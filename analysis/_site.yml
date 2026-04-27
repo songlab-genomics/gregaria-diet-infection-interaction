@@ -1,0 +1,17 @@
+name: "Effect of Diet on Metarhizium Infection in S. Gregaria"
+output_dir: ../docs
+navbar:
+  title: "Effect of Diet on Metarhizium Infection in S. Gregaria"
+  left:
+  - text: Home
+    href: index.html
+  - text: About
+    href: about.html
+  - text: License
+    href: license.html
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
