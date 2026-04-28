@@ -11,7 +11,7 @@
 
 
 
-<title>DEG Overlap Analysis</title>
+<title>Home</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +29,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -232,69 +229,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -302,16 +236,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -371,7 +295,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">DEG Overlap Analysis</h1>
+<h1 class="title toc-ignore">Home</h1>
 
 </div>
 
@@ -499,11 +423,10 @@ have uncommitted changes.
 <div id="versions" class="tab-pane fade">
 <p>
 These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/overlap.Rmd</code>) and HTML
-(<code>docs/overlap.html</code>) files. If you’ve configured a remote
-Git repository (see <code>?wflow_git_remote</code>), click on the
-hyperlinks in the table below to view the files as they were in that
-past version.
+made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
+(<code>docs/index.html</code>) files. If you’ve configured a remote Git
+repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
+in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -532,33 +455,16 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/d07f0a034f2f2fce2c1aff18affc2effadea9727/analysis/overlap.Rmd" target="_blank">d07f0a0</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/c557b84667748aa5f9f9ff5383ee7dfec8e194b1/analysis/index.Rmd" target="_blank">c557b84</a>
 </td>
 <td>
 emily-cbaker
 </td>
 <td>
-2026-04-28
+2026-04-27
 </td>
 <td>
-HTML Site Additions
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/d07f0a034f2f2fce2c1aff18affc2effadea9727/docs/overlap.html" target="_blank">d07f0a0</a>
-</td>
-<td>
-emily-cbaker
-</td>
-<td>
-2026-04-28
-</td>
-<td>
-HTML Site Additions
+Start workflowr project.
 </td>
 </tr>
 </tbody>
@@ -568,92 +474,7 @@ HTML Site Additions
 </div>
 </div>
 </div>
-<div id="heatmap" class="section level2">
-<h2>Heatmap</h2>
-<p>This heatmap shows the presence of each DEG that appears in the full
-model and one subset. Note that the only values in the heatmap are 0 or
-1, where 0 is the absence of that gene in the subset and 1 is the
-presence.</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/DEG_overlap_heatmap.png" style="width:50%;"></p>
-</div>
-<p>We can then see the overlapping genes that are likely primarily
-involved in infection in the pink rectangle and genes that are likely
-involved mainly in diet in the orange rectangle.</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/DEG_overlap_heatmap_clusters_highlighted.png" style="width:50%;"></p>
-</div>
-</div>
-<div id="upsetr-plot" class="section level2">
-<h2>UpSetR Plot</h2>
-<p>This is another form of visualization to see the different
-overlapping groups of genes across all 5 tests.</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/DEG_upset_plot.png" style="width:90%;"></p>
-</div>
-</div>
-<div id="venn-diagrams" class="section level2">
-<h2>Venn Diagrams</h2>
-<p>The first 4 Venn diagrams are broken down into 4 groups since the
-full Venn diagram can be difficult to interpret alone. The last diagram
-shows the overlap between all 5 iterations.</p>
-<div id="full-model-vs-control-vs-pairwise-diet" class="section level3">
-<h3>Full Model vs Control vs Pairwise Diet</h3>
-<p>The genes in the center overlap between these 3 subsets are likely
-genes mainly involved in response to changes in the organism’s diet, as
-there should be no immune response genes activated within the control
-group.</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_full_model_control_only_pairwise_diet.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="full-model-vs-infected-vs-within-diet" class="section level3">
-<h3>Full Model vs Infected vs Within Diet</h3>
-<p>The common genes between these 3 groups are likely genes that are
-related to immune response, due to the inclusion of the infected samples
-subgroup.</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_full_model_infection_only_within_diet.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="infected-vs-within-diet-vs-pairwise-diet"
-class="section level3">
-<h3>Infected vs Within Diet vs Pairwise Diet</h3>
-<p>Again, this overlap should show mainly genes involved in immune
-response</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_infection_only_within_diet_pairwise_diet.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="control-vs-pairwise-diet-vs-within-diet"
-class="section level3">
-<h3>Control vs Pairwise Diet vs Within Diet</h3>
-<p>The overlapping group in this</p>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_control_only_pairwise_diet_within_diet.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="infected-vs-pairwise-diet-vs-within-diet-vs-full-model"
-class="section level3">
-<h3>Infected vs Pairwise Diet vs Within Diet vs Full Model</h3>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_infection_group.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="control-vs-pairwise-diet-vs-within-diet-vs-full-model"
-class="section level3">
-<h3>Control vs Pairwise Diet vs Within Diet vs Full Model</h3>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/Venn_control_group.png" style="width:75%;"></p>
-</div>
-</div>
-<div id="full-venn-diagram" class="section level3">
-<h3>Full Venn Diagram</h3>
-<div style="text-align:center;">
-<p><img src="assets/DEG_Overlap_Analysis/full_venn.png" style="width:75%;"></p>
-</div>
-</div>
-</div>
+<p>Welcome to my research website.</p>
 </div>
 </div>
 </div>
@@ -676,8 +497,6 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -710,35 +529,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
