@@ -5,10 +5,21 @@ navbar:
   left:
   - text: Home
     href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
+  - text: Data Processing
+    menu:
+      - text: Data Trimming and Filtering
+        href:
+      - text: Mapping to Reference Genome
+        href:
+  - text: Target Gene Analysis
+    menu:
+      - text: Gene Expression Analysis
+        href: deg.html
+      - text: Overlap of DEGs
+        href: overlap.html
+      - text: GO Term Enrichment
+        href:
+      - text: KEGG Pathway Enrichment
 output:
   workflowr::wflow_html:
     toc: yes

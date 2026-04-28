@@ -1,0 +1,874 @@
+---
+title: "Differentially Expressed Gene Analysis"
+output: 
+  html_document:
+    self_contained: false
+    toc: TRUE
+    toc_depth: 6
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: false
+---
+
+# DEG Analyses 
+
+<hr>
+
+## Pairwise Diet Comparison{.tabset .tabset-fade}
+These analyses compare both infected and control samples pairwise across all diets.
+
+### 33 vs 50{.tabset .tabset-fade}
+
+#### Volcano Plot
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/Volcano_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plots
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/MAplot_33_vs_50.png" style="width:75%;">
+</div>
+
+
+##### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/MA_top500_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### Heatmap
+
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/Heatmap_sample_distance_33_vs_50.png" style="width:75%;">
+</div>
+
+
+##### Top 50 DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/GeneHeatmap_Top50Var_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/PCA_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_50/UMAP_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 50 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/Volcano_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plots
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/MAplot_50_vs_83.png" style="width:75%;">
+</div>
+
+
+##### Top 500 DEGs
+
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/MA_top500_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/Heatmap_sample_distance_50_vs_83.png" style="width:75%;">
+</div>
+
+
+##### Top 50 DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/GeneHeatmap_Top50Var_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/PCA_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/50_vs_83/UMAP_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 33 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/Volcano_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plots
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/MAplot_33_vs_83.png" style="width:75%;">
+</div>
+
+
+##### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/MA_top500_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/Heatmap_sample_distance_33_vs_83.png" style="width:75%;">
+</div>
+
+
+##### Top 50 DEGs
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/GeneHeatmap_Top50Var_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/PCA_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Diet_Pairwise_DEG_PCA/33_vs_83/UMAP_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+## Treatment within Diets {.tabset .tabset-fade}
+These analyses focus on infected versus control samples within each diet.
+
+### Diet 33{.tabset .tabset-fade}
+
+#### Volcano Plot
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_33/Volcano_Diet_33.png" style="width:75%;">
+</div>
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_33/MA_Diet_33.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_33/Heatmap_Diet_33.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_33/PCA_Diet_33.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_33/UMAP_Diet_33.png" style="width:75%;">
+</div>
+
+
+<hr>
+
+### Diet 50{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_50/Volcano_Diet_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_50/MA_Diet_50.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_50/Heatmap_Diet_50.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_50/PCA_Diet_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_50/UMAP_Diet_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+### Diet 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_83/Volcano_Diet_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_83/MA_Diet_83.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_83/Heatmap_Diet_83.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA 
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_83/PCA_Diet_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/Treatment_within_Diet_DEG/Diet_83/UMAP_Diet_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+## Control Samples {.tabset .tabset-fade}
+
+The following analyses are focused solely on the control group. No infected samples were included in the generation of these results and will serve as a baseline comparison for the infected group.
+
+### 33 vs 50{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_50/Volcano_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_50/MA_33_vs_50.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_50/Heatmap_33_vs_50.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_50/PCA_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_50/UMAP_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 50 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/50_vs_83/Volcano_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/50_vs_83/MA_50_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/50_vs_83/Heatmap_50_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/50_vs_83/PCA_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/50_vs_83/UMAP_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 33 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_83/Volcano_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_83/MA_33_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_83/Heatmap_33_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_83/PCA_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/33_vs_83/UMAP_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+### All Diets{.tabset .tabset-fade}
+
+#### Heatmap
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/Heatmap_All_Control.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/PCA_Control.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_ControlOnly_DietEffects/UMAP_Control.png" style="width:75%;">
+</div>
+
+<hr>
+
+## Infected Samples{.tabset .tabset-fade}
+
+These analyses were performed only using the infected samples, which were then compared pairwise across diets and in full.
+
+### 33 vs 50{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_50/Volcano_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_50/MA_33_vs_50.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_50/Heatmap_33_vs_50.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_50/PCA_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_50/UMAP_33_vs_50.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 50 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/50_vs_83/Volcano_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/50_vs_83/MA_50_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/50_vs_83/Heatmap_50_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/50_vs_83/PCA_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/50_vs_83/UMAP_50_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+### 33 vs 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_83/Volcano_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_83/MA_33_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_83/Heatmap_33_vs_83.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_83/PCA_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/33_vs_83/UMAP_33_vs_83.png" style="width:75%;">
+</div>
+
+<hr>
+
+### All Diets{.tabset .tabset-fade}
+
+#### Heatmap
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/Heatmap_ALL_Infected.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/PCA_Infected.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEG_InfectedOnly_DietEffects/UMAP_Infected.png" style="width:75%;">
+</div>
+
+<hr>
+
+## Full Model with SVA{.tabset .tabset-fade}
+
+Finally, this is the full model, accounting for both diet and infection. In addition to the standard DEG analysis applied to the previous tests, this model also underwent Surrogate Variable Analysis (SVA) to account for potential batch effects during data collection. We did not perform SVA on the previous analyses since those datasets were smaller.
+
+### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/Volcano_FullModel.png" style="width:75%;">
+</div>
+
+### MA Plot
+#### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_ALL.png" style="width:75%;">
+</div>
+
+#### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_Top500.png" style="width:75%;">
+</div>
+
+#### Top 1000 DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_Top1000.png" style="width:75%;">
+</div>
+
+### Heatmap
+#### All Samples
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/SampleDistanceHeatmap_FullModel.png" style="width:75%;">
+</div>
+
+#### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/Heatmap_Top500_DEGs.png" style="width:75%;">
+</div>
+
+### PCA
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/PCA_FullModel.png" style="width:75%;">
+</div>
+
+### UMAP
+
+<div style="text-align:center;">
+<img src="assets/DEseq2_Mehreen_Gregaria_Full_Model_SVA/UMAP_FullModel_SVAdjusted.png" style="width:75%;">
+</div>
+
+<hr>
+
+# DEG Summary Table
+
+<i>To view more information about a differentially expressed gene, hover over the regulation cell and the padj and log fold change values will appear.</i>
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(DT)
+
+df <- read.csv(
+  "analysis/DESeq2_FINAL_Annotated_Table.csv",
+  stringsAsFactors = FALSE
+)
+
+summary_df <- df %>%
+  mutate(
+    priority = ifelse(
+      INFECT_padj < 0.05 &
+      (DIET33_padj < 0.05 | DIET83_padj < 0.05),
+      1, 2
+    )
+  ) %>%
+  arrange(priority, GeneID) %>%
+  transmute(
+    GeneID,
+    GeneType = GeneType.y,
+    Description = Description.y,
+
+    Infection = case_when(
+      INFECT_padj < 0.05 & INFECT_log2FoldChange > 0 ~
+        paste0('<span title="log2FC: ',
+               round(INFECT_log2FoldChange,2),
+               ' | padj: ',
+               signif(INFECT_padj,3),
+               '">↑ Up</span>'),
+
+      INFECT_padj < 0.05 & INFECT_log2FoldChange < 0 ~
+        paste0('<span title="log2FC: ',
+               round(INFECT_log2FoldChange,2),
+               ' | padj: ',
+               signif(INFECT_padj,3),
+               '">↓ Down</span>'),
+
+      TRUE ~ '<span title="Not significant">— Not DE</span>'
+    ),
+
+    Diet33 = case_when(
+      DIET33_padj < 0.05 & DIET33_log2FoldChange > 0 ~
+        paste0('<span title="log2FC: ',
+               round(DIET33_log2FoldChange,2),
+               ' | padj: ',
+               signif(DIET33_padj,3),
+               '">↑ Up</span>'),
+
+      DIET33_padj < 0.05 & DIET33_log2FoldChange < 0 ~
+        paste0('<span title="log2FC: ',
+               round(DIET33_log2FoldChange,2),
+               ' | padj: ',
+               signif(DIET33_padj,3),
+               '">↓ Down</span>'),
+
+      TRUE ~ '<span title="Not significant">— Not DE</span>'
+    ),
+
+    Diet83 = case_when(
+      DIET83_padj < 0.05 & DIET83_log2FoldChange > 0 ~
+        paste0('<span title="log2FC: ',
+               round(DIET83_log2FoldChange,2),
+               ' | padj: ',
+               signif(DIET83_padj,3),
+               '">↑ Up</span>'),
+
+      DIET83_padj < 0.05 & DIET83_log2FoldChange < 0 ~
+        paste0('<span title="log2FC: ',
+               round(DIET83_log2FoldChange,2),
+               ' | padj: ',
+               signif(DIET83_padj,3),
+               '">↓ Down</span>'),
+
+      TRUE ~ '<span title="Not significant">— Not DE</span>'
+    )
+  )
+
+datatable(
+  summary_df,
+  extensions = "FixedColumns",
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    fixedColumns = list(leftColumns = 3)
+  ),
+  escape = FALSE,
+  rownames = FALSE
+) %>%
+formatStyle(
+  c("Infection","Diet33","Diet83"),
+  backgroundColor = styleEqual(
+    c("↑ Up","↓ Down","— Not DE"),
+    c("#d9f0d3","#fcbba1","#eeeeee")
+  )
+)
+```
