@@ -15,6 +15,163 @@ output:
 
 <hr>
 
+## Treatment within Diets {.tabset .tabset-fade}
+These analyses focus on infected versus control samples within each diet.
+
+### Diet 33{.tabset .tabset-fade}
+
+#### Volcano Plot
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_33/Volcano_Diet_33_no_rRNA.png" style="width:75%;">
+</div>
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_33/MA_Diet_33_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_33/Heatmap_Diet_33_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_33/PCA_Diet_33_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_33/UMAP_Diet_33_no_rRNA.png" style="width:75%;">
+</div>
+
+
+<hr>
+
+### Diet 50{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_50/Volcano_Diet_50_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_50/MA_Diet_50_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_50/Heatmap_Diet_50_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_50/PCA_Diet_50_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_50/UMAP_Diet_50_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+### Diet 83{.tabset .tabset-fade}
+
+#### Volcano Plot
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_83/Volcano_Diet_83_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### MA Plot
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_83/MA_Diet_83_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 500 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### Heatmap
+##### All DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_83/Heatmap_Diet_83_no_rRNA.png" style="width:75%;">
+</div>
+
+##### Top 50 DEGs
+
+This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
+
+<hr>
+
+#### PCA 
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_83/PCA_Diet_83_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
+
+#### UMAP
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/Treatment_within_Diet_DEG/Diet_83/UMAP_Diet_83_no_rRNA.png" style="width:75%;">
+</div>
+
+<hr>
 
 ## Control Samples {.tabset .tabset-fade}
 
@@ -25,7 +182,7 @@ The following analyses are focused solely on the control group. No infected samp
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_50/Volcano_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_50/Volcano_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -34,7 +191,7 @@ The following analyses are focused solely on the control group. No infected samp
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_50/MA_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_50/MA_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -47,7 +204,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_50/Heatmap_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_50/Heatmap_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -58,7 +215,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_50/PCA_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_50/PCA_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -66,7 +223,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_50/UMAP_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_50/UMAP_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -76,7 +233,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/50_vs_83/Volcano_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/50_vs_83/Volcano_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -85,7 +242,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/50_vs_83/MA_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/50_vs_83/MA_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -98,7 +255,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/50_vs_83/Heatmap_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/50_vs_83/Heatmap_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -109,7 +266,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/50_vs_83/PCA_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/50_vs_83/PCA_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -117,7 +274,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/50_vs_83/UMAP_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/50_vs_83/UMAP_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -127,7 +284,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_83/Volcano_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_83/Volcano_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -136,7 +293,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_83/MA_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_83/MA_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -149,7 +306,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_83/Heatmap_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_83/Heatmap_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -160,7 +317,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_83/PCA_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_83/PCA_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -168,7 +325,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/33_vs_83/UMAP_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/33_vs_83/UMAP_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -178,7 +335,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Heatmap
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/Heatmap_All_Control.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/Heatmap_All_Control_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -186,7 +343,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/PCA_Control.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/PCA_Control_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -194,7 +351,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_ControlOnly_DietEffects/UMAP_Control.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_ControlOnly_DietEffects/UMAP_Control_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -208,7 +365,7 @@ These analyses were performed only using the infected samples, which were then c
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_50/Volcano_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_50/Volcano_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -217,7 +374,7 @@ These analyses were performed only using the infected samples, which were then c
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_50/MA_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_50/MA_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -230,7 +387,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_50/Heatmap_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_50/Heatmap_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -241,7 +398,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_50/PCA_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_50/PCA_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -249,7 +406,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_50/UMAP_33_vs_50.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_50/UMAP_33_vs_50_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -259,7 +416,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/50_vs_83/Volcano_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/50_vs_83/Volcano_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -268,7 +425,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/50_vs_83/MA_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/50_vs_83/MA_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -281,7 +438,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/50_vs_83/Heatmap_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/50_vs_83/Heatmap_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -292,7 +449,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/50_vs_83/PCA_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/50_vs_83/PCA_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -300,7 +457,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/50_vs_83/UMAP_50_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/50_vs_83/UMAP_50_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -310,7 +467,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Volcano Plot
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_83/Volcano_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_83/Volcano_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -319,7 +476,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_83/MA_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_83/MA_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 500 DEGs
@@ -332,7 +489,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 ##### All DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_83/Heatmap_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_83/Heatmap_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 ##### Top 50 DEGs
@@ -343,7 +500,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_83/PCA_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_83/PCA_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -351,7 +508,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/33_vs_83/UMAP_33_vs_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/33_vs_83/UMAP_33_vs_83_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -361,7 +518,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### Heatmap
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/Heatmap_ALL_Infected.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/Heatmap_ALL_Infected_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -369,7 +526,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/PCA_Infected.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/PCA_Infected_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -377,165 +534,7 @@ This plot was not generated for this iteration as the total number of DEGs was l
 #### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEG_InfectedOnly_DietEffects/UMAP_Infected.png" style="width:75%;">
-</div>
-
-<hr>
-
-## Treatment within Diets {.tabset .tabset-fade}
-These analyses focus on infected versus control samples within each diet.
-
-### Diet 33{.tabset .tabset-fade}
-
-#### Volcano Plot
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_33/Volcano_Diet_33.png" style="width:75%;">
-</div>
-<hr>
-
-#### MA Plot
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_33/MA_Diet_33.png" style="width:75%;">
-</div>
-
-##### Top 500 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### Heatmap
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_33/Heatmap_Diet_33.png" style="width:75%;">
-</div>
-
-##### Top 50 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### PCA
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_33/PCA_Diet_33.png" style="width:75%;">
-</div>
-
-<hr>
-
-#### UMAP
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_33/UMAP_Diet_33.png" style="width:75%;">
-</div>
-
-
-<hr>
-
-### Diet 50{.tabset .tabset-fade}
-
-#### Volcano Plot
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_50/Volcano_Diet_50.png" style="width:75%;">
-</div>
-
-<hr>
-
-#### MA Plot
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_50/MA_Diet_50.png" style="width:75%;">
-</div>
-
-##### Top 500 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### Heatmap
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_50/Heatmap_Diet_50.png" style="width:75%;">
-</div>
-
-##### Top 50 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### PCA
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_50/PCA_Diet_50.png" style="width:75%;">
-</div>
-
-<hr>
-
-#### UMAP
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_50/UMAP_Diet_50.png" style="width:75%;">
-</div>
-
-<hr>
-
-### Diet 83{.tabset .tabset-fade}
-
-#### Volcano Plot
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_83/Volcano_Diet_83.png" style="width:75%;">
-</div>
-
-<hr>
-
-#### MA Plot
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_83/MA_Diet_83.png" style="width:75%;">
-</div>
-
-##### Top 500 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### Heatmap
-##### All DEGs
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_83/Heatmap_Diet_83.png" style="width:75%;">
-</div>
-
-##### Top 50 DEGs
-
-This plot was not generated for this iteration as the total number of DEGs was low enough to generate a clean plot with the full model.
-
-<hr>
-
-#### PCA 
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_83/PCA_Diet_83.png" style="width:75%;">
-</div>
-
-<hr>
-
-#### UMAP
-
-<div style="text-align:center;">
-<img src="assets/rRNA_included/Treatment_within_Diet_DEG/Diet_83/UMAP_Diet_83.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEG_InfectedOnly_DietEffects/UMAP_Infected_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
@@ -544,54 +543,116 @@ This plot was not generated for this iteration as the total number of DEGs was l
 
 Finally, this is the full model, accounting for both diet and infection. In addition to the standard DEG analysis applied to the previous tests, this model also underwent Surrogate Variable Analysis (SVA) to account for potential batch effects during data collection. We did not perform SVA on the previous analyses since those datasets were smaller.
 
-### Volcano Plot
-
+### Volcano Plot{.tabset .tabset-fade}
+#### Diet 33
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/Volcano_FullModel.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Volcano_Interaction_Diet33_no_rRNA.png" style="width:75%;">
 </div>
 
-### MA Plot
-#### All DEGs
+#### Diet 83
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_ALL.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Volcano_Interaction_Diet83_no_rRNA.png" style="width:75%;">
 </div>
 
-#### Top 500 DEGs
+### MA Plot{.tabset .tabset-fade}
 
+#### Diet 33
+##### All DEGs
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_Top500.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet33_ALL.png" style="width:75%;">
 </div>
 
-#### Top 1000 DEGs
+##### Top 1000 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/MAplot_FullModel_Top1000.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet33_TOP1000.png" style="width:75%;">
 </div>
 
-### Heatmap
-#### All Samples
+
+##### Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/SampleDistanceHeatmap_FullModel.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet33_TOP500.png" style="width:75%;">
 </div>
 
-#### Top 500 DEGs
+#### Diet 83
+
+##### All DEGs
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet83_ALL.png" style="width:75%;">
+</div>
+
+##### Top 1000 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/Heatmap_Top500_DEGs.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet83_TOP1000.png" style="width:75%;">
+</div>
+
+
+##### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Interaction_Diet83_TOP500.png" style="width:75%;">
+</div>
+
+#### All Diets
+
+##### All DEGs
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Infection_ALL.png" style="width:75%;">
+</div>
+
+##### Top 1000 DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Infection_TOP1000.png" style="width:75%;">
+</div>
+
+
+##### Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/MA_Infection_TOP500.png" style="width:75%;">
+</div>
+
+### Heatmap{.tabset .tabset-fade}
+
+#### Diet 33: Top 500 DEGs
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Heatmap_TOP500_Interaction_Diet33.png" style="width:75%;">
+</div>
+
+#### Diet 83: Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Heatmap_TOP500_Interaction_Diet83.png" style="width:75%;">
+</div>
+
+
+#### All Infected: Heatmap of Samples
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Heatmap_Interaction_DEGs_no_rRNA.png" style="width:75%;">
+</div>
+
+
+#### All Infected: Top 500 DEGs
+
+<div style="text-align:center;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Heatmap_Interaction_DEGs.png" style="width:75%;">
 </div>
 
 ### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/PCA_FullModel.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/PCA_VST_no_rRNA.png" style="width:75%;">
 </div>
 
 ### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_included/DEseq2_Mehreen_Gregaria_Full_Model_SVA/UMAP_FullModel_SVAdjusted.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/UMAP_VST_no_rRNA.png" style="width:75%;">
 </div>
 
 <hr>
