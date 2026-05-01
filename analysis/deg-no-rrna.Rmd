@@ -672,7 +672,7 @@ library(dplyr)
 library(DT)
 
 df <- read.csv(
-  "analysis/filter_table.csv",
+  "analysis/filtered_table_NO_rRNA.csv",
   stringsAsFactors = FALSE
 )
 
@@ -755,12 +755,67 @@ datatable(
   ),
   escape = FALSE,
   rownames = FALSE
+) 
+```
+
+# rRNA Removal Affects
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(DT)
+
+df <- read.csv("analysis/non_overlapping_rows.csv",
+               stringsAsFactors = FALSE)
+
+summary_df <- df %>%
+  mutate(
+    priority = ifelse(
+      INFECT_padj < 0.05 &
+      (DIET33_padj < 0.05 | DIET83_padj < 0.05),
+      1, 2
+    )
+  ) %>%
+  arrange(priority, GeneID) %>%
+  transmute(
+    GeneID,
+    GeneType = GeneType.y,
+    Description = Description.y,
+
+    Infection = case_when(
+      INFECT_padj < 0.05 & INFECT_log2FoldChange > 0 ~ "↑ Up",
+      INFECT_padj < 0.05 & INFECT_log2FoldChange < 0 ~ "↓ Down",
+      TRUE ~ "— Not DE"
+    ),
+
+    Diet33 = case_when(
+      DIET33_padj < 0.05 & DIET33_log2FoldChange > 0 ~ "↑ Up",
+      DIET33_padj < 0.05 & DIET33_log2FoldChange < 0 ~ "↓ Down",
+      TRUE ~ "— Not DE"
+    ),
+
+    Diet83 = case_when(
+      DIET83_padj < 0.05 & DIET83_log2FoldChange > 0 ~ "↑ Up",
+      DIET83_padj < 0.05 & DIET83_log2FoldChange < 0 ~ "↓ Down",
+      TRUE ~ "— Not DE"
+    ),
+
+    Source = Source
+  )
+
+datatable(
+  summary_df,
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  rownames = FALSE
 ) %>%
 formatStyle(
-  c("Infection","Diet33","Diet83"),
+  "Source",
+  target = "row",
   backgroundColor = styleEqual(
-    c("↑ Up","↓ Down","— Not DE"),
-    c("#d9f0d3","#fcbba1","#eeeeee")
+    c("rRNA Included", "rRNA Removed"),
+    c("#e7f0ff", "#ffeeee")
   )
 )
 ```

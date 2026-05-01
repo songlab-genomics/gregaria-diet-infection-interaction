@@ -611,7 +611,7 @@ library(dplyr)
 library(DT)
 
 df <- read.csv(
-  "analysis/filter_table.csv",
+  "analysis/filter_table_with_rRNA.csv",
   stringsAsFactors = FALSE
 )
 
