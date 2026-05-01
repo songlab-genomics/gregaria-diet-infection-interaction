@@ -546,7 +546,7 @@ Finally, this is the full model, accounting for both diet and infection. In addi
 ### Volcano Plot{.tabset .tabset-fade}
 #### Diet 33
 <div style="text-align:center;">
-<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model/Volcano_Interaction_Diet33_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed/DEseq2_Mehreen_Interaction_Model_SVA/Volcano_Interaction_Diet33_no_rRNA.png" style="width:75%;">
 </div>
 
 #### Diet 83
