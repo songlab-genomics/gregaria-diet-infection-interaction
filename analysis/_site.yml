@@ -13,13 +13,30 @@ navbar:
         href:
   - text: Target Gene Analysis
     menu:
-      - text: Gene Expression Analysis
-        href: deg.html
-      - text: Overlap of DEGs
-        href: overlap.html
-      - text: GO Term Enrichment
-        href:
-      - text: KEGG Pathway Enrichment
+      - text: rRNA Included
+        menu:
+          - text: Gene Expression Analysis
+            href: deg.html
+          - text: Overlap of DEGs
+            href: overlap.html
+          - text: GO Term Enrichment
+            href:
+          - text: KEGG Pathway Enrichment
+      - text: rRNA Removed (No SVA)
+        menu:
+          - text: Gene Expression Analysis
+            href: deg-no-rrna.html
+          - text: Overlap of DEGs
+            href:
+          - text: Go Term Enrichment
+            href:
+          - text: KEGG Pathway Enrichment
+            href:
+      - text: rRNA Removed (SVA)
+        menu:
+          - text: Gene Expression Analysis
+            href: deg-no-rrna-sva.html
+
 output:
   workflowr::wflow_html:
     toc: yes
