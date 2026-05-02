@@ -22,7 +22,7 @@ These analyses focus on infected versus control samples within each diet.
 
 #### Volcano Plot
 <div style="text-align:center;">
-<img src="docs/assets/rRNA_removed_SVA_S/Treatment_within_Diet_DEG_SVA/Diet_33/Volcano_Diet_33_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/Treatment_within_Diet_DEG_SVA/Diet_33/Volcano_Diet_33_no_rRNA.png" style="width:75%;">
 </div>
 <hr>
 
