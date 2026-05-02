@@ -1,6 +1,7 @@
 wflow_publish(c(
 "analysis/about.Rmd",
 "analysis/deg-no-rrna.Rmd",
+"analysis/deg-no-rrna-sva.Rmd",
 "analysis/deg.Rmd",
 "analysis/file_prep.Rmd",
 "analysis/index.Rmd",
