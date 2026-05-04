@@ -546,13 +546,13 @@ Finally, this is the full model, accounting for both diet and infection. In addi
 ### Volcano Plot{.tabset .tabset-fade}
 #### Diet 33
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Volcano_Interaction_Diet33_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Volcano_Interaction_Diet33.png" style="width:75%;">
 </div>
 
 #### Diet 83
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Volcano_Interaction_Diet83_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Volcano_Interaction_Diet83.png" style="width:75%;">
 </div>
 
 ### MA Plot{.tabset .tabset-fade}
@@ -560,106 +560,108 @@ Finally, this is the full model, accounting for both diet and infection. In addi
 #### Diet 33
 ##### All DEGs
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet33_ALL.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet33_ALL.png" style="width:75%;">
 </div>
 
 ##### Top 1000 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet33_TOP1000.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet33_TOP1000.png" style="width:75%;">
 </div>
 
 
 ##### Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet33_TOP500.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet33_TOP500.png" style="width:75%;">
 </div>
 
 #### Diet 83
 
 ##### All DEGs
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet83_ALL.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet83_ALL.png" style="width:75%;">
 </div>
 
 ##### Top 1000 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet83_TOP1000.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet83_TOP1000.png" style="width:75%;">
 </div>
 
 
 ##### Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Interaction_Diet83_TOP500.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Interaction_Diet83_TOP500.png" style="width:75%;">
 </div>
 
 #### All Diets
 
 ##### All DEGs
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Infection_ALL.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Infection_ALL.png" style="width:75%;">
 </div>
 
 ##### Top 1000 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Infection_TOP1000.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Infection_TOP1000.png" style="width:75%;">
 </div>
 
 
 ##### Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/MA_Infection_TOP500.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/MA_Infection_TOP500.png" style="width:75%;">
 </div>
 
 ### Heatmap{.tabset .tabset-fade}
 
 #### Diet 33: Top 500 DEGs
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Heatmap_TOP500_Interaction_Diet33.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Heatmap_TOP500_Interaction_Diet33.png" style="width:75%;">
 </div>
 
 #### Diet 83: Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Heatmap_TOP500_Interaction_Diet83.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Heatmap_TOP500_Interaction_Diet83.png" style="width:75%;">
 </div>
 
 
 #### All Infected: Heatmap of Samples
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Heatmap_Interaction_DEGs_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Heatmap_Interaction_DEGs.png" style="width:75%;">
 </div>
 
 
 #### All Infected: Top 500 DEGs
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/Heatmap_Interaction_DEGs.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/Heatmap_Interaction_DEGs.png" style="width:75%;">
 </div>
 
 ### PCA
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/PCA_VST_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/PCA_VST.png" style="width:75%;">
 </div>
 
 ### UMAP
 
 <div style="text-align:center;">
-<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model/UMAP_VST_no_rRNA.png" style="width:75%;">
+<img src="assets/rRNA_removed_SVA/DEseq2_Mehreen_Interaction_Model_No_rRNA/UMAP_VST.png" style="width:75%;">
 </div>
 
 <hr>
 
-# DEG Summary Table
+# DEG Summary Tables
 
-This table displays genes that were differentially regulated both within infection and within one of the two biased diet groups (33 or 83). This table was made using the output of the full DESeq2 model, testing for interactive affects between diet and infection using the below formula.
+The first two tables summarize the results of the infected and non-infected groups, using the diet 33 as a reference. This was done because it seems that the difference between the carb biased diet (33) and the reference was severe, whereas the difference between the protein-baised diet (83) and the reference had minor differences. This is based on observations from prior diet-infection experiments and is supported by data trends in this study. The model used in these groups simply accounted for diet, as infection status was negligible due to the separation of infected and non-infected specimens.
+
+The third table displays genes that were differentially expressed both within infection and within one of the two biased diet groups (33 or 83). This table was made using the output of the full DESeq2 model, testing for interactive affects between diet and infection using the below formula.
 
 $$model = ~Diet * Infection = Diet + Infection + Diet:Infection$$
 
@@ -667,7 +669,9 @@ The resulting csv files for both the 33 and 83 tests were then combined with a c
 
 <i>To view more information about a differentially expressed gene, hover over the regulation cell and the padj and log2 fold change values will appear.</i>
 
+<br>
 <hr>
+<br>
 
 ## Diet Effects Across Non-Infected Specimens
 
@@ -736,8 +740,9 @@ datatable(
 )
 ```
 
-
+<br>
 <hr>
+<br>
 
 ## Diet Effects Across Infected Specimens
 
@@ -806,7 +811,9 @@ datatable(
 )
 ```
 
+<br>
 <hr>
+<br>
 
 ## Overall Interaction Effects
 
@@ -900,69 +907,7 @@ datatable(
   rownames = FALSE
 ) 
 ```
-
+<br>
 <hr>
 
-These genes are the ones that were removed or became significant after removing rRNA from the DESeq2 analysis. This table does not necessarily present any biologically interesting results, but rather is used to quantify the change in the analysis before and after removing the rRNA.
 
-# rRNA Removal Affects
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(dplyr)
-library(DT)
-
-df <- read.csv("analysis/non_overlapping_rows.csv",
-               stringsAsFactors = FALSE)
-
-summary_df <- df %>%
-  mutate(
-    priority = ifelse(
-      INFECT_padj < 0.05 &
-      (DIET33_padj < 0.05 | DIET83_padj < 0.05),
-      1, 2
-    )
-  ) %>%
-  arrange(priority, GeneID) %>%
-  transmute(
-    GeneID,
-    GeneType = GeneType.y,
-    Description = Description.y,
-
-    Infection = case_when(
-      INFECT_padj < 0.05 & INFECT_log2FoldChange > 0 ~ "↑ Up",
-      INFECT_padj < 0.05 & INFECT_log2FoldChange < 0 ~ "↓ Down",
-      TRUE ~ "— Not DE"
-    ),
-
-    Diet33 = case_when(
-      DIET33_padj < 0.05 & DIET33_log2FoldChange > 0 ~ "↑ Up",
-      DIET33_padj < 0.05 & DIET33_log2FoldChange < 0 ~ "↓ Down",
-      TRUE ~ "— Not DE"
-    ),
-
-    Diet83 = case_when(
-      DIET83_padj < 0.05 & DIET83_log2FoldChange > 0 ~ "↑ Up",
-      DIET83_padj < 0.05 & DIET83_log2FoldChange < 0 ~ "↓ Down",
-      TRUE ~ "— Not DE"
-    ),
-
-    Source = Source
-  )
-
-datatable(
-  summary_df,
-  options = list(
-    pageLength = 10,
-    scrollX = TRUE
-  ),
-  rownames = FALSE
-) %>%
-formatStyle(
-  "Source",
-  target = "row",
-  backgroundColor = styleEqual(
-    c("rRNA Included", "rRNA Removed"),
-    c("#e7f0ff", "#ffeeee")
-  )
-)
-```
