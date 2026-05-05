@@ -4,8 +4,8 @@ library(tidyverse)
 # FILE PATHS
 # ---------------------------
 
-file1 <- "analysis/filter_table_with_rRNA.csv"
-file2 <- "analysis/filtered_table_NO_rRNA.csv"
+file1 <- "analysis/Control_50_83_Combined_Annotated.csv"
+file2 <- "analysis/Infected_50_83_Combined_Annotated.csv"
 
 out_file <- "non_overlapping_rows.csv"
 
@@ -34,8 +34,8 @@ df2$Source <- "File2"
 # GET NON-SHARED ROWS
 # ---------------------------
 
-only_df1 <- anti_join(df1, df2, by = "GeneID")
-only_df2 <- anti_join(df2, df1, by = "GeneID")
+only_df1 <- left_join(df1, df2, by = "GeneID")
+only_df2 <- left_join(df2, df1, by = "GeneID")
 
 diff_df <- bind_rows(only_df1, only_df2)
 
