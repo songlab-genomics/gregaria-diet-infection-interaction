@@ -3,34 +3,43 @@ output_dir: ../docs
 navbar:
   title: "S. gregaria diet x infection"
   left:
-  - text: "Home"
-    href: index.html
-  - text: "Overview"
+  - text: "About"
     menu:
+      - text: "Home"
+        href: index.html
       - text: "Study design and data"
         href: 01-study-design-data.html
-      - text: "Workflow and reproducibility"
+      - text: "RNAseq workflow and reproducibility"
         href: 02-workflow-reproducibility.html
       - text: "Count QC and exploration"
         href: 03-count-qc-exploration.html
-  - text: "Differential expression"
+  - text: "Transcriptomics"
     menu:
-      - text: "Diet x infection interaction"
-        href: 04-deseq2-interaction-model.html
-      - text: "Diet pairwise DEGs"
-        href: 05-diet-pairwise-deg.html
-      - text: "Infection within diet DEGs"
-        href: 06-infection-within-diet-deg.html
-      - text: "DEG overlap and prioritization"
-        href: 07-deg-overlap-prioritization.html
-      - text: "GO term and KEGG enrichment"
-        href: 10-go-term-enrichment.html
-  - text: "Interpretation"
+      - text: "RNAseq pre-processing"
+      - text: "HPC to workflowR overview"
+        href: 02-workflow-reproducibility.html
+      - text: "Control Quality"
+        href: 03-count-qc-exploration.html
+      - text: "DESeq2 analyses"
+        menu:
+          - text: "Diet x infection interaction"
+            href: 04-deseq2-interaction-model.html
+          - text: "Diet pairwise DEGs"
+            href: 05-diet-pairwise-deg.html
+          - text: "Infection within diet DEGs"
+            href: 06-infection-within-diet-deg.html
+      - text: "Supporting analyses"
+        menu:
+          - text: "DEG overlap and prioritization"
+            href: 07-deg-overlap-prioritization.html
+          - text: "GO term and KEGG enrichment"
+            href: 10-go-term-enrichment.html
+          - text: "Outlier sensitivity"
+            href: 11-outlier-sensitivity.html
+          - text: "Quality sensitivity and enrichment"
+            href: 09-outliers-load-enrichment.html
+  - text: "Publication"
     menu:
-      - text: "Outlier sensitivity"
-        href: 11-outlier-sensitivity.html
-      - text: "Quality sensitivity and enrichment"
-        href: 09-outliers-load-enrichment.html
       - text: "Publication figure exports"
         href: 08-publication-figures.html
   - text: "Archive"
@@ -50,7 +59,7 @@ navbar:
   right:
   - icon: fab fa-github
     text: "Source code"
-    href: https://github.com/MaevaTecher/gregaria-diet-infection-interaction
+    href: https://github.com/songlab-genomics/gregaria-diet-infection-interaction
 output:
   workflowr::wflow_html:
     toc: yes
