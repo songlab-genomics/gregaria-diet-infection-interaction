@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Local/generated files that should not be pushed to GitHub Pages.
+.DS_Store
+data/reference/
+output/rmd_runs/
+output/manual-validation/
