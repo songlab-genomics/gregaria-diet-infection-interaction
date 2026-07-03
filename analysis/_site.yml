@@ -23,8 +23,12 @@ navbar:
         href: 06-infection-within-diet-deg.html
       - text: "DEG overlap and prioritization"
         href: 07-deg-overlap-prioritization.html
+      - text: "GO term and KEGG enrichment"
+        href: 10-go-term-enrichment.html
   - text: "Interpretation"
     menu:
+      - text: "Outlier sensitivity"
+        href: 11-outlier-sensitivity.html
       - text: "Quality sensitivity and enrichment"
         href: 09-outliers-load-enrichment.html
       - text: "Publication figure exports"

@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   treatment_subset: "All"
   min_total_count: 10
   alpha: 0.05

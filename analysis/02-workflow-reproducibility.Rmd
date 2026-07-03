@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   output_tag: "workflow-reproducibility"
 ---
 
@@ -48,6 +48,128 @@ layout <- data.frame(
 
 knitr::kable(layout)
 ```
+
+## RNA-seq workflow overview
+
+This project starts from gene-level count files that were produced upstream on
+the HPC. The diagram below separates the HPC preprocessing steps from the
+workflowR analyses in this repository, so it is clear which part maps reads to
+the *Schistocerca piceifrons* reference and which part tests diet, infection,
+and diet-by-infection expression patterns.
+
+```{r hpc-workflow-figure, fig.width=12, fig.height=6}
+library(ggplot2)
+library(grid)
+
+workflow_nodes <- data.frame(
+  id = c(
+    "libraries", "fastq_qc", "star_index", "star_align", "align_qc",
+    "gene_counts", "merge_counts", "remove_rrna", "count_qc",
+    "deseq2", "annotation", "figures"
+  ),
+  lane = c(rep("HPC preprocessing", 6), rep("workflowR analysis", 6)),
+  x = c(1, 2.35, 3.7, 5.05, 6.4, 7.75, 1.6, 3.0, 4.4, 5.8, 7.2, 8.6),
+  y = c(rep(2.35, 6), rep(0.85, 6)),
+  title = c(
+    "RNA libraries", "FASTQ QC", "STAR index", "STAR alignment",
+    "Alignment QC", "Gene counts", "Merge counts", "Remove rRNA loci",
+    "Count QC", "DESeq2 models", "eggNOG enrichment", "Publication figures"
+  ),
+  detail = c(
+    "fat body; RiboZero", "read quality reports",
+    "genome + GFF", "reads to genome",
+    "mapping summaries", "per-sample count files",
+    "master count matrix", "gregaria rRNA list",
+    "depth, VST, PCA", "diet and infection",
+    "GO and KEGG themes", "curated panels"
+  ),
+  group = c(
+    "wet_lab", "hpc", "hpc", "hpc", "hpc", "hpc",
+    "data", "data", "analysis", "analysis", "annotation", "figures"
+  ),
+  stringsAsFactors = FALSE
+)
+
+workflow_nodes$label <- paste0(workflow_nodes$title, "\n", workflow_nodes$detail)
+
+workflow_edges <- data.frame(
+  from = c(
+    "libraries", "fastq_qc", "star_index", "star_align", "align_qc",
+    "gene_counts", "merge_counts", "remove_rrna", "count_qc",
+    "deseq2", "annotation"
+  ),
+  to = c(
+    "fastq_qc", "star_index", "star_align", "align_qc", "gene_counts",
+    "merge_counts", "remove_rrna", "count_qc", "deseq2",
+    "annotation", "figures"
+  ),
+  stringsAsFactors = FALSE
+)
+
+edge_df <- merge(workflow_edges, workflow_nodes[, c("id", "x", "y")],
+                 by.x = "from", by.y = "id")
+edge_df <- merge(edge_df, workflow_nodes[, c("id", "x", "y")],
+                 by.x = "to", by.y = "id", suffixes = c("_from", "_to"))
+
+node_width <- 1.06
+node_height <- 0.58
+
+p_workflow <- ggplot() +
+  annotate("rect", xmin = 0.28, xmax = 8.48, ymin = 1.88, ymax = 2.82,
+           fill = "#F5F0FA", color = NA) +
+  annotate("rect", xmin = 0.28, xmax = 9.32, ymin = 0.38, ymax = 1.32,
+           fill = "#F3F7F2", color = NA) +
+  annotate("text", x = 0.35, y = 2.74, label = "HPC preprocessing",
+           hjust = 0, size = 4.2, fontface = "bold", color = "#4B3A5A") +
+  annotate("text", x = 0.35, y = 1.24, label = "workflowR analysis",
+           hjust = 0, size = 4.2, fontface = "bold", color = "#2F4C39") +
+  geom_segment(
+    data = edge_df,
+    aes(x = x_from + node_width / 2, y = y_from,
+        xend = x_to - node_width / 2, yend = y_to),
+    arrow = arrow(length = unit(0.18, "cm"), type = "closed"),
+    linewidth = 0.55,
+    lineend = "round",
+    color = "#3D4148"
+  ) +
+  geom_rect(
+    data = workflow_nodes,
+    aes(xmin = x - node_width / 2, xmax = x + node_width / 2,
+        ymin = y - node_height / 2, ymax = y + node_height / 2,
+        fill = group),
+    color = "white",
+    linewidth = 1
+  ) +
+  geom_text(
+    data = workflow_nodes,
+    aes(x = x, y = y, label = label),
+    size = 3.15,
+    lineheight = 0.9,
+    color = "#1F2528"
+  ) +
+  scale_fill_manual(values = c(
+    wet_lab = "#F6B26B",
+    hpc = "#B998D9",
+    data = "#8BBE8B",
+    analysis = "#77A7C8",
+    annotation = "#E59BB1",
+    figures = "#F0C36A"
+  )) +
+  coord_cartesian(xlim = c(0.15, 9.55), ylim = c(0.2, 3.0), clip = "off") +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.margin = margin(10, 20, 10, 20))
+
+p_workflow
+ggsave(file.path(out_dir, "hpc_to_workflowr_workflow.png"),
+       p_workflow, width = 12, height = 6, dpi = 300)
+```
+
+The important handoff for this repository is the count matrix. The original
+STAR alignment and gene-counting steps produce per-sample count files; the
+workflowR pages then merge and check those counts, remove the loci listed in
+`gregaria_rrna_list.txt`, and use the rRNA-filtered matrix for QC,
+differential expression, annotation enrichment, and publication figures.
 
 ## Rerun commands
 

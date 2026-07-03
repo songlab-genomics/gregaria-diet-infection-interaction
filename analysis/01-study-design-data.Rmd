@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   reference_gff: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   output_tag: "study-design-data"
 ---

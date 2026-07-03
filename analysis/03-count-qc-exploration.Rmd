@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   min_total_count: 10
   top_variable_genes: 500
   output_tag: "count-qc-exploration"

@@ -10,7 +10,7 @@ output:
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
   metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -166,12 +166,30 @@ parse_cds_gene_bridge <- function(path) {
     dplyr::distinct()
 }
 
+parse_gene_biotypes <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2],
+      gene_description = stringr::str_match(attributes, "description=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
 eggnog <- read_emapper(eggnog_file)
 protein_to_gene <- parse_cds_gene_bridge(gff_file)
+gene_biotypes <- parse_gene_biotypes(gff_file)
 
 annotation <- eggnog |>
   dplyr::left_join(protein_to_gene, by = "protein_id") |>
   dplyr::filter(!is.na(gene_id)) |>
+  dplyr::left_join(gene_biotypes, by = "gene_id") |>
   dplyr::distinct(gene_id, .keep_all = TRUE)
 
 counts_raw <- read.csv(counts_file, check.names = FALSE)
@@ -182,6 +200,7 @@ annotation <- annotation |>
 annotation_summary <- data.frame(
   genes_in_count_matrix = length(gene_universe),
   annotated_genes_lifted_to_LOC = dplyr::n_distinct(annotation$gene_id),
+  genes_with_gff_biotype = sum(gene_universe %in% gene_biotypes$gene_id),
   genes_with_GO = sum(annotation$GOs != "-" & annotation$GOs != ""),
   genes_with_KEGG_KO = sum(annotation$KEGG_ko != "-" & annotation$KEGG_ko != ""),
   genes_with_KEGG_pathway = sum(annotation$KEGG_Pathway != "-" &
@@ -279,6 +298,17 @@ result_files <- list.files(file.path(project_dir, params$latest_results_root),
 result_files <- result_files[grepl("DESeq2_|all_.*results|coefficients",
                                    basename(result_files))]
 
+result_file_info <- data.frame(
+  file = result_files,
+  short_name = basename(result_files),
+  modified = file.info(result_files)$mtime,
+  stringsAsFactors = FALSE
+)
+result_file_info <- result_file_info[order(result_file_info$short_name,
+                                           -as.numeric(result_file_info$modified)), ]
+result_file_info <- result_file_info[!duplicated(result_file_info$short_name), ]
+result_files <- result_file_info$file
+
 read_deg_table <- function(path) {
   tab <- read.csv(path, check.names = FALSE)
   gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
@@ -316,6 +346,147 @@ deg_set_summary <- deg_long |>
 
 DT::datatable(deg_set_summary, options = list(pageLength = 15))
 write.csv(deg_set_summary, file.path(out_dir, "enrichment_deg_set_summary.csv"),
+          row.names = FALSE)
+```
+
+## Coding and long non-coding DEG classes
+
+This section mirrors the AGY DEG magnitude figure. It asks whether each DEG set
+is mostly protein-coding, long non-coding RNA, or another/unknown gene class.
+Gene class comes from `gene_biotype` in the local GFF, while DEG direction comes
+from the current DESeq2 result tables.
+
+```{r coding-lncrna-deg-summary, fig.height=7, fig.width=11}
+classify_gene <- function(x) {
+  dplyr::case_when(
+    x == "protein_coding" ~ "Coding genes",
+    x == "lncRNA" ~ "Long non-coding RNA",
+    is.na(x) ~ "Other / unknown",
+    TRUE ~ "Other non-coding"
+  )
+}
+
+deg_biotype <- deg_long |>
+  dplyr::filter(direction %in% c("UP", "DOWN")) |>
+  dplyr::left_join(gene_biotypes, by = "gene_id") |>
+  dplyr::mutate(
+    Gene_class = classify_gene(gene_biotype),
+    Direction = dplyr::recode(direction,
+                              UP = "Higher in numerator/infected",
+                              DOWN = "Higher in denominator/control"),
+    signed_direction = ifelse(direction == "UP", 1, -1),
+    source_label = stringr::str_replace_all(source, "_", " ")
+  ) |>
+  dplyr::distinct(source, source_label, direction, Direction,
+                  gene_id, Gene_class, .keep_all = TRUE)
+
+focus_sources <- c(
+  "all_infection_within_diet_results",
+  "DESeq2_infected_vs_control_diet_33",
+  "DESeq2_infected_vs_control_diet_50",
+  "DESeq2_infected_vs_control_diet_83",
+  "all_model_coefficients",
+  "interaction_coefficients",
+  "all_diet_pairwise_results"
+)
+
+deg_biotype_focus <- deg_biotype |>
+  dplyr::filter(source %in% focus_sources)
+
+biotype_counts <- deg_biotype_focus |>
+  dplyr::count(source, source_label, direction, Direction, Gene_class,
+               name = "n_genes") |>
+  dplyr::mutate(
+    signed_n = ifelse(direction == "UP", n_genes, -n_genes),
+    DEG_class = paste(Direction, Gene_class, sep = " - ")
+  )
+
+source_totals <- biotype_counts |>
+  dplyr::group_by(source, source_label, Direction, direction) |>
+  dplyr::summarise(
+    n_genes = sum(n_genes),
+    signed_n = ifelse(dplyr::first(direction) == "UP",
+                      sum(n_genes), -sum(n_genes)),
+    .groups = "drop"
+  )
+
+source_order <- biotype_counts |>
+  dplyr::group_by(source_label) |>
+  dplyr::summarise(total = sum(n_genes), .groups = "drop") |>
+  dplyr::arrange(total) |>
+  dplyr::pull(source_label)
+
+biotype_counts$source_label <- factor(biotype_counts$source_label,
+                                      levels = source_order)
+source_totals$source_label <- factor(source_totals$source_label,
+                                     levels = source_order)
+
+class_colors <- c(
+  "Higher in numerator/infected - Coding genes" = "#8B1E3F",
+  "Higher in numerator/infected - Long non-coding RNA" = "#D98BA3",
+  "Higher in numerator/infected - Other non-coding" = "#F2B8A0",
+  "Higher in numerator/infected - Other / unknown" = "#E5B567",
+  "Higher in denominator/control - Coding genes" = "#1F5F8B",
+  "Higher in denominator/control - Long non-coding RNA" = "#93B7D4",
+  "Higher in denominator/control - Other non-coding" = "#B8C7D9",
+  "Higher in denominator/control - Other / unknown" = "#C9CED6"
+)
+
+max_biotype <- max(abs(source_totals$signed_n), 1)
+source_totals$label_x <- ifelse(source_totals$signed_n >= 0,
+                                source_totals$signed_n + 0.04 * max_biotype,
+                                source_totals$signed_n - 0.04 * max_biotype)
+
+p_biotype <- ggplot2::ggplot(
+  biotype_counts,
+  ggplot2::aes(x = signed_n, y = source_label, fill = DEG_class)
+) +
+  ggplot2::geom_vline(xintercept = 0, color = "#374151", linewidth = 0.35) +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    data = source_totals,
+    ggplot2::aes(x = label_x, y = source_label, label = n_genes),
+    inherit.aes = FALSE,
+    size = 3,
+    fontface = "bold"
+  ) +
+  ggplot2::scale_x_continuous(labels = abs,
+                              limits = c(-1.2 * max_biotype,
+                                         1.2 * max_biotype)) +
+  ggplot2::scale_fill_manual(values = class_colors, drop = FALSE) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 8),
+    axis.text.y = ggplot2::element_text(size = 8)
+  ) +
+  ggplot2::labs(
+    title = "Coding and long non-coding RNA DEGs",
+    subtitle = "Dark = coding genes; lighter shades = lncRNA, other non-coding, or unknown biotype",
+    x = "Number of DEGs",
+    y = NULL
+  )
+
+p_biotype
+ggplot2::ggsave(file.path(out_dir, "coding_lncRNA_deg_barplot.png"),
+                p_biotype, width = 11, height = 7, dpi = 300)
+write.csv(biotype_counts,
+          file.path(out_dir, "coding_lncRNA_deg_counts.csv"),
+          row.names = FALSE)
+
+lncrna_deg_table <- deg_biotype |>
+  dplyr::filter(Gene_class == "Long non-coding RNA") |>
+  dplyr::left_join(annotation |>
+                     dplyr::select(gene_id, Preferred_name, Description,
+                                   GOs, KEGG_ko, KEGG_Pathway),
+                   by = "gene_id") |>
+  dplyr::arrange(source, direction, gene_id)
+
+DT::datatable(lncrna_deg_table,
+              options = list(pageLength = 10, scrollX = TRUE))
+write.csv(lncrna_deg_table,
+          file.path(out_dir, "lncRNA_deg_table.csv"),
           row.names = FALSE)
 ```
 

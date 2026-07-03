@@ -1,0 +1,871 @@
+"database","ID","Description","set","n_sets"
+"GO","GO:1901605","alpha-amino acid metabolic process","all_diet_pairwise_results__DOWN",5
+"GO","GO:0019752","carboxylic acid metabolic process","all_diet_pairwise_results__DOWN",6
+"GO","GO:0006520","amino acid metabolic process","all_diet_pairwise_results__DOWN",3
+"GO","GO:0006836","neurotransmitter transport","all_diet_pairwise_results__DOWN",2
+"GO","GO:0006082","organic acid metabolic process","all_diet_pairwise_results__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","all_diet_pairwise_results__DOWN",6
+"GO","GO:0001505","GO:0001505","all_diet_pairwise_results__DOWN",2
+"GO","GO:0055114","GO:0055114","all_infection_within_diet_results__DOWN",3
+"GO","GO:0016491","oxidoreductase activity","all_infection_within_diet_results__DOWN",4
+"GO","GO:0016616","oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor","all_infection_within_diet_results__DOWN",4
+"GO","GO:0016614","oxidoreductase activity, acting on CH-OH group of donors","all_infection_within_diet_results__DOWN",4
+"GO","GO:0005576","extracellular region","all_infection_within_diet_results__DOWN",7
+"GO","GO:0019752","carboxylic acid metabolic process","all_infection_within_diet_results__DOWN",6
+"GO","GO:0006082","organic acid metabolic process","all_infection_within_diet_results__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","all_infection_within_diet_results__DOWN",6
+"GO","GO:0004497","monooxygenase activity","all_infection_within_diet_results__DOWN",2
+"GO","GO:0044421","GO:0044421","all_infection_within_diet_results__DOWN",6
+"GO","GO:0044283","small molecule biosynthetic process","all_infection_within_diet_results__DOWN",2
+"GO","GO:0005576","extracellular region","all_infection_within_diet_results__UP",7
+"GO","GO:0005615","extracellular space","all_infection_within_diet_results__UP",5
+"GO","GO:0009617","response to bacterium","all_infection_within_diet_results__UP",5
+"GO","GO:0044421","GO:0044421","all_infection_within_diet_results__UP",6
+"GO","GO:0097367","carbohydrate derivative binding","all_infection_within_diet_results__UP",5
+"GO","GO:0005539","glycosaminoglycan binding","all_infection_within_diet_results__UP",5
+"GO","GO:0006022","aminoglycan metabolic process","all_infection_within_diet_results__UP",5
+"GO","GO:0006026","aminoglycan catabolic process","all_infection_within_diet_results__UP",4
+"GO","GO:0009607","response to biotic stimulus","all_infection_within_diet_results__UP",5
+"GO","GO:0043207","response to external biotic stimulus","all_infection_within_diet_results__UP",5
+"GO","GO:0051707","response to other organism","all_infection_within_diet_results__UP",5
+"GO","GO:0042834","peptidoglycan binding","all_infection_within_diet_results__UP",5
+"GO","GO:0000270","peptidoglycan metabolic process","all_infection_within_diet_results__UP",5
+"GO","GO:0009253","peptidoglycan catabolic process","all_infection_within_diet_results__UP",5
+"GO","GO:0030203","glycosaminoglycan metabolic process","all_infection_within_diet_results__UP",5
+"GO","GO:1901136","carbohydrate derivative catabolic process","all_infection_within_diet_results__UP",4
+"GO","GO:1901565","GO:1901565","all_infection_within_diet_results__UP",4
+"GO","GO:0051051","negative regulation of transport","all_infection_within_diet_results__UP",5
+"GO","GO:0006027","glycosaminoglycan catabolic process","all_infection_within_diet_results__UP",5
+"GO","GO:0032387","negative regulation of intracellular transport","all_infection_within_diet_results__UP",4
+"GO","GO:0031648","protein destabilization","all_infection_within_diet_results__UP",4
+"GO","GO:0071630","nuclear protein quality control by the ubiquitin-proteasome system","all_infection_within_diet_results__UP",4
+"GO","GO:1901044","GO:1901044","all_infection_within_diet_results__UP",4
+"GO","GO:0042308","negative regulation of protein import into nucleus","all_infection_within_diet_results__UP",4
+"GO","GO:1900181","negative regulation of protein localization to nucleus","all_infection_within_diet_results__UP",4
+"GO","GO:1904590","negative regulation of protein import","all_infection_within_diet_results__UP",4
+"GO","GO:0006952","defense response","all_infection_within_diet_results__UP",5
+"GO","GO:0004866","endopeptidase inhibitor activity","all_infection_within_diet_results__UP",5
+"GO","GO:0010466","negative regulation of peptidase activity","all_infection_within_diet_results__UP",5
+"GO","GO:0010951","negative regulation of endopeptidase activity","all_infection_within_diet_results__UP",5
+"GO","GO:0030414","peptidase inhibitor activity","all_infection_within_diet_results__UP",5
+"GO","GO:0051865","protein autoubiquitination","all_infection_within_diet_results__UP",4
+"GO","GO:0046823","negative regulation of nucleocytoplasmic transport","all_infection_within_diet_results__UP",4
+"GO","GO:0051788","response to misfolded protein","all_infection_within_diet_results__UP",4
+"GO","GO:0071218","cellular response to misfolded protein","all_infection_within_diet_results__UP",4
+"GO","GO:0090317","negative regulation of intracellular protein transport","all_infection_within_diet_results__UP",4
+"GO","GO:0006515","protein quality control for misfolded or incompletely synthesized proteins","all_infection_within_diet_results__UP",4
+"GO","GO:0042306","regulation of protein import into nucleus","all_infection_within_diet_results__UP",4
+"GO","GO:1903828","negative regulation of protein localization","all_infection_within_diet_results__UP",4
+"GO","GO:1904589","regulation of protein import","all_infection_within_diet_results__UP",4
+"GO","GO:0051224","negative regulation of protein transport","all_infection_within_diet_results__UP",4
+"GO","GO:1904950","negative regulation of establishment of protein localization","all_infection_within_diet_results__UP",4
+"GO","GO:0042742","defense response to bacterium","all_infection_within_diet_results__UP",5
+"GO","GO:0045879","negative regulation of smoothened signaling pathway","all_infection_within_diet_results__UP",4
+"GO","GO:1900180","regulation of protein localization to nucleus","all_infection_within_diet_results__UP",4
+"GO","GO:0061135","endopeptidase regulator activity","all_infection_within_diet_results__UP",4
+"GO","GO:0007367","segment polarity determination","all_infection_within_diet_results__UP",4
+"GO","GO:0050829","defense response to Gram-negative bacterium","all_infection_within_diet_results__UP",4
+"GO","GO:0019005","SCF ubiquitin ligase complex","all_infection_within_diet_results__UP",4
+"GO","GO:0009057","macromolecule catabolic process","all_infection_within_diet_results__UP",4
+"GO","GO:0046330","positive regulation of JNK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0007365","periodic partitioning","all_infection_within_diet_results__UP",4
+"GO","GO:0035966","response to topologically incorrect protein","all_infection_within_diet_results__UP",4
+"GO","GO:0035967","cellular response to topologically incorrect protein","all_infection_within_diet_results__UP",4
+"GO","GO:0046822","regulation of nucleocytoplasmic transport","all_infection_within_diet_results__UP",4
+"GO","GO:0032874","positive regulation of stress-activated MAPK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0050776","regulation of immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0070304","positive regulation of stress-activated protein kinase signaling cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0009880","embryonic pattern specification","all_infection_within_diet_results__UP",4
+"GO","GO:0050830","defense response to Gram-positive bacterium","all_infection_within_diet_results__UP",3
+"GO","GO:0061134","peptidase regulator activity","all_infection_within_diet_results__UP",4
+"GO","GO:0022857","transmembrane transporter activity","all_infection_within_diet_results__UP",4
+"GO","GO:0080134","regulation of response to stress","all_infection_within_diet_results__UP",5
+"GO","GO:0031226","GO:0031226","all_infection_within_diet_results__UP",4
+"GO","GO:0009611","response to wounding","all_infection_within_diet_results__UP",3
+"GO","GO:0033157","regulation of intracellular protein transport","all_infection_within_diet_results__UP",4
+"GO","GO:0030162","regulation of proteolysis","all_infection_within_diet_results__UP",4
+"GO","GO:0002682","regulation of immune system process","all_infection_within_diet_results__UP",4
+"GO","GO:0043410","positive regulation of MAPK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0005887","GO:0005887","all_infection_within_diet_results__UP",4
+"GO","GO:0008589","regulation of smoothened signaling pathway","all_infection_within_diet_results__UP",4
+"GO","GO:0045824","negative regulation of innate immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0071310","GO:0071310","all_infection_within_diet_results__UP",4
+"GO","GO:0032386","regulation of intracellular transport","all_infection_within_diet_results__UP",3
+"GO","GO:0042803","protein homodimerization activity","all_infection_within_diet_results__UP",4
+"GO","GO:0007350","blastoderm segmentation","all_infection_within_diet_results__UP",3
+"GO","GO:1902533","positive regulation of intracellular signal transduction","all_infection_within_diet_results__UP",4
+"GO","GO:0098542","defense response to other organism","all_infection_within_diet_results__UP",5
+"GO","GO:0045088","regulation of innate immune response","all_infection_within_diet_results__UP",5
+"GO","GO:0015711","organic anion transport","all_infection_within_diet_results__UP",4
+"GO","GO:0070887","cellular response to chemical stimulus","all_infection_within_diet_results__UP",3
+"GO","GO:0006955","immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0050777","negative regulation of immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0009967","positive regulation of signal transduction","all_infection_within_diet_results__UP",4
+"GO","GO:0031461","cullin-RING ubiquitin ligase complex","all_infection_within_diet_results__UP",4
+"GO","GO:0045861","negative regulation of proteolysis","all_infection_within_diet_results__UP",3
+"GO","GO:0042067","establishment of ommatidial planar polarity","all_infection_within_diet_results__UP",4
+"GO","GO:0000209","protein polyubiquitination","all_infection_within_diet_results__UP",3
+"GO","GO:0048584","positive regulation of response to stimulus","all_infection_within_diet_results__UP",4
+"GO","GO:0031401","positive regulation of protein modification process","all_infection_within_diet_results__UP",4
+"GO","GO:0031625","ubiquitin protein ligase binding","all_infection_within_diet_results__UP",4
+"GO","GO:0010033","GO:0010033","all_infection_within_diet_results__UP",3
+"GO","GO:0008514","GO:0008514","all_infection_within_diet_results__UP",4
+"GO","GO:0044389","ubiquitin-like protein ligase binding","all_infection_within_diet_results__UP",4
+"GO","GO:0046328","regulation of JNK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0006811","monoatomic ion transport","all_infection_within_diet_results__UP",3
+"GO","GO:0043408","regulation of MAPK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0045087","innate immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0010562","positive regulation of phosphorus metabolic process","all_infection_within_diet_results__UP",4
+"GO","GO:0045937","positive regulation of phosphate metabolic process","all_infection_within_diet_results__UP",4
+"GO","GO:0001934","positive regulation of protein phosphorylation","all_infection_within_diet_results__UP",4
+"GO","GO:0002684","positive regulation of immune system process","all_infection_within_diet_results__UP",4
+"GO","GO:0035282","segmentation","all_infection_within_diet_results__UP",2
+"GO","GO:1903827","GO:1903827","all_infection_within_diet_results__UP",3
+"GO","GO:0032872","regulation of stress-activated MAPK cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0070302","regulation of stress-activated protein kinase signaling cascade","all_infection_within_diet_results__UP",4
+"GO","GO:0051346","negative regulation of hydrolase activity","all_infection_within_diet_results__UP",3
+"GO","GO:0061783","peptidoglycan muralytic activity","all_infection_within_diet_results__UP",2
+"GO","GO:0046983","protein dimerization activity","all_infection_within_diet_results__UP",4
+"GO","GO:0042386","hemocyte differentiation","all_infection_within_diet_results__UP",4
+"GO","GO:0034220","monoatomic ion transmembrane transport","all_infection_within_diet_results__UP",3
+"GO","GO:0042327","positive regulation of phosphorylation","all_infection_within_diet_results__UP",4
+"GO","GO:0004553","hydrolase activity, hydrolyzing O-glycosyl compounds","all_infection_within_diet_results__UP",3
+"GO","GO:0098656","monoatomic anion transmembrane transport","all_infection_within_diet_results__UP",4
+"GO","GO:0015075","monoatomic ion transmembrane transporter activity","all_infection_within_diet_results__UP",3
+"GO","GO:0043065","positive regulation of apoptotic process","all_infection_within_diet_results__UP",4
+"GO","GO:0042802","identical protein binding","all_infection_within_diet_results__UP",3
+"GO","GO:0000151","ubiquitin ligase complex","all_infection_within_diet_results__UP",3
+"GO","GO:0031347","regulation of defense response","all_infection_within_diet_results__UP",4
+"GO","GO:0097164","GO:0097164","all_infection_within_diet_results__UP",3
+"GO","GO:0010647","positive regulation of cell communication","all_infection_within_diet_results__UP",4
+"GO","GO:0023056","positive regulation of signaling","all_infection_within_diet_results__UP",4
+"GO","GO:0003333","amino acid transmembrane transport","all_infection_within_diet_results__UP",3
+"GO","GO:0010942","GO:0010942","all_infection_within_diet_results__UP",3
+"GO","GO:0002376","immune system process","all_infection_within_diet_results__UP",4
+"GO","GO:0006865","amino acid transport","all_infection_within_diet_results__UP",3
+"GO","GO:0007442","hindgut morphogenesis","all_infection_within_diet_results__UP",4
+"GO","GO:0061525","hindgut development","all_infection_within_diet_results__UP",4
+"GO","GO:0002683","negative regulation of immune system process","all_infection_within_diet_results__UP",4
+"GO","GO:0052548","regulation of endopeptidase activity","all_infection_within_diet_results__UP",3
+"GO","GO:0016798","hydrolase activity, acting on glycosyl bonds","all_infection_within_diet_results__UP",3
+"GO","GO:0043068","positive regulation of programmed cell death","all_infection_within_diet_results__UP",4
+"GO","GO:0031647","regulation of protein stability","all_infection_within_diet_results__UP",3
+"GO","GO:0042136","GO:0042136","all_infection_within_diet_results__UP",2
+"GO","GO:0042133","GO:0042133","all_infection_within_diet_results__UP",2
+"GO","GO:0051223","regulation of protein transport","all_infection_within_diet_results__UP",3
+"GO","GO:0003002","regionalization","all_infection_within_diet_results__UP",3
+"GO","GO:0070201","regulation of establishment of protein localization","all_infection_within_diet_results__UP",3
+"GO","GO:0051603","GO:0051603","all_infection_within_diet_results__UP",3
+"GO","GO:0006576","biogenic amine metabolic process","all_infection_within_diet_results__UP",3
+"GO","GO:0009308","amine metabolic process","all_infection_within_diet_results__UP",3
+"GO","GO:0031348","negative regulation of defense response","all_infection_within_diet_results__UP",2
+"GO","GO:0044106","GO:0044106","all_infection_within_diet_results__UP",3
+"GO","GO:0044257","GO:0044257","all_infection_within_diet_results__UP",3
+"GO","GO:0061057","peptidoglycan recognition protein signaling pathway","all_infection_within_diet_results__UP",5
+"GO","GO:0007389","pattern specification process","all_infection_within_diet_results__UP",2
+"GO","GO:0048565","digestive tract development","all_infection_within_diet_results__UP",2
+"GO","GO:0055123","digestive system development","all_infection_within_diet_results__UP",2
+"GO","GO:0090087","regulation of peptide transport","all_infection_within_diet_results__UP",3
+"GO","GO:0006820","monoatomic anion transport","all_infection_within_diet_results__UP",3
+"GO","GO:0015562","efflux transmembrane transporter activity","all_infection_within_diet_results__UP",3
+"GO","GO:0001745","compound eye morphogenesis","all_infection_within_diet_results__UP",3
+"GO","GO:0000041","transition metal ion transport","all_infection_within_diet_results__UP",2
+"GO","GO:0010631","epithelial cell migration","all_infection_within_diet_results__UP",2
+"GO","GO:0015171","amino acid transmembrane transporter activity","all_infection_within_diet_results__UP",3
+"GO","GO:0090132","epithelium migration","all_infection_within_diet_results__UP",2
+"GO","GO:0001736","establishment of planar polarity","all_infection_within_diet_results__UP",2
+"GO","GO:0007164","establishment of tissue polarity","all_infection_within_diet_results__UP",2
+"GO","GO:0007169","cell surface receptor protein tyrosine kinase signaling pathway","all_infection_within_diet_results__UP",2
+"GO","GO:0008509","monoatomic anion transmembrane transporter activity","all_infection_within_diet_results__UP",3
+"GO","GO:0009790","embryo development","all_infection_within_diet_results__UP",3
+"GO","GO:0052547","regulation of peptidase activity","all_infection_within_diet_results__UP",2
+"GO","GO:0030163","protein catabolic process","all_infection_within_diet_results__UP",2
+"GO","GO:0008061","chitin binding","all_infection_within_diet_results__UP",3
+"GO","GO:0090130","tissue migration","all_infection_within_diet_results__UP",2
+"GO","GO:0050778","positive regulation of immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0048592","eye morphogenesis","all_infection_within_diet_results__UP",2
+"GO","GO:0090596","sensory organ morphogenesis","all_infection_within_diet_results__UP",2
+"GO","GO:0048585","negative regulation of response to stimulus","all_infection_within_diet_results__UP",2
+"GO","GO:0007427","epithelial cell migration, open tracheal system","all_infection_within_diet_results__UP",2
+"GO","GO:0016830","carbon-carbon lyase activity","all_infection_within_diet_results__UP",2
+"GO","GO:0001667","ameboidal-type cell migration","all_infection_within_diet_results__UP",2
+"GO","GO:0048546","digestive tract morphogenesis","all_infection_within_diet_results__UP",2
+"GO","GO:1901617","GO:1901617","all_infection_within_diet_results__UP",2
+"GO","GO:0004568","chitinase activity","all_infection_within_diet_results__UP",3
+"GO","GO:0006032","chitin catabolic process","all_infection_within_diet_results__UP",3
+"GO","GO:0080135","regulation of cellular response to stress","all_infection_within_diet_results__UP",2
+"GO","GO:0002759","regulation of antimicrobial humoral response","all_infection_within_diet_results__UP",4
+"GO","GO:0002920","regulation of humoral immune response","all_infection_within_diet_results__UP",4
+"GO","GO:0043161","proteasome-mediated ubiquitin-dependent protein catabolic process","all_infection_within_diet_results__UP",2
+"GO","GO:0017144","GO:0017144","all_infection_within_diet_results__UP",3
+"GO","GO:0005576","extracellular region","all_model_coefficients__DOWN",7
+"GO","GO:0016491","oxidoreductase activity","all_model_coefficients__DOWN",4
+"GO","GO:0044421","GO:0044421","all_model_coefficients__DOWN",6
+"GO","GO:0097367","carbohydrate derivative binding","all_model_coefficients__UP",5
+"GO","GO:0005539","glycosaminoglycan binding","all_model_coefficients__UP",5
+"GO","GO:0006026","aminoglycan catabolic process","all_model_coefficients__UP",4
+"GO","GO:0009617","response to bacterium","all_model_coefficients__UP",5
+"GO","GO:0042834","peptidoglycan binding","all_model_coefficients__UP",5
+"GO","GO:0000270","peptidoglycan metabolic process","all_model_coefficients__UP",5
+"GO","GO:0009253","peptidoglycan catabolic process","all_model_coefficients__UP",5
+"GO","GO:0006022","aminoglycan metabolic process","all_model_coefficients__UP",5
+"GO","GO:0006027","glycosaminoglycan catabolic process","all_model_coefficients__UP",5
+"GO","GO:1901136","carbohydrate derivative catabolic process","all_model_coefficients__UP",4
+"GO","GO:1901565","GO:1901565","all_model_coefficients__UP",4
+"GO","GO:0006952","defense response","all_model_coefficients__UP",5
+"GO","GO:0005576","extracellular region","all_model_coefficients__UP",7
+"GO","GO:0009607","response to biotic stimulus","all_model_coefficients__UP",5
+"GO","GO:0043207","response to external biotic stimulus","all_model_coefficients__UP",5
+"GO","GO:0051707","response to other organism","all_model_coefficients__UP",5
+"GO","GO:0030203","glycosaminoglycan metabolic process","all_model_coefficients__UP",5
+"GO","GO:0042742","defense response to bacterium","all_model_coefficients__UP",5
+"GO","GO:0031648","protein destabilization","all_model_coefficients__UP",4
+"GO","GO:0031226","GO:0031226","all_model_coefficients__UP",4
+"GO","GO:0071630","nuclear protein quality control by the ubiquitin-proteasome system","all_model_coefficients__UP",4
+"GO","GO:1901044","GO:1901044","all_model_coefficients__UP",4
+"GO","GO:0022857","transmembrane transporter activity","all_model_coefficients__UP",4
+"GO","GO:0042308","negative regulation of protein import into nucleus","all_model_coefficients__UP",4
+"GO","GO:1900181","negative regulation of protein localization to nucleus","all_model_coefficients__UP",4
+"GO","GO:1904590","negative regulation of protein import","all_model_coefficients__UP",4
+"GO","GO:0051865","protein autoubiquitination","all_model_coefficients__UP",4
+"GO","GO:0005887","GO:0005887","all_model_coefficients__UP",4
+"GO","GO:0046823","negative regulation of nucleocytoplasmic transport","all_model_coefficients__UP",4
+"GO","GO:0051788","response to misfolded protein","all_model_coefficients__UP",4
+"GO","GO:0071218","cellular response to misfolded protein","all_model_coefficients__UP",4
+"GO","GO:0090317","negative regulation of intracellular protein transport","all_model_coefficients__UP",4
+"GO","GO:0005615","extracellular space","all_model_coefficients__UP",5
+"GO","GO:0009057","macromolecule catabolic process","all_model_coefficients__UP",4
+"GO","GO:0017144","GO:0017144","all_model_coefficients__UP",3
+"GO","GO:0097164","GO:0097164","all_model_coefficients__UP",3
+"GO","GO:0006820","monoatomic anion transport","all_model_coefficients__UP",3
+"GO","GO:0006515","protein quality control for misfolded or incompletely synthesized proteins","all_model_coefficients__UP",4
+"GO","GO:0006811","monoatomic ion transport","all_model_coefficients__UP",3
+"GO","GO:0050829","defense response to Gram-negative bacterium","all_model_coefficients__UP",4
+"GO","GO:0042306","regulation of protein import into nucleus","all_model_coefficients__UP",4
+"GO","GO:1903828","negative regulation of protein localization","all_model_coefficients__UP",4
+"GO","GO:1904589","regulation of protein import","all_model_coefficients__UP",4
+"GO","GO:0051051","negative regulation of transport","all_model_coefficients__UP",5
+"GO","GO:0032387","negative regulation of intracellular transport","all_model_coefficients__UP",4
+"GO","GO:0051224","negative regulation of protein transport","all_model_coefficients__UP",4
+"GO","GO:1904950","negative regulation of establishment of protein localization","all_model_coefficients__UP",4
+"GO","GO:0050776","regulation of immune response","all_model_coefficients__UP",4
+"GO","GO:1900180","regulation of protein localization to nucleus","all_model_coefficients__UP",4
+"GO","GO:0019005","SCF ubiquitin ligase complex","all_model_coefficients__UP",4
+"GO","GO:0015711","organic anion transport","all_model_coefficients__UP",4
+"GO","GO:0098656","monoatomic anion transmembrane transport","all_model_coefficients__UP",4
+"GO","GO:0098542","defense response to other organism","all_model_coefficients__UP",5
+"GO","GO:0080134","regulation of response to stress","all_model_coefficients__UP",5
+"GO","GO:0045087","innate immune response","all_model_coefficients__UP",4
+"GO","GO:0006955","immune response","all_model_coefficients__UP",4
+"GO","GO:0045879","negative regulation of smoothened signaling pathway","all_model_coefficients__UP",4
+"GO","GO:0046330","positive regulation of JNK cascade","all_model_coefficients__UP",4
+"GO","GO:0034220","monoatomic ion transmembrane transport","all_model_coefficients__UP",3
+"GO","GO:0008514","GO:0008514","all_model_coefficients__UP",4
+"GO","GO:0035966","response to topologically incorrect protein","all_model_coefficients__UP",4
+"GO","GO:0035967","cellular response to topologically incorrect protein","all_model_coefficients__UP",4
+"GO","GO:0046822","regulation of nucleocytoplasmic transport","all_model_coefficients__UP",4
+"GO","GO:0043410","positive regulation of MAPK cascade","all_model_coefficients__UP",4
+"GO","GO:0044421","GO:0044421","all_model_coefficients__UP",6
+"GO","GO:0032874","positive regulation of stress-activated MAPK cascade","all_model_coefficients__UP",4
+"GO","GO:0070304","positive regulation of stress-activated protein kinase signaling cascade","all_model_coefficients__UP",4
+"GO","GO:0003333","amino acid transmembrane transport","all_model_coefficients__UP",3
+"GO","GO:0015075","monoatomic ion transmembrane transporter activity","all_model_coefficients__UP",3
+"GO","GO:0042386","hemocyte differentiation","all_model_coefficients__UP",4
+"GO","GO:0050830","defense response to Gram-positive bacterium","all_model_coefficients__UP",3
+"GO","GO:0061134","peptidase regulator activity","all_model_coefficients__UP",4
+"GO","GO:0002376","immune system process","all_model_coefficients__UP",4
+"GO","GO:0006865","amino acid transport","all_model_coefficients__UP",3
+"GO","GO:0030162","regulation of proteolysis","all_model_coefficients__UP",4
+"GO","GO:0009611","response to wounding","all_model_coefficients__UP",3
+"GO","GO:0033157","regulation of intracellular protein transport","all_model_coefficients__UP",4
+"GO","GO:0045088","regulation of innate immune response","all_model_coefficients__UP",5
+"GO","GO:0002682","regulation of immune system process","all_model_coefficients__UP",4
+"GO","GO:0031461","cullin-RING ubiquitin ligase complex","all_model_coefficients__UP",4
+"GO","GO:0004866","endopeptidase inhibitor activity","all_model_coefficients__UP",5
+"GO","GO:0010466","negative regulation of peptidase activity","all_model_coefficients__UP",5
+"GO","GO:0010951","negative regulation of endopeptidase activity","all_model_coefficients__UP",5
+"GO","GO:0030414","peptidase inhibitor activity","all_model_coefficients__UP",5
+"GO","GO:0046148","pigment biosynthetic process","all_model_coefficients__UP",2
+"GO","GO:0008509","monoatomic anion transmembrane transporter activity","all_model_coefficients__UP",3
+"GO","GO:0042440","pigment metabolic process","all_model_coefficients__UP",2
+"GO","GO:0042133","GO:0042133","all_model_coefficients__UP",2
+"GO","GO:0042803","protein homodimerization activity","all_model_coefficients__UP",4
+"GO","GO:0042136","GO:0042136","all_model_coefficients__UP",2
+"GO","GO:0045824","negative regulation of innate immune response","all_model_coefficients__UP",4
+"GO","GO:0043408","regulation of MAPK cascade","all_model_coefficients__UP",4
+"GO","GO:0000209","protein polyubiquitination","all_model_coefficients__UP",3
+"GO","GO:0006576","biogenic amine metabolic process","all_model_coefficients__UP",3
+"GO","GO:0009308","amine metabolic process","all_model_coefficients__UP",3
+"GO","GO:0044106","GO:0044106","all_model_coefficients__UP",3
+"GO","GO:0050777","negative regulation of immune response","all_model_coefficients__UP",4
+"GO","GO:0002684","positive regulation of immune system process","all_model_coefficients__UP",4
+"GO","GO:0042802","identical protein binding","all_model_coefficients__UP",3
+"GO","GO:0031401","positive regulation of protein modification process","all_model_coefficients__UP",4
+"GO","GO:0042067","establishment of ommatidial planar polarity","all_model_coefficients__UP",4
+"GO","GO:0061057","peptidoglycan recognition protein signaling pathway","all_model_coefficients__UP",5
+"GO","GO:0061135","endopeptidase regulator activity","all_model_coefficients__UP",4
+"GO","GO:0031347","regulation of defense response","all_model_coefficients__UP",4
+"GO","GO:0015171","amino acid transmembrane transporter activity","all_model_coefficients__UP",3
+"GO","GO:0031625","ubiquitin protein ligase binding","all_model_coefficients__UP",4
+"GO","GO:0071310","GO:0071310","all_model_coefficients__UP",4
+"GO","GO:0007367","segment polarity determination","all_model_coefficients__UP",4
+"GO","GO:0044389","ubiquitin-like protein ligase binding","all_model_coefficients__UP",4
+"GO","GO:0048584","positive regulation of response to stimulus","all_model_coefficients__UP",4
+"GO","GO:0004553","hydrolase activity, hydrolyzing O-glycosyl compounds","all_model_coefficients__UP",3
+"GO","GO:0046328","regulation of JNK cascade","all_model_coefficients__UP",4
+"GO","GO:0051223","regulation of protein transport","all_model_coefficients__UP",3
+"GO","GO:0008589","regulation of smoothened signaling pathway","all_model_coefficients__UP",4
+"GO","GO:0070201","regulation of establishment of protein localization","all_model_coefficients__UP",3
+"GO","GO:0009967","positive regulation of signal transduction","all_model_coefficients__UP",4
+"GO","GO:0032872","regulation of stress-activated MAPK cascade","all_model_coefficients__UP",4
+"GO","GO:0070302","regulation of stress-activated protein kinase signaling cascade","all_model_coefficients__UP",4
+"GO","GO:0008061","chitin binding","all_model_coefficients__UP",3
+"GO","GO:1901617","GO:1901617","all_model_coefficients__UP",2
+"GO","GO:0050778","positive regulation of immune response","all_model_coefficients__UP",4
+"GO","GO:1902533","positive regulation of intracellular signal transduction","all_model_coefficients__UP",4
+"GO","GO:0010942","GO:0010942","all_model_coefficients__UP",3
+"GO","GO:0009880","embryonic pattern specification","all_model_coefficients__UP",4
+"GO","GO:0010562","positive regulation of phosphorus metabolic process","all_model_coefficients__UP",4
+"GO","GO:0045937","positive regulation of phosphate metabolic process","all_model_coefficients__UP",4
+"GO","GO:0010647","positive regulation of cell communication","all_model_coefficients__UP",4
+"GO","GO:0023056","positive regulation of signaling","all_model_coefficients__UP",4
+"GO","GO:1903827","GO:1903827","all_model_coefficients__UP",3
+"GO","GO:0007442","hindgut morphogenesis","all_model_coefficients__UP",4
+"GO","GO:0061525","hindgut development","all_model_coefficients__UP",4
+"GO","GO:0090087","regulation of peptide transport","all_model_coefficients__UP",3
+"GO","GO:0002759","regulation of antimicrobial humoral response","all_model_coefficients__UP",4
+"GO","GO:0002920","regulation of humoral immune response","all_model_coefficients__UP",4
+"GO","GO:0032386","regulation of intracellular transport","all_model_coefficients__UP",3
+"GO","GO:0043065","positive regulation of apoptotic process","all_model_coefficients__UP",4
+"GO","GO:0001934","positive regulation of protein phosphorylation","all_model_coefficients__UP",4
+"GO","GO:0007365","periodic partitioning","all_model_coefficients__UP",4
+"GO","GO:0016798","hydrolase activity, acting on glycosyl bonds","all_model_coefficients__UP",3
+"GO","GO:0010033","GO:0010033","all_model_coefficients__UP",3
+"GO","GO:0070887","cellular response to chemical stimulus","all_model_coefficients__UP",3
+"GO","GO:0004568","chitinase activity","all_model_coefficients__UP",3
+"GO","GO:0006032","chitin catabolic process","all_model_coefficients__UP",3
+"GO","GO:0043068","positive regulation of programmed cell death","all_model_coefficients__UP",4
+"GO","GO:0002683","negative regulation of immune system process","all_model_coefficients__UP",4
+"GO","GO:0042327","positive regulation of phosphorylation","all_model_coefficients__UP",4
+"GO","GO:0046983","protein dimerization activity","all_model_coefficients__UP",4
+"GO","GO:0016831","carboxy-lyase activity","all_model_coefficients__UP",2
+"GO","GO:1901605","alpha-amino acid metabolic process","all_model_coefficients__UP",5
+"GO","GO:1903825","GO:1903825","all_model_coefficients__UP",2
+"GO","GO:1905039","carboxylic acid transmembrane transport","all_model_coefficients__UP",2
+"GO","GO:0000151","ubiquitin ligase complex","all_model_coefficients__UP",3
+"GO","GO:0015849","organic acid transport","all_model_coefficients__UP",2
+"GO","GO:0031647","regulation of protein stability","all_model_coefficients__UP",3
+"GO","GO:0046942","carboxylic acid transport","all_model_coefficients__UP",2
+"GO","GO:0030148","sphingolipid biosynthetic process","all_model_coefficients__UP",2
+"GO","GO:0046348","amino sugar catabolic process","all_model_coefficients__UP",2
+"GO","GO:1901072","glucosamine-containing compound catabolic process","all_model_coefficients__UP",2
+"GO","GO:1901681","sulfur compound binding","all_model_coefficients__UP",2
+"GO","GO:0001655","urogenital system development","all_model_coefficients__UP",2
+"GO","GO:0072001","renal system development","all_model_coefficients__UP",2
+"GO","GO:0001745","compound eye morphogenesis","all_model_coefficients__UP",3
+"GO","GO:0007166","cell surface receptor signaling pathway","all_model_coefficients__UP",2
+"GO","GO:0006836","neurotransmitter transport","DESeq2_33_vs_50__DOWN",2
+"GO","GO:0001505","GO:0001505","DESeq2_33_vs_50__DOWN",2
+"GO","GO:1901605","alpha-amino acid metabolic process","DESeq2_33_vs_83__DOWN",5
+"GO","GO:0019752","carboxylic acid metabolic process","DESeq2_33_vs_83__DOWN",6
+"GO","GO:0006082","organic acid metabolic process","DESeq2_33_vs_83__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","DESeq2_33_vs_83__DOWN",6
+"GO","GO:0006520","amino acid metabolic process","DESeq2_33_vs_83__DOWN",3
+"GO","GO:1901605","alpha-amino acid metabolic process","DESeq2_50_vs_83__DOWN",5
+"GO","GO:0006520","amino acid metabolic process","DESeq2_50_vs_83__DOWN",3
+"GO","GO:0019752","carboxylic acid metabolic process","DESeq2_50_vs_83__DOWN",6
+"GO","GO:0006082","organic acid metabolic process","DESeq2_50_vs_83__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","DESeq2_50_vs_83__DOWN",6
+"GO","GO:0055114","GO:0055114","DESeq2_infected_vs_control_diet_33__DOWN",3
+"GO","GO:0006082","organic acid metabolic process","DESeq2_infected_vs_control_diet_33__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","DESeq2_infected_vs_control_diet_33__DOWN",6
+"GO","GO:0019752","carboxylic acid metabolic process","DESeq2_infected_vs_control_diet_33__DOWN",6
+"GO","GO:0016491","oxidoreductase activity","DESeq2_infected_vs_control_diet_33__DOWN",4
+"GO","GO:0044283","small molecule biosynthetic process","DESeq2_infected_vs_control_diet_33__DOWN",2
+"GO","GO:0004497","monooxygenase activity","DESeq2_infected_vs_control_diet_33__DOWN",2
+"GO","GO:0016616","oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor","DESeq2_infected_vs_control_diet_33__DOWN",4
+"GO","GO:0016614","oxidoreductase activity, acting on CH-OH group of donors","DESeq2_infected_vs_control_diet_33__DOWN",4
+"GO","GO:0009617","response to bacterium","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0030203","glycosaminoglycan metabolic process","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0006952","defense response","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0005576","extracellular region","DESeq2_infected_vs_control_diet_33__UP",7
+"GO","GO:0009607","response to biotic stimulus","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0043207","response to external biotic stimulus","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0051707","response to other organism","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0042834","peptidoglycan binding","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0006022","aminoglycan metabolic process","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0042742","defense response to bacterium","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0005539","glycosaminoglycan binding","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0097367","carbohydrate derivative binding","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0000270","peptidoglycan metabolic process","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0009253","peptidoglycan catabolic process","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0006027","glycosaminoglycan catabolic process","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0006955","immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002682","regulation of immune system process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0098542","defense response to other organism","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:1901565","GO:1901565","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002376","immune system process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0080134","regulation of response to stress","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0044421","GO:0044421","DESeq2_infected_vs_control_diet_33__UP",6
+"GO","GO:0050776","regulation of immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0006026","aminoglycan catabolic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0048584","positive regulation of response to stimulus","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002684","positive regulation of immune system process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0005615","extracellular space","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0045087","innate immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0009057","macromolecule catabolic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0004866","endopeptidase inhibitor activity","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0010466","negative regulation of peptidase activity","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0010951","negative regulation of endopeptidase activity","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0030414","peptidase inhibitor activity","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0051865","protein autoubiquitination","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0051051","negative regulation of transport","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0009967","positive regulation of signal transduction","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031648","protein destabilization","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002759","regulation of antimicrobial humoral response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002920","regulation of humoral immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0050829","defense response to Gram-negative bacterium","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0061057","peptidoglycan recognition protein signaling pathway","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0061135","endopeptidase regulator activity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0071630","nuclear protein quality control by the ubiquitin-proteasome system","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1901044","GO:1901044","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0045879","negative regulation of smoothened signaling pathway","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0045088","regulation of innate immune response","DESeq2_infected_vs_control_diet_33__UP",5
+"GO","GO:0042308","negative regulation of protein import into nucleus","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1900181","negative regulation of protein localization to nucleus","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1904590","negative regulation of protein import","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031347","regulation of defense response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0010631","epithelial cell migration","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0046823","negative regulation of nucleocytoplasmic transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0051788","response to misfolded protein","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0071218","cellular response to misfolded protein","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0090317","negative regulation of intracellular protein transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0090132","epithelium migration","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0090130","tissue migration","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0006515","protein quality control for misfolded or incompletely synthesized proteins","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0001667","ameboidal-type cell migration","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0042306","regulation of protein import into nucleus","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1903828","negative regulation of protein localization","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1904589","regulation of protein import","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0022857","transmembrane transporter activity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0010647","positive regulation of cell communication","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0023056","positive regulation of signaling","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0030162","regulation of proteolysis","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0032387","negative regulation of intracellular transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0051224","negative regulation of protein transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1904950","negative regulation of establishment of protein localization","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0043410","positive regulation of MAPK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1900180","regulation of protein localization to nucleus","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0019005","SCF ubiquitin ligase complex","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1901136","carbohydrate derivative catabolic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0042386","hemocyte differentiation","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0061134","peptidase regulator activity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:1902533","positive regulation of intracellular signal transduction","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031401","positive regulation of protein modification process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0007367","segment polarity determination","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0007442","hindgut morphogenesis","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0061525","hindgut development","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0008589","regulation of smoothened signaling pathway","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0046330","positive regulation of JNK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0001934","positive regulation of protein phosphorylation","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0035966","response to topologically incorrect protein","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0035967","cellular response to topologically incorrect protein","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0046822","regulation of nucleocytoplasmic transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0015711","organic anion transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031461","cullin-RING ubiquitin ligase complex","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0050778","positive regulation of immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0050777","negative regulation of immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0032874","positive regulation of stress-activated MAPK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0070304","positive regulation of stress-activated protein kinase signaling cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0005887","GO:0005887","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0010033","GO:0010033","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0007365","periodic partitioning","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0048565","digestive tract development","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0055123","digestive system development","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0042327","positive regulation of phosphorylation","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0033157","regulation of intracellular protein transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0045861","negative regulation of proteolysis","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0008514","GO:0008514","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031226","GO:0031226","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0009880","embryonic pattern specification","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0007169","cell surface receptor protein tyrosine kinase signaling pathway","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0043408","regulation of MAPK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0002683","negative regulation of immune system process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0052548","regulation of endopeptidase activity","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0048585","negative regulation of response to stimulus","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0042067","establishment of ommatidial planar polarity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0031625","ubiquitin protein ligase binding","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0010562","positive regulation of phosphorus metabolic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0045937","positive regulation of phosphate metabolic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0045824","negative regulation of innate immune response","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0044389","ubiquitin-like protein ligase binding","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0071310","GO:0071310","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0007427","epithelial cell migration, open tracheal system","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0016830","carbon-carbon lyase activity","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0051346","negative regulation of hydrolase activity","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0046328","regulation of JNK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0048546","digestive tract morphogenesis","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0007350","blastoderm segmentation","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0032872","regulation of stress-activated MAPK cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0070302","regulation of stress-activated protein kinase signaling cascade","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0043068","positive regulation of programmed cell death","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0098656","monoatomic anion transmembrane transport","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0003002","regionalization","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0007166","cell surface receptor signaling pathway","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0043065","positive regulation of apoptotic process","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0046983","protein dimerization activity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0042803","protein homodimerization activity","DESeq2_infected_vs_control_diet_33__UP",4
+"GO","GO:0015562","efflux transmembrane transporter activity","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0052547","regulation of peptidase activity","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0009790","embryo development","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0051603","GO:0051603","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0044265","GO:0044265","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0044257","GO:0044257","DESeq2_infected_vs_control_diet_33__UP",3
+"GO","GO:0032270","GO:0032270","DESeq2_infected_vs_control_diet_33__UP",2
+"GO","GO:0005576","extracellular region","DESeq2_infected_vs_control_diet_50__DOWN",7
+"GO","GO:0016616","oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor","DESeq2_infected_vs_control_diet_50__DOWN",4
+"GO","GO:0016614","oxidoreductase activity, acting on CH-OH group of donors","DESeq2_infected_vs_control_diet_50__DOWN",4
+"GO","GO:0005576","extracellular region","DESeq2_infected_vs_control_diet_50__UP",7
+"GO","GO:0009617","response to bacterium","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0009607","response to biotic stimulus","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0043207","response to external biotic stimulus","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0051707","response to other organism","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0097367","carbohydrate derivative binding","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0005539","glycosaminoglycan binding","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0005615","extracellular space","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0006026","aminoglycan catabolic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042834","peptidoglycan binding","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0044421","GO:0044421","DESeq2_infected_vs_control_diet_50__UP",6
+"GO","GO:0000270","peptidoglycan metabolic process","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0009253","peptidoglycan catabolic process","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0006022","aminoglycan metabolic process","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0006027","glycosaminoglycan catabolic process","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0006952","defense response","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:1901565","GO:1901565","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0031648","protein destabilization","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0071630","nuclear protein quality control by the ubiquitin-proteasome system","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1901044","GO:1901044","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042308","negative regulation of protein import into nucleus","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1900181","negative regulation of protein localization to nucleus","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1904590","negative regulation of protein import","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1901136","carbohydrate derivative catabolic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0051865","protein autoubiquitination","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0046823","negative regulation of nucleocytoplasmic transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0051788","response to misfolded protein","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0071218","cellular response to misfolded protein","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0090317","negative regulation of intracellular protein transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0006515","protein quality control for misfolded or incompletely synthesized proteins","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042306","regulation of protein import into nucleus","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1903828","negative regulation of protein localization","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1904589","regulation of protein import","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042742","defense response to bacterium","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0032387","negative regulation of intracellular transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0051224","negative regulation of protein transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1904950","negative regulation of establishment of protein localization","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1900180","regulation of protein localization to nucleus","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0051051","negative regulation of transport","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0009057","macromolecule catabolic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0030203","glycosaminoglycan metabolic process","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0019005","SCF ubiquitin ligase complex","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0080134","regulation of response to stress","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0050829","defense response to Gram-negative bacterium","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0031226","GO:0031226","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0045879","negative regulation of smoothened signaling pathway","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0046330","positive regulation of JNK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0035966","response to topologically incorrect protein","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0035967","cellular response to topologically incorrect protein","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0046822","regulation of nucleocytoplasmic transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0032874","positive regulation of stress-activated MAPK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0050776","regulation of immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0070304","positive regulation of stress-activated protein kinase signaling cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0005887","GO:0005887","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0043410","positive regulation of MAPK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0033157","regulation of intracellular protein transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0007367","segment polarity determination","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0050830","defense response to Gram-positive bacterium","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0015711","organic anion transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0004866","endopeptidase inhibitor activity","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0010466","negative regulation of peptidase activity","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0010951","negative regulation of endopeptidase activity","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0030414","peptidase inhibitor activity","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0098542","defense response to other organism","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0030162","regulation of proteolysis","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0007365","periodic partitioning","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0009880","embryonic pattern specification","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0002682","regulation of immune system process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0031461","cullin-RING ubiquitin ligase complex","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0045824","negative regulation of innate immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0045088","regulation of innate immune response","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0022857","transmembrane transporter activity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0008514","GO:0008514","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0000209","protein polyubiquitination","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0061135","endopeptidase regulator activity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1902533","positive regulation of intracellular signal transduction","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042067","establishment of ommatidial planar polarity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0009611","response to wounding","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0042803","protein homodimerization activity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0031625","ubiquitin protein ligase binding","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0043408","regulation of MAPK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0050777","negative regulation of immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0044389","ubiquitin-like protein ligase binding","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0008589","regulation of smoothened signaling pathway","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0046328","regulation of JNK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0098656","monoatomic anion transmembrane transport","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0032872","regulation of stress-activated MAPK cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0070302","regulation of stress-activated protein kinase signaling cascade","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0045087","innate immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:1903827","GO:1903827","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0009967","positive regulation of signal transduction","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0006955","immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0048584","positive regulation of response to stimulus","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0007350","blastoderm segmentation","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0031401","positive regulation of protein modification process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0032386","regulation of intracellular transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0000151","ubiquitin ligase complex","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0043065","positive regulation of apoptotic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0010942","GO:0010942","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0010562","positive regulation of phosphorus metabolic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0045937","positive regulation of phosphate metabolic process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0004553","hydrolase activity, hydrolyzing O-glycosyl compounds","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0031347","regulation of defense response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0034220","monoatomic ion transmembrane transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0006811","monoatomic ion transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0001934","positive regulation of protein phosphorylation","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0043068","positive regulation of programmed cell death","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0003333","amino acid transmembrane transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0042386","hemocyte differentiation","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0061134","peptidase regulator activity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0031647","regulation of protein stability","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0061783","peptidoglycan muralytic activity","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0006820","monoatomic anion transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0006865","amino acid transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0015075","monoatomic ion transmembrane transporter activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0002376","immune system process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042327","positive regulation of phosphorylation","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0042802","identical protein binding","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0051223","regulation of protein transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0097164","GO:0097164","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0010647","positive regulation of cell communication","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0023056","positive regulation of signaling","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0070201","regulation of establishment of protein localization","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0016798","hydrolase activity, acting on glycosyl bonds","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0002683","negative regulation of immune system process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0071310","GO:0071310","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0070887","cellular response to chemical stimulus","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0046983","protein dimerization activity","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0090087","regulation of peptide transport","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0051603","GO:0051603","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0008509","monoatomic anion transmembrane transporter activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0044257","GO:0044257","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0001736","establishment of planar polarity","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0007164","establishment of tissue polarity","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0006576","biogenic amine metabolic process","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0009308","amine metabolic process","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0031348","negative regulation of defense response","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0044106","GO:0044106","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0035282","segmentation","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0043161","proteasome-mediated ubiquitin-dependent protein catabolic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0061057","peptidoglycan recognition protein signaling pathway","DESeq2_infected_vs_control_diet_50__UP",5
+"GO","GO:0002684","positive regulation of immune system process","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0009790","embryo development","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0080135","regulation of cellular response to stress","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0045861","negative regulation of proteolysis","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0015171","amino acid transmembrane transporter activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0030163","protein catabolic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0008061","chitin binding","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0050778","positive regulation of immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0007442","hindgut morphogenesis","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0061525","hindgut development","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0002759","regulation of antimicrobial humoral response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0002920","regulation of humoral immune response","DESeq2_infected_vs_control_diet_50__UP",4
+"GO","GO:0051346","negative regulation of hydrolase activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0001745","compound eye morphogenesis","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0003002","regionalization","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0004568","chitinase activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0006032","chitin catabolic process","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0046148","pigment biosynthetic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0042440","pigment metabolic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0007389","pattern specification process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0044265","GO:0044265","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0052548","regulation of endopeptidase activity","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0017144","GO:0017144","DESeq2_infected_vs_control_diet_50__UP",3
+"GO","GO:0048592","eye morphogenesis","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0090596","sensory organ morphogenesis","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0016831","carboxy-lyase activity","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:1903825","GO:1903825","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:1905039","carboxylic acid transmembrane transport","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0030148","sphingolipid biosynthetic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0046348","amino sugar catabolic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:1901072","glucosamine-containing compound catabolic process","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:1901681","sulfur compound binding","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0015849","organic acid transport","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0046942","carboxylic acid transport","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0001655","urogenital system development","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0072001","renal system development","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0032270","GO:0032270","DESeq2_infected_vs_control_diet_50__UP",2
+"GO","GO:0055114","GO:0055114","DESeq2_infected_vs_control_diet_83__DOWN",3
+"GO","GO:0019752","carboxylic acid metabolic process","DESeq2_infected_vs_control_diet_83__DOWN",6
+"GO","GO:0016616","oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor","DESeq2_infected_vs_control_diet_83__DOWN",4
+"GO","GO:0016614","oxidoreductase activity, acting on CH-OH group of donors","DESeq2_infected_vs_control_diet_83__DOWN",4
+"GO","GO:0006082","organic acid metabolic process","DESeq2_infected_vs_control_diet_83__DOWN",6
+"GO","GO:0043436","oxoacid metabolic process","DESeq2_infected_vs_control_diet_83__DOWN",6
+"GO","GO:0016491","oxidoreductase activity","DESeq2_infected_vs_control_diet_83__DOWN",4
+"GO","GO:1901605","alpha-amino acid metabolic process","DESeq2_infected_vs_control_diet_83__DOWN",5
+"GO","GO:0009617","response to bacterium","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0042834","peptidoglycan binding","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0005539","glycosaminoglycan binding","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0030203","glycosaminoglycan metabolic process","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0000270","peptidoglycan metabolic process","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0009253","peptidoglycan catabolic process","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0042742","defense response to bacterium","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0006027","glycosaminoglycan catabolic process","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0061057","peptidoglycan recognition protein signaling pathway","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0015562","efflux transmembrane transporter activity","DESeq2_infected_vs_control_diet_83__UP",3
+"GO","GO:0006952","defense response","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0009607","response to biotic stimulus","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0043207","response to external biotic stimulus","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0051707","response to other organism","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0005615","extracellular space","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0006022","aminoglycan metabolic process","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0045088","regulation of innate immune response","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0080134","regulation of response to stress","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0051051","negative regulation of transport","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0000041","transition metal ion transport","DESeq2_infected_vs_control_diet_83__UP",2
+"GO","GO:0097367","carbohydrate derivative binding","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0004866","endopeptidase inhibitor activity","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0010466","negative regulation of peptidase activity","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0010951","negative regulation of endopeptidase activity","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0030414","peptidase inhibitor activity","DESeq2_infected_vs_control_diet_83__UP",5
+"GO","GO:0098542","defense response to other organism","DESeq2_infected_vs_control_diet_83__UP",5
+"KEGG_pathway","ko01110","ko01110","all_diet_pairwise_results__DOWN",9
+"KEGG_pathway","ko01130","ko01130","all_diet_pairwise_results__DOWN",8
+"KEGG_pathway","ko00230","ko00230","all_diet_pairwise_results__DOWN",3
+"KEGG_pathway","ko00670","ko00670","all_diet_pairwise_results__DOWN",4
+"KEGG_pathway","ko00260","ko00260","all_diet_pairwise_results__DOWN",5
+"KEGG_pathway","ko00053","ko00053","all_diet_pairwise_results__DOWN",6
+"KEGG_pathway","ko00562","ko00562","all_diet_pairwise_results__DOWN",3
+"KEGG_pathway","ko01120","ko01120","all_diet_pairwise_results__DOWN",8
+"KEGG_pathway","ko01523","ko01523","all_diet_pairwise_results__DOWN",2
+"KEGG_pathway","ko01230","ko01230","all_diet_pairwise_results__DOWN",5
+"KEGG_pathway","ko00680","ko00680","all_diet_pairwise_results__DOWN",5
+"KEGG_pathway","ko01110","ko01110","all_diet_pairwise_results__UP",9
+"KEGG_pathway","ko01110","ko01110","all_infection_within_diet_results__DOWN",9
+"KEGG_pathway","ko01130","ko01130","all_infection_within_diet_results__DOWN",8
+"KEGG_pathway","ko01120","ko01120","all_infection_within_diet_results__DOWN",8
+"KEGG_pathway","ko01200","ko01200","all_infection_within_diet_results__DOWN",5
+"KEGG_pathway","ko00040","ko00040","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko00980","ko00980","all_infection_within_diet_results__DOWN",4
+"KEGG_pathway","ko00260","ko00260","all_infection_within_diet_results__DOWN",5
+"KEGG_pathway","ko05204","ko05204","all_infection_within_diet_results__DOWN",4
+"KEGG_pathway","ko00620","ko00620","all_infection_within_diet_results__DOWN",4
+"KEGG_pathway","ko00982","ko00982","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko00410","ko00410","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00053","ko00053","all_infection_within_diet_results__DOWN",6
+"KEGG_pathway","ko00030","ko00030","all_infection_within_diet_results__DOWN",5
+"KEGG_pathway","ko00330","ko00330","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko00981","ko00981","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko01230","ko01230","all_infection_within_diet_results__DOWN",5
+"KEGG_pathway","ko00680","ko00680","all_infection_within_diet_results__DOWN",5
+"KEGG_pathway","ko04975","ko04975","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00280","ko00280","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00710","ko00710","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko00630","ko00630","all_infection_within_diet_results__DOWN",3
+"KEGG_pathway","ko00520","ko00520","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00380","ko00380","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00480","ko00480","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00670","ko00670","all_infection_within_diet_results__DOWN",4
+"KEGG_pathway","ko00051","ko00051","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00640","ko00640","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko00010","ko00010","all_infection_within_diet_results__DOWN",2
+"KEGG_pathway","ko04624","ko04624","all_infection_within_diet_results__UP",4
+"KEGG_pathway","ko02010","ko02010","all_infection_within_diet_results__UP",5
+"KEGG_pathway","ko04341","ko04341","all_infection_within_diet_results__UP",3
+"KEGG_pathway","ko04340","ko04340","all_infection_within_diet_results__UP",2
+"KEGG_pathway","ko01110","ko01110","all_model_coefficients__DOWN",9
+"KEGG_pathway","ko01200","ko01200","all_model_coefficients__DOWN",5
+"KEGG_pathway","ko01120","ko01120","all_model_coefficients__DOWN",8
+"KEGG_pathway","ko01130","ko01130","all_model_coefficients__DOWN",8
+"KEGG_pathway","ko00620","ko00620","all_model_coefficients__DOWN",4
+"KEGG_pathway","ko00030","ko00030","all_model_coefficients__DOWN",5
+"KEGG_pathway","ko05204","ko05204","all_model_coefficients__DOWN",4
+"KEGG_pathway","ko00980","ko00980","all_model_coefficients__DOWN",4
+"KEGG_pathway","ko04624","ko04624","all_model_coefficients__UP",4
+"KEGG_pathway","ko02010","ko02010","all_model_coefficients__UP",5
+"KEGG_pathway","ko00330","ko00330","all_model_coefficients__UP",3
+"KEGG_pathway","ko04341","ko04341","all_model_coefficients__UP",3
+"KEGG_pathway","ko01130","ko01130","DESeq2_33_vs_83__DOWN",8
+"KEGG_pathway","ko01110","ko01110","DESeq2_33_vs_83__DOWN",9
+"KEGG_pathway","ko00230","ko00230","DESeq2_33_vs_83__DOWN",3
+"KEGG_pathway","ko00670","ko00670","DESeq2_33_vs_83__DOWN",4
+"KEGG_pathway","ko01523","ko01523","DESeq2_33_vs_83__DOWN",2
+"KEGG_pathway","ko01120","ko01120","DESeq2_33_vs_83__DOWN",8
+"KEGG_pathway","ko00562","ko00562","DESeq2_33_vs_83__DOWN",3
+"KEGG_pathway","ko00680","ko00680","DESeq2_33_vs_83__DOWN",5
+"KEGG_pathway","ko00053","ko00053","DESeq2_33_vs_83__DOWN",6
+"KEGG_pathway","ko01230","ko01230","DESeq2_33_vs_83__DOWN",5
+"KEGG_pathway","ko00260","ko00260","DESeq2_33_vs_83__DOWN",5
+"KEGG_pathway","ko01130","ko01130","DESeq2_50_vs_83__DOWN",8
+"KEGG_pathway","ko00680","ko00680","DESeq2_50_vs_83__DOWN",5
+"KEGG_pathway","ko01230","ko01230","DESeq2_50_vs_83__DOWN",5
+"KEGG_pathway","ko01120","ko01120","DESeq2_50_vs_83__DOWN",8
+"KEGG_pathway","ko00260","ko00260","DESeq2_50_vs_83__DOWN",5
+"KEGG_pathway","ko00562","ko00562","DESeq2_50_vs_83__DOWN",3
+"KEGG_pathway","ko01110","ko01110","DESeq2_50_vs_83__DOWN",9
+"KEGG_pathway","ko00670","ko00670","DESeq2_50_vs_83__DOWN",4
+"KEGG_pathway","ko00230","ko00230","DESeq2_50_vs_83__DOWN",3
+"KEGG_pathway","ko00053","ko00053","DESeq2_50_vs_83__DOWN",6
+"KEGG_pathway","ko01130","ko01130","DESeq2_infected_vs_control_diet_33__DOWN",8
+"KEGG_pathway","ko01110","ko01110","DESeq2_infected_vs_control_diet_33__DOWN",9
+"KEGG_pathway","ko01120","ko01120","DESeq2_infected_vs_control_diet_33__DOWN",8
+"KEGG_pathway","ko00040","ko00040","DESeq2_infected_vs_control_diet_33__DOWN",3
+"KEGG_pathway","ko01200","ko01200","DESeq2_infected_vs_control_diet_33__DOWN",5
+"KEGG_pathway","ko00030","ko00030","DESeq2_infected_vs_control_diet_33__DOWN",5
+"KEGG_pathway","ko00980","ko00980","DESeq2_infected_vs_control_diet_33__DOWN",4
+"KEGG_pathway","ko00051","ko00051","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00680","ko00680","DESeq2_infected_vs_control_diet_33__DOWN",5
+"KEGG_pathway","ko00982","ko00982","DESeq2_infected_vs_control_diet_33__DOWN",3
+"KEGG_pathway","ko01230","ko01230","DESeq2_infected_vs_control_diet_33__DOWN",5
+"KEGG_pathway","ko05204","ko05204","DESeq2_infected_vs_control_diet_33__DOWN",4
+"KEGG_pathway","ko00981","ko00981","DESeq2_infected_vs_control_diet_33__DOWN",3
+"KEGG_pathway","ko00280","ko00280","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00410","ko00410","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00380","ko00380","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00053","ko00053","DESeq2_infected_vs_control_diet_33__DOWN",6
+"KEGG_pathway","ko00520","ko00520","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00260","ko00260","DESeq2_infected_vs_control_diet_33__DOWN",5
+"KEGG_pathway","ko00710","ko00710","DESeq2_infected_vs_control_diet_33__DOWN",3
+"KEGG_pathway","ko00630","ko00630","DESeq2_infected_vs_control_diet_33__DOWN",3
+"KEGG_pathway","ko00720","ko00720","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko00010","ko00010","DESeq2_infected_vs_control_diet_33__DOWN",2
+"KEGG_pathway","ko02010","ko02010","DESeq2_infected_vs_control_diet_33__UP",5
+"KEGG_pathway","ko04624","ko04624","DESeq2_infected_vs_control_diet_33__UP",4
+"KEGG_pathway","ko01110","ko01110","DESeq2_infected_vs_control_diet_50__DOWN",9
+"KEGG_pathway","ko01200","ko01200","DESeq2_infected_vs_control_diet_50__DOWN",5
+"KEGG_pathway","ko01130","ko01130","DESeq2_infected_vs_control_diet_50__DOWN",8
+"KEGG_pathway","ko01120","ko01120","DESeq2_infected_vs_control_diet_50__DOWN",8
+"KEGG_pathway","ko00620","ko00620","DESeq2_infected_vs_control_diet_50__DOWN",4
+"KEGG_pathway","ko05204","ko05204","DESeq2_infected_vs_control_diet_50__DOWN",4
+"KEGG_pathway","ko00980","ko00980","DESeq2_infected_vs_control_diet_50__DOWN",4
+"KEGG_pathway","ko00053","ko00053","DESeq2_infected_vs_control_diet_50__DOWN",6
+"KEGG_pathway","ko00981","ko00981","DESeq2_infected_vs_control_diet_50__DOWN",3
+"KEGG_pathway","ko00982","ko00982","DESeq2_infected_vs_control_diet_50__DOWN",3
+"KEGG_pathway","ko00480","ko00480","DESeq2_infected_vs_control_diet_50__DOWN",2
+"KEGG_pathway","ko00030","ko00030","DESeq2_infected_vs_control_diet_50__DOWN",5
+"KEGG_pathway","ko00040","ko00040","DESeq2_infected_vs_control_diet_50__DOWN",3
+"KEGG_pathway","ko04624","ko04624","DESeq2_infected_vs_control_diet_50__UP",4
+"KEGG_pathway","ko04341","ko04341","DESeq2_infected_vs_control_diet_50__UP",3
+"KEGG_pathway","ko04340","ko04340","DESeq2_infected_vs_control_diet_50__UP",2
+"KEGG_pathway","ko02010","ko02010","DESeq2_infected_vs_control_diet_50__UP",5
+"KEGG_pathway","ko00330","ko00330","DESeq2_infected_vs_control_diet_50__UP",3
+"KEGG_pathway","ko01200","ko01200","DESeq2_infected_vs_control_diet_83__DOWN",5
+"KEGG_pathway","ko01110","ko01110","DESeq2_infected_vs_control_diet_83__DOWN",9
+"KEGG_pathway","ko01120","ko01120","DESeq2_infected_vs_control_diet_83__DOWN",8
+"KEGG_pathway","ko01130","ko01130","DESeq2_infected_vs_control_diet_83__DOWN",8
+"KEGG_pathway","ko00030","ko00030","DESeq2_infected_vs_control_diet_83__DOWN",5
+"KEGG_pathway","ko00640","ko00640","DESeq2_infected_vs_control_diet_83__DOWN",2
+"KEGG_pathway","ko00710","ko00710","DESeq2_infected_vs_control_diet_83__DOWN",3
+"KEGG_pathway","ko00630","ko00630","DESeq2_infected_vs_control_diet_83__DOWN",3
+"KEGG_pathway","ko00720","ko00720","DESeq2_infected_vs_control_diet_83__DOWN",2
+"KEGG_pathway","ko00620","ko00620","DESeq2_infected_vs_control_diet_83__DOWN",4
+"KEGG_pathway","ko04975","ko04975","DESeq2_infected_vs_control_diet_83__DOWN",2
+"KEGG_pathway","ko02010","ko02010","DESeq2_infected_vs_control_diet_83__UP",5

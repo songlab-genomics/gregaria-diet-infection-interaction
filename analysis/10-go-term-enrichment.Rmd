@@ -1,0 +1,830 @@
+---
+title: "GO term and KEGG enrichment"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  alpha: 0.05
+  lfc_threshold: 1
+  top_terms: 8
+  output_tag: "go-term-enrichment"
+---
+
+## Purpose
+
+This page keeps the eggNOG-based functional enrichment with the differential
+expression results. It uses the latest DESeq2 result tables on disk, lifts
+eggNOG protein annotations onto the `LOC...` gene IDs in the count matrix, and
+tests infection DEG sets for enriched GO terms and KEGG pathways.
+
+The key point is that this is a custom enrichment workflow for this reference:
+the foregrounds are current DEG sets, the background is the annotated gene
+universe in this count matrix, and GO names/ontologies come from `GO.db`.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c(
+  "dplyr", "tidyr", "stringr", "ggplot2", "forcats", "clusterProfiler",
+  "GO.db", "AnnotationDbi", "DT"
+)
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+results_root <- file.path(project_dir, params$latest_results_root)
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+ontology_colors <- c(
+  "Biological process" = "#2F8F5B",
+  "Molecular function" = "#E6862E",
+  "Cellular component" = "#7B4FA3"
+)
+kegg_theme_colors <- c(
+  "Immune and stress signaling" = "#C23B22",
+  "Storage, lipid transport, and endocrine nutrition" = "#D7832F",
+  "Amino acid and nitrogen metabolism" = "#6F4AA8",
+  "Carbohydrate and energy metabolism" = "#2C7FB8",
+  "Lipid and membrane metabolism" = "#2F8F5B",
+  "Detoxification and secondary metabolism" = "#8C6D31",
+  "Transport and environmental response" = "#00A6A6",
+  "Genetic information processing" = "#6B7280",
+  "Cellular process" = "#9C5DA5",
+  "Broad metabolic map" = "#4B5563",
+  "Reference disease pathway" = "#A0AEC0",
+  "Other KEGG pathway" = "#7B8794"
+)
+```
+
+## Build eggNOG annotation maps
+
+eggNOG reports annotations at the protein-query level, while the count matrix
+uses `LOC...` gene IDs. The GFF provides the bridge from CDS protein IDs to gene
+IDs. Only genes present in the count matrix are kept in the enrichment
+background.
+
+```{r annotation-maps}
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+eggnog <- read_emapper(eggnog_file)
+protein_to_gene <- parse_cds_gene_bridge(gff_file)
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+gene_universe <- unique(counts_raw[[1]])
+
+annotation <- eggnog |>
+  dplyr::left_join(protein_to_gene, by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+annotation_summary <- data.frame(
+  genes_in_count_matrix = length(gene_universe),
+  annotated_genes_lifted_to_LOC = dplyr::n_distinct(annotation$gene_id),
+  genes_with_GO = sum(annotation$GOs != "-" & annotation$GOs != ""),
+  genes_with_KEGG_KO = sum(annotation$KEGG_ko != "-" & annotation$KEGG_ko != ""),
+  genes_with_KEGG_pathway = sum(annotation$KEGG_Pathway != "-" &
+                                  annotation$KEGG_Pathway != "")
+)
+
+knitr::kable(annotation_summary)
+write.csv(annotation_summary, file.path(out_dir, "annotation_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r term-maps}
+term2gene_go <- annotation |>
+  dplyr::select(gene_id, GOs) |>
+  tidyr::separate_rows(GOs, sep = ",") |>
+  dplyr::filter(grepl("^GO:", GOs)) |>
+  dplyr::transmute(term = GOs, gene = gene_id) |>
+  dplyr::distinct()
+
+go_names <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "TERM",
+  multiVals = "first"
+)
+
+go_ontology <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "ONTOLOGY",
+  multiVals = "first"
+)
+
+term2name_go <- data.frame(
+  term = names(go_names),
+  name = unname(go_names),
+  ontology = unname(go_ontology)
+) |>
+  dplyr::filter(!is.na(name))
+
+term2gene_kegg_pathway <- annotation |>
+  dplyr::select(gene_id, KEGG_Pathway) |>
+  tidyr::separate_rows(KEGG_Pathway, sep = ",") |>
+  dplyr::filter(grepl("^ko[0-9]+$", KEGG_Pathway)) |>
+  dplyr::transmute(term = KEGG_Pathway, gene = gene_id) |>
+  dplyr::distinct()
+
+kegg_fallback_names <- c(
+  ko00010 = "Glycolysis / Gluconeogenesis",
+  ko00020 = "Citrate cycle (TCA cycle)",
+  ko00030 = "Pentose phosphate pathway",
+  ko00040 = "Pentose and glucuronate interconversions",
+  ko00051 = "Fructose and mannose metabolism",
+  ko00052 = "Galactose metabolism",
+  ko00053 = "Ascorbate and aldarate metabolism",
+  ko00061 = "Fatty acid biosynthesis",
+  ko00062 = "Fatty acid elongation",
+  ko00071 = "Fatty acid degradation",
+  ko00190 = "Oxidative phosphorylation",
+  ko00220 = "Arginine biosynthesis",
+  ko00230 = "Purine metabolism",
+  ko00240 = "Pyrimidine metabolism",
+  ko00250 = "Alanine, aspartate and glutamate metabolism",
+  ko00260 = "Glycine, serine and threonine metabolism",
+  ko00270 = "Cysteine and methionine metabolism",
+  ko00280 = "Valine, leucine and isoleucine degradation",
+  ko00330 = "Arginine and proline metabolism",
+  ko00340 = "Histidine metabolism",
+  ko00350 = "Tyrosine metabolism",
+  ko00360 = "Phenylalanine metabolism",
+  ko00500 = "Starch and sucrose metabolism",
+  ko00520 = "Amino sugar and nucleotide sugar metabolism",
+  ko00561 = "Glycerolipid metabolism",
+  ko00564 = "Glycerophospholipid metabolism",
+  ko00565 = "Ether lipid metabolism",
+  ko00590 = "Arachidonic acid metabolism",
+  ko00591 = "Linoleic acid metabolism",
+  ko00592 = "alpha-Linolenic acid metabolism",
+  ko00620 = "Pyruvate metabolism",
+  ko00630 = "Glyoxylate and dicarboxylate metabolism",
+  ko00640 = "Propanoate metabolism",
+  ko00650 = "Butanoate metabolism",
+  ko00670 = "One carbon pool by folate",
+  ko00730 = "Thiamine metabolism",
+  ko00860 = "Porphyrin metabolism",
+  ko00900 = "Terpenoid backbone biosynthesis",
+  ko00910 = "Nitrogen metabolism",
+  ko00920 = "Sulfur metabolism",
+  ko00930 = "Caprolactam degradation",
+  ko00970 = "Aminoacyl-tRNA biosynthesis",
+  ko01040 = "Biosynthesis of unsaturated fatty acids",
+  ko01100 = "Metabolic pathways",
+  ko01110 = "Biosynthesis of secondary metabolites",
+  ko01120 = "Microbial metabolism in diverse environments",
+  ko01130 = "Biosynthesis of antibiotics",
+  ko01200 = "Carbon metabolism",
+  ko01212 = "Fatty acid metabolism",
+  ko01220 = "Degradation of aromatic compounds",
+  ko01230 = "Biosynthesis of amino acids",
+  ko02010 = "ABC transporters",
+  ko02020 = "Two-component system",
+  ko03010 = "Ribosome",
+  ko03013 = "Nucleocytoplasmic transport",
+  ko03015 = "mRNA surveillance pathway",
+  ko03018 = "RNA degradation",
+  ko03022 = "Basal transcription factors",
+  ko03030 = "DNA replication",
+  ko03040 = "Spliceosome",
+  ko03050 = "Proteasome",
+  ko03060 = "Protein export",
+  ko03320 = "PPAR signaling pathway",
+  ko04010 = "MAPK signaling pathway",
+  ko04014 = "Ras signaling pathway",
+  ko04020 = "Calcium signaling pathway",
+  ko04024 = "cAMP signaling pathway",
+  ko04110 = "Cell cycle",
+  ko04120 = "Ubiquitin mediated proteolysis",
+  ko04130 = "SNARE interactions in vesicular transport",
+  ko04141 = "Protein processing in endoplasmic reticulum",
+  ko04142 = "Lysosome",
+  ko04144 = "Endocytosis",
+  ko04145 = "Phagosome",
+  ko04146 = "Peroxisome",
+  ko04147 = "Exosome",
+  ko04150 = "mTOR signaling pathway",
+  ko04151 = "PI3K-Akt signaling pathway",
+  ko04152 = "AMPK signaling pathway",
+  ko04210 = "Apoptosis",
+  ko04213 = "Longevity regulating pathway - multiple species",
+  ko04217 = "Necroptosis",
+  ko04218 = "Cellular senescence",
+  ko04270 = "Vascular smooth muscle contraction",
+  ko04310 = "Wnt signaling pathway",
+  ko04330 = "Notch signaling pathway",
+  ko04340 = "Hedgehog signaling pathway",
+  ko04350 = "TGF-beta signaling pathway",
+  ko04370 = "VEGF signaling pathway",
+  ko04371 = "Apelin signaling pathway",
+  ko04510 = "Focal adhesion",
+  ko04512 = "ECM-receptor interaction",
+  ko04514 = "Cell adhesion molecules",
+  ko04520 = "Adherens junction",
+  ko04530 = "Tight junction",
+  ko04630 = "JAK-STAT signaling pathway",
+  ko04668 = "TNF signaling pathway",
+  ko04710 = "Circadian rhythm",
+  ko04713 = "Circadian entrainment",
+  ko04714 = "Thermogenesis",
+  ko04723 = "Retrograde endocannabinoid signaling",
+  ko04730 = "Long-term depression",
+  ko04910 = "Insulin signaling pathway",
+  ko04920 = "Adipocytokine signaling pathway",
+  ko04922 = "Glucagon signaling pathway",
+  ko04926 = "Relaxin signaling pathway",
+  ko04970 = "Salivary secretion",
+  ko04972 = "Pancreatic secretion",
+  ko04975 = "Fat digestion and absorption",
+  ko05010 = "Alzheimer disease",
+  ko05012 = "Parkinson disease",
+  ko05014 = "Amyotrophic lateral sclerosis",
+  ko05016 = "Huntington disease"
+)
+
+get_kegg_pathway_names <- function(ids) {
+  ids <- unique(ids)
+  resolved <- setNames(rep(NA_character_, length(ids)), ids)
+
+  if (requireNamespace("KEGGREST", quietly = TRUE)) {
+    kegg_list <- tryCatch(
+      KEGGREST::keggList("pathway", "ko"),
+      error = function(e) character()
+    )
+    if (length(kegg_list) > 0) {
+      live_ids <- sub("^path:", "", names(kegg_list))
+      live_names <- sub(" - Reference pathway$", "", unname(kegg_list))
+      live_names <- sub(" - Homo sapiens \\(human\\)$", "", live_names)
+      resolved[intersect(ids, live_ids)] <- live_names[match(intersect(ids, live_ids),
+                                                             live_ids)]
+    }
+  }
+
+  fallback_ids <- intersect(ids, names(kegg_fallback_names))
+  resolved[fallback_ids] <- ifelse(
+    is.na(resolved[fallback_ids]),
+    unname(kegg_fallback_names[fallback_ids]),
+    resolved[fallback_ids]
+  )
+  resolved[is.na(resolved)] <- ids[is.na(resolved)]
+  resolved
+}
+
+classify_kegg_theme <- function(ids, names) {
+  ids <- as.character(ids)
+  names_lower <- stringr::str_to_lower(names)
+  dplyr::case_when(
+    stringr::str_detect(ids, "^ko046|^ko040|^ko042") |
+      stringr::str_detect(names_lower, "toll|imd|tnf|jak-stat|immune|apoptosis|necrosis|stress") ~
+      "Immune and stress signaling",
+    stringr::str_detect(ids, "^ko049|^ko033|^ko00981") |
+      stringr::str_detect(names_lower, "insulin|glucagon|adipocytokine|ppar|hormone|bile|mineral|fat digestion|secretion|absorption") ~
+      "Storage, lipid transport, and endocrine nutrition",
+    ids %in% c("ko00220", "ko00230", "ko00240", "ko00250", "ko00260",
+               "ko00270", "ko00280", "ko00330", "ko00340", "ko00350",
+               "ko00360", "ko00380", "ko00410", "ko01230") |
+      stringr::str_detect(names_lower, "amino acid|arginine|proline|glycine|serine|threonine|tryptophan|tyrosine|nitrogen") ~
+      "Amino acid and nitrogen metabolism",
+    ids %in% c("ko00010", "ko00020", "ko00030", "ko00040", "ko00051",
+               "ko00052", "ko00053", "ko00190", "ko00620", "ko00630",
+               "ko00640", "ko00650", "ko00720", "ko01200") |
+      stringr::str_detect(names_lower, "glycolysis|gluconeogenesis|citrate|carbon metabolism|pentose|pyruvate|oxidative phosphorylation|carbon fixation|ascorbate") ~
+      "Carbohydrate and energy metabolism",
+    ids %in% c("ko00061", "ko00062", "ko00071", "ko00561", "ko00564",
+               "ko00565", "ko00590", "ko00591", "ko00592", "ko01040",
+               "ko01212") |
+      stringr::str_detect(names_lower, "fatty acid|lipid|glycerolipid|glycerophospholipid|linoleic|arachidonic") ~
+      "Lipid and membrane metabolism",
+    ids %in% c("ko00480", "ko00900", "ko00920", "ko00930", "ko00970",
+               "ko00980", "ko01110", "ko01120", "ko01130", "ko01220") |
+      stringr::str_detect(names_lower, "glutathione|xenobiotic|cytochrome|secondary metabolite|microbial metabolism|antibiotic|aromatic") ~
+      "Detoxification and secondary metabolism",
+    stringr::str_detect(ids, "^ko020") |
+      stringr::str_detect(names_lower, "transporter|two-component|environmental") ~
+      "Transport and environmental response",
+    stringr::str_detect(ids, "^ko030") |
+      stringr::str_detect(names_lower, "ribosome|spliceosome|rna|dna|replication|transcription|proteasome") ~
+      "Genetic information processing",
+    stringr::str_detect(ids, "^ko041|^ko043|^ko045") |
+      stringr::str_detect(names_lower, "cell cycle|endocytosis|phagosome|peroxisome|junction|adhesion|notch|wnt|hedgehog") ~
+      "Cellular process",
+    ids == "ko01100" ~ "Broad metabolic map",
+    stringr::str_detect(ids, "^ko050|^ko052") ~ "Reference disease pathway",
+    TRUE ~ "Other KEGG pathway"
+  )
+}
+
+kegg_names <- get_kegg_pathway_names(unique(term2gene_kegg_pathway$term))
+
+term2name_kegg_pathway <- term2gene_kegg_pathway |>
+  dplyr::distinct(term) |>
+  dplyr::mutate(
+    name = unname(kegg_names[term]),
+    pathway_theme = classify_kegg_theme(term, name)
+  )
+
+write.csv(term2gene_go, file.path(out_dir, "eggNOG_GO_TERM2GENE.csv"),
+          row.names = FALSE)
+write.csv(term2name_go, file.path(out_dir, "eggNOG_GO_TERM2NAME.csv"),
+          row.names = FALSE)
+write.csv(term2gene_kegg_pathway,
+          file.path(out_dir, "eggNOG_KEGG_pathway_TERM2GENE.csv"),
+          row.names = FALSE)
+write.csv(term2name_kegg_pathway,
+          file.path(out_dir, "eggNOG_KEGG_pathway_TERM2NAME.csv"),
+          row.names = FALSE)
+```
+
+## Collect current infection DEG sets
+
+The enrichment foregrounds are built from infected-versus-control DEGs without
+splitting genes by direction. This keeps the biological question simple: which
+functional categories are over-represented among infection-responsive genes in
+general, within each diet, and among genes shared across diets. The newest file
+for each within-diet infection result table is used so older workflowR runs do
+not duplicate a contrast.
+
+```{r deg-sets}
+infection_result_files <- list.files(
+  results_root,
+  pattern = "^DESeq2_infected_vs_control_diet_[0-9]+[.]csv$",
+  recursive = TRUE,
+  full.names = TRUE
+)
+
+infection_file_info <- data.frame(
+  file = infection_result_files,
+  short_name = basename(infection_result_files),
+  modified = file.info(infection_result_files)$mtime,
+  stringsAsFactors = FALSE
+)
+infection_file_info <- infection_file_info[order(infection_file_info$short_name,
+                                                 -as.numeric(infection_file_info$modified)), ]
+infection_file_info <- infection_file_info[!duplicated(infection_file_info$short_name), ]
+infection_result_files <- infection_file_info$file
+
+read_infection_deg_set <- function(path) {
+  tab <- read.csv(path, check.names = FALSE)
+  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
+  if (is.na(gene_col) || !"padj" %in% names(tab) ||
+      !"log2FoldChange" %in% names(tab)) return(NULL)
+  sig <- !is.na(tab$padj) &
+    tab$padj < params$alpha &
+    abs(tab$log2FoldChange) >= params$lfc_threshold
+  unique(as.character(tab[[gene_col]][sig]))
+}
+
+infection_sets_by_diet <- lapply(infection_result_files, read_infection_deg_set)
+names(infection_sets_by_diet) <- sub(
+  "^DESeq2_infected_vs_control_diet_([0-9]+)[.]csv$",
+  "Diet \\1",
+  basename(infection_result_files)
+)
+infection_sets_by_diet <- infection_sets_by_diet[lengths(infection_sets_by_diet) > 0]
+infection_sets_by_diet <- infection_sets_by_diet[order(names(infection_sets_by_diet))]
+
+if (length(infection_sets_by_diet) == 0) {
+  stop("No within-diet infection DEG result files were found. Build page 06 first.")
+}
+
+all_infection_genes <- sort(unique(unlist(infection_sets_by_diet, use.names = FALSE)))
+diet_hit_count <- table(unlist(lapply(names(infection_sets_by_diet), function(nm) {
+  unique(infection_sets_by_diet[[nm]])
+}), use.names = FALSE))
+shared_two_or_more <- names(diet_hit_count)[diet_hit_count >= 2]
+shared_all_diets <- names(diet_hit_count)[diet_hit_count == length(infection_sets_by_diet)]
+
+enrichment_sets <- c(
+  list("All infection DEGs" = all_infection_genes),
+  infection_sets_by_diet,
+  list("Shared by at least two diets" = shared_two_or_more,
+       "Shared by all diets" = shared_all_diets)
+)
+
+deg_set_summary <- data.frame(
+  DEG_set = names(enrichment_sets),
+  n_genes = lengths(enrichment_sets),
+  stringsAsFactors = FALSE
+)
+deg_set_summary <- deg_set_summary[order(factor(
+  deg_set_summary$DEG_set,
+  levels = names(enrichment_sets)
+)), ]
+
+source_table <- data.frame(
+  DEG_set = names(infection_sets_by_diet),
+  result_file = infection_result_files,
+  modified = file.info(infection_result_files)$mtime,
+  stringsAsFactors = FALSE
+)
+
+read_infection_deg_table <- function(path) {
+  tab <- read.csv(path, check.names = FALSE)
+  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
+  if (is.na(gene_col) || !"padj" %in% names(tab) ||
+      !"log2FoldChange" %in% names(tab)) return(NULL)
+  diet <- sub("^DESeq2_infected_vs_control_diet_([0-9]+)[.]csv$",
+              "\\1", basename(path))
+  tab |>
+    dplyr::transmute(
+      gene_id = as.character(.data[[gene_col]]),
+      diet = diet,
+      DEG_set = paste("Diet", diet),
+      log2FoldChange = log2FoldChange,
+      padj = padj,
+      significant = !is.na(padj) &
+        padj < params$alpha &
+        abs(log2FoldChange) >= params$lfc_threshold
+    )
+}
+
+infection_deg_long <- dplyr::bind_rows(
+  lapply(infection_result_files, read_infection_deg_table)
+) |>
+  dplyr::filter(significant)
+
+DT::datatable(deg_set_summary, options = list(pageLength = 15))
+write.csv(deg_set_summary, file.path(out_dir, "go_enrichment_deg_set_summary.csv"),
+          row.names = FALSE)
+write.csv(source_table, file.path(out_dir, "infection_deg_source_files.csv"),
+          row.names = FALSE)
+write.csv(infection_deg_long, file.path(out_dir, "infection_DEGs_long.csv"),
+          row.names = FALSE)
+```
+
+## Fat body immune and storage candidates
+
+The fat body is central to immune defense, detoxification, lipid transport, and
+nutrient storage. This table therefore flags significant infection-responsive
+genes whose eggNOG annotation contains immune, storage-protein, lipid-transport,
+endocrine-nutrition, or detoxification language. This is a transparent keyword
+screen to help prioritize genes for biological interpretation; it does not
+replace the GO or KEGG enrichment tests.
+
+```{r fat-body-candidates}
+classify_fat_body_candidate <- function(text) {
+  text <- stringr::str_to_lower(text)
+  immune <- stringr::str_detect(
+    text,
+    "immune|defen[cs]e|defensin|attacin|cecropin|gloverin|lysozyme|toll|imd|tnf|jak-stat|peptidoglycan|antimicrobial|phenoloxidase|prophenoloxidase|serpin|thioester|transferrin|lectin|phagosome"
+  )
+  storage <- stringr::str_detect(
+    text,
+    "storage protein|hexamerin|arylphorin|hemocyanin|vitellogenin|lipophorin|apolipophorin|nutrient reservoir"
+  )
+  detox <- stringr::str_detect(
+    text,
+    "detox|glutathione|cytochrome p450|p450|xenobiotic|oxidative stress|peroxidase|superoxide|catalase"
+  )
+  endocrine_nutrition <- stringr::str_detect(
+    text,
+    "juvenile hormone|insulin|glucagon|adipocytokine|ppar|bile secretion|mineral absorption|fat digestion|glycerolipid|amino acid|lipid transport"
+  )
+
+  dplyr::case_when(
+    immune & storage ~ "Immune + storage/lipid transport",
+    storage ~ "Storage / lipid transport",
+    immune ~ "Immune / defense",
+    detox ~ "Detoxification / oxidative stress",
+    endocrine_nutrition ~ "Endocrine / nutrient metabolism",
+    TRUE ~ NA_character_
+  )
+}
+
+fat_body_candidates <- infection_deg_long |>
+  dplyr::inner_join(
+    annotation |>
+      dplyr::select(gene_id, Preferred_name, Description, GOs, KEGG_ko,
+                    KEGG_Pathway, BRITE, PFAMs),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
+                            KEGG_Pathway, BRITE, PFAMs, sep = " "),
+    candidate_theme = classify_fat_body_candidate(annotation_text)
+  ) |>
+  dplyr::filter(!is.na(candidate_theme)) |>
+  dplyr::arrange(candidate_theme, padj) |>
+  dplyr::group_by(gene_id, candidate_theme, Preferred_name, Description, PFAMs) |>
+  dplyr::summarise(
+    DEG_sets = paste(unique(DEG_set), collapse = "; "),
+    log2FC_by_diet = paste0(DEG_set, "=", round(log2FoldChange, 2),
+                            collapse = "; "),
+    min_padj = signif(min(padj, na.rm = TRUE), 3),
+    max_abs_log2FC = round(max(abs(log2FoldChange), na.rm = TRUE), 2),
+    KEGG_Pathway = paste(unique(KEGG_Pathway), collapse = "; "),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(candidate_theme, min_padj)
+
+write.csv(fat_body_candidates,
+          file.path(out_dir, "fat_body_immune_storage_DEG_candidates.csv"),
+          row.names = FALSE)
+
+if (nrow(fat_body_candidates) > 0) {
+  DT::datatable(
+    fat_body_candidates,
+    rownames = FALSE,
+    options = list(pageLength = 15, scrollX = TRUE)
+  )
+} else {
+  cat("No significant infection DEGs matched the current fat-body candidate keyword screen.")
+}
+```
+
+## Run GO and KEGG enrichment
+
+Enrichment tests whether a DEG set contains more genes from a term than expected
+from the annotated background. Here the DEG sets are not separated by
+upregulation or downregulation; each foreground contains significant
+infected-versus-control DEGs regardless of fold-change direction.
+
+```{r run-enrichment}
+run_enrichment <- function(genes, term2gene, term2name, universe) {
+  genes <- unique(genes[genes %in% universe])
+  if (length(genes) < 5) return(NULL)
+  clusterProfiler::enricher(
+    gene = genes,
+    universe = universe,
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name[, c("term", "name")],
+    pvalueCutoff = 0.1,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2
+  )
+}
+
+universe_go <- unique(term2gene_go$gene)
+universe_kegg <- unique(term2gene_kegg_pathway$gene)
+
+go_results <- lapply(enrichment_sets, run_enrichment,
+                     term2gene = term2gene_go,
+                     term2name = term2name_go,
+                     universe = universe_go)
+kegg_results <- lapply(enrichment_sets, run_enrichment,
+                       term2gene = term2gene_kegg_pathway,
+                       term2name = term2name_kegg_pathway,
+                       universe = universe_kegg)
+
+enrich_to_df <- function(result_list, database) {
+  pieces <- lapply(names(result_list), function(nm) {
+    res <- result_list[[nm]]
+    if (is.null(res)) return(NULL)
+    df <- as.data.frame(res)
+    if (nrow(df) == 0) return(NULL)
+    df$set <- nm
+    df$database <- database
+    df
+  })
+  dplyr::bind_rows(pieces)
+}
+
+go_enrichment_df <- enrich_to_df(go_results, "GO")
+kegg_enrichment_df <- enrich_to_df(kegg_results, "KEGG_pathway")
+all_enrichment <- dplyr::bind_rows(go_enrichment_df, kegg_enrichment_df)
+
+write.csv(go_enrichment_df, file.path(out_dir, "GO_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(kegg_enrichment_df,
+          file.path(out_dir, "KEGG_pathway_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(all_enrichment, file.path(out_dir, "all_enrichment_results.csv"),
+          row.names = FALSE)
+
+if (nrow(all_enrichment) == 0) {
+  cat("No enriched terms passed the current cutoffs.")
+} else {
+  DT::datatable(
+    all_enrichment |>
+      dplyr::select(database, set, ID, Description, GeneRatio, BgRatio,
+                    p.adjust, qvalue, geneID) |>
+      dplyr::arrange(p.adjust),
+    options = list(pageLength = 15, scrollX = TRUE)
+  )
+}
+```
+
+## GO terms by ontology
+
+This figure separates biological process, molecular function, and cellular
+component terms. A few eggNOG GO IDs can be obsolete or unavailable in the
+local `GO.db` ontology table; those terms are kept in the complete enrichment
+CSV but omitted from this ontology-specific plot. The dashed vertical line
+marks FDR = 0.05.
+
+```{r go-ontology-figure, fig.height=10, fig.width=13}
+if (nrow(go_enrichment_df) > 0 && "ID" %in% names(go_enrichment_df)) {
+  go_enrichment_ontology <- go_enrichment_df |>
+    dplyr::left_join(term2name_go |> dplyr::select(term, ontology),
+                     by = c("ID" = "term")) |>
+    dplyr::mutate(
+      ontology = dplyr::case_when(
+        ontology == "BP" ~ "Biological process",
+        ontology == "MF" ~ "Molecular function",
+        ontology == "CC" ~ "Cellular component",
+        TRUE ~ NA_character_
+      ),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      term_label = paste0(stringr::str_trunc(Description, 52), " [", ID, "]"),
+      set_label = stringr::str_replace_all(set, "_", " ")
+    )
+} else {
+  go_enrichment_ontology <- data.frame()
+}
+
+write.csv(go_enrichment_ontology,
+          file.path(out_dir, "eggNOG_GO_enrichment_with_ontology.csv"),
+          row.names = FALSE)
+
+unmapped_go_terms <- go_enrichment_ontology |>
+  dplyr::filter(is.na(ontology)) |>
+  dplyr::distinct(ID, Description, set, p.adjust, Count)
+write.csv(unmapped_go_terms,
+          file.path(out_dir, "eggNOG_GO_enrichment_unmapped_ontology.csv"),
+          row.names = FALSE)
+
+if (nrow(unmapped_go_terms) > 0) {
+  cat(nrow(unmapped_go_terms),
+      "enriched GO rows did not map to BP, MF, or CC in the local GO.db and are omitted from the ontology plot.\n")
+}
+
+if (nrow(go_enrichment_ontology) > 0) {
+  go_plot_df <- go_enrichment_ontology |>
+    dplyr::filter(!is.na(p.adjust), !is.na(ontology)) |>
+    dplyr::group_by(set_label, ontology) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = params$top_terms) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      term_label = forcats::fct_reorder(term_label, neg_log10_padj)
+    )
+
+  p_go_ontology <- ggplot2::ggplot(
+    go_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_label)
+  ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_point(ggplot2::aes(size = Count, fill = ontology),
+                        shape = 21, color = "#1f2937", alpha = 0.9,
+                        stroke = 0.35) +
+    ggplot2::facet_grid(ontology ~ set_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_fill_manual(values = ontology_colors) +
+    ggplot2::scale_size(range = c(2, 7)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = 7, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 8, face = "bold", angle = 0),
+      axis.text.y = ggplot2::element_text(size = 6),
+      legend.position = "bottom"
+    ) +
+    ggplot2::labs(
+      title = "eggNOG GO enrichment by ontology",
+      subtitle = "Top GO terms per DEG set and ontology",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      fill = "GO ontology",
+      size = "DEGs in term"
+    )
+
+  print(p_go_ontology)
+  ggplot2::ggsave(file.path(out_dir, "eggNOG_GO_enrichment_by_ontology.png"),
+                  p_go_ontology, width = 13, height = 10, dpi = 300)
+}
+```
+
+## KEGG pathway overview
+
+KEGG pathways are labelled with descriptive pathway names and the pathway ID in
+brackets. The names are resolved from KEGGREST when available, with an offline
+fallback for common KEGG pathway IDs so the page remains reproducible. Pathways
+are grouped into broad themes to keep immune, nutrition/storage, detoxification,
+and core metabolic signals visually separate.
+
+```{r kegg-overview, fig.height=11, fig.width=14}
+if (nrow(kegg_enrichment_df) > 0) {
+  kegg_plot_df <- kegg_enrichment_df |>
+    dplyr::left_join(
+      term2name_kegg_pathway |> dplyr::select(term, pathway_theme),
+      by = c("ID" = "term")
+    ) |>
+    dplyr::mutate(
+      pathway_theme = ifelse(is.na(pathway_theme),
+                             "Other KEGG pathway", pathway_theme),
+      set_label = factor(stringr::str_replace_all(set, "_", " "),
+                         levels = stringr::str_replace_all(
+                           names(enrichment_sets), "_", " "
+                         )),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin))
+    ) |>
+    dplyr::group_by(set_label, pathway_theme) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = 5) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      term_label = paste0(stringr::str_trunc(Description, 48), " [", ID, "]"),
+      term_label = forcats::fct_reorder(term_label, neg_log10_padj),
+      pathway_theme = factor(pathway_theme, levels = names(kegg_theme_colors))
+    )
+
+  p_kegg <- ggplot2::ggplot(
+    kegg_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_label)
+  ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_point(ggplot2::aes(size = Count, fill = pathway_theme),
+                        shape = 21, color = "#1f2937", alpha = 0.9,
+                        stroke = 0.35) +
+    ggplot2::facet_grid(pathway_theme ~ set_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_fill_manual(values = kegg_theme_colors) +
+    ggplot2::scale_size(range = c(2, 7)) +
+    ggplot2::guides(fill = "none") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = 7, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 7, face = "bold", angle = 0),
+      axis.text.y = ggplot2::element_text(size = 6),
+      legend.position = "bottom",
+      plot.margin = ggplot2::margin(10, 16, 10, 16)
+    ) +
+    ggplot2::labs(
+      title = "eggNOG KEGG pathway enrichment by biological theme",
+      subtitle = "Top KEGG pathways per DEG set and theme",
+      x = "-log10 adjusted p-value",
+      y = "KEGG pathway",
+      size = "DEGs in pathway",
+      fill = "KEGG theme"
+    )
+
+  print(p_kegg)
+  ggplot2::ggsave(file.path(out_dir, "eggNOG_KEGG_pathway_enrichment.png"),
+                  p_kegg, width = 14, height = 11, dpi = 300)
+}
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

@@ -676,7 +676,7 @@ library(dplyr)
 library(DT)
 
 df <- read.csv(
-  "analysis/Control_50_83_Combined_Annotated.csv",
+  "data/legacy_csv/annotated_tables/Control_50_83_Combined_Annotated.csv",
   stringsAsFactors = FALSE
 )
 
@@ -746,7 +746,7 @@ library(dplyr)
 library(DT)
 
 df <- read.csv(
-  "analysis/Infected_50_83_Combined_Annotated.csv",
+  "data/legacy_csv/annotated_tables/Infected_50_83_Combined_Annotated.csv",
   stringsAsFactors = FALSE
 )
 
@@ -815,7 +815,7 @@ library(dplyr)
 library(DT)
 
 df <- read.csv(
-  "analysis/filtered_table_NO_rRNA.csv",
+  "data/legacy_csv/annotated_tables/filtered_table_NO_rRNA.csv",
   stringsAsFactors = FALSE
 )
 
@@ -911,7 +911,7 @@ These genes are the ones that were removed or became significant after removing 
 library(dplyr)
 library(DT)
 
-df <- read.csv("analysis/non_overlapping_rows.csv",
+df <- read.csv("data/legacy_csv/overlap_helpers/analysis_non_overlapping_rows.csv",
                stringsAsFactors = FALSE)
 
 summary_df <- df %>%

@@ -38,6 +38,15 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -377,6 +386,9 @@ div.tocify {
     <li>
       <a href="07-deg-overlap-prioritization.html">DEG overlap and prioritization</a>
     </li>
+    <li>
+      <a href="10-go-term-enrichment.html">GO term and KEGG enrichment</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -386,6 +398,9 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="11-outlier-sensitivity.html">Outlier sensitivity</a>
+    </li>
     <li>
       <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
     </li>
@@ -517,10 +532,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -613,15 +628,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree4ef2181155c609d67abadf6996e77dbb8f1716e0targetblank4ef2181a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/4ef2181155c609d67abadf6996e77dbb8f1716e0" target="_blank">4ef2181</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree4ef2181155c609d67abadf6996e77dbb8f1716e0targetblank4ef2181a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -631,7 +646,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/4ef2181155c609d67abadf6996e77dbb8f1716e0" target="_blank">4ef2181</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -645,29 +660,1095 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
+Ignored files:
+    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
+    Ignored:    scripts/.RData
+    Ignored:    scripts/.Rhistory
+
 Untracked files:
-    Untracked:  analysis/01-study-design-data.Rmd
-    Untracked:  analysis/02-workflow-reproducibility.Rmd
-    Untracked:  analysis/03-count-qc-exploration.Rmd
-    Untracked:  analysis/04-deseq2-interaction-model.Rmd
-    Untracked:  analysis/05-diet-pairwise-deg.Rmd
-    Untracked:  analysis/06-infection-within-diet-deg.Rmd
-    Untracked:  analysis/07-deg-overlap-prioritization.Rmd
-    Untracked:  analysis/08-publication-figures.Rmd
-    Untracked:  analysis/09-outliers-load-enrichment.Rmd
-    Untracked:  analysis/site-style.css
-    Untracked:  data/.DS_Store
-    Untracked:  data/GO_Annotations/
-    Untracked:  data/metadata/
-    Untracked:  data/raw_read_counts/
+    Untracked:  analysis/10-go-term-enrichment.Rmd
+    Untracked:  analysis/11-outlier-sensitivity.Rmd
+    Untracked:  data/excluded_loci/
+    Untracked:  data/raw_read_counts/master_counts_no_rRNA.csv
+    Untracked:  data/raw_read_counts/master_counts_no_rRNA.tsv
+    Untracked:  data/raw_read_counts/master_counts_no_rRNA_manifest.csv
+    Untracked:  data/raw_read_counts/master_counts_removed_rRNA_genes.csv
     Untracked:  data/reference/
-    Untracked:  output/rmd_runs/
-    Untracked:  scripts/
+    Untracked:  manuscript/
+    Untracked:  output/.DS_Store
+    Untracked:  output/rmd_runs/.DS_Store
+    Untracked:  output/rmd_runs/count-qc-exploration_20260703-223312/
+    Untracked:  output/rmd_runs/deg-overlap-prioritization_20260703-222937/
+    Untracked:  output/rmd_runs/deseq2-interaction-model_20260703-223319/
+    Untracked:  output/rmd_runs/diet-pairwise-deg_All_20260703-223341/
+    Untracked:  output/rmd_runs/go-term-enrichment_20260703-223035/
+    Untracked:  output/rmd_runs/infection-within-diet-deg_20260703-222855/
+    Untracked:  output/rmd_runs/outlier-sensitivity_20260703-223100/
+    Untracked:  output/rmd_runs/outliers-load-enrichment_20260703-222949/
+    Untracked:  output/rmd_runs/publication-figures_20260703-223133/
+    Untracked:  output/rmd_runs/study-design-data_20260703-223304/
+    Untracked:  output/rmd_runs/workflow-reproducibility_20260703-223306/
+    Untracked:  scripts/legacy/
 
 Unstaged changes:
     Modified:   .DS_Store
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/09-outliers-load-enrichment.Rmd
     Modified:   analysis/_site.yml
+    Deleted:    analysis/csv-overlap.R
+    Deleted:    analysis/filter-csv.R
     Modified:   analysis/index.Rmd
+    Deleted:    analysis/make_control_table.R
+    Modified:   data/.DS_Store
+    Modified:   data/GO_Annotations/.DS_Store
+    Deleted:    data/GO_Annotations/GCF_021461385.2_iqSchPice1.1_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/GCF_021461395.2_iqSchAmer2.1_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/GCF_023864275.1_iqSchCanc2.1_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/GCF_023864345.2_iqSchSeri2.2_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/GCF_023898315.1_iqSchNite1.1_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/blast2go_americana.annot
+    Deleted:    data/GO_Annotations/blast2go_americana.txt
+    Deleted:    data/GO_Annotations/blast2go_americana_custom.txt
+    Deleted:    data/GO_Annotations/blast2go_cancellata.annot
+    Deleted:    data/GO_Annotations/blast2go_cancellata.txt
+    Deleted:    data/GO_Annotations/blast2go_cancellata_custom.txt
+    Deleted:    data/GO_Annotations/blast2go_cubense.annot
+    Deleted:    data/GO_Annotations/blast2go_cubense.txt
+    Deleted:    data/GO_Annotations/blast2go_cubense_custom.txt
+    Deleted:    data/GO_Annotations/blast2go_nitens.annot
+    Deleted:    data/GO_Annotations/blast2go_nitens.txt
+    Deleted:    data/GO_Annotations/blast2go_nitens_custom.txt
+    Deleted:    data/GO_Annotations/blast2go_piceifrons.annot
+    Deleted:    data/GO_Annotations/blast2go_piceifrons_custom.txt
+    Deleted:    data/GO_Annotations/install_depedencies.R
+    Deleted:    data/raw_read_counts/merge-matrices.sh
+    Deleted:    match_3_description.R
+    Deleted:    match_by_description.R
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134559/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134559/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134625/top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134921/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134921/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134921/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134921/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-134921/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-135555/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-135555/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-135555/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-135555/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-135555/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142417/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142417/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142417/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142417/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142417/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142714/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142714/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142714/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142714/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-142714/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145004/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145004/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145004/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145004/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145004/sessionInfo.txt
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145116/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145116/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145116/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145116/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260703-145116/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-134732/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-134732/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-134732/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-134732/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-134732/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135038/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135038/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135038/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135038/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135038/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135715/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135715/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135715/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135715/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-135715/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142532/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142532/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142532/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142532/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142532/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142827/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142827/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142827/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142827/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-142827/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-145233/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-145233/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-145233/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-145233/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-145233/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_intersection_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_intersection_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_set_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152630/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_intersection_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_intersection_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_set_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152717/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_intersection_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_intersection_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_set_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260703-152742/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134627/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-134927/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-135601/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142423/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-142720/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/interaction_model_deg_count_barplot.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/interaction_model_direction_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145011/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/interaction_model_deg_count_barplot.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/interaction_model_direction_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-145122/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/interaction_model_deg_count_barplot.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/interaction_model_direction_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260703-150850/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134650/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-134952/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-135627/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142448/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-142744/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145036/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/diet_pairwise_deg_count_barplot.png
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/diet_pairwise_direction_counts.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-145146/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/diet_pairwise_deg_count_barplot.png
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/diet_pairwise_direction_counts.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260703-150915/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-134709/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135015/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-135651/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142510/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-142805/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-145208/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-150938/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151336/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-151451/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-152450/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-153743/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154007/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154142/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154235/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154433/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-154539/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155109/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155305/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-155512/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160313/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160430/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-160526/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/metarhizium_load_template.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141243/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/metarhizium_load_template.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-141333/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142545/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-142841/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-145247/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/annotation_source_manifest.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/eggNOG_GO_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/eggNOG_GO_TERM2NAME.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/eggNOG_GO_enrichment_by_ontology.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/eggNOG_GO_enrichment_with_ontology.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/eggNOG_KEGG_pathway_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151006/sessionInfo.txt
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/annotation_source_manifest.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/eggNOG_GO_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/eggNOG_GO_TERM2NAME.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/eggNOG_GO_enrichment_by_ontology.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/eggNOG_GO_enrichment_with_ontology.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/eggNOG_KEGG_pathway_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260703-151211/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/10_UMAP_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/11_MA_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/12_MA_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/14_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/15_PCA_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/16_PCA_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/17_PCA_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/18_PCA_Control.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/19_DEG_upset_plot.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/20_DEG_upset_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/21_DEG_venn_diagram.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/22_DEG_venn_diagram.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/23_full_venn.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/24_full_venn.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/3_Heatmap_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/4_Heatmap_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/5_Heatmap_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/6_Heatmap_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/8_MA_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/candidate_panels/9_MA_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/publication_figure_plan.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-134733/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/10_11_MA_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/11_12_MA_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/12_7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/14_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/15_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/16_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/17_13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/18_14_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/19_19_DEG_upset_plot.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/20_20_DEG_upset_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/21_21_DEG_venn_diagram.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/22_22_DEG_venn_diagram.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/23_23_full_venn.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/24_24_full_venn.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/25_25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/26_26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/27_27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/28_28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/29_29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/30_30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/3_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/4_1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/5_2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/6_3_Heatmap_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/8_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/candidate_panels/9_10_UMAP_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/publication_figure_plan.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135043/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/10_10_UMAP_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/11_11_MA_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/12_12_MA_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/14_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/15_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/16_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/17_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/18_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/19_19_DEG_upset_plot.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/20_20_DEG_upset_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/21_21_DEG_venn_diagram.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/22_22_DEG_venn_diagram.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/23_23_full_venn.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/24_24_full_venn.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/25_25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/26_26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/27_27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/28_28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/29_29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/30_30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/3_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/4_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/5_1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/6_2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/8_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/candidate_panels/9_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/publication_figure_plan.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-135720/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/10_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/11_10_UMAP_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/12_11_MA_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/14_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/15_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/16_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/17_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/18_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/19_19_DEG_upset_plot.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/20_20_DEG_upset_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/21_21_DEG_venn_diagram.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/22_22_DEG_venn_diagram.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/23_23_full_venn.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/24_24_full_venn.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/25_25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/26_26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/27_27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/28_28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/29_29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/30_30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/3_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/4_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/5_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/6_enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/8_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/candidate_panels/9_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-142539/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/10_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/11_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/12_10_UMAP_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/14_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/15_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/16_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/17_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/18_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/19_19_DEG_upset_plot.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/20_20_DEG_upset_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/21_21_DEG_venn_diagram.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/22_22_DEG_venn_diagram.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/23_23_full_venn.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/24_24_full_venn.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/25_25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/26_26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/27_27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/28_28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/29_29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/2_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/30_30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/3_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/4_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/5_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/6_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/8_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/candidate_panels/9_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260703-142836/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260703-134554/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260703-134554/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260703-134913/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260703-134913/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260703-135547/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260703-135547/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260703-142408/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260703-142408/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260703-142706/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260703-142706/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-134555/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-134555/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-134915/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-134915/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-135549/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-135549/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-142410/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-142410/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-142708/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260703-142708/sessionInfo.txt
 
 </code></pre>
 <p>
@@ -683,9 +1764,73 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/06-infection-within-diet-deg.Rmd</code>) and HTML
+(<code>docs/06-infection-within-diet-deg.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/analysis/06-infection-within-diet-deg.Rmd" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Upgrading analysis and figures DEGs
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/06-infection-within-diet-deg.html" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Upgrading analysis and figures DEGs
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -711,7 +1856,7 @@ are run.</p>
 <pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 required &lt;- c(&quot;DESeq2&quot;, &quot;ggplot2&quot;, &quot;EnhancedVolcano&quot;, &quot;pheatmap&quot;, &quot;ggrepel&quot;,
-              &quot;dplyr&quot;, &quot;SummarizedExperiment&quot;)
+              &quot;dplyr&quot;, &quot;SummarizedExperiment&quot;, &quot;DT&quot;)
 missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) &gt; 0) {
   stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
@@ -846,6 +1991,43 @@ p_pca_centroids &lt;- ggplot2::ggplot() +
 
 p_pca_centroids</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-vst-pca-centroids-1">
+Past versions of vst-pca-centroids-1.png
+</button>
+</p>
+<div id="fig-vst-pca-centroids-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;vst_pca_condition_centroids.png&quot;),
                 p_pca_centroids, width = 8, height = 5.8, dpi = 300)
 write.csv(pca_scores, file.path(out_dir, &quot;vst_pca_sample_scores.csv&quot;),
@@ -881,6 +2063,43 @@ pheatmap::pheatmap(
   main = paste(&quot;Top&quot;, top_n, &quot;variable VST genes across samples&quot;)
 )</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/vst-sample-heatmap-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-vst-sample-heatmap-1">
+Past versions of vst-sample-heatmap-1.png
+</button>
+</p>
+<div id="fig-vst-sample-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/vst-sample-heatmap-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dev.off()</code></pre>
 <pre><code>quartz_off_screen 
                 3 </code></pre>
@@ -948,7 +2167,120 @@ for (diet_level in levels(droplevels(metadata$Diet))) {
     title = paste(&quot;Infected vs control in diet&quot;, diet_level)
   ))
 }</code></pre>
-<p><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" alt="" width="768" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" alt="" width="768" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-infection-tests-1">
+Past versions of infection-tests-1.png
+</button>
+</p>
+<div id="fig-infection-tests-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-infection-tests-2">
+Past versions of infection-tests-2.png
+</button>
+</p>
+<div id="fig-infection-tests-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-infection-tests-3">
+Past versions of infection-tests-3.png
+</button>
+</p>
+<div id="fig-infection-tests-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>all_infection_results &lt;- do.call(rbind, diet_results)
 write.csv(all_infection_results,
           file.path(out_dir, &quot;all_infection_within_diet_results.csv&quot;),
@@ -1063,7 +2395,284 @@ for (diet_level in levels(droplevels(metadata$Diet))) {
     print(p_local)
   }
 }</code></pre>
-<p><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diet-specific-deg-pca-1">
+Past versions of diet-specific-deg-pca-1.png
+</button>
+</p>
+<div id="fig-diet-specific-deg-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diet-specific-deg-pca-2">
+Past versions of diet-specific-deg-pca-2.png
+</button>
+</p>
+<div id="fig-diet-specific-deg-pca-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diet-specific-deg-pca-3">
+Past versions of diet-specific-deg-pca-3.png
+</button>
+</p>
+<div id="fig-diet-specific-deg-pca-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="within-diet-ma-plots-and-deg-heatmaps" class="section level2">
+<h2>Within-diet MA plots and DEG heatmaps</h2>
+<p>The PCA shows whether samples separate using infection-responsive
+genes. The MA plots add the gene-level view for each diet: effect size
+on the y-axis and mean expression on the x-axis. The heatmaps then show
+the strongest infected-control DEGs within each diet using only samples
+from that diet, with the same blue-white-red VST palette used for the
+curated publication-style heatmap.</p>
+<pre class="r"><code>make_ma_plot &lt;- function(diet_level) {
+  res &lt;- diet_results[[diet_level]]
+  if (is.null(res) || nrow(res) == 0) return(NULL)
+
+  res$ma_class &lt;- &quot;Not significant&quot;
+  res$ma_class[res$significant &amp; res$log2FoldChange &gt; 0] &lt;- &quot;Higher in infected&quot;
+  res$ma_class[res$significant &amp; res$log2FoldChange &lt; 0] &lt;- &quot;Higher in control&quot;
+  res$ma_class &lt;- factor(res$ma_class,
+                         levels = c(&quot;Higher in infected&quot;,
+                                    &quot;Higher in control&quot;,
+                                    &quot;Not significant&quot;))
+
+  ggplot2::ggplot(res, ggplot2::aes(x = log10(baseMean + 1),
+                                    y = log2FoldChange,
+                                    color = ma_class)) +
+    ggplot2::geom_hline(yintercept = c(-params$lfc_threshold,
+                                       params$lfc_threshold),
+                        linetype = &quot;dashed&quot;, linewidth = 0.3,
+                        color = &quot;#6B7280&quot;) +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 0.25,
+                        color = &quot;#111827&quot;) +
+    ggplot2::geom_point(alpha = 0.45, size = 0.7) +
+    ggplot2::scale_color_manual(values = c(
+      &quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
+      &quot;Higher in control&quot; = &quot;#237C8E&quot;,
+      &quot;Not significant&quot; = &quot;#D1D5DB&quot;
+    )) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = &quot;bottom&quot;) +
+    ggplot2::labs(
+      title = paste(&quot;Diet&quot;, diet_level, &quot;infected-control MA plot&quot;),
+      subtitle = paste(sum(res$significant, na.rm = TRUE),
+                       &quot;significant DEGs&quot;),
+      x = &quot;log10 mean normalized count + 1&quot;,
+      y = &quot;log2 fold-change: infected / control&quot;,
+      color = &quot;DEG class&quot;
+    )
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  p_ma &lt;- make_ma_plot(diet_level)
+  if (!is.null(p_ma)) {
+    print(p_ma)
+    ggplot2::ggsave(file.path(out_dir,
+                              paste0(&quot;diet_&quot;, diet_level,
+                                     &quot;_infection_ma_plot.png&quot;)),
+                    p_ma, width = 7.2, height = 4.8, dpi = 300)
+  }
+}</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-1.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-2.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-3.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>within_diet_heatmap_colors &lt;- grDevices::colorRampPalette(
+  c(&quot;#237C8E&quot;, &quot;#F7F3E8&quot;, &quot;#C85A54&quot;)
+)(101)
+within_diet_heatmap_breaks &lt;- seq(-3, 3, length.out = 102)
+within_diet_display_dir &lt;- file.path(project_dir, &quot;docs&quot;, &quot;figure&quot;,
+                                     &quot;06-infection-within-diet-deg.Rmd&quot;)
+dir.create(within_diet_display_dir, recursive = TRUE, showWarnings = FALSE)
+
+make_within_diet_heatmap &lt;- function(diet_level, n_genes = 60) {
+  res &lt;- diet_results[[diet_level]]
+  if (is.null(res)) return(NULL)
+
+  degs &lt;- res[res$significant &amp; !is.na(res$padj) &amp;
+                !is.na(res$log2FoldChange), ]
+  degs &lt;- degs[order(degs$padj, -abs(degs$log2FoldChange)), ]
+  deg_genes &lt;- intersect(head(degs$gene_id, n_genes), rownames(vst_mat))
+  if (length(deg_genes) &lt; 3) return(NULL)
+
+  sample_keep &lt;- metadata$Diet == diet_level
+  sample_order_diet &lt;- metadata$label[sample_keep][order(
+    factor(as.character(metadata$Treatment[sample_keep]),
+           levels = c(&quot;Infected&quot;, &quot;Control&quot;)),
+    metadata$label[sample_keep]
+  )]
+
+  sample_annotation_diet &lt;- data.frame(
+    Treatment = metadata[sample_order_diet, &quot;Treatment&quot;]
+  )
+  rownames(sample_annotation_diet) &lt;- sample_order_diet
+
+  gene_direction &lt;- degs[match(deg_genes, degs$gene_id), ]
+  gene_annotation_diet &lt;- data.frame(
+    Direction = ifelse(gene_direction$log2FoldChange &gt; 0,
+                       &quot;Higher in infected&quot;, &quot;Higher in control&quot;)
+  )
+  rownames(gene_annotation_diet) &lt;- deg_genes
+
+  pheatmap::pheatmap(
+    vst_mat[deg_genes, sample_order_diet, drop = FALSE],
+    scale = &quot;row&quot;,
+    color = within_diet_heatmap_colors,
+    breaks = within_diet_heatmap_breaks,
+    cluster_rows = TRUE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = TRUE,
+    fontsize_col = 7,
+    annotation_col = sample_annotation_diet,
+    annotation_row = gene_annotation_diet,
+    annotation_colors = list(
+      Treatment = treatment_colors,
+      Direction = c(&quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
+                    &quot;Higher in control&quot; = &quot;#237C8E&quot;)
+    ),
+    main = paste(&quot;Diet&quot;, diet_level, &quot;top infection DEGs&quot;),
+    filename = file.path(out_dir,
+                         paste0(&quot;diet_&quot;, diet_level,
+                                &quot;_infection_deg_vst_heatmap.png&quot;)),
+    width = 8,
+    height = 7.5
+  )
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  hm &lt;- make_within_diet_heatmap(diet_level)
+  if (is.null(hm)) {
+    cat(&quot;Diet&quot;, diet_level,
+        &quot;does not have enough significant DEGs for a within-diet heatmap.\n&quot;)
+  } else {
+    print(hm)
+    heatmap_out &lt;- file.path(out_dir,
+                             paste0(&quot;diet_&quot;, diet_level,
+                                    &quot;_infection_deg_vst_heatmap.png&quot;))
+    heatmap_display &lt;- file.path(within_diet_display_dir,
+                                 paste0(&quot;diet-&quot;, diet_level,
+                                        &quot;-infection-deg-vst-heatmap.png&quot;))
+    file.copy(heatmap_out, heatmap_display, overwrite = TRUE)
+    heatmap_src &lt;- file.path(&quot;figure&quot;, &quot;06-infection-within-diet-deg.Rmd&quot;,
+                             basename(heatmap_display))
+    cat(paste0(
+      &#39;&lt;h4&gt;Diet &#39;, diet_level, &#39;&lt;/h4&gt;&#39;,
+      &#39;&lt;p&gt;&lt;img src=&quot;&#39;, heatmap_src,
+      &#39;&quot; alt=&quot;Diet &#39;, diet_level, &#39; infection DEG VST heatmap&quot; &#39;,
+      &#39;style=&quot;display:block;margin:auto;max-width:100%;height:auto;&quot; /&gt;&lt;/p&gt;&#39;
+    ))
+  }
+}</code></pre>
+<h4>
+Diet 33
+</h4>
+<p>
+<img src="figure/06-infection-within-diet-deg.Rmd/diet-33-infection-deg-vst-heatmap.png" alt="Diet 33 infection DEG VST heatmap" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
+<h4>
+Diet 50
+</h4>
+<p>
+<img src="figure/06-infection-within-diet-deg.Rmd/diet-50-infection-deg-vst-heatmap.png" alt="Diet 50 infection DEG VST heatmap" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
+<h4>
+Diet 83
+</h4>
+<p>
+<img src="figure/06-infection-within-diet-deg.Rmd/diet-83-infection-deg-vst-heatmap.png" alt="Diet 83 infection DEG VST heatmap" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
 </div>
 <div id="deg-count-barplot" class="section level2">
 <h2>DEG count barplot</h2>
@@ -1107,6 +2716,43 @@ p_deg_counts &lt;- ggplot(deg_bar_counts,
 
 p_deg_counts</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-deg-count-barplot-1">
+Past versions of deg-count-barplot-1.png
+</button>
+</p>
+<div id="fig-deg-count-barplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(file.path(out_dir, &quot;infection_within_diet_deg_count_barplot.png&quot;),
        p_deg_counts, width = 7.5, height = 4.8, dpi = 300)
 write.csv(deg_bar_counts,
@@ -1190,6 +2836,43 @@ p_pca_arrows &lt;- ggplot2::ggplot() +
 
 p_pca_arrows</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/pca-centroid-arrows-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-centroid-arrows-1">
+Past versions of pca-centroid-arrows-1.png
+</button>
+</p>
+<div id="fig-pca-centroid-arrows-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/pca-centroid-arrows-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;pca_centroid_infection_arrows.png&quot;),
                 p_pca_arrows, width = 10, height = 6.2, dpi = 300)
 write.csv(centroid_arrows,
@@ -1230,25 +2913,176 @@ p_deg_burden &lt;- ggplot2::ggplot(
 
 p_deg_burden</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-1.png" alt="" width="825.6" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diverging-deg-burden-1">
+Past versions of diverging-deg-burden-1.png
+</button>
+</p>
+<div id="fig-diverging-deg-burden-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;infection_deg_burden_diverging_barplot.png&quot;),
                 p_deg_burden, width = 8.6, height = 4.8, dpi = 300)
 write.csv(deg_burden,
           file.path(out_dir, &quot;infection_deg_burden_diverging_counts.csv&quot;),
           row.names = FALSE)</code></pre>
+<pre class="r"><code>parse_gene_biotypes &lt;- function(path) {
+  gff &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, stringsAsFactors = FALSE)
+  names(gff)[1:9] &lt;- c(&quot;seqid&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;, &quot;score&quot;,
+                       &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)
+  genes &lt;- gff[gff$type == &quot;gene&quot;, ]
+  data.frame(
+    gene_id = sub(&quot;.*gene=([^;]+).*&quot;, &quot;\\1&quot;, genes$attributes),
+    gene_biotype = sub(&quot;.*gene_biotype=([^;]+).*&quot;, &quot;\\1&quot;, genes$attributes),
+    raw_attributes = genes$attributes,
+    stringsAsFactors = FALSE
+  ) |&gt;
+    dplyr::filter(grepl(&quot;^LOC&quot;, gene_id)) |&gt;
+    dplyr::mutate(gene_biotype = ifelse(gene_biotype == raw_attributes,
+                                        NA_character_, gene_biotype)) |&gt;
+    dplyr::select(-raw_attributes) |&gt;
+    dplyr::distinct()
+}
+
+classify_gene_class &lt;- function(x) {
+  dplyr::case_when(
+    x == &quot;protein_coding&quot; ~ &quot;Coding genes&quot;,
+    x == &quot;lncRNA&quot; ~ &quot;Long non-coding RNA&quot;,
+    x == &quot;rRNA&quot; ~ &quot;rRNA&quot;,
+    is.na(x) ~ &quot;Other / unknown&quot;,
+    TRUE ~ &quot;Other non-coding&quot;
+  )
+}
+
+gene_biotypes &lt;- parse_gene_biotypes(file.path(project_dir, params$gff_file))
+
+biotype_burden &lt;- sig_infection |&gt;
+  dplyr::left_join(gene_biotypes, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    Gene_class = classify_gene_class(gene_biotype),
+    signed_direction = ifelse(direction == &quot;Higher in infected&quot;, 1, -1)
+  ) |&gt;
+  dplyr::distinct(diet, direction, gene_id, Gene_class, .keep_all = TRUE) |&gt;
+  dplyr::count(diet, direction, signed_direction, Gene_class,
+               name = &quot;n_significant_genes&quot;) |&gt;
+  dplyr::mutate(
+    signed_n = signed_direction * n_significant_genes,
+    burden_class = paste(direction, Gene_class, sep = &quot; - &quot;)
+  )
+
+biotype_totals &lt;- biotype_burden |&gt;
+  dplyr::group_by(diet, direction, signed_direction) |&gt;
+  dplyr::summarise(
+    n_significant_genes = sum(n_significant_genes),
+    signed_n = dplyr::first(signed_direction) * n_significant_genes,
+    .groups = &quot;drop&quot;
+  )
+
+max_biotype_burden &lt;- max(abs(biotype_totals$signed_n), 1)
+biotype_totals$label_x &lt;- ifelse(
+  biotype_totals$signed_n &gt; 0,
+  biotype_totals$signed_n + 0.04 * max_biotype_burden,
+  biotype_totals$signed_n - 0.04 * max_biotype_burden
+)
+
+biotype_burden$diet &lt;- factor(biotype_burden$diet,
+                              levels = levels(droplevels(metadata$Diet)))
+biotype_totals$diet &lt;- factor(biotype_totals$diet,
+                              levels = levels(droplevels(metadata$Diet)))
+
+biotype_colors &lt;- c(
+  &quot;Higher in infected - Coding genes&quot; = &quot;#8B1E3F&quot;,
+  &quot;Higher in infected - Long non-coding RNA&quot; = &quot;#D98BA3&quot;,
+  &quot;Higher in infected - rRNA&quot; = &quot;#F2B8A0&quot;,
+  &quot;Higher in infected - Other non-coding&quot; = &quot;#F2B8A0&quot;,
+  &quot;Higher in infected - Other / unknown&quot; = &quot;#E5B567&quot;,
+  &quot;Higher in control - Coding genes&quot; = &quot;#1F5F8B&quot;,
+  &quot;Higher in control - Long non-coding RNA&quot; = &quot;#93B7D4&quot;,
+  &quot;Higher in control - rRNA&quot; = &quot;#B8C7D9&quot;,
+  &quot;Higher in control - Other non-coding&quot; = &quot;#B8C7D9&quot;,
+  &quot;Higher in control - Other / unknown&quot; = &quot;#C9CED6&quot;
+)
+
+p_biotype_burden &lt;- ggplot2::ggplot(
+  biotype_burden,
+  ggplot2::aes(x = signed_n, y = diet, fill = burden_class)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = &quot;grey35&quot;) +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    data = biotype_totals,
+    ggplot2::aes(x = label_x, y = diet, label = n_significant_genes),
+    inherit.aes = FALSE,
+    size = 3.2
+  ) +
+  ggplot2::scale_x_continuous(labels = abs,
+                              limits = c(-max_biotype_burden * 1.25,
+                                         max_biotype_burden * 1.25)) +
+  ggplot2::scale_fill_manual(values = biotype_colors, drop = FALSE) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 8)
+  ) +
+  ggplot2::labs(
+    title = &quot;Direction-aware infection DEG burden by gene class&quot;,
+    subtitle = &quot;This uses the rRNA-filtered master count matrix; rRNA should be absent after filtering&quot;,
+    x = &quot;Number of significant genes&quot;,
+    y = &quot;Diet&quot;
+  )
+
+p_biotype_burden</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-by-biotype-1.png" alt="" width="902.4" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(file.path(out_dir,
+                          &quot;infection_deg_burden_by_biotype_diverging_barplot.png&quot;),
+                p_biotype_burden, width = 9.4, height = 5.2, dpi = 300)
+write.csv(biotype_burden,
+          file.path(out_dir, &quot;infection_deg_burden_by_biotype_counts.csv&quot;),
+          row.names = FALSE)</code></pre>
 </div>
 <div id="curated-deg-vst-heatmap" class="section level2">
 <h2>Curated DEG VST heatmap</h2>
 <p>The full VST heatmap is a broad QC view. This heatmap is narrower: it
-selects the strongest infected-control DEGs from each diet and
-direction, then adds significant DEGs with eggNOG descriptions matching
-immune or nutrition-related keywords. This follows the same idea as the
-AGY candidate heatmaps: keep the statistical DEG signal visible, but
-annotate genes that are biologically relevant to the manuscript
-question. Samples are ordered by infection status first and then diet
-instead of clustered, so the infected profiles appear together and
-diet-specific substructure can be compared directly. Genes are ordered
-first by how broadly they are detected as DEGs across diets, and then by
-their functional theme.</p>
+selects strong infection-responsive DEGs and fat-body-relevant genes
+with eggNOG descriptions matching immune, storage, nutrition,
+lipid-transport, or detoxification keywords. Samples are ordered by
+infection status first and then diet instead of clustered, so the
+infected profiles appear together and diet-specific substructure can be
+compared directly. The gene annotations are kept deliberately simple:
+whether a gene is a significant infection DEG in at least one diet, and
+its functional theme. Genes are ordered first by DEG class and then by
+functional theme.</p>
 <pre class="r"><code>sig_for_heatmap &lt;- all_infection_results[all_infection_results$significant &amp;
                                            !is.na(all_infection_results$padj) &amp;
                                            !is.na(all_infection_results$log2FoldChange), ]
@@ -1342,19 +3176,25 @@ nutrition_keywords &lt;- paste(c(
   &quot;lipase&quot;, &quot;amylase&quot;, &quot;digestion&quot;, &quot;digestive&quot;, &quot;transporter&quot;
 ), collapse = &quot;|&quot;)
 
-annotated_sig$Functional_theme &lt;- dplyr::case_when(
-  grepl(immune_keywords, annotation_text, ignore.case = TRUE) ~ &quot;Immune-related&quot;,
-  grepl(nutrition_keywords, annotation_text, ignore.case = TRUE) ~ &quot;Nutrition/metabolism&quot;,
-  TRUE ~ &quot;Other&quot;
-)
+storage_keywords &lt;- paste(c(
+  &quot;storage protein&quot;, &quot;hexamerin&quot;, &quot;arylphorin&quot;, &quot;hemocyanin&quot;,
+  &quot;vitellogenin&quot;, &quot;lipophorin&quot;, &quot;apolipophorin&quot;, &quot;nutrient reservoir&quot;
+), collapse = &quot;|&quot;)
 
-theme_rows &lt;- annotated_sig |&gt;
-  dplyr::filter(Functional_theme != &quot;Other&quot;) |&gt;
-  dplyr::group_by(Functional_theme) |&gt;
-  dplyr::arrange(padj, dplyr::desc(abs(log2FoldChange)), .by_group = TRUE) |&gt;
-  dplyr::slice_head(n = params$top_functional_degs_per_theme) |&gt;
-  dplyr::ungroup() |&gt;
-  dplyr::mutate(Selection = Functional_theme)
+detox_keywords &lt;- paste(c(
+  &quot;detox&quot;, &quot;xenobiotic&quot;, &quot;cytochrome p450&quot;, &quot;p450&quot;, &quot;glutathione&quot;,
+  &quot;peroxidase&quot;, &quot;oxidative stress&quot;, &quot;superoxide&quot;, &quot;catalase&quot;
+), collapse = &quot;|&quot;)
+
+classify_functional_theme &lt;- function(text) {
+  dplyr::case_when(
+    grepl(immune_keywords, text, ignore.case = TRUE) ~ &quot;Immune-related&quot;,
+    grepl(storage_keywords, text, ignore.case = TRUE) ~ &quot;Storage/lipid transport&quot;,
+    grepl(detox_keywords, text, ignore.case = TRUE) ~ &quot;Detoxification/stress&quot;,
+    grepl(nutrition_keywords, text, ignore.case = TRUE) ~ &quot;Nutrition/metabolism&quot;,
+    TRUE ~ &quot;Other strong DEG&quot;
+  )
+}
 
 gene_deg_summary &lt;- sig_for_heatmap |&gt;
   dplyr::group_by(gene_id) |&gt;
@@ -1371,45 +3211,58 @@ gene_deg_summary &lt;- sig_for_heatmap |&gt;
     .groups = &quot;drop&quot;
   ) |&gt;
   dplyr::mutate(
-    DEG_status = dplyr::case_when(
-      DEG_diet_count == length(levels(droplevels(metadata$Diet))) ~
-        &quot;DEG in all diets&quot;,
-      DEG_diet_count &gt; 1 ~ &quot;DEG in multiple diets&quot;,
-      DEG_diet_count == 1 ~ &quot;DEG in one diet&quot;,
-      TRUE ~ &quot;Functional candidate (not DEG)&quot;
-    )
+    DEG_class = &quot;DEG&quot;
   )
 
-deg_status_levels &lt;- c(&quot;DEG in all diets&quot;, &quot;DEG in multiple diets&quot;,
-                       &quot;DEG in one diet&quot;, &quot;Functional candidate (not DEG)&quot;)
-functional_theme_levels &lt;- c(&quot;Immune-related&quot;, &quot;Nutrition/metabolism&quot;,
-                             &quot;Top DEG&quot;, &quot;Other&quot;)
-
-curated_degs &lt;- dplyr::bind_rows(top_deg_rows, theme_rows) |&gt;
-  dplyr::left_join(gene_annotation, by = &quot;gene_id&quot;, suffix = c(&quot;&quot;, &quot;.anno&quot;)) |&gt;
-  dplyr::left_join(gene_deg_summary, by = &quot;gene_id&quot;) |&gt;
+annotation_for_heatmap &lt;- gene_annotation |&gt;
+  dplyr::filter(gene_id %in% rownames(vst_mat)) |&gt;
   dplyr::mutate(
-    Preferred_name = dplyr::coalesce(Preferred_name, Preferred_name.anno),
-    Description = dplyr::coalesce(Description, Description.anno),
-    GOs = dplyr::coalesce(GOs, GOs.anno),
-    KEGG_ko = dplyr::coalesce(KEGG_ko, KEGG_ko.anno),
-    KEGG_Pathway = dplyr::coalesce(KEGG_Pathway, KEGG_Pathway.anno),
-    PFAMs = dplyr::coalesce(PFAMs, PFAMs.anno),
     curated_annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
                                     KEGG_Pathway, PFAMs),
-    Functional_theme = dplyr::case_when(
-      grepl(immune_keywords, curated_annotation_text, ignore.case = TRUE) ~
-        &quot;Immune-related&quot;,
-      grepl(nutrition_keywords, curated_annotation_text, ignore.case = TRUE) ~
-        &quot;Nutrition/metabolism&quot;,
-      Selection %in% c(&quot;Immune-related&quot;, &quot;Nutrition/metabolism&quot;) ~ Selection,
-      TRUE ~ &quot;Top DEG&quot;
-    ),
-    DEG_status = factor(DEG_status, levels = deg_status_levels),
-    Functional_theme = factor(Functional_theme, levels = functional_theme_levels)
+    Functional_theme = classify_functional_theme(curated_annotation_text)
+  )
+
+theme_rows &lt;- annotation_for_heatmap |&gt;
+  dplyr::left_join(gene_deg_summary, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    DEG_class = dplyr::if_else(is.na(DEG_class), &quot;Not DEG&quot;, DEG_class),
+    min_padj = dplyr::if_else(is.na(min_padj), Inf, min_padj),
+    max_abs_lfc = dplyr::if_else(is.na(max_abs_lfc), 0, max_abs_lfc),
+    vst_variance = apply(vst_mat[gene_id, , drop = FALSE], 1, var)
   ) |&gt;
-  dplyr::arrange(DEG_status, Functional_theme, DEG_direction_summary,
-                 DEG_diets, min_padj, dplyr::desc(max_abs_lfc)) |&gt;
+  dplyr::filter(Functional_theme != &quot;Other strong DEG&quot;) |&gt;
+  dplyr::group_by(Functional_theme, DEG_class) |&gt;
+  dplyr::arrange(min_padj, dplyr::desc(max_abs_lfc),
+                 dplyr::desc(vst_variance), .by_group = TRUE) |&gt;
+  dplyr::slice_head(n = params$top_functional_degs_per_theme) |&gt;
+  dplyr::ungroup() |&gt;
+  dplyr::mutate(Selection = &quot;Functional candidate&quot;)
+
+curated_degs &lt;- top_deg_rows |&gt;
+  dplyr::select(gene_id, diet, direction, padj, log2FoldChange, Selection) |&gt;
+  dplyr::left_join(annotation_for_heatmap, by = &quot;gene_id&quot;) |&gt;
+  dplyr::left_join(gene_deg_summary, by = &quot;gene_id&quot;, suffix = c(&quot;&quot;, &quot;.summary&quot;)) |&gt;
+  dplyr::mutate(
+    Functional_theme = dplyr::if_else(is.na(Functional_theme),
+                                      &quot;Other strong DEG&quot;,
+                                      Functional_theme),
+    DEG_class = &quot;DEG&quot;
+  ) |&gt;
+  dplyr::bind_rows(theme_rows) |&gt;
+  dplyr::mutate(
+    DEG_class = dplyr::if_else(is.na(DEG_class), &quot;Not DEG&quot;, DEG_class),
+    min_padj = dplyr::if_else(is.na(min_padj), Inf, min_padj),
+    max_abs_lfc = dplyr::if_else(is.na(max_abs_lfc), 0, max_abs_lfc),
+    Functional_theme = factor(
+      Functional_theme,
+      levels = c(&quot;Immune-related&quot;, &quot;Storage/lipid transport&quot;,
+                 &quot;Nutrition/metabolism&quot;, &quot;Detoxification/stress&quot;,
+                 &quot;Other strong DEG&quot;)
+    ),
+    DEG_class = factor(DEG_class, levels = c(&quot;DEG&quot;, &quot;Not DEG&quot;))
+  ) |&gt;
+  dplyr::arrange(DEG_class, Functional_theme, min_padj,
+                 dplyr::desc(max_abs_lfc)) |&gt;
   dplyr::distinct(gene_id, .keep_all = TRUE)
 
 curated_genes &lt;- curated_degs$gene_id[curated_degs$gene_id %in% rownames(vst_mat)]
@@ -1425,12 +3278,8 @@ sample_annotation &lt;- data.frame(
 rownames(sample_annotation) &lt;- sample_order
 
 gene_annotation_display &lt;- curated_degs[match(curated_genes, curated_degs$gene_id),
-                                        c(&quot;DEG_status&quot;,
-                                          &quot;DEG_direction_summary&quot;,
-                                          &quot;Selection&quot;,
+                                        c(&quot;DEG_class&quot;,
                                           &quot;Functional_theme&quot;), drop = FALSE]
-names(gene_annotation_display) &lt;- c(&quot;DEG_status&quot;, &quot;DEG_direction&quot;,
-                                    &quot;Selection&quot;, &quot;Functional_theme&quot;)
 rownames(gene_annotation_display) &lt;- curated_genes
 
 label_source &lt;- curated_degs[match(curated_genes, curated_degs$gene_id), ]
@@ -1452,26 +3301,19 @@ find_gaps &lt;- function(groups) {
 
 sample_gaps &lt;- find_gaps(paste(sample_annotation$Treatment,
                                sample_annotation$Diet))
-gene_gaps &lt;- find_gaps(paste(gene_annotation_display$DEG_status,
+gene_gaps &lt;- find_gaps(paste(gene_annotation_display$DEG_class,
                              gene_annotation_display$Functional_theme))
 
 annotation_colors &lt;- list(
   Diet = diet_colors,
   Treatment = treatment_colors,
-  DEG_direction = c(&quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
-                    &quot;Higher in control&quot; = treatment_colors[[&quot;Control&quot;]],
-                    &quot;Mixed directions&quot; = &quot;#4B5563&quot;),
-  DEG_status = c(&quot;DEG in all diets&quot; = &quot;#111827&quot;,
-                 &quot;DEG in multiple diets&quot; = &quot;#4B5563&quot;,
-                 &quot;DEG in one diet&quot; = &quot;#9CA3AF&quot;,
-                 &quot;Functional candidate (not DEG)&quot; = &quot;#E5E7EB&quot;),
-  Selection = c(&quot;Top DEG&quot; = &quot;#374151&quot;,
-                &quot;Immune-related&quot; = &quot;#237C8E&quot;,
-                &quot;Nutrition/metabolism&quot; = &quot;#B8643C&quot;),
-  Functional_theme = c(&quot;Top DEG&quot; = &quot;#374151&quot;,
-                       &quot;Immune-related&quot; = &quot;#237C8E&quot;,
+  DEG_class = c(&quot;DEG&quot; = &quot;#111827&quot;,
+                &quot;Not DEG&quot; = &quot;#D1D5DB&quot;),
+  Functional_theme = c(&quot;Immune-related&quot; = &quot;#237C8E&quot;,
+                       &quot;Storage/lipid transport&quot; = &quot;#D7832F&quot;,
                        &quot;Nutrition/metabolism&quot; = &quot;#B8643C&quot;,
-                       &quot;Other&quot; = &quot;#9CA3AF&quot;)
+                       &quot;Detoxification/stress&quot; = &quot;#8C6D31&quot;,
+                       &quot;Other strong DEG&quot; = &quot;#9CA3AF&quot;)
 )
 
 heatmap_expression_colors &lt;- grDevices::colorRampPalette(
@@ -1495,10 +3337,35 @@ heatmap_display &lt;- pheatmap::pheatmap(
   annotation_col = gene_annotation_display,
   annotation_row = sample_annotation,
   annotation_colors = annotation_colors,
-  main = &quot;Curated infection, immune, and nutrition DEGs&quot;,
+  main = &quot;Curated fat body infection-response genes&quot;,
   filename = file.path(out_dir, &quot;curated_infection_deg_vst_heatmap.png&quot;),
   width = 14,
   height = 11
+)
+
+labeled_heatmap_display &lt;- pheatmap::pheatmap(
+  t(vst_mat[curated_genes, sample_order, drop = FALSE]),
+  scale = &quot;column&quot;,
+  color = heatmap_expression_colors,
+  breaks = heatmap_expression_breaks,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  gaps_row = sample_gaps,
+  gaps_col = gene_gaps,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  labels_col = col_labels,
+  fontsize_row = 6,
+  fontsize_col = 4.5,
+  angle_col = 90,
+  annotation_col = gene_annotation_display,
+  annotation_row = sample_annotation,
+  annotation_colors = annotation_colors,
+  main = &quot;Curated fat body infection-response genes with annotations&quot;,
+  filename = file.path(out_dir,
+                       &quot;curated_infection_deg_vst_heatmap_labeled.png&quot;),
+  width = 22,
+  height = 12
 )
 
 display_dir &lt;- file.path(project_dir, &quot;docs&quot;, &quot;figure&quot;,
@@ -1511,11 +3378,27 @@ file.copy(file.path(out_dir, &quot;curated_infection_deg_vst_heatmap.png&quot;),
 <pre class="r"><code>curated_heatmap_src &lt;- file.path(&quot;figure&quot;, &quot;06-infection-within-diet-deg.Rmd&quot;,
                                  &quot;curated-deg-heatmap-display.png&quot;)
 
+labeled_display_png &lt;- file.path(display_dir,
+                                 &quot;curated-deg-heatmap-labeled-display.png&quot;)
+file.copy(file.path(out_dir, &quot;curated_infection_deg_vst_heatmap_labeled.png&quot;),
+          labeled_display_png, overwrite = TRUE)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>labeled_curated_heatmap_src &lt;- file.path(
+  &quot;figure&quot;, &quot;06-infection-within-diet-deg.Rmd&quot;,
+  &quot;curated-deg-heatmap-labeled-display.png&quot;
+)
+
 write.csv(curated_degs,
           file.path(out_dir, &quot;curated_infection_deg_heatmap_genes.csv&quot;),
           row.names = FALSE)</code></pre>
 <p>
 <img src="figure/06-infection-within-diet-deg.Rmd/curated-deg-heatmap-display.png" alt="Curated infection, immune, and nutrition DEG VST heatmap" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
+<h3>
+Labeled curated heatmap
+</h3>
+<p>
+<img src="figure/06-infection-within-diet-deg.Rmd/curated-deg-heatmap-labeled-display.png" alt="Curated infection DEG VST heatmap with gene descriptions" style="display:block;margin:auto;max-width:100%;height:auto;" />
 </p>
 </div>
 <div id="curated-immune-and-nutrition-deg-summary"
@@ -1561,10 +3444,79 @@ p_curated_summary &lt;- ggplot(curated_summary,
 
 p_curated_summary</code></pre>
 <p><img src="figure/06-infection-within-diet-deg.Rmd/curated-theme-barplot-1.png" alt="" width="816" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-curated-theme-barplot-1">
+Past versions of curated-theme-barplot-1.png
+</button>
+</p>
+<div id="fig-curated-theme-barplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/4ef2181155c609d67abadf6996e77dbb8f1716e0/docs/figure/06-infection-within-diet-deg.Rmd/curated-theme-barplot-1.png" target="_blank">4ef2181</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(file.path(out_dir, &quot;curated_immune_nutrition_deg_barplot.png&quot;),
        p_curated_summary, width = 8.5, height = 5.2, dpi = 300)
 write.csv(curated_summary,
           file.path(out_dir, &quot;curated_immune_nutrition_deg_summary.csv&quot;),
+          row.names = FALSE)</code></pre>
+<pre class="r"><code>curated_gene_list &lt;- curated_degs |&gt;
+  dplyr::filter(Functional_theme %in% c(&quot;Immune-related&quot;,
+                                        &quot;Nutrition/metabolism&quot;,
+                                        &quot;Storage/lipid transport&quot;)) |&gt;
+  dplyr::mutate(
+    Preferred_name = ifelse(is.na(Preferred_name) | Preferred_name == &quot;-&quot;,
+                            &quot;&quot;, Preferred_name),
+    Description = ifelse(is.na(Description) | Description == &quot;-&quot;,
+                         &quot;&quot;, Description),
+    DEG_diets = ifelse(is.na(DEG_diets), &quot;&quot;, DEG_diets),
+    DEG_direction_summary = ifelse(is.na(DEG_direction_summary), &quot;&quot;,
+                                   DEG_direction_summary),
+    min_padj = ifelse(is.infinite(min_padj), NA_real_, min_padj)
+  ) |&gt;
+  dplyr::select(
+    gene_id, Preferred_name, Description, Functional_theme, DEG_class,
+    DEG_diets, DEG_direction_summary, min_padj, max_abs_lfc
+  ) |&gt;
+  dplyr::arrange(DEG_class, Functional_theme, min_padj,
+                 dplyr::desc(max_abs_lfc))
+
+DT::datatable(
+  curated_gene_list,
+  rownames = FALSE,
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = &quot;Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap&quot;
+)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8e5959f7d44745aa3695" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8e5959f7d44745aa3695">{"x":{"filter":"none","vertical":false,"caption":"<caption>Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap<\/caption>","data":[["LOC126285462","LOC126335463","LOC126267038","LOC126335468","LOC126267163","LOC126271975","LOC126335547","LOC126267162","LOC126267215","LOC126266760","LOC126268068","LOC126336578","LOC126266759","LOC126267343","LOC126365918","LOC126335467","LOC126353952","LOC126291639","LOC126336325","LOC126336416","LOC126299332","LOC126336415","LOC126336409","LOC126299533","LOC126355303","LOC126285413","LOC126355939","LOC126272336","LOC126278707","LOC126299559","LOC126285457","LOC126355684","LOC126284651","LOC126299510","LOC126297421","LOC126339755","LOC126335114","LOC126267545","LOC126356204","LOC126349011","LOC126354995","LOC126354704","LOC126266596","LOC126278232","LOC126335115","LOC126272350","LOC126299121","LOC126266677","LOC126295319","LOC126273183","LOC126277885","LOC126354270","LOC126345236","LOC126281485","LOC126267690","LOC126272138","LOC126336078","LOC126297465","LOC126273387","LOC126335616","LOC126277948","LOC126355358","LOC126335469","LOC126334876","LOC126336408","LOC126335724","LOC126298412","LOC126299565","LOC126335646","LOC126336762","LOC126323918","LOC126328322","LOC126354316","LOC126355818","LOC126332617","LOC126354457","LOC126355972","LOC126355971","LOC126332180","LOC126277939","LOC126304741","LOC126274026","LOC126278130","LOC126335006","LOC126327137","LOC126355964","LOC126278132","LOC126272474"],["","","","","","","","PGRPLC","PGRPLA","","PGRPLA","","","","PGRPLA","","CLIPC1","","","","","","","","","","","","","","","Orct","","","","","","","","","","","","","","","bt","","","stai","","","RpL5","","CLIPD2","","","","SCRASP1","","","","","","","","","","","","","","","","","","","","","bli-4","","","","","","","",""],["Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","Signal transducer and activator of transcription","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Alpha-lactalbumin / lysozyme C","Belongs to the serpin family","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immunoglobulin V-set domain","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Knottins","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","nutrient reservoir activity","Transporter activity. It is involved in the biological process described with transmembrane transport","transporter activity. It is involved in the biological process described with sodium ion transport","amino acid transporter","lipid binding","Trypsin","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","Sugar (and other) transporter","Phosphoric diester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Trypsin-like serine protease","Carboxylic ester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Vault protein inter-alpha-trypsin domain","Belongs to the type-B carboxylesterase lipase family","Trypsin-like serine protease","catalytic activity. It is involved in the biological process described with metabolic process","Trypsin-like serine protease","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Serine-type endopeptidase inhibitor activity","Transferase activity, transferring hexosyl groups. It is involved in the biological process described with carbohydrate metabolic process","Sugar proton symporter activity. It is involved in the biological process described with carbohydrate transport","Belongs to the type-B carboxylesterase lipase family","carbohydrate binding","Immunoglobulin like","Immunoglobulin","Immunoglobulin C-2 Type","It is involved in the biological process described with regulation of microtubule polymerization or depolymerization","Immunoglobulin C-2 Type","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Component of the ribosome, a large ribonucleoprotein complex responsible for the synthesis of proteins in the cell. The small ribosomal subunit (SSU) binds messenger RNAs (mRNAs) and translates the encoded message by selecting cognate aminoacyl- transfer RNA (tRNA) molecules. The large subunit (LSU) contains the ribosomal catalytic site termed the peptidyl transferase center (PTC), which catalyzes the formation of peptide bonds, thereby polymerizing the amino acids delivered by tRNAs into a polypeptide chain. The nascent polypeptides leave the ribosome through a tunnel in the LSU and interact with protein factors that function in enzymatic processing, targeting, and the membrane insertion of nascent chains at the exit of the ribosomal tunnel","Immunoglobulin","Domain of unknown function (DUF1986)","Immunoglobulin domain","Belongs to the serpin family","Legume-like lectin family","It is involved in the biological process described with","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","CD80-like C2-set immunoglobulin domain","Collagenase NC10 and Endostatin","Belongs to the serpin family","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, copper containing domain","Microsomal triglyceride transfer protein","It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","activity. It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with carbohydrate metabolic process","Proprotein convertase P-domain","It is involved in the biological process described with carbohydrate metabolic process","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with metabolic process","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Dipeptidyl peptidase IV (DPP IV) N-terminal region"],["Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism"],["DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG"],["33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","50","50","33, 50, 83","50","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33","50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],["Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],[1.488187602919542e-31,5.022130116516287e-24,3.316672995776341e-16,1.090249733661977e-15,3.877220354601891e-15,3.583958746083118e-14,2.50680880651974e-13,2.662982960185946e-13,2.10098686675823e-12,2.187236594357404e-12,1.461184593237631e-11,3.530534278973955e-11,5.658535905881999e-10,6.554676389711904e-10,1.749721062953593e-09,2.851615692251323e-09,1.871974906285001e-08,2.643472550903612e-08,6.073576703079021e-08,2.623776110630218e-13,5.681095977085196e-13,5.729642778738305e-05,0.003776994097060118,0.006772059927512675,3.275017549101291e-20,3.227700292935422e-18,3.797989306126913e-18,6.131466596025749e-17,8.196123330686172e-17,8.76372956149559e-17,2.160247687644949e-16,3.273646780074912e-16,2.721728748821012e-15,1.282319706427465e-13,2.882868434655947e-13,4.411627219198623e-13,5.681095977085196e-13,6.545496871156995e-13,9.460174007178445e-13,1.730419430959503e-12,2.426830627951155e-12,2.801226443495212e-12,9.163622581047802e-11,2.712989834122484e-10,8.158804711083966e-10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[3.798849497532762,6.993757805231753,1.187627323797608,4.991323006484674,4.410727782380262,7.499195244319904,2.977694144312415,2.155494697596648,5.535066734957939,2.820990811405765,2.349321362287764,5.197727984164628,3.175397272626118,2.347946948557903,1.69937999848552,2.464859050643734,2.376317747155013,2.759287120589964,6.713947303690562,2.10311261136104,2.106236060347341,2.289821463576982,2.213658598449683,2.822412527804175,4.368745379149719,3.191539552239849,6.535669867325421,2.012700665452439,3.839799148199968,3.135141683835453,3.521700479462783,2.54131964925491,4.747911885221292,5.309035865765937,4.891846661755467,3.785047607307905,3.782260225278736,7.434380343365635,3.984809488793387,2.746566844757483,6.80124212200908,2.207187769551948,2.359285844601591,2.08556509856239,6.739115767385497,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>gene_id<\/th>\n      <th>Preferred_name<\/th>\n      <th>Description<\/th>\n      <th>Functional_theme<\/th>\n      <th>DEG_class<\/th>\n      <th>DEG_diets<\/th>\n      <th>DEG_direction_summary<\/th>\n      <th>min_padj<\/th>\n      <th>max_abs_lfc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[7,8]},{"name":"gene_id","targets":0},{"name":"Preferred_name","targets":1},{"name":"Description","targets":2},{"name":"Functional_theme","targets":3},{"name":"DEG_class","targets":4},{"name":"DEG_diets","targets":5},{"name":"DEG_direction_summary","targets":6},{"name":"min_padj","targets":7},{"name":"max_abs_lfc","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>write.csv(curated_gene_list,
+          file.path(out_dir, &quot;curated_immune_nutrition_gene_list.csv&quot;),
           row.names = FALSE)</code></pre>
 </div>
 <div id="summary" class="section level2">
@@ -1586,15 +3538,15 @@ knitr::kable(summary_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">33</td>
-<td align="right">1124</td>
+<td align="right">898</td>
 </tr>
 <tr class="even">
 <td align="left">50</td>
-<td align="right">1735</td>
+<td align="right">1312</td>
 </tr>
 <tr class="odd">
 <td align="left">83</td>
-<td align="right">657</td>
+<td align="right">519</td>
 </tr>
 </tbody>
 </table>
@@ -1626,45 +3578,46 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
  [3] xfun_0.57                   bslib_0.10.0               
- [5] ggrepel_0.9.8               processx_3.9.0             
- [7] Biobase_2.72.0              lattice_0.22-9             
- [9] callr_3.7.6                 vctrs_0.7.3                
-[11] tools_4.6.0                 generics_0.1.4             
-[13] stats4_4.6.0                parallel_4.6.0             
-[15] tibble_3.3.1                pkgconfig_2.0.3            
-[17] pheatmap_1.0.13             Matrix_1.7-5               
-[19] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
-[21] S7_0.2.2                    S4Vectors_0.50.1           
-[23] lifecycle_1.0.5             compiler_4.6.0             
-[25] farver_2.1.2                stringr_1.6.0              
-[27] git2r_0.36.2                textshaping_1.0.5          
-[29] DESeq2_1.52.0               getPass_0.2-4              
-[31] Seqinfo_1.2.0               codetools_0.2-20           
-[33] httpuv_1.6.17               htmltools_0.5.9            
-[35] sass_0.4.10                 yaml_2.3.12                
-[37] later_1.4.8                 pillar_1.11.1              
-[39] jquerylib_0.1.4             whisker_0.4.1              
-[41] BiocParallel_1.46.0         cachem_1.1.0               
-[43] DelayedArray_0.38.1         abind_1.4-8                
-[45] locfit_1.5-9.12             tidyselect_1.2.1           
-[47] digest_0.6.39               stringi_1.8.7              
-[49] dplyr_1.2.1                 labeling_0.4.3             
-[51] rprojroot_2.1.1             fastmap_1.2.0              
-[53] grid_4.6.0                  cli_3.6.6                  
-[55] SparseArray_1.12.2          magrittr_2.0.5             
-[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[59] withr_3.0.2                 scales_1.4.0               
-[61] promises_1.5.0              rmarkdown_2.31             
-[63] XVector_0.52.0              httr_1.4.8                 
-[65] matrixStats_1.5.0           otel_0.2.0                 
-[67] ragg_1.5.2                  evaluate_1.0.5             
-[69] knitr_1.51                  GenomicRanges_1.64.0       
-[71] IRanges_2.46.0              rlang_1.2.0                
-[73] Rcpp_1.1.1-1.1              glue_1.8.1                 
-[75] BiocGenerics_0.58.0         rstudioapi_0.18.0          
-[77] jsonlite_2.0.0              R6_2.6.1                   
-[79] systemfonts_1.3.2           MatrixGenerics_1.24.0      
-[81] fs_2.1.0                   </code></pre>
+ [5] htmlwidgets_1.6.4           ggrepel_0.9.8              
+ [7] processx_3.9.0              Biobase_2.72.0             
+ [9] lattice_0.22-9              callr_3.7.6                
+[11] crosstalk_1.2.2             vctrs_0.7.3                
+[13] tools_4.6.0                 generics_0.1.4             
+[15] stats4_4.6.0                parallel_4.6.0             
+[17] tibble_3.3.1                pkgconfig_2.0.3            
+[19] pheatmap_1.0.13             Matrix_1.7-5               
+[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
+[23] S7_0.2.2                    S4Vectors_0.50.1           
+[25] lifecycle_1.0.5             compiler_4.6.0             
+[27] farver_2.1.2                stringr_1.6.0              
+[29] git2r_0.36.2                textshaping_1.0.5          
+[31] DESeq2_1.52.0               getPass_0.2-4              
+[33] Seqinfo_1.2.0               codetools_0.2-20           
+[35] httpuv_1.6.17               htmltools_0.5.9            
+[37] sass_0.4.10                 yaml_2.3.12                
+[39] later_1.4.8                 pillar_1.11.1              
+[41] jquerylib_0.1.4             whisker_0.4.1              
+[43] DT_0.34.0                   BiocParallel_1.46.0        
+[45] cachem_1.1.0                DelayedArray_0.38.1        
+[47] abind_1.4-8                 locfit_1.5-9.12            
+[49] tidyselect_1.2.1            digest_0.6.39              
+[51] stringi_1.8.7               dplyr_1.2.1                
+[53] labeling_0.4.3              rprojroot_2.1.1            
+[55] fastmap_1.2.0               grid_4.6.0                 
+[57] cli_3.6.6                   SparseArray_1.12.2         
+[59] magrittr_2.0.5              S4Arrays_1.12.0            
+[61] dichromat_2.0-0.1           withr_3.0.2                
+[63] scales_1.4.0                promises_1.5.0             
+[65] rmarkdown_2.31              XVector_0.52.0             
+[67] httr_1.4.8                  matrixStats_1.5.0          
+[69] otel_0.2.0                  ragg_1.5.2                 
+[71] evaluate_1.0.5              knitr_1.51                 
+[73] GenomicRanges_1.64.0        IRanges_2.46.0             
+[75] rlang_1.2.0                 Rcpp_1.1.1-1.1             
+[77] glue_1.8.1                  BiocGenerics_0.58.0        
+[79] rstudioapi_0.18.0           jsonlite_2.0.0             
+[81] R6_2.6.1                    systemfonts_1.3.2          
+[83] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1697,45 +3650,46 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
  [3] xfun_0.57                   bslib_0.10.0               
- [5] ggrepel_0.9.8               processx_3.9.0             
- [7] Biobase_2.72.0              lattice_0.22-9             
- [9] callr_3.7.6                 vctrs_0.7.3                
-[11] tools_4.6.0                 generics_0.1.4             
-[13] stats4_4.6.0                parallel_4.6.0             
-[15] tibble_3.3.1                pkgconfig_2.0.3            
-[17] pheatmap_1.0.13             Matrix_1.7-5               
-[19] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
-[21] S7_0.2.2                    S4Vectors_0.50.1           
-[23] lifecycle_1.0.5             compiler_4.6.0             
-[25] farver_2.1.2                stringr_1.6.0              
-[27] git2r_0.36.2                textshaping_1.0.5          
-[29] DESeq2_1.52.0               getPass_0.2-4              
-[31] Seqinfo_1.2.0               codetools_0.2-20           
-[33] httpuv_1.6.17               htmltools_0.5.9            
-[35] sass_0.4.10                 yaml_2.3.12                
-[37] later_1.4.8                 pillar_1.11.1              
-[39] jquerylib_0.1.4             whisker_0.4.1              
-[41] BiocParallel_1.46.0         cachem_1.1.0               
-[43] DelayedArray_0.38.1         abind_1.4-8                
-[45] locfit_1.5-9.12             tidyselect_1.2.1           
-[47] digest_0.6.39               stringi_1.8.7              
-[49] dplyr_1.2.1                 labeling_0.4.3             
-[51] rprojroot_2.1.1             fastmap_1.2.0              
-[53] grid_4.6.0                  cli_3.6.6                  
-[55] SparseArray_1.12.2          magrittr_2.0.5             
-[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[59] withr_3.0.2                 scales_1.4.0               
-[61] promises_1.5.0              rmarkdown_2.31             
-[63] XVector_0.52.0              httr_1.4.8                 
-[65] matrixStats_1.5.0           otel_0.2.0                 
-[67] ragg_1.5.2                  evaluate_1.0.5             
-[69] knitr_1.51                  GenomicRanges_1.64.0       
-[71] IRanges_2.46.0              rlang_1.2.0                
-[73] Rcpp_1.1.1-1.1              glue_1.8.1                 
-[75] BiocGenerics_0.58.0         rstudioapi_0.18.0          
-[77] jsonlite_2.0.0              R6_2.6.1                   
-[79] systemfonts_1.3.2           MatrixGenerics_1.24.0      
-[81] fs_2.1.0                   </code></pre>
+ [5] htmlwidgets_1.6.4           ggrepel_0.9.8              
+ [7] processx_3.9.0              Biobase_2.72.0             
+ [9] lattice_0.22-9              callr_3.7.6                
+[11] crosstalk_1.2.2             vctrs_0.7.3                
+[13] tools_4.6.0                 generics_0.1.4             
+[15] stats4_4.6.0                parallel_4.6.0             
+[17] tibble_3.3.1                pkgconfig_2.0.3            
+[19] pheatmap_1.0.13             Matrix_1.7-5               
+[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
+[23] S7_0.2.2                    S4Vectors_0.50.1           
+[25] lifecycle_1.0.5             compiler_4.6.0             
+[27] farver_2.1.2                stringr_1.6.0              
+[29] git2r_0.36.2                textshaping_1.0.5          
+[31] DESeq2_1.52.0               getPass_0.2-4              
+[33] Seqinfo_1.2.0               codetools_0.2-20           
+[35] httpuv_1.6.17               htmltools_0.5.9            
+[37] sass_0.4.10                 yaml_2.3.12                
+[39] later_1.4.8                 pillar_1.11.1              
+[41] jquerylib_0.1.4             whisker_0.4.1              
+[43] DT_0.34.0                   BiocParallel_1.46.0        
+[45] cachem_1.1.0                DelayedArray_0.38.1        
+[47] abind_1.4-8                 locfit_1.5-9.12            
+[49] tidyselect_1.2.1            digest_0.6.39              
+[51] stringi_1.8.7               dplyr_1.2.1                
+[53] labeling_0.4.3              rprojroot_2.1.1            
+[55] fastmap_1.2.0               grid_4.6.0                 
+[57] cli_3.6.6                   SparseArray_1.12.2         
+[59] magrittr_2.0.5              S4Arrays_1.12.0            
+[61] dichromat_2.0-0.1           withr_3.0.2                
+[63] scales_1.4.0                promises_1.5.0             
+[65] rmarkdown_2.31              XVector_0.52.0             
+[67] httr_1.4.8                  matrixStats_1.5.0          
+[69] otel_0.2.0                  ragg_1.5.2                 
+[71] evaluate_1.0.5              knitr_1.51                 
+[73] GenomicRanges_1.64.0        IRanges_2.46.0             
+[75] rlang_1.2.0                 Rcpp_1.1.1-1.1             
+[77] glue_1.8.1                  BiocGenerics_0.58.0        
+[79] rstudioapi_0.18.0           jsonlite_2.0.0             
+[81] R6_2.6.1                    systemfonts_1.3.2          
+[83] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 </div>
 </div>
 </div>

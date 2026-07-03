@@ -16,7 +16,7 @@ metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts <- read.csv("data/raw_read_counts/master_counts.csv",
+counts <- read.csv("data/raw_read_counts/master_counts_no_rRNA.csv",
                    check.names = FALSE)
 ```
 
@@ -27,7 +27,7 @@ cat('
 <p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
 <h1>Diet-conditioned transcriptional response to <em>Metarhizium</em> exposure</h1>
 <p class="lede">
-A workflowR analysis site for tracking sample structure, count quality,
+A workflowR analysis site for tracking sample structure, rRNA-filtered count quality,
 differential expression, DEG overlap, and functional enrichment in
 <em>Schistocerca gregaria</em>.
 </p>

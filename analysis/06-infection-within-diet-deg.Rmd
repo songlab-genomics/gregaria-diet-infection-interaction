@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts.csv"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   min_total_count: 10
@@ -42,7 +42,7 @@ the model inputs visible before any statistics are run.
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "pheatmap", "ggrepel",
-              "dplyr", "SummarizedExperiment")
+              "dplyr", "SummarizedExperiment", "DT")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -402,6 +402,156 @@ for (diet_level in levels(droplevels(metadata$Diet))) {
 }
 ```
 
+## Within-diet MA plots and DEG heatmaps
+
+The PCA shows whether samples separate using infection-responsive genes. The MA
+plots add the gene-level view for each diet: effect size on the y-axis and mean
+expression on the x-axis. The heatmaps then show the strongest infected-control
+DEGs within each diet using only samples from that diet, with the same
+blue-white-red VST palette used for the curated publication-style heatmap.
+
+```{r within-diet-ma-plots, fig.height=4.8, fig.width=7.2}
+make_ma_plot <- function(diet_level) {
+  res <- diet_results[[diet_level]]
+  if (is.null(res) || nrow(res) == 0) return(NULL)
+
+  res$ma_class <- "Not significant"
+  res$ma_class[res$significant & res$log2FoldChange > 0] <- "Higher in infected"
+  res$ma_class[res$significant & res$log2FoldChange < 0] <- "Higher in control"
+  res$ma_class <- factor(res$ma_class,
+                         levels = c("Higher in infected",
+                                    "Higher in control",
+                                    "Not significant"))
+
+  ggplot2::ggplot(res, ggplot2::aes(x = log10(baseMean + 1),
+                                    y = log2FoldChange,
+                                    color = ma_class)) +
+    ggplot2::geom_hline(yintercept = c(-params$lfc_threshold,
+                                       params$lfc_threshold),
+                        linetype = "dashed", linewidth = 0.3,
+                        color = "#6B7280") +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 0.25,
+                        color = "#111827") +
+    ggplot2::geom_point(alpha = 0.45, size = 0.7) +
+    ggplot2::scale_color_manual(values = c(
+      "Higher in infected" = treatment_colors[["Infected"]],
+      "Higher in control" = "#237C8E",
+      "Not significant" = "#D1D5DB"
+    )) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::labs(
+      title = paste("Diet", diet_level, "infected-control MA plot"),
+      subtitle = paste(sum(res$significant, na.rm = TRUE),
+                       "significant DEGs"),
+      x = "log10 mean normalized count + 1",
+      y = "log2 fold-change: infected / control",
+      color = "DEG class"
+    )
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  p_ma <- make_ma_plot(diet_level)
+  if (!is.null(p_ma)) {
+    print(p_ma)
+    ggplot2::ggsave(file.path(out_dir,
+                              paste0("diet_", diet_level,
+                                     "_infection_ma_plot.png")),
+                    p_ma, width = 7.2, height = 4.8, dpi = 300)
+  }
+}
+```
+
+```{r within-diet-deg-heatmaps, results='asis'}
+within_diet_heatmap_colors <- grDevices::colorRampPalette(
+  c("#237C8E", "#F7F3E8", "#C85A54")
+)(101)
+within_diet_heatmap_breaks <- seq(-3, 3, length.out = 102)
+within_diet_display_dir <- file.path(project_dir, "docs", "figure",
+                                     "06-infection-within-diet-deg.Rmd")
+dir.create(within_diet_display_dir, recursive = TRUE, showWarnings = FALSE)
+
+make_within_diet_heatmap <- function(diet_level, n_genes = 60) {
+  res <- diet_results[[diet_level]]
+  if (is.null(res)) return(NULL)
+
+  degs <- res[res$significant & !is.na(res$padj) &
+                !is.na(res$log2FoldChange), ]
+  degs <- degs[order(degs$padj, -abs(degs$log2FoldChange)), ]
+  deg_genes <- intersect(head(degs$gene_id, n_genes), rownames(vst_mat))
+  if (length(deg_genes) < 3) return(NULL)
+
+  sample_keep <- metadata$Diet == diet_level
+  sample_order_diet <- metadata$label[sample_keep][order(
+    factor(as.character(metadata$Treatment[sample_keep]),
+           levels = c("Infected", "Control")),
+    metadata$label[sample_keep]
+  )]
+
+  sample_annotation_diet <- data.frame(
+    Treatment = metadata[sample_order_diet, "Treatment"]
+  )
+  rownames(sample_annotation_diet) <- sample_order_diet
+
+  gene_direction <- degs[match(deg_genes, degs$gene_id), ]
+  gene_annotation_diet <- data.frame(
+    Direction = ifelse(gene_direction$log2FoldChange > 0,
+                       "Higher in infected", "Higher in control")
+  )
+  rownames(gene_annotation_diet) <- deg_genes
+
+  pheatmap::pheatmap(
+    vst_mat[deg_genes, sample_order_diet, drop = FALSE],
+    scale = "row",
+    color = within_diet_heatmap_colors,
+    breaks = within_diet_heatmap_breaks,
+    cluster_rows = TRUE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = TRUE,
+    fontsize_col = 7,
+    annotation_col = sample_annotation_diet,
+    annotation_row = gene_annotation_diet,
+    annotation_colors = list(
+      Treatment = treatment_colors,
+      Direction = c("Higher in infected" = treatment_colors[["Infected"]],
+                    "Higher in control" = "#237C8E")
+    ),
+    main = paste("Diet", diet_level, "top infection DEGs"),
+    filename = file.path(out_dir,
+                         paste0("diet_", diet_level,
+                                "_infection_deg_vst_heatmap.png")),
+    width = 8,
+    height = 7.5
+  )
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  hm <- make_within_diet_heatmap(diet_level)
+  if (is.null(hm)) {
+    cat("Diet", diet_level,
+        "does not have enough significant DEGs for a within-diet heatmap.\n")
+  } else {
+    print(hm)
+    heatmap_out <- file.path(out_dir,
+                             paste0("diet_", diet_level,
+                                    "_infection_deg_vst_heatmap.png"))
+    heatmap_display <- file.path(within_diet_display_dir,
+                                 paste0("diet-", diet_level,
+                                        "-infection-deg-vst-heatmap.png"))
+    file.copy(heatmap_out, heatmap_display, overwrite = TRUE)
+    heatmap_src <- file.path("figure", "06-infection-within-diet-deg.Rmd",
+                             basename(heatmap_display))
+    cat(paste0(
+      '<h4>Diet ', diet_level, '</h4>',
+      '<p><img src="', heatmap_src,
+      '" alt="Diet ', diet_level, ' infection DEG VST heatmap" ',
+      'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
+    ))
+  }
+}
+```
+
 ## DEG count barplot
 
 The volcano plots are good for seeing whether a contrast has many small effects
@@ -578,18 +728,134 @@ write.csv(deg_burden,
           row.names = FALSE)
 ```
 
+```{r diverging-deg-burden-by-biotype, fig.height=5.2, fig.width=9.4}
+parse_gene_biotypes <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  genes <- gff[gff$type == "gene", ]
+  data.frame(
+    gene_id = sub(".*gene=([^;]+).*", "\\1", genes$attributes),
+    gene_biotype = sub(".*gene_biotype=([^;]+).*", "\\1", genes$attributes),
+    raw_attributes = genes$attributes,
+    stringsAsFactors = FALSE
+  ) |>
+    dplyr::filter(grepl("^LOC", gene_id)) |>
+    dplyr::mutate(gene_biotype = ifelse(gene_biotype == raw_attributes,
+                                        NA_character_, gene_biotype)) |>
+    dplyr::select(-raw_attributes) |>
+    dplyr::distinct()
+}
+
+classify_gene_class <- function(x) {
+  dplyr::case_when(
+    x == "protein_coding" ~ "Coding genes",
+    x == "lncRNA" ~ "Long non-coding RNA",
+    x == "rRNA" ~ "rRNA",
+    is.na(x) ~ "Other / unknown",
+    TRUE ~ "Other non-coding"
+  )
+}
+
+gene_biotypes <- parse_gene_biotypes(file.path(project_dir, params$gff_file))
+
+biotype_burden <- sig_infection |>
+  dplyr::left_join(gene_biotypes, by = "gene_id") |>
+  dplyr::mutate(
+    Gene_class = classify_gene_class(gene_biotype),
+    signed_direction = ifelse(direction == "Higher in infected", 1, -1)
+  ) |>
+  dplyr::distinct(diet, direction, gene_id, Gene_class, .keep_all = TRUE) |>
+  dplyr::count(diet, direction, signed_direction, Gene_class,
+               name = "n_significant_genes") |>
+  dplyr::mutate(
+    signed_n = signed_direction * n_significant_genes,
+    burden_class = paste(direction, Gene_class, sep = " - ")
+  )
+
+biotype_totals <- biotype_burden |>
+  dplyr::group_by(diet, direction, signed_direction) |>
+  dplyr::summarise(
+    n_significant_genes = sum(n_significant_genes),
+    signed_n = dplyr::first(signed_direction) * n_significant_genes,
+    .groups = "drop"
+  )
+
+max_biotype_burden <- max(abs(biotype_totals$signed_n), 1)
+biotype_totals$label_x <- ifelse(
+  biotype_totals$signed_n > 0,
+  biotype_totals$signed_n + 0.04 * max_biotype_burden,
+  biotype_totals$signed_n - 0.04 * max_biotype_burden
+)
+
+biotype_burden$diet <- factor(biotype_burden$diet,
+                              levels = levels(droplevels(metadata$Diet)))
+biotype_totals$diet <- factor(biotype_totals$diet,
+                              levels = levels(droplevels(metadata$Diet)))
+
+biotype_colors <- c(
+  "Higher in infected - Coding genes" = "#8B1E3F",
+  "Higher in infected - Long non-coding RNA" = "#D98BA3",
+  "Higher in infected - rRNA" = "#F2B8A0",
+  "Higher in infected - Other non-coding" = "#F2B8A0",
+  "Higher in infected - Other / unknown" = "#E5B567",
+  "Higher in control - Coding genes" = "#1F5F8B",
+  "Higher in control - Long non-coding RNA" = "#93B7D4",
+  "Higher in control - rRNA" = "#B8C7D9",
+  "Higher in control - Other non-coding" = "#B8C7D9",
+  "Higher in control - Other / unknown" = "#C9CED6"
+)
+
+p_biotype_burden <- ggplot2::ggplot(
+  biotype_burden,
+  ggplot2::aes(x = signed_n, y = diet, fill = burden_class)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = "grey35") +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    data = biotype_totals,
+    ggplot2::aes(x = label_x, y = diet, label = n_significant_genes),
+    inherit.aes = FALSE,
+    size = 3.2
+  ) +
+  ggplot2::scale_x_continuous(labels = abs,
+                              limits = c(-max_biotype_burden * 1.25,
+                                         max_biotype_burden * 1.25)) +
+  ggplot2::scale_fill_manual(values = biotype_colors, drop = FALSE) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 8)
+  ) +
+  ggplot2::labs(
+    title = "Direction-aware infection DEG burden by gene class",
+    subtitle = "This uses the rRNA-filtered master count matrix; rRNA should be absent after filtering",
+    x = "Number of significant genes",
+    y = "Diet"
+  )
+
+p_biotype_burden
+ggplot2::ggsave(file.path(out_dir,
+                          "infection_deg_burden_by_biotype_diverging_barplot.png"),
+                p_biotype_burden, width = 9.4, height = 5.2, dpi = 300)
+write.csv(biotype_burden,
+          file.path(out_dir, "infection_deg_burden_by_biotype_counts.csv"),
+          row.names = FALSE)
+```
+
 ## Curated DEG VST heatmap
 
 The full VST heatmap is a broad QC view. This heatmap is narrower: it selects
-the strongest infected-control DEGs from each diet and direction, then adds
-significant DEGs with eggNOG descriptions matching immune or nutrition-related
-keywords. This follows the same idea as the AGY candidate heatmaps: keep the
-statistical DEG signal visible, but annotate genes that are biologically
-relevant to the manuscript question. Samples are ordered by infection status
-first and then diet instead of clustered, so the infected profiles appear
-together and diet-specific substructure can be compared directly. Genes are
-ordered first by how broadly they are detected as DEGs across diets, and then by
-their functional theme.
+strong infection-responsive DEGs and fat-body-relevant genes with eggNOG
+descriptions matching immune, storage, nutrition, lipid-transport, or
+detoxification keywords. Samples are ordered by infection status first and then
+diet instead of clustered, so the infected profiles appear together and
+diet-specific substructure can be compared directly. The gene annotations are
+kept deliberately simple: whether a gene is a significant infection DEG in at
+least one diet, and its functional theme. Genes are ordered first by DEG class
+and then by functional theme.
 
 ```{r curated-deg-heatmap, fig.height=9, fig.width=10}
 sig_for_heatmap <- all_infection_results[all_infection_results$significant &
@@ -685,19 +951,25 @@ nutrition_keywords <- paste(c(
   "lipase", "amylase", "digestion", "digestive", "transporter"
 ), collapse = "|")
 
-annotated_sig$Functional_theme <- dplyr::case_when(
-  grepl(immune_keywords, annotation_text, ignore.case = TRUE) ~ "Immune-related",
-  grepl(nutrition_keywords, annotation_text, ignore.case = TRUE) ~ "Nutrition/metabolism",
-  TRUE ~ "Other"
-)
+storage_keywords <- paste(c(
+  "storage protein", "hexamerin", "arylphorin", "hemocyanin",
+  "vitellogenin", "lipophorin", "apolipophorin", "nutrient reservoir"
+), collapse = "|")
 
-theme_rows <- annotated_sig |>
-  dplyr::filter(Functional_theme != "Other") |>
-  dplyr::group_by(Functional_theme) |>
-  dplyr::arrange(padj, dplyr::desc(abs(log2FoldChange)), .by_group = TRUE) |>
-  dplyr::slice_head(n = params$top_functional_degs_per_theme) |>
-  dplyr::ungroup() |>
-  dplyr::mutate(Selection = Functional_theme)
+detox_keywords <- paste(c(
+  "detox", "xenobiotic", "cytochrome p450", "p450", "glutathione",
+  "peroxidase", "oxidative stress", "superoxide", "catalase"
+), collapse = "|")
+
+classify_functional_theme <- function(text) {
+  dplyr::case_when(
+    grepl(immune_keywords, text, ignore.case = TRUE) ~ "Immune-related",
+    grepl(storage_keywords, text, ignore.case = TRUE) ~ "Storage/lipid transport",
+    grepl(detox_keywords, text, ignore.case = TRUE) ~ "Detoxification/stress",
+    grepl(nutrition_keywords, text, ignore.case = TRUE) ~ "Nutrition/metabolism",
+    TRUE ~ "Other strong DEG"
+  )
+}
 
 gene_deg_summary <- sig_for_heatmap |>
   dplyr::group_by(gene_id) |>
@@ -714,45 +986,58 @@ gene_deg_summary <- sig_for_heatmap |>
     .groups = "drop"
   ) |>
   dplyr::mutate(
-    DEG_status = dplyr::case_when(
-      DEG_diet_count == length(levels(droplevels(metadata$Diet))) ~
-        "DEG in all diets",
-      DEG_diet_count > 1 ~ "DEG in multiple diets",
-      DEG_diet_count == 1 ~ "DEG in one diet",
-      TRUE ~ "Functional candidate (not DEG)"
-    )
+    DEG_class = "DEG"
   )
 
-deg_status_levels <- c("DEG in all diets", "DEG in multiple diets",
-                       "DEG in one diet", "Functional candidate (not DEG)")
-functional_theme_levels <- c("Immune-related", "Nutrition/metabolism",
-                             "Top DEG", "Other")
-
-curated_degs <- dplyr::bind_rows(top_deg_rows, theme_rows) |>
-  dplyr::left_join(gene_annotation, by = "gene_id", suffix = c("", ".anno")) |>
-  dplyr::left_join(gene_deg_summary, by = "gene_id") |>
+annotation_for_heatmap <- gene_annotation |>
+  dplyr::filter(gene_id %in% rownames(vst_mat)) |>
   dplyr::mutate(
-    Preferred_name = dplyr::coalesce(Preferred_name, Preferred_name.anno),
-    Description = dplyr::coalesce(Description, Description.anno),
-    GOs = dplyr::coalesce(GOs, GOs.anno),
-    KEGG_ko = dplyr::coalesce(KEGG_ko, KEGG_ko.anno),
-    KEGG_Pathway = dplyr::coalesce(KEGG_Pathway, KEGG_Pathway.anno),
-    PFAMs = dplyr::coalesce(PFAMs, PFAMs.anno),
     curated_annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
                                     KEGG_Pathway, PFAMs),
-    Functional_theme = dplyr::case_when(
-      grepl(immune_keywords, curated_annotation_text, ignore.case = TRUE) ~
-        "Immune-related",
-      grepl(nutrition_keywords, curated_annotation_text, ignore.case = TRUE) ~
-        "Nutrition/metabolism",
-      Selection %in% c("Immune-related", "Nutrition/metabolism") ~ Selection,
-      TRUE ~ "Top DEG"
-    ),
-    DEG_status = factor(DEG_status, levels = deg_status_levels),
-    Functional_theme = factor(Functional_theme, levels = functional_theme_levels)
+    Functional_theme = classify_functional_theme(curated_annotation_text)
+  )
+
+theme_rows <- annotation_for_heatmap |>
+  dplyr::left_join(gene_deg_summary, by = "gene_id") |>
+  dplyr::mutate(
+    DEG_class = dplyr::if_else(is.na(DEG_class), "Not DEG", DEG_class),
+    min_padj = dplyr::if_else(is.na(min_padj), Inf, min_padj),
+    max_abs_lfc = dplyr::if_else(is.na(max_abs_lfc), 0, max_abs_lfc),
+    vst_variance = apply(vst_mat[gene_id, , drop = FALSE], 1, var)
   ) |>
-  dplyr::arrange(DEG_status, Functional_theme, DEG_direction_summary,
-                 DEG_diets, min_padj, dplyr::desc(max_abs_lfc)) |>
+  dplyr::filter(Functional_theme != "Other strong DEG") |>
+  dplyr::group_by(Functional_theme, DEG_class) |>
+  dplyr::arrange(min_padj, dplyr::desc(max_abs_lfc),
+                 dplyr::desc(vst_variance), .by_group = TRUE) |>
+  dplyr::slice_head(n = params$top_functional_degs_per_theme) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(Selection = "Functional candidate")
+
+curated_degs <- top_deg_rows |>
+  dplyr::select(gene_id, diet, direction, padj, log2FoldChange, Selection) |>
+  dplyr::left_join(annotation_for_heatmap, by = "gene_id") |>
+  dplyr::left_join(gene_deg_summary, by = "gene_id", suffix = c("", ".summary")) |>
+  dplyr::mutate(
+    Functional_theme = dplyr::if_else(is.na(Functional_theme),
+                                      "Other strong DEG",
+                                      Functional_theme),
+    DEG_class = "DEG"
+  ) |>
+  dplyr::bind_rows(theme_rows) |>
+  dplyr::mutate(
+    DEG_class = dplyr::if_else(is.na(DEG_class), "Not DEG", DEG_class),
+    min_padj = dplyr::if_else(is.na(min_padj), Inf, min_padj),
+    max_abs_lfc = dplyr::if_else(is.na(max_abs_lfc), 0, max_abs_lfc),
+    Functional_theme = factor(
+      Functional_theme,
+      levels = c("Immune-related", "Storage/lipid transport",
+                 "Nutrition/metabolism", "Detoxification/stress",
+                 "Other strong DEG")
+    ),
+    DEG_class = factor(DEG_class, levels = c("DEG", "Not DEG"))
+  ) |>
+  dplyr::arrange(DEG_class, Functional_theme, min_padj,
+                 dplyr::desc(max_abs_lfc)) |>
   dplyr::distinct(gene_id, .keep_all = TRUE)
 
 curated_genes <- curated_degs$gene_id[curated_degs$gene_id %in% rownames(vst_mat)]
@@ -768,12 +1053,8 @@ sample_annotation <- data.frame(
 rownames(sample_annotation) <- sample_order
 
 gene_annotation_display <- curated_degs[match(curated_genes, curated_degs$gene_id),
-                                        c("DEG_status",
-                                          "DEG_direction_summary",
-                                          "Selection",
+                                        c("DEG_class",
                                           "Functional_theme"), drop = FALSE]
-names(gene_annotation_display) <- c("DEG_status", "DEG_direction",
-                                    "Selection", "Functional_theme")
 rownames(gene_annotation_display) <- curated_genes
 
 label_source <- curated_degs[match(curated_genes, curated_degs$gene_id), ]
@@ -795,26 +1076,19 @@ find_gaps <- function(groups) {
 
 sample_gaps <- find_gaps(paste(sample_annotation$Treatment,
                                sample_annotation$Diet))
-gene_gaps <- find_gaps(paste(gene_annotation_display$DEG_status,
+gene_gaps <- find_gaps(paste(gene_annotation_display$DEG_class,
                              gene_annotation_display$Functional_theme))
 
 annotation_colors <- list(
   Diet = diet_colors,
   Treatment = treatment_colors,
-  DEG_direction = c("Higher in infected" = treatment_colors[["Infected"]],
-                    "Higher in control" = treatment_colors[["Control"]],
-                    "Mixed directions" = "#4B5563"),
-  DEG_status = c("DEG in all diets" = "#111827",
-                 "DEG in multiple diets" = "#4B5563",
-                 "DEG in one diet" = "#9CA3AF",
-                 "Functional candidate (not DEG)" = "#E5E7EB"),
-  Selection = c("Top DEG" = "#374151",
-                "Immune-related" = "#237C8E",
-                "Nutrition/metabolism" = "#B8643C"),
-  Functional_theme = c("Top DEG" = "#374151",
-                       "Immune-related" = "#237C8E",
+  DEG_class = c("DEG" = "#111827",
+                "Not DEG" = "#D1D5DB"),
+  Functional_theme = c("Immune-related" = "#237C8E",
+                       "Storage/lipid transport" = "#D7832F",
                        "Nutrition/metabolism" = "#B8643C",
-                       "Other" = "#9CA3AF")
+                       "Detoxification/stress" = "#8C6D31",
+                       "Other strong DEG" = "#9CA3AF")
 )
 
 heatmap_expression_colors <- grDevices::colorRampPalette(
@@ -838,10 +1112,35 @@ heatmap_display <- pheatmap::pheatmap(
   annotation_col = gene_annotation_display,
   annotation_row = sample_annotation,
   annotation_colors = annotation_colors,
-  main = "Curated infection, immune, and nutrition DEGs",
+  main = "Curated fat body infection-response genes",
   filename = file.path(out_dir, "curated_infection_deg_vst_heatmap.png"),
   width = 14,
   height = 11
+)
+
+labeled_heatmap_display <- pheatmap::pheatmap(
+  t(vst_mat[curated_genes, sample_order, drop = FALSE]),
+  scale = "column",
+  color = heatmap_expression_colors,
+  breaks = heatmap_expression_breaks,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  gaps_row = sample_gaps,
+  gaps_col = gene_gaps,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  labels_col = col_labels,
+  fontsize_row = 6,
+  fontsize_col = 4.5,
+  angle_col = 90,
+  annotation_col = gene_annotation_display,
+  annotation_row = sample_annotation,
+  annotation_colors = annotation_colors,
+  main = "Curated fat body infection-response genes with annotations",
+  filename = file.path(out_dir,
+                       "curated_infection_deg_vst_heatmap_labeled.png"),
+  width = 22,
+  height = 12
 )
 
 display_dir <- file.path(project_dir, "docs", "figure",
@@ -853,6 +1152,15 @@ file.copy(file.path(out_dir, "curated_infection_deg_vst_heatmap.png"),
 curated_heatmap_src <- file.path("figure", "06-infection-within-diet-deg.Rmd",
                                  "curated-deg-heatmap-display.png")
 
+labeled_display_png <- file.path(display_dir,
+                                 "curated-deg-heatmap-labeled-display.png")
+file.copy(file.path(out_dir, "curated_infection_deg_vst_heatmap_labeled.png"),
+          labeled_display_png, overwrite = TRUE)
+labeled_curated_heatmap_src <- file.path(
+  "figure", "06-infection-within-diet-deg.Rmd",
+  "curated-deg-heatmap-labeled-display.png"
+)
+
 write.csv(curated_degs,
           file.path(out_dir, "curated_infection_deg_heatmap_genes.csv"),
           row.names = FALSE)
@@ -862,6 +1170,15 @@ write.csv(curated_degs,
 cat(paste0(
   '<p><img src="', curated_heatmap_src,
   '" alt="Curated infection, immune, and nutrition DEG VST heatmap" ',
+  'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
+))
+```
+
+```{r curated-deg-heatmap-labeled-display, echo=FALSE, results='asis'}
+cat(paste0(
+  '<h3>Labeled curated heatmap</h3>',
+  '<p><img src="', labeled_curated_heatmap_src,
+  '" alt="Curated infection DEG VST heatmap with gene descriptions" ',
   'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
 ))
 ```
@@ -913,6 +1230,39 @@ ggsave(file.path(out_dir, "curated_immune_nutrition_deg_barplot.png"),
        p_curated_summary, width = 8.5, height = 5.2, dpi = 300)
 write.csv(curated_summary,
           file.path(out_dir, "curated_immune_nutrition_deg_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r curated-immune-nutrition-gene-list}
+curated_gene_list <- curated_degs |>
+  dplyr::filter(Functional_theme %in% c("Immune-related",
+                                        "Nutrition/metabolism",
+                                        "Storage/lipid transport")) |>
+  dplyr::mutate(
+    Preferred_name = ifelse(is.na(Preferred_name) | Preferred_name == "-",
+                            "", Preferred_name),
+    Description = ifelse(is.na(Description) | Description == "-",
+                         "", Description),
+    DEG_diets = ifelse(is.na(DEG_diets), "", DEG_diets),
+    DEG_direction_summary = ifelse(is.na(DEG_direction_summary), "",
+                                   DEG_direction_summary),
+    min_padj = ifelse(is.infinite(min_padj), NA_real_, min_padj)
+  ) |>
+  dplyr::select(
+    gene_id, Preferred_name, Description, Functional_theme, DEG_class,
+    DEG_diets, DEG_direction_summary, min_padj, max_abs_lfc
+  ) |>
+  dplyr::arrange(DEG_class, Functional_theme, min_padj,
+                 dplyr::desc(max_abs_lfc))
+
+DT::datatable(
+  curated_gene_list,
+  rownames = FALSE,
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = "Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap"
+)
+write.csv(curated_gene_list,
+          file.path(out_dir, "curated_immune_nutrition_gene_list.csv"),
           row.names = FALSE)
 ```
 
