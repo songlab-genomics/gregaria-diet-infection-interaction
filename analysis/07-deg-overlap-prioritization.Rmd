@@ -8,7 +8,10 @@ output:
     toc: true
     toc_float: true
 params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   results_root: "output/rmd_runs"
+  min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1
   output_tag: "deg-overlap-prioritization"
@@ -16,13 +19,15 @@ params:
 
 ## Purpose
 
-This page compares significant DEG lists from the model pages. It can be run
-after the DESeq2 pages create result CSV files under `output/rmd_runs/`.
+This page compares significant DEG lists from the model pages. It also runs the
+small condition-specific diet contrasts needed for targeted Venn diagrams:
+diet-to-diet DEGs among control samples and diet-to-diet DEGs among infected
+samples.
 
-The goal is not to run a new statistical test. Instead, this page asks whether
-the same genes repeatedly appear across diet contrasts, infection contrasts, and
-model coefficients. Genes that recur across analyses can be useful candidates
-for follow-up because they are less dependent on a single contrast definition.
+The goal is to ask whether the same genes repeatedly appear across diet
+contrasts, infection contrasts, and model coefficients. Genes that recur across
+analyses can be useful candidates for follow-up because they are less dependent
+on a single contrast definition.
 
 ## Setup
 
@@ -34,7 +39,7 @@ header.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("ggplot2", "UpSetR", "ggVennDiagram")
+required <- c("DESeq2", "ggplot2", "UpSetR", "ggVennDiagram")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -368,6 +373,160 @@ if (length(plots) == 0) {
   } else {
     print(plots[[1]])
     print(plots[[2]])
+  }
+}
+```
+
+## Diet DEG Venns within controls and infected samples
+
+The previous diet-pairwise page tests diet differences across all samples while
+including infection status as a covariate. Here, we ask a more specific
+question: among control samples only, which genes distinguish diets, and among
+infected samples only, which genes distinguish diets? Each treatment subset is
+modeled separately with `~ Diet`, then the three pairwise diet contrasts are
+shown as a Venn diagram.
+
+```{r condition-specific-diet-venns, fig.height=6, fig.width=12}
+metadata <- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+counts_raw <- read.csv(file.path(project_dir, params$counts_file),
+                       check.names = FALSE)
+counts <- as.matrix(counts_raw[, -1])
+rownames(counts) <- counts_raw[[1]]
+storage.mode(counts) <- "integer"
+
+count_labels <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
+metadata <- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) <- metadata$label
+colnames(counts) <- count_labels
+
+run_treatment_diet_degs <- function(treatment_label) {
+  keep_samples <- metadata$Treatment == treatment_label
+  metadata_sub <- droplevels(metadata[keep_samples, ])
+  counts_sub <- counts[, metadata_sub$label, drop = FALSE]
+  keep_genes <- rowSums(counts_sub) >= params$min_total_count
+
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_sub[keep_genes, ],
+    colData = metadata_sub,
+    design = ~ Diet
+  )
+  dds <- DESeq2::DESeq(dds)
+
+  diet_pairs <- combn(levels(droplevels(metadata_sub$Diet)), 2,
+                      simplify = FALSE)
+  contrast_sets <- list()
+  summary_rows <- list()
+
+  for (pair in diet_pairs) {
+    contrast_label <- paste(pair[1], "vs", pair[2], sep = "_")
+    res <- DESeq2::results(dds, contrast = c("Diet", pair[1], pair[2]),
+                           alpha = params$alpha)
+    res_df <- as.data.frame(res)
+    res_df$gene_id <- rownames(res_df)
+    res_df$treatment_subset <- treatment_label
+    res_df$contrast <- contrast_label
+    res_df$significant <- !is.na(res_df$padj) &
+      res_df$padj < params$alpha &
+      abs(res_df$log2FoldChange) >= params$lfc_threshold
+    res_df$direction <- ifelse(res_df$log2FoldChange > 0,
+                               paste("Higher in diet", pair[1]),
+                               paste("Higher in diet", pair[2]))
+
+    write.csv(
+      res_df,
+      file.path(out_dir,
+                paste0("DESeq2_", treatment_label, "_diet_", contrast_label,
+                       ".csv")),
+      row.names = FALSE
+    )
+    writeLines(
+      res_df$gene_id[res_df$significant],
+      file.path(out_dir,
+                paste0("significant_genes_", treatment_label, "_diet_",
+                       contrast_label, ".txt"))
+    )
+
+    set_name <- paste(pair[1], "vs", pair[2])
+    contrast_sets[[set_name]] <- unique(res_df$gene_id[res_df$significant])
+    summary_rows[[contrast_label]] <- data.frame(
+      treatment_subset = treatment_label,
+      contrast = contrast_label,
+      n_significant_genes = sum(res_df$significant),
+      n_higher_first_diet = sum(res_df$significant & res_df$log2FoldChange > 0,
+                                na.rm = TRUE),
+      n_higher_second_diet = sum(res_df$significant & res_df$log2FoldChange < 0,
+                                 na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  list(
+    sets = contrast_sets,
+    summary = do.call(rbind, summary_rows)
+  )
+}
+
+control_diet_degs <- run_treatment_diet_degs("Control")
+infected_diet_degs <- run_treatment_diet_degs("Infected")
+
+condition_diet_summary <- rbind(control_diet_degs$summary,
+                                infected_diet_degs$summary)
+knitr::kable(condition_diet_summary,
+             caption = "Diet-pairwise DEGs run separately within controls and infected samples")
+write.csv(condition_diet_summary,
+          file.path(out_dir, "condition_specific_diet_pairwise_summary.csv"),
+          row.names = FALSE)
+
+make_condition_venn <- function(sets, title, high_color, file_name) {
+  sets <- sets[lengths(sets) > 0]
+  if (length(sets) < 2) {
+    return(NULL)
+  }
+  p <- ggVennDiagram::ggVennDiagram(
+    sets,
+    label = "count",
+    label_alpha = 0
+  ) +
+    ggplot2::scale_fill_gradient(low = "#F7F3E8", high = high_color) +
+    venn_theme +
+    ggplot2::labs(title = title)
+  ggplot2::ggsave(file.path(out_dir, file_name), p,
+                  width = 6, height = 5.4, dpi = 300)
+  p
+}
+
+p_control_diet_venn <- make_condition_venn(
+  control_diet_degs$sets,
+  "Diet DEGs among controls",
+  "#2F8F5B",
+  "venn_diet_degs_controls.png"
+)
+
+p_infected_diet_venn <- make_condition_venn(
+  infected_diet_degs$sets,
+  "Diet DEGs among infected samples",
+  "#7B4FA3",
+  "venn_diet_degs_infected.png"
+)
+
+condition_venn_plots <- Filter(Negate(is.null),
+                               list(p_control_diet_venn, p_infected_diet_venn))
+if (length(condition_venn_plots) == 0) {
+  cat("No condition-specific diet Venn diagram was drawn because fewer than two DEG sets were found.")
+} else if (length(condition_venn_plots) == 1) {
+  print(condition_venn_plots[[1]])
+} else {
+  if (requireNamespace("patchwork", quietly = TRUE)) {
+    print(condition_venn_plots[[1]] + condition_venn_plots[[2]])
+  } else {
+    print(condition_venn_plots[[1]])
+    print(condition_venn_plots[[2]])
   }
 }
 ```

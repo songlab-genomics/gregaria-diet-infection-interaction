@@ -63,7 +63,7 @@ sample-distance heatmaps, or library-level QC can pull a group mean away from
 the other biological replicates and inflate or hide DEG calls. The no-outlier
 metadata file is therefore treated as a sensitivity dataset: it does not erase
 the full dataset, but it lets the analysis ask whether the main conclusions
-depend on the two strongest QC outliers.
+depend on the strongest QC outliers.
 
 ```{r outlier-status}
 metadata <- read.delim(metadata_file, check.names = FALSE)
@@ -91,9 +91,10 @@ write.csv(removed_samples, file.path(out_dir, "removed_outlier_samples.csv"),
           row.names = FALSE)
 ```
 
-The no-outlier file removes samples `1007` and `1037`, both control samples from
-diet 50. These are reported here because removing two controls from one diet
-changes group balance and should always be visible when interpreting diet 50
+The no-outlier file removes samples `1036` and `1039`, both control samples from
+diet 33, and samples `1007` and `1037`, both control samples from diet 50. These
+are reported here because removing controls from two diet groups changes group
+balance and should always be visible when interpreting diet-specific infection
 results. The removal is used to reduce sensitivity to samples with atypical
 global expression structure, not because infection age was uncontrolled; age was
 controlled in the lab design.

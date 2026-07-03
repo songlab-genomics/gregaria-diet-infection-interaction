@@ -24,9 +24,7 @@ label	files	Sex	Treatment	Diet	Hour_Group_Post_Innoculation
 1033	mehreen_1033_MERGE_counts.txt	Female	Control	33	96	
 1034	mehreen_1034_MERGE_counts.txt	Female	Control	50	96	
 1035	mehreen_1035_MERGE_counts.txt	Female	Control	83	96	
-1036	mehreen_1036_MERGE_counts.txt	Female	Control	33	96	
 1038	mehreen_1038_MERGE_counts.txt	Female	Control	83	96	
-1039	mehreen_1039_MERGE_counts.txt	Female	Control	33	96	
 1040	mehreen_1040_MERGE_counts.txt	Female	Control	50	96	
 1041	mehreen_1041_MERGE_counts.txt	Female	Control	83	96	
 1042	mehreen_1042_MERGE_counts.txt	Female	Infected	33	96	

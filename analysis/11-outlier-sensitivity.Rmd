@@ -27,8 +27,8 @@ patterns are robust to outlier removal.
 
 The no-outlier analysis is treated as a sensitivity analysis, not as a
 replacement for the main analysis. This is important because the removed samples
-come from one diet-by-treatment group, so removing them changes group balance as
-well as expression structure.
+are all controls from diet 33 or diet 50, so removing them changes group balance
+as well as expression structure.
 
 ## Setup
 
