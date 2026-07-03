@@ -1,0 +1,220 @@
+---
+title: "Count QC and exploration"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts.csv"
+  min_total_count: 10
+  top_variable_genes: 500
+  output_tag: "count-qc-exploration"
+---
+
+## Purpose
+
+This page checks count depth, low-count filtering, sample clustering, and PCA
+before differential expression models are interpreted. These checks are not a
+separate biological result; they are the audit trail that tells us whether the
+diet and infection contrasts are being estimated from comparable samples or
+whether a small number of unusual libraries could dominate the model.
+
+## Setup and data loading
+
+The count matrix and metadata are matched by sample label before any plotting.
+This small bookkeeping step is important because RNA-seq models assume that the
+columns of the count matrix and the rows of the metadata describe the same
+samples in the same order.
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "ggplot2", "pheatmap", "scales")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata <- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+counts_raw <- read.csv(file.path(project_dir, params$counts_file),
+                       check.names = FALSE)
+counts <- as.matrix(counts_raw[, -1])
+rownames(counts) <- counts_raw[[1]]
+storage.mode(counts) <- "integer"
+
+count_labels <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
+metadata <- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) <- metadata$label
+colnames(counts) <- count_labels
+```
+
+## Library size
+
+Library size is the first check because very low-depth samples can have noisy
+gene estimates even when their biological label is correct. Here we compare the
+total assigned counts across diet and infection groups, looking for samples that
+fall far outside the rest of their condition.
+
+```{r library-size}
+library(ggplot2)
+
+library_size <- data.frame(
+  label = metadata$label,
+  total_counts = colSums(counts),
+  Diet = metadata$Diet,
+  Treatment = metadata$Treatment
+)
+
+ggplot(library_size, aes(x = interaction(Diet, Treatment),
+                         y = total_counts,
+                         color = Treatment)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.12, height = 0, size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_classic() +
+  labs(
+    title = "Total assigned counts per sample",
+    x = "Diet and treatment",
+    y = "Total counts",
+    color = "Treatment"
+  )
+
+write.csv(library_size, file.path(out_dir, "library_size.csv"),
+          row.names = FALSE)
+```
+
+## Low-count filtering
+
+Genes with almost no reads across the whole experiment add multiple-testing
+burden but usually cannot be estimated reliably. The filtering threshold keeps
+genes with at least `r params$min_total_count` total counts, which is a light
+screen intended to remove uninformative rows while preserving diet- and
+infection-responsive genes for DESeq2.
+
+```{r filtering}
+keep <- rowSums(counts) >= params$min_total_count
+filter_summary <- data.frame(
+  min_total_count = params$min_total_count,
+  genes_before = nrow(counts),
+  genes_after = sum(keep),
+  genes_removed = sum(!keep)
+)
+
+knitr::kable(filter_summary)
+write.csv(filter_summary, file.path(out_dir, "filter_summary.csv"),
+          row.names = FALSE)
+```
+
+## PCA
+
+The PCA is calculated after a variance-stabilizing transformation (VST). VST
+puts low-count and high-count genes onto a more comparable scale, so the plot is
+useful for sample-level structure rather than being driven mostly by the most
+abundant genes. We expect samples to show some organization by diet and/or
+infection, but we also use this plot to identify samples that sit apart from
+their expected group.
+
+```{r pca}
+dds <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep, ],
+  colData = metadata,
+  design = ~ Diet + Treatment
+)
+
+vsd <- DESeq2::vst(dds, blind = TRUE)
+pca_df <- DESeq2::plotPCA(vsd, intgroup = c("Diet", "Treatment"),
+                          returnData = TRUE)
+percent_var <- round(100 * attr(pca_df, "percentVar"))
+
+p_pca <- ggplot(pca_df, aes(PC1, PC2, color = Diet, shape = Treatment)) +
+  geom_point(size = 3) +
+  theme_classic() +
+  labs(
+    title = "Variance-stabilized PCA",
+    x = paste0("PC1: ", percent_var[1], "% variance"),
+    y = paste0("PC2: ", percent_var[2], "% variance")
+  )
+
+p_pca
+ggsave(file.path(out_dir, "pca_vst.png"), p_pca, width = 7, height = 5, dpi = 300)
+```
+
+## Sample distance heatmap
+
+The sample distance heatmap asks the same QC question as the PCA in a different
+format: which libraries are most similar after VST normalization? Samples from
+the same diet and treatment should usually be closer to one another than to
+unrelated groups. A sample that clusters away from its condition is a candidate
+outlier and should be checked before it is allowed to drive differential
+expression calls.
+
+```{r sample-distance}
+sample_dist <- dist(t(SummarizedExperiment::assay(vsd)))
+sample_dist_matrix <- as.matrix(sample_dist)
+rownames(sample_dist_matrix) <- paste(metadata$Diet, metadata$Treatment,
+                                      metadata$label, sep = "_")
+colnames(sample_dist_matrix) <- rownames(sample_dist_matrix)
+
+png(file.path(out_dir, "sample_distance_heatmap.png"),
+    width = 1600, height = 1400, res = 180)
+pheatmap::pheatmap(sample_dist_matrix,
+                   main = "Sample-to-sample distance")
+dev.off()
+
+pheatmap::pheatmap(sample_dist_matrix,
+                   main = "Sample-to-sample distance")
+```
+
+## Most variable genes
+
+This heatmap shows the `r params$top_variable_genes` genes with the strongest
+sample-to-sample variation after VST transformation. It is not a DEG test. It is
+a compact view of whether the largest expression patterns line up with the
+experimental design and whether any sample carries a distinct expression profile
+that might explain an outlier flag.
+
+```{r variable-genes}
+vst_mat <- SummarizedExperiment::assay(vsd)
+gene_variance <- apply(vst_mat, 1, var)
+top_n <- min(params$top_variable_genes, length(gene_variance))
+top_genes <- names(sort(gene_variance, decreasing = TRUE))[seq_len(top_n)]
+
+annotation_col <- data.frame(Diet = metadata$Diet,
+                             Treatment = metadata$Treatment)
+rownames(annotation_col) <- colnames(vst_mat)
+
+png(file.path(out_dir, "top_variable_gene_heatmap.png"),
+    width = 1600, height = 1600, res = 180)
+pheatmap::pheatmap(vst_mat[top_genes, ],
+                   show_rownames = FALSE,
+                   annotation_col = annotation_col,
+                   main = paste("Top", top_n, "variable genes"))
+dev.off()
+
+pheatmap::pheatmap(vst_mat[top_genes, ],
+                   show_rownames = FALSE,
+                   annotation_col = annotation_col,
+                   main = paste("Top", top_n, "variable genes"))
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

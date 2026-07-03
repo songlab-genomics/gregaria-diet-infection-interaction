@@ -1,0 +1,583 @@
+---
+title: "Quality sensitivity and functional enrichment"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers.txt"
+  counts_file: "data/raw_read_counts/master_counts.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  alpha: 0.05
+  lfc_threshold: 1
+  top_terms: 15
+  output_tag: "outliers-load-enrichment"
+---
+
+## Purpose
+
+The biological goal is to identify genes that differ among diets, infection
+status, and diet-specific infection responses. This page summarizes current
+sample inclusion, lifts local eggNOG annotations onto the `LOC...` gene IDs used
+by the count matrix, and runs GO and KEGG pathway enrichment on the current DEG
+sets.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c(
+  "DESeq2", "dplyr", "tidyr", "stringr", "ggplot2", "forcats",
+  "clusterProfiler", "GO.db", "AnnotationDbi", "enrichplot", "DT"
+)
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata_file <- file.path(project_dir, params$metadata_file)
+metadata_no_outliers_file <- file.path(project_dir, params$metadata_no_outliers_file)
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+```
+
+## Current sample and outlier status
+
+Outliers are handled explicitly because this experiment has a modest number of
+replicates per diet-by-treatment group. A sample that separates strongly in PCA,
+sample-distance heatmaps, or library-level QC can pull a group mean away from
+the other biological replicates and inflate or hide DEG calls. The no-outlier
+metadata file is therefore treated as a sensitivity dataset: it does not erase
+the full dataset, but it lets the analysis ask whether the main conclusions
+depend on the two strongest QC outliers.
+
+```{r outlier-status}
+metadata <- read.delim(metadata_file, check.names = FALSE)
+metadata_no_outliers <- read.delim(metadata_no_outliers_file, check.names = FALSE)
+metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)), drop = FALSE]
+metadata_no_outliers <- metadata_no_outliers[, !is.na(names(metadata_no_outliers)) &
+                                               nzchar(names(metadata_no_outliers)),
+                                             drop = FALSE]
+metadata$label <- as.character(metadata$label)
+metadata_no_outliers$label <- as.character(metadata_no_outliers$label)
+
+removed_samples <- metadata |>
+  dplyr::filter(!label %in% metadata_no_outliers$label)
+
+knitr::kable(removed_samples)
+
+design_full <- as.data.frame.matrix(with(metadata, table(Diet, Treatment)))
+design_no_outliers <- as.data.frame.matrix(with(metadata_no_outliers,
+                                                table(Diet, Treatment)))
+
+knitr::kable(design_full, caption = "Full metadata design")
+knitr::kable(design_no_outliers, caption = "No-outlier metadata design")
+
+write.csv(removed_samples, file.path(out_dir, "removed_outlier_samples.csv"),
+          row.names = FALSE)
+```
+
+The no-outlier file removes samples `1007` and `1037`, both control samples from
+diet 50. These are reported here because removing two controls from one diet
+changes group balance and should always be visible when interpreting diet 50
+results. The removal is used to reduce sensitivity to samples with atypical
+global expression structure, not because infection age was uncontrolled; age was
+controlled in the lab design.
+
+## Current DEG set summary
+
+Before enrichment, the page summarizes the most recent DEG outputs from the
+model pages. This check keeps the enrichment step connected to the exact DEG
+sets currently available on disk, rather than relying on a manually copied gene
+list.
+
+```{r current-deg-summary}
+latest_file <- function(pattern) {
+  files <- list.files(file.path(project_dir, params$latest_results_root),
+                      pattern = pattern, recursive = TRUE, full.names = TRUE)
+  if (length(files) == 0) return(NA_character_)
+  files[order(file.info(files)$mtime, decreasing = TRUE)][1]
+}
+
+summary_files <- c(
+  interaction = latest_file("significant_gene_counts[.]csv$"),
+  diet_pairwise = latest_file("diet_pairwise_summary[.]csv$"),
+  infection_within_diet = latest_file("infection_within_diet_summary[.]csv$")
+)
+
+for (nm in names(summary_files)) {
+  if (!is.na(summary_files[[nm]])) {
+    cat("\n\n###", gsub("_", " ", nm), "\n\n")
+    print(knitr::kable(read.csv(summary_files[[nm]], check.names = FALSE)))
+  }
+}
+```
+
+## Build annotation maps from local eggNOG and GFF
+
+The count matrix uses `LOC...` gene IDs, whereas the eggNOG file is annotated at
+the protein-query level. This section uses the local GFF file as a bridge from
+protein IDs to gene IDs, then keeps only annotations that can be lifted onto
+genes present in the count matrix. That makes GO and KEGG enrichment compatible
+with the DESeq2 result tables.
+
+```{r annotation-maps}
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+eggnog <- read_emapper(eggnog_file)
+protein_to_gene <- parse_cds_gene_bridge(gff_file)
+
+annotation <- eggnog |>
+  dplyr::left_join(protein_to_gene, by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id)) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+gene_universe <- unique(counts_raw[[1]])
+annotation <- annotation |>
+  dplyr::filter(gene_id %in% gene_universe)
+
+annotation_summary <- data.frame(
+  genes_in_count_matrix = length(gene_universe),
+  annotated_genes_lifted_to_LOC = dplyr::n_distinct(annotation$gene_id),
+  genes_with_GO = sum(annotation$GOs != "-" & annotation$GOs != ""),
+  genes_with_KEGG_KO = sum(annotation$KEGG_ko != "-" & annotation$KEGG_ko != ""),
+  genes_with_KEGG_pathway = sum(annotation$KEGG_Pathway != "-" &
+                                  annotation$KEGG_Pathway != "")
+)
+
+knitr::kable(annotation_summary)
+write.csv(annotation_summary, file.path(out_dir, "annotation_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r make-term-maps}
+term2gene_go <- annotation |>
+  dplyr::select(gene_id, GOs) |>
+  tidyr::separate_rows(GOs, sep = ",") |>
+  dplyr::filter(grepl("^GO:", GOs)) |>
+  dplyr::transmute(term = GOs, gene = gene_id) |>
+  dplyr::distinct()
+
+go_names <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "TERM",
+  multiVals = "first"
+)
+
+go_ontology <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "ONTOLOGY",
+  multiVals = "first"
+)
+
+term2name_go <- data.frame(
+  term = names(go_names),
+  name = unname(go_names),
+  ontology = unname(go_ontology)
+) |>
+  dplyr::filter(!is.na(name))
+
+term2gene_kegg_pathway <- annotation |>
+  dplyr::select(gene_id, KEGG_Pathway) |>
+  tidyr::separate_rows(KEGG_Pathway, sep = ",") |>
+  dplyr::filter(grepl("^ko[0-9]+$", KEGG_Pathway)) |>
+  dplyr::transmute(term = KEGG_Pathway, gene = gene_id) |>
+  dplyr::distinct()
+
+term2name_kegg_pathway <- term2gene_kegg_pathway |>
+  dplyr::distinct(term) |>
+  dplyr::mutate(name = term)
+
+write.csv(term2gene_go, file.path(out_dir, "GO_TERM2GENE.csv"),
+          row.names = FALSE)
+write.csv(term2name_go, file.path(out_dir, "GO_TERM2NAME.csv"),
+          row.names = FALSE)
+write.csv(term2gene_kegg_pathway, file.path(out_dir, "KEGG_pathway_TERM2GENE.csv"),
+          row.names = FALSE)
+
+write.table(term2gene_go, file.path(out_dir, "eggNOG_GO_TERM2GENE.tsv"),
+            sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(term2name_go, file.path(out_dir, "eggNOG_GO_TERM2NAME.tsv"),
+            sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(term2gene_kegg_pathway,
+            file.path(out_dir, "eggNOG_KEGG_pathway_TERM2GENE.tsv"),
+            sep = "\t", quote = FALSE, row.names = FALSE)
+
+annotation_source_manifest <- data.frame(
+  Annotation_source = c("eggNOG GO", "eggNOG KEGG pathway"),
+  Source_file = c(eggnog_file, eggnog_file),
+  Gene_id_bridge = c(gff_file, gff_file),
+  Interpretation = c(
+    "GO terms parsed from eggNOG protein annotations and lifted to LOC gene IDs.",
+    "KEGG pathway IDs parsed from eggNOG protein annotations and lifted to LOC gene IDs."
+  )
+)
+knitr::kable(annotation_source_manifest)
+write.csv(annotation_source_manifest,
+          file.path(out_dir, "annotation_source_manifest.csv"),
+          row.names = FALSE)
+```
+
+## Enrichment input DEG sets
+
+For enrichment, each DEG table is split by source and direction. Direction-aware
+sets are helpful because genes higher in infected samples and genes higher in
+controls can point to different biological processes, even when they come from
+the same statistical contrast.
+
+```{r deg-sets}
+result_files <- list.files(file.path(project_dir, params$latest_results_root),
+                           pattern = "\\.csv$", recursive = TRUE,
+                           full.names = TRUE)
+result_files <- result_files[grepl("DESeq2_|all_.*results|coefficients",
+                                   basename(result_files))]
+
+read_deg_table <- function(path) {
+  tab <- read.csv(path, check.names = FALSE)
+  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
+  if (is.na(gene_col) || !"padj" %in% names(tab) ||
+      !"log2FoldChange" %in% names(tab)) return(NULL)
+  tab |>
+    dplyr::transmute(
+      gene_id = as.character(.data[[gene_col]]),
+      log2FoldChange = log2FoldChange,
+      padj = padj,
+      source = tools::file_path_sans_ext(basename(path)),
+      direction = dplyr::case_when(
+        !is.na(padj) & padj < params$alpha &
+          log2FoldChange >= params$lfc_threshold ~ "UP",
+        !is.na(padj) & padj < params$alpha &
+          log2FoldChange <= -params$lfc_threshold ~ "DOWN",
+        !is.na(padj) & padj < params$alpha &
+          abs(log2FoldChange) >= params$lfc_threshold ~ "ALL",
+        TRUE ~ "NOT_SIGNIFICANT"
+      )
+    )
+}
+
+deg_tables <- lapply(result_files, read_deg_table)
+deg_tables <- deg_tables[!vapply(deg_tables, is.null, logical(1))]
+deg_long <- dplyr::bind_rows(deg_tables)
+deg_long <- deg_long |>
+  dplyr::filter(direction != "NOT_SIGNIFICANT") |>
+  dplyr::mutate(source_direction = paste(source, direction, sep = "__"))
+
+deg_set_summary <- deg_long |>
+  dplyr::distinct(source_direction, gene_id) |>
+  dplyr::count(source_direction, name = "n_genes") |>
+  dplyr::arrange(dplyr::desc(n_genes))
+
+DT::datatable(deg_set_summary, options = list(pageLength = 15))
+write.csv(deg_set_summary, file.path(out_dir, "enrichment_deg_set_summary.csv"),
+          row.names = FALSE)
+```
+
+## GO and KEGG enrichment
+
+GO and KEGG enrichment asks whether a DEG set contains more genes from a
+functional term than expected from the annotated gene universe. The universe is
+restricted to genes that are both present in the count matrix and represented in
+the corresponding annotation map, so the background matches what this dataset
+could actually test.
+
+```{r run-enrichment}
+run_enrichment <- function(genes, term2gene, term2name, universe) {
+  genes <- unique(genes[genes %in% universe])
+  if (length(genes) < 5) return(NULL)
+  clusterProfiler::enricher(
+    gene = genes,
+    universe = universe,
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name[, c("term", "name")],
+    pvalueCutoff = 0.1,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2
+  )
+}
+
+enrichment_sets <- split(deg_long$gene_id, deg_long$source_direction)
+universe_go <- unique(term2gene_go$gene)
+universe_kegg <- unique(term2gene_kegg_pathway$gene)
+
+go_results <- lapply(enrichment_sets, run_enrichment,
+                     term2gene = term2gene_go,
+                     term2name = term2name_go,
+                     universe = universe_go)
+kegg_results <- lapply(enrichment_sets, run_enrichment,
+                       term2gene = term2gene_kegg_pathway,
+                       term2name = term2name_kegg_pathway,
+                       universe = universe_kegg)
+
+enrich_to_df <- function(result_list, database) {
+  pieces <- lapply(names(result_list), function(nm) {
+    res <- result_list[[nm]]
+    if (is.null(res)) return(NULL)
+    df <- as.data.frame(res)
+    if (nrow(df) == 0) return(NULL)
+    df$set <- nm
+    df$database <- database
+    df
+  })
+  dplyr::bind_rows(pieces)
+}
+
+go_enrichment_df <- enrich_to_df(go_results, "GO")
+kegg_enrichment_df <- enrich_to_df(kegg_results, "KEGG_pathway")
+all_enrichment <- dplyr::bind_rows(go_enrichment_df, kegg_enrichment_df)
+
+write.csv(go_enrichment_df, file.path(out_dir, "GO_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(kegg_enrichment_df, file.path(out_dir, "KEGG_pathway_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(all_enrichment, file.path(out_dir, "all_enrichment_results.csv"),
+          row.names = FALSE)
+
+if (nrow(all_enrichment) == 0) {
+  cat("No enriched terms passed the current cutoffs. Try inspecting the DEG set sizes or relaxing qvalueCutoff.")
+} else {
+  DT::datatable(
+    all_enrichment |>
+      dplyr::select(database, set, ID, Description, GeneRatio, BgRatio,
+                    p.adjust, qvalue, geneID) |>
+      dplyr::arrange(p.adjust),
+    options = list(pageLength = 15)
+  )
+}
+```
+
+## eggNOG GO enrichment by ontology
+
+This panel follows the same logic used for the AGY gregaria eggNOG layer:
+foreground genes come from the DESeq2 DEG sets, the background is the set of
+tested genes with eggNOG GO annotations, and the GO ontology labels come from
+`GO.db`. The enrichment is therefore a custom eggNOG GO enrichment, not an
+NCBI/organism-specific `enrichGO()` call.
+
+```{r eggnog-go-ontology-figure, fig.height=10, fig.width=13}
+if (nrow(go_enrichment_df) > 0 && "ID" %in% names(go_enrichment_df)) {
+  go_enrichment_ontology <- go_enrichment_df |>
+    dplyr::left_join(term2name_go |> dplyr::select(term, ontology),
+                     by = c("ID" = "term")) |>
+    dplyr::mutate(
+      ontology = dplyr::case_when(
+        ontology == "BP" ~ "Biological process",
+        ontology == "MF" ~ "Molecular function",
+        ontology == "CC" ~ "Cellular component",
+        TRUE ~ "GO term"
+      ),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      term_label = paste0(stringr::str_trunc(Description, 52), " [", ID, "]"),
+      set_label = stringr::str_replace_all(set, "_", " ")
+    )
+} else {
+  go_enrichment_ontology <- data.frame()
+}
+
+write.csv(go_enrichment_ontology,
+          file.path(out_dir, "eggNOG_GO_enrichment_with_ontology.csv"),
+          row.names = FALSE)
+
+if (nrow(go_enrichment_ontology) > 0) {
+  go_plot_df <- go_enrichment_ontology |>
+    dplyr::filter(!is.na(p.adjust)) |>
+    dplyr::group_by(set_label, ontology) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = 5) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(ontology, set_label, p.adjust) |>
+    dplyr::mutate(
+      term_label = forcats::fct_reorder(term_label, neg_log10_padj)
+    )
+
+  p_go_ontology <- ggplot2::ggplot(
+    go_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_label)
+  ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_point(ggplot2::aes(size = Count, fill = ontology),
+                        shape = 21, color = "#1f2937", alpha = 0.9,
+                        stroke = 0.35) +
+    ggplot2::facet_grid(ontology ~ set_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_fill_manual(values = c(
+      "Biological process" = "#237C8E",
+      "Molecular function" = "#B8643C",
+      "Cellular component" = "#5B6B4A",
+      "GO term" = "#7B8794"
+    )) +
+    ggplot2::scale_size(range = c(2, 7)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = 7, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 8, face = "bold", angle = 0),
+      axis.text.y = ggplot2::element_text(size = 6),
+      legend.position = "bottom"
+    ) +
+    ggplot2::labs(
+      title = "eggNOG GO enrichment by ontology",
+      subtitle = "Top GO terms per DEG set and ontology; dashed line marks FDR = 0.05",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      fill = "GO ontology",
+      size = "DEGs in term"
+    )
+
+  print(p_go_ontology)
+  ggplot2::ggsave(file.path(out_dir,
+                            "eggNOG_GO_enrichment_by_ontology.png"),
+                  p_go_ontology, width = 13, height = 10, dpi = 300)
+}
+```
+
+## Enrichment overview figure
+
+The overview dotplot shows the strongest enriched terms per DEG set. Dot size is
+the number of genes from the DEG set in the term, and color is the adjusted
+p-value strength, which makes it easier to compare both support and significance
+across many DEG lists.
+
+```{r enrichment-overview, fig.height=9, fig.width=11}
+if (nrow(all_enrichment) > 0) {
+  plot_df <- all_enrichment |>
+    dplyr::group_by(database, set) |>
+    dplyr::slice_min(p.adjust, n = params$top_terms, with_ties = FALSE) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      term_label = stringr::str_trunc(Description, 55),
+      term_label = forcats::fct_reorder(term_label, -log10(p.adjust)),
+      set = stringr::str_replace_all(set, "_", " ")
+    )
+
+  p_enrich <- ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(x = set, y = term_label, size = Count,
+                 color = -log10(p.adjust))
+  ) +
+    ggplot2::geom_point(alpha = 0.85) +
+    ggplot2::facet_wrap(~ database, scales = "free_y") +
+    ggplot2::scale_color_viridis_c(option = "magma") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::labs(
+      title = "Top enriched GO terms and KEGG pathways",
+      x = "DEG set and direction",
+      y = "Enriched term",
+      size = "Gene count",
+      color = "-log10 adjusted P"
+    )
+
+  print(p_enrich)
+  ggplot2::ggsave(file.path(out_dir, "enrichment_dotplot_by_set.png"),
+                  p_enrich, width = 11, height = 9, dpi = 300)
+}
+```
+
+## Term overlap across DEG sets
+
+This final heatmap highlights functional terms that recur in multiple DEG sets.
+Shared terms can point to processes that are robust across contrast definitions,
+whereas terms seen in only one set may be more diet-, infection-, or
+direction-specific.
+
+```{r term-overlap, fig.height=7, fig.width=10}
+if (nrow(all_enrichment) > 0) {
+  term_overlap <- all_enrichment |>
+    dplyr::filter(p.adjust < 0.1) |>
+    dplyr::distinct(database, ID, Description, set) |>
+    dplyr::add_count(database, ID, name = "n_sets") |>
+    dplyr::filter(n_sets >= 2)
+
+  write.csv(term_overlap, file.path(out_dir, "enriched_terms_seen_in_multiple_sets.csv"),
+            row.names = FALSE)
+
+  if (nrow(term_overlap) > 0) {
+    top_overlap_terms <- term_overlap |>
+      dplyr::distinct(database, ID, Description, n_sets) |>
+      dplyr::arrange(dplyr::desc(n_sets)) |>
+      head(40)
+
+    overlap_plot_df <- term_overlap |>
+      dplyr::semi_join(top_overlap_terms, by = c("database", "ID", "Description", "n_sets")) |>
+      dplyr::mutate(
+        term_label = stringr::str_trunc(Description, 60),
+        set = stringr::str_replace_all(set, "_", " ")
+      )
+
+    p_overlap <- ggplot2::ggplot(overlap_plot_df,
+                                 ggplot2::aes(x = set, y = term_label)) +
+      ggplot2::geom_tile(fill = "#2b8cbe") +
+      ggplot2::facet_wrap(~ database, scales = "free_y") +
+      ggplot2::theme_classic() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+      ggplot2::labs(
+        title = "Enriched terms shared by two or more DEG sets",
+        x = "DEG set and direction",
+        y = "Shared enriched term"
+      )
+
+    print(p_overlap)
+    ggplot2::ggsave(file.path(out_dir, "enriched_term_overlap_heatmap.png"),
+                    p_overlap, width = 10, height = 7, dpi = 300)
+  } else {
+    cat("No enriched terms are currently shared by two or more DEG sets at p.adjust < 0.1.")
+  }
+}
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Emily Baker and Maeva A. Techer" />
 
+<meta name="date" content="2026-07-03" />
 
-<title>Home</title>
+<title>Diet and Metarhizium infection interaction in Schistocerca gregaria</title>
 
-<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +32,11 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -68,6 +73,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="site-style.css" type="text/css" />
 
 
 
@@ -226,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -248,7 +257,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Effect of Diet on Metarhizium Infection in S. Gregaria</a>
+      <a class="navbar-brand" href="index.html">S. gregaria diet x infection</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -257,59 +266,94 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Data Processing
+    Overview
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Data Trimming and Filtering</li>
-    <li class="dropdown-header">Mapping to Reference Genome</li>
+    <li>
+      <a href="01-study-design-data.html">Study design and data</a>
+    </li>
+    <li>
+      <a href="02-workflow-reproducibility.html">Workflow and reproducibility</a>
+    </li>
+    <li>
+      <a href="03-count-qc-exploration.html">Count QC and exploration</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Target Gene Analysis
+    Differential expression
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">rRNA Included</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="deg.html">Gene Expression Analysis</a>
-        </li>
-        <li>
-          <a href="overlap.html">Overlap of DEGs</a>
-        </li>
-        <li class="dropdown-header">GO Term Enrichment</li>
-        <li class="dropdown-header">KEGG Pathway Enrichment</li>
-      </ul>
+    <li>
+      <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">rRNA Removed (No SVA)</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="deg-no-rrna.html">Gene Expression Analysis</a>
-        </li>
-        <li class="dropdown-header">Overlap of DEGs</li>
-        <li class="dropdown-header">Go Term Enrichment</li>
-        <li class="dropdown-header">KEGG Pathway Enrichment</li>
-      </ul>
+    <li>
+      <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">rRNA Removed (SVA)</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="deg-no-rrna-sva.html">Gene Expression Analysis</a>
-        </li>
-      </ul>
+    <li>
+      <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+    </li>
+    <li>
+      <a href="07-deg-overlap-prioritization.html">DEG overlap and prioritization</a>
     </li>
   </ul>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Interpretation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
+    </li>
+    <li>
+      <a href="08-publication-figures.html">Publication figure exports</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Archive
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="file_prep.html">Original file preparation</a>
+    </li>
+    <li>
+      <a href="deg.html">Original DEG with rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna.html">Original DEG without rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna-sva.html">Original DEG without rRNA + SVA</a>
+    </li>
+    <li>
+      <a href="overlap.html">Original overlap page</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/MaevaTecher/gregaria-diet-infection-interaction">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -317,9 +361,20 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Home</h1>
+
+<h1 class="title toc-ignore">Diet and Metarhizium infection interaction
+in Schistocerca gregaria</h1>
+<h4 class="author">Emily Baker and Maeva A. Techer</h4>
+<h4 class="date">2026-07-03</h4>
 
 </div>
 
@@ -327,7 +382,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -338,8 +393,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -348,13 +403,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-05-05
+<strong>Last updated:</strong> 2026-07-03
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -378,33 +433,120 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree9816dfed05b8f83a8c7e8fe817a1d271e02d8eb6targetblank9816dfea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260427code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260427)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260427code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260427)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/9816dfed05b8f83a8c7e8fe817a1d271e02d8eb6" target="_blank">9816dfe</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree9816dfed05b8f83a8c7e8fe817a1d271e02d8eb6targetblank9816dfea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -414,7 +556,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/9816dfed05b8f83a8c7e8fe817a1d271e02d8eb6" target="_blank">9816dfe</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -428,10 +570,29 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Ignored files:
-    Ignored:    .RData
-    Ignored:    .Rhistory
-    Ignored:    .Rproj.user/
+Untracked files:
+    Untracked:  analysis/01-study-design-data.Rmd
+    Untracked:  analysis/02-workflow-reproducibility.Rmd
+    Untracked:  analysis/03-count-qc-exploration.Rmd
+    Untracked:  analysis/04-deseq2-interaction-model.Rmd
+    Untracked:  analysis/05-diet-pairwise-deg.Rmd
+    Untracked:  analysis/06-infection-within-diet-deg.Rmd
+    Untracked:  analysis/07-deg-overlap-prioritization.Rmd
+    Untracked:  analysis/08-publication-figures.Rmd
+    Untracked:  analysis/09-outliers-load-enrichment.Rmd
+    Untracked:  analysis/site-style.css
+    Untracked:  data/.DS_Store
+    Untracked:  data/GO_Annotations/
+    Untracked:  data/metadata/
+    Untracked:  data/raw_read_counts/
+    Untracked:  data/reference/
+    Untracked:  output/rmd_runs/
+    Untracked:  scripts/
+
+Unstaged changes:
+    Modified:   .DS_Store
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -480,13 +641,30 @@ Message
 html
 </td>
 <td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1ab4fb468fb55f608d235f43854e43deea8d3ce6/docs/index.html" target="_blank">1ab4fb4</a>
+</td>
+<td>
+emily-cbaker
+</td>
+<td>
+2026-05-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
 <a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/4a81520ee229e39223f172ce381d003be6df9c02/docs/index.html" target="_blank">4a81520</a>
 </td>
 <td>
 emily-cbaker
 </td>
 <td>
-2026-05-01
+2026-05-02
 </td>
 <td>
 Build site.
@@ -503,7 +681,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-05-01
+2026-05-02
 </td>
 <td>
 Build site.
@@ -520,7 +698,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-05-01
+2026-05-02
 </td>
 <td>
 Build site.
@@ -537,7 +715,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-05-01
+2026-05-02
 </td>
 <td>
 Build site.
@@ -554,7 +732,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-05-01
+2026-05-02
 </td>
 <td>
 Build site.
@@ -571,7 +749,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-04-29
+2026-04-30
 </td>
 <td>
 Build site.
@@ -588,7 +766,7 @@ html
 emily-cbaker
 </td>
 <td>
-2026-04-28
+2026-04-29
 </td>
 <td>
 Build site.
@@ -605,7 +783,7 @@ Rmd
 emily-cbaker
 </td>
 <td>
-2026-04-27
+2026-04-28
 </td>
 <td>
 Start workflowr project.
@@ -618,7 +796,158 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Welcome to my research website.</p>
+<div class="hero-panel">
+<div class="hero-copy">
+<p class="eyebrow">
+fat body RNA-seq / diet / fungal challenge
+</p>
+<h1>
+Diet-conditioned transcriptional response to <em>Metarhizium</em>
+exposure
+</h1>
+<p class="lede">
+A workflowR analysis site for tracking sample structure, count quality,
+differential expression, DEG overlap, and functional enrichment in
+<em>Schistocerca gregaria</em>.
+</p>
+<div class="hero-actions">
+<p><a href="03-count-qc-exploration.html">Explore QC</a>
+<a href="04-deseq2-interaction-model.html">Open DESeq2 model</a>
+<a href="09-outliers-load-enrichment.html">View enrichment</a></p>
+</div>
+</div>
+<div class="hero-figure">
+<p><img src="figure/03-count-qc-exploration.Rmd/pca-1.png" alt="Variance-stabilized PCA preview"></p>
+</div>
+</div>
+<div class="metric-grid">
+<div class="metric">
+<span>44</span><strong>samples</strong>
+</div>
+<div class="metric">
+<span>35,681</span><strong>counted genes</strong>
+</div>
+<div class="metric">
+<span>33 / 50 / 83</span><strong>diet levels</strong>
+</div>
+<div class="metric">
+<span>Control / Infected</span><strong>treatments</strong>
+</div>
+</div>
+<div id="analysis-map" class="section level2">
+<h2>Analysis Map</h2>
+<div class="analysis-grid">
+<a class="analysis-tile" href="01-study-design-data.html">
+<span>01</span> <strong>Study Design and Data</strong>
+<p>
+Input files, metadata balance, sample names, and count-depth checks.
+</p>
+</a> <a class="analysis-tile" href="03-count-qc-exploration.html">
+<span>03</span> <strong>Count QC and Exploration</strong>
+<p>
+Library sizes, filtering, PCA, sample distance, and variable genes.
+</p>
+</a> <a class="analysis-tile" href="04-deseq2-interaction-model.html">
+<span>04</span> <strong>Diet x Infection Model</strong>
+<p>
+Full DESeq2 model for diet, treatment, and interaction terms.
+</p>
+</a> <a class="analysis-tile" href="05-diet-pairwise-deg.html">
+<span>05</span> <strong>Diet Pairwise DEGs</strong>
+<p>
+Pairwise diet contrasts across the available expression matrix.
+</p>
+</a> <a class="analysis-tile" href="06-infection-within-diet-deg.html">
+<span>06</span> <strong>Infection Within Diet</strong>
+<p>
+Infected-versus-control contrasts split by diet level.
+</p>
+</a> <a class="analysis-tile" href="07-deg-overlap-prioritization.html">
+<span>07</span> <strong>DEG Overlap</strong>
+<p>
+Shared and contrast-specific genes across the current DEG sets.
+</p>
+</a> <a class="analysis-tile" href="09-outliers-load-enrichment.html">
+<span>09</span> <strong>Quality Sensitivity and Enrichment</strong>
+<p>
+Outlier status, annotation lifting, GO enrichment, and KEGG pathways.
+</p>
+</a> <a class="analysis-tile" href="08-publication-figures.html">
+<span>08</span> <strong>Figure Exports</strong>
+<p>
+Rendered panels gathered from current analysis and legacy assets.
+</p>
+<p></a></p>
+</div>
+</div>
+<div id="current-visual-signals" class="section level2">
+<h2>Current Visual Signals</h2>
+<div class="figure-strip">
+<figure>
+<img src="figure/03-count-qc-exploration.Rmd/library-size-1.png" alt="Library size by group">
+<figcaption>
+Library depth
+</figcaption>
+</figure>
+<figure>
+<img src="figure/04-deseq2-interaction-model.Rmd/volcano-main-effect-1.png" alt="Main effect volcano">
+<figcaption>
+Infection effect
+</figcaption>
+</figure>
+<figure>
+<img src="figure/07-deg-overlap-prioritization.Rmd/overlap-plot-1.png" alt="DEG overlap matrix">
+<figcaption>
+DEG overlap
+</figcaption>
+</figure>
+</div>
+<p>The archive menu preserves the original workflowR pages and older
+generated assets as provenance. The main navigation highlights the
+current reproducible R Markdown analyses.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3       httr_1.4.8        cli_3.6.6         knitr_1.51       
+ [5] rlang_1.2.0       xfun_0.57         stringi_1.8.7     otel_0.2.0       
+ [9] processx_3.9.0    promises_1.5.0    jsonlite_2.0.0    glue_1.8.1       
+[13] rprojroot_2.1.1   git2r_0.36.2      htmltools_0.5.9   httpuv_1.6.17    
+[17] sass_0.4.10       rmarkdown_2.31    jquerylib_0.1.4   tibble_3.3.1     
+[21] evaluate_1.0.5    fastmap_1.2.0     yaml_2.3.12       lifecycle_1.0.5  
+[25] whisker_0.4.1     stringr_1.6.0     compiler_4.6.0    fs_2.1.0         
+[29] pkgconfig_2.0.3   Rcpp_1.1.1-1.1    rstudioapi_0.18.0 later_1.4.8      
+[33] digest_0.6.39     R6_2.6.1          pillar_1.11.1     callr_3.7.6      
+[37] magrittr_2.0.5    bslib_0.10.0      tools_4.6.0       cachem_1.1.0     
+[41] getPass_0.2-4    </code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -672,6 +1001,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

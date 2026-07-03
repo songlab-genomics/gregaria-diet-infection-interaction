@@ -1,0 +1,293 @@
+---
+title: "DEG overlap and prioritization"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  results_root: "output/rmd_runs"
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "deg-overlap-prioritization"
+---
+
+## Purpose
+
+This page compares significant DEG lists from the model pages. It can be run
+after the DESeq2 pages create result CSV files under `output/rmd_runs/`.
+
+The goal is not to run a new statistical test. Instead, this page asks whether
+the same genes repeatedly appear across diet contrasts, infection contrasts, and
+model coefficients. Genes that recur across analyses can be useful candidates
+for follow-up because they are less dependent on a single contrast definition.
+
+## Setup
+
+The page reads DEG result files from the timestamped run folders produced by the
+analysis pages. This keeps the overlap step reproducible while avoiding hidden
+helper scripts: the thresholds used to define a DEG remain visible in the YAML
+header.
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("ggplot2")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+library(ggplot2)
+
+overlap_colors <- c("Present" = "#237C8E", "Absent" = "grey92")
+bar_color <- "#5B6B4A"
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root <- file.path(project_dir, params$results_root)
+```
+
+## Find result files
+
+Only CSV files that look like DESeq2 result tables are selected. The table below
+is shown so the reader can see exactly which run outputs contributed to the
+overlap analysis.
+
+```{r find-files}
+all_result_files <- list.files(results_root, pattern = "\\.csv$", recursive = TRUE,
+                               full.names = TRUE)
+all_result_files <- all_result_files[grepl("DESeq2_|all_.*results|coefficients",
+                                           basename(all_result_files))]
+
+file_info <- data.frame(
+  file = all_result_files,
+  short_name = basename(all_result_files),
+  modified = file.info(all_result_files)$mtime,
+  stringsAsFactors = FALSE
+)
+file_info <- file_info[order(file_info$short_name,
+                             -as.numeric(file_info$modified)), ]
+
+# Keep the newest run for each result table so old workflowR runs do not
+# duplicate the same contrast many times in the overlap figures.
+file_info <- file_info[!duplicated(file_info$short_name), ]
+result_files <- file_info$file
+
+file_table <- data.frame(
+  file = result_files,
+  short_name = basename(result_files),
+  modified = file.info(result_files)$mtime
+)
+
+knitr::kable(file_table)
+```
+
+## Build DEG sets
+
+Each result table is converted into a set of significant gene IDs. If a table
+already contains a `significant` column, that column is used directly; otherwise
+the page reconstructs the DEG call from adjusted p-value and log2 fold-change.
+This lets the overlap page work with both the current self-contained Rmd outputs
+and older result tables.
+
+```{r build-sets}
+read_deg_set <- function(path) {
+  tab <- read.csv(path, check.names = FALSE)
+  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
+  if (is.na(gene_col)) return(NULL)
+
+  if ("significant" %in% names(tab)) {
+    sig <- tab$significant
+  } else if (all(c("padj", "log2FoldChange") %in% names(tab))) {
+    sig <- !is.na(tab$padj) &
+      tab$padj < params$alpha &
+      abs(tab$log2FoldChange) >= params$lfc_threshold
+  } else {
+    return(NULL)
+  }
+
+  unique(as.character(tab[[gene_col]][sig]))
+}
+
+deg_sets <- lapply(result_files, read_deg_set)
+names(deg_sets) <- tools::file_path_sans_ext(basename(result_files))
+deg_sets <- deg_sets[lengths(deg_sets) > 0]
+
+set_summary <- data.frame(
+  set = names(deg_sets),
+  n_genes = lengths(deg_sets),
+  stringsAsFactors = FALSE
+)
+set_summary <- set_summary[order(set_summary$n_genes, decreasing = TRUE), ]
+deg_sets <- deg_sets[set_summary$set]
+
+knitr::kable(set_summary)
+write.csv(set_summary, file.path(out_dir, "deg_set_summary.csv"),
+          row.names = FALSE)
+```
+
+## DEG set size plot
+
+This first figure is the fastest way to see which contrasts are driving most of
+the DEG signal. It counts each DEG set independently, before asking whether
+genes overlap between sets.
+
+```{r deg-set-size-plot, fig.height=5.8, fig.width=9}
+set_summary$set <- factor(set_summary$set, levels = rev(set_summary$set))
+
+p_set_size <- ggplot(set_summary, aes(x = set, y = n_genes)) +
+  geom_col(fill = bar_color, width = 0.72) +
+  geom_text(aes(label = n_genes), hjust = -0.12, size = 3) +
+  coord_flip() +
+  theme_classic() +
+  labs(
+    title = "DEG set sizes",
+    x = "DEG set",
+    y = "Number of significant genes"
+  )
+
+p_set_size
+ggsave(file.path(out_dir, "deg_set_size_barplot.png"),
+       p_set_size, width = 9, height = 5.8, dpi = 300)
+```
+
+## Presence-absence matrix
+
+The presence-absence matrix records whether each DEG appears in each result
+set. The priority table then lists genes that occur in two or more sets, which
+is a practical starting point for annotation, enrichment, and candidate-gene
+figures.
+
+```{r overlap-matrix}
+if (length(deg_sets) == 0) {
+  stop("No DEG sets found. Knit the DESeq2 pages first, then rerun this page.")
+}
+
+all_genes <- sort(unique(unlist(deg_sets)))
+presence <- sapply(deg_sets, function(x) all_genes %in% x)
+presence_df <- data.frame(gene_id = all_genes, presence, check.names = FALSE)
+
+write.csv(presence_df, file.path(out_dir, "deg_presence_absence_matrix.csv"),
+          row.names = FALSE)
+
+overlap_count <- rowSums(presence)
+priority_genes <- data.frame(
+  gene_id = all_genes[overlap_count >= 2],
+  n_sets = overlap_count[overlap_count >= 2],
+  set_members = apply(presence[overlap_count >= 2, , drop = FALSE], 1,
+                      function(x) paste(names(deg_sets)[x], collapse = "; ")),
+  stringsAsFactors = FALSE
+)
+priority_genes <- priority_genes[order(priority_genes$n_sets, decreasing = TRUE), ]
+
+knitr::kable(head(priority_genes, 25))
+write.csv(priority_genes, file.path(out_dir, "genes_seen_in_two_or_more_sets.csv"),
+          row.names = FALSE)
+```
+
+## Intersection size plot
+
+This plot counts overlap patterns directly. A bar means that a group of genes is
+shared by exactly the DEG sets named on the y-axis. This is easier to read than
+a full gene-by-set heatmap when the result files contain many contrasts.
+
+```{r intersection-size-plot, fig.height=6.5, fig.width=9}
+intersection_labels <- apply(presence, 1, function(x) {
+  paste(names(deg_sets)[x], collapse = " + ")
+})
+intersection_labels <- intersection_labels[nzchar(intersection_labels)]
+intersection_summary <- as.data.frame(table(intersection = intersection_labels),
+                                      stringsAsFactors = FALSE)
+names(intersection_summary)[2] <- "n_genes"
+intersection_summary$n_sets <- vapply(strsplit(intersection_summary$intersection,
+                                               " [+] "),
+                                      length, integer(1))
+intersection_summary <- intersection_summary[order(intersection_summary$n_genes,
+                                                   intersection_summary$n_sets,
+                                                   decreasing = TRUE), ]
+intersection_summary <- head(intersection_summary, 20)
+intersection_summary$intersection_id <- sprintf("I%02d", seq_len(nrow(intersection_summary)))
+intersection_summary$intersection_id <- factor(intersection_summary$intersection_id,
+                                               levels = rev(intersection_summary$intersection_id))
+
+p_intersections <- ggplot(intersection_summary,
+                          aes(x = intersection_id, y = n_genes,
+                              fill = factor(n_sets))) +
+  geom_col(width = 0.72) +
+  geom_text(aes(label = n_genes), hjust = -0.12, size = 3) +
+  coord_flip() +
+  scale_fill_manual(values = c("1" = "#7B8794", "2" = "#237C8E",
+                               "3" = "#5B6B4A", "4" = "#B8643C",
+                               "5" = "#8C6D9E", "6" = "#C85A54"),
+                    na.value = "#374151") +
+  theme_classic() +
+  labs(
+    title = "Top DEG intersections",
+    subtitle = "Bars show exact overlap patterns across the latest DEG result tables",
+    x = "Intersection ID",
+    y = "Number of genes",
+    fill = "Number of sets"
+  )
+
+p_intersections
+ggsave(file.path(out_dir, "deg_intersection_size_barplot.png"),
+       p_intersections, width = 9, height = 6.5, dpi = 300)
+write.csv(intersection_summary,
+          file.path(out_dir, "deg_intersection_summary.csv"),
+          row.names = FALSE)
+
+knitr::kable(intersection_summary[, c("intersection_id", "n_genes",
+                                      "n_sets", "intersection")],
+             caption = "Intersection IDs used in the plot")
+```
+
+## Overlap plot
+
+The heatmap displays the densest part of the presence-absence matrix so the
+website stays readable. Blue cells mean the gene is significant in that DEG set;
+grey cells mean it is absent from that set under the current thresholds.
+
+```{r overlap-plot, fig.height=6, fig.width=9}
+plot_df <- data.frame(
+  gene_id = rep(all_genes, times = length(deg_sets)),
+  set = rep(names(deg_sets), each = length(all_genes)),
+  present = as.vector(presence)
+)
+
+# Plot the densest part of the matrix so the website stays readable.
+top_genes <- names(sort(overlap_count, decreasing = TRUE))[seq_len(min(100, length(overlap_count)))]
+plot_df <- plot_df[plot_df$gene_id %in% top_genes, ]
+
+p_overlap <- ggplot2::ggplot(plot_df,
+                             ggplot2::aes(x = set, y = gene_id, fill = present)) +
+  ggplot2::geom_tile() +
+  ggplot2::scale_fill_manual(values = c("TRUE" = overlap_colors[["Present"]],
+                                        "FALSE" = overlap_colors[["Absent"]])) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                 axis.text.y = ggplot2::element_blank(),
+                 axis.ticks.y = ggplot2::element_blank()) +
+  ggplot2::labs(
+    title = "DEG overlap matrix",
+    subtitle = "Top genes ranked by number of sets where they appear",
+    x = "DEG set",
+    y = "Genes",
+    fill = "Present"
+  )
+
+p_overlap
+ggplot2::ggsave(file.path(out_dir, "deg_overlap_matrix.png"),
+                p_overlap, width = 9, height = 6, dpi = 300)
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

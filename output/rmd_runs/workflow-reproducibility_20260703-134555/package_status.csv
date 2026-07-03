@@ -1,0 +1,11 @@
+"package","installed"
+"workflowr",TRUE
+"knitr",TRUE
+"rmarkdown",TRUE
+"ggplot2",TRUE
+"scales",TRUE
+"DESeq2",TRUE
+"pheatmap",TRUE
+"ggrepel",TRUE
+"EnhancedVolcano",TRUE
+"UpSetR",TRUE

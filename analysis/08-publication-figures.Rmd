@@ -1,0 +1,111 @@
+---
+title: "Publication figure exports"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  results_root: "output/rmd_runs"
+  legacy_assets_root: "docs/assets"
+  output_tag: "publication-figures"
+---
+
+## Purpose
+
+This page gathers rendered analysis panels for review. It does not overwrite
+older figures; every knit creates a new export folder.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("ggplot2", "png", "grid")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+candidate_roots <- c(file.path(project_dir, params$results_root),
+                     file.path(project_dir, params$legacy_assets_root))
+```
+
+## Candidate figure inventory
+
+```{r figure-inventory}
+figure_files <- unlist(lapply(candidate_roots, function(root) {
+  if (!dir.exists(root)) return(character())
+  list.files(root, pattern = "\\.(png|pdf)$", recursive = TRUE, full.names = TRUE)
+}))
+
+figure_inventory <- data.frame(
+  source = figure_files,
+  file = basename(figure_files),
+  role = dplyr::case_when(
+    grepl("PCA", basename(figure_files), ignore.case = TRUE) ~ "ordination",
+    grepl("Volcano", basename(figure_files), ignore.case = TRUE) ~ "volcano",
+    grepl("Heatmap", basename(figure_files), ignore.case = TRUE) ~ "heatmap",
+    grepl("MA", basename(figure_files), ignore.case = TRUE) ~ "MA plot",
+    grepl("overlap|venn|upset", basename(figure_files), ignore.case = TRUE) ~ "overlap",
+    TRUE ~ "other"
+  )
+)
+
+knitr::kable(head(figure_inventory, 30))
+write.csv(figure_inventory, file.path(out_dir, "candidate_figure_inventory.csv"),
+          row.names = FALSE)
+```
+
+## Copy candidate panels
+
+```{r copy-panels}
+keep_roles <- c("ordination", "volcano", "heatmap", "overlap", "MA plot")
+copy_inventory <- figure_inventory[figure_inventory$role %in% keep_roles, ]
+
+# Keep the first few panels from each figure role for review.
+copy_inventory <- do.call(rbind, lapply(split(copy_inventory, copy_inventory$role),
+                                        head, 6))
+
+panel_dir <- file.path(out_dir, "candidate_panels")
+dir.create(panel_dir, recursive = TRUE, showWarnings = FALSE)
+
+copied_to <- file.path(panel_dir, paste(seq_len(nrow(copy_inventory)),
+                                        copy_inventory$file, sep = "_"))
+file.copy(copy_inventory$source, copied_to, overwrite = FALSE)
+copy_inventory$copied_to <- copied_to
+
+knitr::kable(copy_inventory[, c("role", "file", "copied_to")])
+write.csv(copy_inventory, file.path(out_dir, "copied_candidate_panels.csv"),
+          row.names = FALSE)
+```
+
+## Preview PNG panels
+
+```{r preview-panels, results='asis'}
+png_panels <- copy_inventory$copied_to[grepl("\\.png$", copy_inventory$copied_to)]
+png_panels <- head(png_panels, 8)
+
+if (length(png_panels) == 0) {
+  cat("No PNG panels found for preview. Check the inventory CSV in the output folder.")
+} else {
+  for (panel in png_panels) {
+    rel_panel <- sub(paste0("^", project_dir, "/"), "../", panel)
+    cat("![](", rel_panel, ")\n\n", sep = "")
+  }
+}
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

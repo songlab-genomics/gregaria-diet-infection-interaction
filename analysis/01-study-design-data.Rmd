@@ -1,0 +1,134 @@
+---
+title: "Study design and data"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts.csv"
+  reference_gff: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  output_tag: "study-design-data"
+---
+
+## Purpose
+
+This page records the input files, sample labels, experimental groups, and
+basic count-table checks used by downstream analyses. It is meant to be
+knitted before running DESeq2 pages so mismatched sample names or incomplete
+metadata are caught early.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+# Keep all paths relative to the repository root used by workflowR.
+project_dir <- normalizePath(".", mustWork = TRUE)
+
+# Every run writes into a new folder, preserving older results for comparison.
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata_file <- file.path(project_dir, params$metadata_file)
+counts_file <- file.path(project_dir, params$counts_file)
+reference_gff <- file.path(project_dir, params$reference_gff)
+```
+
+## Input files
+
+```{r input-files}
+input_files <- data.frame(
+  role = c("sample metadata", "gene count matrix", "reference annotation"),
+  path = c(params$metadata_file, params$counts_file, params$reference_gff),
+  exists = file.exists(c(metadata_file, counts_file, reference_gff))
+)
+
+knitr::kable(input_files)
+
+stopifnot(all(input_files$exists))
+```
+
+## Metadata
+
+```{r metadata-summary}
+metadata <- read.delim(metadata_file, check.names = FALSE)
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+# This table shows whether the design is balanced across diet and infection.
+design_table <- with(metadata, table(Diet, Treatment))
+knitr::kable(as.data.frame.matrix(design_table))
+
+summary_table <- data.frame(
+  n_samples = nrow(metadata),
+  diets = paste(levels(droplevels(metadata$Diet)), collapse = ", "),
+  treatments = paste(levels(droplevels(metadata$Treatment)), collapse = ", ")
+)
+knitr::kable(summary_table)
+```
+
+## Count matrix
+
+```{r counts-check}
+counts <- read.csv(counts_file, check.names = FALSE)
+gene_ids <- counts[[1]]
+count_matrix <- counts[, -1, drop = FALSE]
+rownames(count_matrix) <- gene_ids
+
+# Count columns include file prefixes; convert them back to metadata labels.
+count_labels <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(count_matrix)))
+metadata_labels <- metadata$label
+
+sample_match <- data.frame(
+  count_column = colnames(count_matrix),
+  inferred_label = count_labels,
+  found_in_metadata = count_labels %in% metadata_labels
+)
+
+knitr::kable(head(sample_match, 12))
+
+stopifnot(all(sample_match$found_in_metadata))
+stopifnot(length(metadata_labels) == ncol(count_matrix))
+```
+
+## Count depth
+
+```{r count-depth}
+library(ggplot2)
+
+depth_df <- data.frame(
+  label = count_labels,
+  total_counts = colSums(count_matrix)
+)
+depth_df <- merge(depth_df, metadata, by = "label", all.x = TRUE)
+
+ggplot(depth_df, aes(x = Diet, y = total_counts, color = Treatment)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.12, height = 0, size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_classic() +
+  labs(
+    title = "Library size by diet and infection",
+    x = "Diet",
+    y = "Total assigned counts",
+    color = "Treatment"
+  )
+
+write.csv(depth_df, file.path(out_dir, "library_size_by_sample.csv"),
+          row.names = FALSE)
+```
+
+## Reproduction notes
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

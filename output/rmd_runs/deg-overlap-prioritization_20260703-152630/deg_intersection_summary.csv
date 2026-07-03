@@ -1,0 +1,21 @@
+"intersection","n_genes","n_sets"
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83",10,7
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_33_vs_50",2,7
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_50_vs_83",2,7
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + interaction_coefficients + DESeq2_33_vs_50 + DESeq2_50_vs_83",1,7
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_50_vs_83",1,7
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83 + interaction_coefficients + DESeq2_50_vs_83",1,7
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + all_diet_pairwise_results + DESeq2_33_vs_83 + interaction_coefficients + DESeq2_50_vs_83",1,7
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83",56,6
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83",5,6
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + interaction_coefficients + DESeq2_33_vs_50",2,6
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_50_vs_83",2,6
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_50_vs_83",1,6
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_50_vs_83",1,6
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_33_vs_50",1,6
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_50_vs_83",1,6
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83",267,5
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + all_model_coefficients + all_diet_pairwise_results + DESeq2_33_vs_83",44,5
+"all_infection_within_diet_results + all_model_coefficients + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83",10,5
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 + DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results + DESeq2_33_vs_83",8,5
+"all_infection_within_diet_results + DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results + DESeq2_33_vs_83",3,5

@@ -1,0 +1,25 @@
+Package: DesertLocustR
+Type: Package
+Title: Perform Pathway Enrichment In Schistocerca Species
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Devon", "Boland",
+      email = "devonjboland@tamu.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: DesertLocustR takes annotations files from the Eggnog mapper
+    and GFF feature files to generate mapped gene names to annotation
+    terms in the GO and KEGG databases. Specifically curated for species
+    investigated by the Behavioral Plasticity Research Institute 'BPRI'.
+Depends: GO.db, AnnotationHub, rtracklayer, Biostrings, data.table,
+        dplyr, clusterProfiler, remotes
+biocViews:
+License: MIT
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+NeedsCompilation: no
+Packaged: 2025-05-28 20:13:13 UTC; devonjboland
+Author: Devon Boland [aut, cre]
+Maintainer: Devon Boland <devonjboland@tamu.edu>

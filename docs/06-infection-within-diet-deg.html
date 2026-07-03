@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Emily Baker and Maeva A. Techer" />
+
+<meta name="date" content="2026-07-03" />
+
+<title>Infection within diet DEGs</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="site-style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">S. gregaria diet x infection</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Overview
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-study-design-data.html">Study design and data</a>
+    </li>
+    <li>
+      <a href="02-workflow-reproducibility.html">Workflow and reproducibility</a>
+    </li>
+    <li>
+      <a href="03-count-qc-exploration.html">Count QC and exploration</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Differential expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+    </li>
+    <li>
+      <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+    </li>
+    <li>
+      <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+    </li>
+    <li>
+      <a href="07-deg-overlap-prioritization.html">DEG overlap and prioritization</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Interpretation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
+    </li>
+    <li>
+      <a href="08-publication-figures.html">Publication figure exports</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Archive
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="file_prep.html">Original file preparation</a>
+    </li>
+    <li>
+      <a href="deg.html">Original DEG with rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna.html">Original DEG without rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna-sva.html">Original DEG without rRNA + SVA</a>
+    </li>
+    <li>
+      <a href="overlap.html">Original overlap page</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/MaevaTecher/gregaria-diet-infection-interaction">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Infection within diet DEGs</h1>
+<h4 class="author">Emily Baker and Maeva A. Techer</h4>
+<h4 class="date">2026-07-03</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-03
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>gregaria-diet-infection-interaction/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260427code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260427)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260427code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260427)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreef30426340dd909852c5dced94fe962ee4d8b47c5targetblankf304263a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/f30426340dd909852c5dced94fe962ee4d8b47c5" target="_blank">f304263</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  analysis/01-study-design-data.Rmd
+    Untracked:  analysis/02-workflow-reproducibility.Rmd
+    Untracked:  analysis/03-count-qc-exploration.Rmd
+    Untracked:  analysis/04-deseq2-interaction-model.Rmd
+    Untracked:  analysis/05-diet-pairwise-deg.Rmd
+    Untracked:  analysis/06-infection-within-diet-deg.Rmd
+    Untracked:  analysis/07-deg-overlap-prioritization.Rmd
+    Untracked:  analysis/08-publication-figures.Rmd
+    Untracked:  analysis/09-outliers-load-enrichment.Rmd
+    Untracked:  analysis/site-style.css
+    Untracked:  data/.DS_Store
+    Untracked:  data/GO_Annotations/
+    Untracked:  data/metadata/
+    Untracked:  data/raw_read_counts/
+    Untracked:  data/reference/
+    Untracked:  output/rmd_runs/
+    Untracked:  scripts/
+
+Unstaged changes:
+    Modified:   .DS_Store
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p>This page tests infected versus control samples separately within
+each diet. This is a simple and readable complement to the full
+interaction model.</p>
+<p>The reason to split by diet is biological and statistical: infection
+may not produce the same transcriptional response under every
+nutritional condition. The full interaction model tests whether diet
+modifies the infection effect; this page then turns that question into
+three direct infected-control comparisons that are easier to inspect,
+plot, and interpret.</p>
+</div>
+<div id="setup-and-data-loading" class="section level2">
+<h2>Setup and data loading</h2>
+<p>The code first matches metadata rows to count-matrix columns using
+the sample labels. This makes the analysis self-contained in the R
+Markdown file and keeps the model inputs visible before any statistics
+are run.</p>
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required &lt;- c(&quot;DESeq2&quot;, &quot;ggplot2&quot;, &quot;EnhancedVolcano&quot;, &quot;pheatmap&quot;, &quot;ggrepel&quot;,
+              &quot;dplyr&quot;, &quot;SummarizedExperiment&quot;)
+missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) &gt; 0) {
+  stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
+}
+library(ggplot2)
+
+diet_colors &lt;- c(&quot;33&quot; = &quot;#E6862E&quot;, &quot;50&quot; = &quot;#2F8F5B&quot;, &quot;83&quot; = &quot;#7B4FA3&quot;)
+treatment_colors &lt;- c(&quot;Control&quot; = &quot;#7B8794&quot;, &quot;Infected&quot; = &quot;#C85A54&quot;)
+treatment_fills &lt;- c(&quot;Control&quot; = &quot;#D8DEE2&quot;, &quot;Infected&quot; = &quot;#F0C7BF&quot;)
+condition_surface_colors &lt;- c(
+  &quot;33 Control&quot; = &quot;#F7D6A6&quot;,
+  &quot;33 Infected&quot; = &quot;#C75C1B&quot;,
+  &quot;50 Control&quot; = &quot;#CDE8D5&quot;,
+  &quot;50 Infected&quot; = &quot;#1F6F43&quot;,
+  &quot;83 Control&quot; = &quot;#D8C7E8&quot;,
+  &quot;83 Infected&quot; = &quot;#5B2E83&quot;
+)
+
+project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
+run_stamp &lt;- format(Sys.time(), &quot;%Y%m%d-%H%M%S&quot;)
+out_dir &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
+                     paste(params$output_tag, run_stamp, sep = &quot;_&quot;))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata &lt;- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label &lt;- as.character(metadata$label)
+metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
+metadata$Treatment &lt;- relevel(factor(metadata$Treatment), ref = &quot;Control&quot;)
+
+counts_raw &lt;- read.csv(file.path(project_dir, params$counts_file),
+                       check.names = FALSE)
+counts &lt;- as.matrix(counts_raw[, -1])
+rownames(counts) &lt;- counts_raw[[1]]
+storage.mode(counts) &lt;- &quot;integer&quot;
+
+count_labels &lt;- sub(&quot;_MERGE$&quot;, &quot;&quot;, sub(&quot;^mehreen_&quot;, &quot;&quot;, colnames(counts)))
+metadata &lt;- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) &lt;- metadata$label
+colnames(counts) &lt;- count_labels
+
+keep_vst &lt;- rowSums(counts) &gt;= params$min_total_count
+dds_vst &lt;- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_vst, ],
+  colData = metadata,
+  design = ~ Diet + Treatment
+)
+
+vsd &lt;- DESeq2::vst(dds_vst, blind = TRUE)
+vst_mat &lt;- SummarizedExperiment::assay(vsd)</code></pre>
+</div>
+<div id="vst-pca-with-condition-centroids" class="section level2">
+<h2>VST PCA with condition centroids</h2>
+<p>PCA is the most transparent ordination for this step because the axes
+show how much expression variance they explain. UMAP can be useful for
+pattern discovery, but it does not give the same direct variance
+accounting and can change with parameter choices. Here the small points
+are individual libraries, the larger points are diet-by-treatment
+centroids, and the pale condition polygons connect the outermost samples
+from each diet-by-treatment group in the first two PCs.</p>
+<pre class="r"><code>nonzero_variance &lt;- apply(vst_mat, 1, var) &gt; 0
+pca &lt;- prcomp(t(vst_mat[nonzero_variance, , drop = FALSE]), scale. = FALSE)
+percent_var &lt;- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+
+pca_scores &lt;- data.frame(
+  label = rownames(pca$x),
+  PC1 = pca$x[, &quot;PC1&quot;],
+  PC2 = pca$x[, &quot;PC2&quot;],
+  Diet = metadata$Diet,
+  Treatment = metadata$Treatment,
+  check.names = FALSE
+)
+pca_scores$Condition &lt;- interaction(pca_scores$Diet, pca_scores$Treatment,
+                                    sep = &quot; &quot;)
+
+pca_centroids &lt;- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
+                           pca_scores, mean)
+names(pca_centroids)[names(pca_centroids) == &quot;PC1&quot;] &lt;- &quot;centroid_PC1&quot;
+names(pca_centroids)[names(pca_centroids) == &quot;PC2&quot;] &lt;- &quot;centroid_PC2&quot;
+
+make_condition_hull &lt;- function(df) {
+  if (nrow(df) &lt; 3) return(df[0, ])
+  df[chull(df$PC1, df$PC2), ]
+}
+
+pca_hulls &lt;- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
+                                   make_condition_hull))
+
+p_pca_centroids &lt;- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.20,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3,
+    alpha = 0.88
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Diet),
+    shape = 21,
+    fill = &quot;white&quot;,
+    stroke = 0.8,
+    size = 5
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Condition),
+    color = &quot;grey15&quot;,
+    fill = &quot;white&quot;,
+    label.size = 0.18,
+    size = 3.1,
+    min.segment.length = 0
+  ) +
+  ggplot2::scale_color_manual(values = diet_colors) +
+  ggplot2::scale_fill_manual(values = condition_surface_colors) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = &quot;bottom&quot;) +
+  ggplot2::labs(
+    title = &quot;VST PCA with diet-by-treatment centroids&quot;,
+    x = paste0(&quot;PC1: &quot;, percent_var[1], &quot;% variance&quot;),
+    y = paste0(&quot;PC2: &quot;, percent_var[2], &quot;% variance&quot;),
+    color = &quot;Diet&quot;,
+    fill = &quot;Condition polygon&quot;,
+    shape = &quot;Treatment&quot;
+  )
+
+p_pca_centroids</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;vst_pca_condition_centroids.png&quot;),
+                p_pca_centroids, width = 8, height = 5.8, dpi = 300)
+write.csv(pca_scores, file.path(out_dir, &quot;vst_pca_sample_scores.csv&quot;),
+          row.names = FALSE)
+write.csv(pca_centroids, file.path(out_dir, &quot;vst_pca_condition_centroids.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="vst-heatmap-across-samples" class="section level2">
+<h2>VST heatmap across samples</h2>
+<p>Before reading the infected-control tests, it helps to see the
+expression structure across all samples. This heatmap uses the most
+variable variance-stabilized genes, with diet and treatment annotations
+above the columns. The VST transformation is used because raw RNA-seq
+counts have mean-dependent variance; without transformation, very highly
+expressed genes can overwhelm the visual structure.</p>
+<pre class="r"><code>gene_variance &lt;- apply(vst_mat, 1, var)
+top_n &lt;- min(params$top_variable_genes, length(gene_variance))
+top_genes &lt;- names(sort(gene_variance, decreasing = TRUE))[seq_len(top_n)]
+
+annotation_col &lt;- data.frame(
+  Diet = metadata$Diet,
+  Treatment = metadata$Treatment
+)
+rownames(annotation_col) &lt;- colnames(vst_mat)
+
+png(file.path(out_dir, &quot;vst_top_variable_gene_heatmap.png&quot;),
+    width = 1800, height = 1600, res = 180)
+pheatmap::pheatmap(
+  vst_mat[top_genes, ],
+  scale = &quot;row&quot;,
+  show_rownames = FALSE,
+  annotation_col = annotation_col,
+  main = paste(&quot;Top&quot;, top_n, &quot;variable VST genes across samples&quot;)
+)</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/vst-sample-heatmap-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                3 </code></pre>
+<pre class="r"><code>pheatmap::pheatmap(
+  vst_mat[top_genes, ],
+  scale = &quot;row&quot;,
+  show_rownames = FALSE,
+  annotation_col = annotation_col,
+  main = paste(&quot;Top&quot;, top_n, &quot;variable VST genes across samples&quot;)
+)</code></pre>
+</div>
+<div id="run-one-infected-control-test-per-diet" class="section level2">
+<h2>Run one infected-control test per diet</h2>
+<p>For each diet, the code keeps only samples from that diet and fits a
+simple <code>~ Treatment</code> DESeq2 model. This avoids averaging the
+infection effect across diets. A positive log2 fold-change means higher
+expression in infected samples; a negative log2 fold-change means higher
+expression in controls. Genes are called significant only when they pass
+both the adjusted p-value threshold and the absolute log2 fold-change
+threshold.</p>
+<pre class="r"><code>diet_results &lt;- list()
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  message(&quot;Running infection contrast for diet &quot;, diet_level)
+
+  sample_keep &lt;- metadata$Diet == diet_level
+  metadata_sub &lt;- droplevels(metadata[sample_keep, ])
+  counts_sub &lt;- counts[, sample_keep]
+  gene_keep &lt;- rowSums(counts_sub) &gt;= params$min_total_count
+
+  dds &lt;- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_sub[gene_keep, ],
+    colData = metadata_sub,
+    design = ~ Treatment
+  )
+  dds &lt;- DESeq2::DESeq(dds)
+
+  res &lt;- DESeq2::results(dds,
+                         contrast = c(&quot;Treatment&quot;, &quot;Infected&quot;, &quot;Control&quot;),
+                         alpha = params$alpha)
+  res_df &lt;- as.data.frame(res)
+  res_df$gene_id &lt;- rownames(res_df)
+  res_df$diet &lt;- diet_level
+  res_df$significant &lt;- !is.na(res_df$padj) &amp;
+    res_df$padj &lt; params$alpha &amp;
+    abs(res_df$log2FoldChange) &gt;= params$lfc_threshold
+
+  diet_results[[diet_level]] &lt;- res_df
+  write.csv(res_df, file.path(out_dir,
+                              paste0(&quot;DESeq2_infected_vs_control_diet_&quot;,
+                                     diet_level, &quot;.csv&quot;)),
+            row.names = FALSE)
+  writeLines(res_df$gene_id[res_df$significant],
+             file.path(out_dir,
+                       paste0(&quot;significant_genes_infection_diet_&quot;,
+                              diet_level, &quot;.txt&quot;)))
+
+  print(EnhancedVolcano::EnhancedVolcano(
+    res_df,
+    lab = res_df$gene_id,
+    x = &quot;log2FoldChange&quot;,
+    y = &quot;padj&quot;,
+    pCutoff = params$alpha,
+    FCcutoff = params$lfc_threshold,
+    title = paste(&quot;Infected vs control in diet&quot;, diet_level)
+  ))
+}</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" alt="" width="768" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" alt="" width="768" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>all_infection_results &lt;- do.call(rbind, diet_results)
+write.csv(all_infection_results,
+          file.path(out_dir, &quot;all_infection_within_diet_results.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="diet-specific-deg-pca" class="section level2">
+<h2>Diet-specific DEG PCA</h2>
+<p>The PCA above uses all filtered genes and all samples, so it
+describes global expression structure. This section asks a narrower
+question for each diet: if we look only at the genes that are
+differentially expressed between infected and control samples within
+that diet, do the samples separate by treatment? This is closer to the
+DEG result itself, and it avoids using genes from another diet to
+explain the infected-control pattern.</p>
+<pre class="r"><code>make_deg_pca &lt;- function(diet_level) {
+  res &lt;- diet_results[[diet_level]]
+  deg_genes &lt;- res$gene_id[res$significant &amp; !is.na(res$gene_id)]
+  deg_genes &lt;- intersect(deg_genes, rownames(vst_mat))
+  sample_keep &lt;- metadata$Diet == diet_level
+  metadata_sub &lt;- droplevels(metadata[sample_keep, ])
+
+  if (length(deg_genes) &lt; 3 || nrow(metadata_sub) &lt; 4) {
+    return(NULL)
+  }
+
+  mat &lt;- vst_mat[deg_genes, metadata_sub$label, drop = FALSE]
+  keep_gene &lt;- apply(mat, 1, var) &gt; 0
+  mat &lt;- mat[keep_gene, , drop = FALSE]
+  if (nrow(mat) &lt; 3) return(NULL)
+
+  pca_local &lt;- prcomp(t(mat), scale. = FALSE)
+  percent_local &lt;- round(100 * (pca_local$sdev^2 / sum(pca_local$sdev^2)), 1)
+  scores &lt;- data.frame(
+    label = rownames(pca_local$x),
+    PC1 = pca_local$x[, &quot;PC1&quot;],
+    PC2 = pca_local$x[, &quot;PC2&quot;],
+    Diet = metadata_sub$Diet,
+    Treatment = metadata_sub$Treatment,
+    check.names = FALSE
+  )
+
+  centroids &lt;- aggregate(cbind(PC1, PC2) ~ Treatment, scores, mean)
+  names(centroids)[names(centroids) == &quot;PC1&quot;] &lt;- &quot;centroid_PC1&quot;
+  names(centroids)[names(centroids) == &quot;PC2&quot;] &lt;- &quot;centroid_PC2&quot;
+
+  treatment_hulls &lt;- do.call(rbind, lapply(split(scores, scores$Treatment),
+                                           make_condition_hull))
+
+  p &lt;- ggplot2::ggplot(scores, ggplot2::aes(PC1, PC2)) +
+    ggplot2::geom_polygon(
+      data = treatment_hulls,
+      ggplot2::aes(x = PC1, y = PC2, fill = Treatment, group = Treatment),
+      alpha = 0.22,
+      color = NA,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_point(ggplot2::aes(color = Treatment, shape = Treatment),
+                        size = 3.2, alpha = 0.9) +
+    ggplot2::geom_point(
+      data = centroids,
+      ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Treatment),
+      shape = 21,
+      fill = &quot;white&quot;,
+      stroke = 0.8,
+      size = 5,
+      inherit.aes = FALSE
+    ) +
+    ggrepel::geom_label_repel(
+      data = centroids,
+      ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Treatment),
+      color = &quot;grey15&quot;,
+      fill = &quot;white&quot;,
+      label.size = 0.18,
+      size = 3.2,
+      min.segment.length = 0,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::scale_color_manual(values = treatment_colors) +
+    ggplot2::scale_fill_manual(values = treatment_fills) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = &quot;bottom&quot;) +
+    ggplot2::labs(
+      title = paste(&quot;Diet&quot;, diet_level, &quot;PCA using infection DEGs only&quot;),
+      subtitle = paste(length(deg_genes), &quot;significant genes&quot;),
+      x = paste0(&quot;PC1: &quot;, percent_local[1], &quot;% variance&quot;),
+      y = paste0(&quot;PC2: &quot;, percent_local[2], &quot;% variance&quot;),
+      color = &quot;Treatment&quot;,
+      fill = &quot;Treatment&quot;,
+      shape = &quot;Treatment&quot;
+    )
+
+  ggsave(file.path(out_dir,
+                   paste0(&quot;diet_&quot;, diet_level, &quot;_infection_deg_pca.png&quot;)),
+         p, width = 7.2, height = 5.2, dpi = 300)
+  write.csv(scores, file.path(out_dir,
+                              paste0(&quot;diet_&quot;, diet_level,
+                                     &quot;_infection_deg_pca_scores.csv&quot;)),
+            row.names = FALSE)
+  write.csv(centroids, file.path(out_dir,
+                                 paste0(&quot;diet_&quot;, diet_level,
+                                        &quot;_infection_deg_pca_centroids.csv&quot;)),
+            row.names = FALSE)
+  p
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  p_local &lt;- make_deg_pca(diet_level)
+  if (is.null(p_local)) {
+    cat(&quot;Diet&quot;, diet_level,
+        &quot;does not have enough significant, variable genes for DEG-only PCA.\n&quot;)
+  } else {
+    print(p_local)
+  }
+}</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" alt="" width="691.2" style="display: block; margin: auto;" /><img src="figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+</div>
+<div id="deg-count-barplot" class="section level2">
+<h2>DEG count barplot</h2>
+<p>The volcano plots are good for seeing whether a contrast has many
+small effects or a few strong effects. This barplot answers the simpler
+question: how many genes pass the current DEG thresholds in each diet,
+and are they higher in infected or control samples?</p>
+<pre class="r"><code>sig_infection &lt;- all_infection_results[all_infection_results$significant &amp;
+                                         !is.na(all_infection_results$log2FoldChange), ]
+sig_infection$diet &lt;- factor(sig_infection$diet,
+                             levels = levels(droplevels(metadata$Diet)))
+sig_infection$direction &lt;- ifelse(sig_infection$log2FoldChange &gt; 0,
+                                  &quot;Higher in infected&quot;,
+                                  &quot;Higher in control&quot;)
+sig_infection$direction &lt;- factor(sig_infection$direction,
+                                  levels = c(&quot;Higher in infected&quot;,
+                                             &quot;Higher in control&quot;))
+
+deg_bar_counts &lt;- as.data.frame(table(
+  diet = sig_infection$diet,
+  direction = sig_infection$direction
+))
+names(deg_bar_counts)[3] &lt;- &quot;n_significant_genes&quot;
+
+p_deg_counts &lt;- ggplot(deg_bar_counts,
+                       aes(x = diet, y = n_significant_genes,
+                           fill = direction)) +
+  geom_col(position = position_dodge(width = 0.78), width = 0.68) +
+  geom_text(aes(label = n_significant_genes),
+            position = position_dodge(width = 0.78),
+            vjust = -0.35, size = 3.2) +
+  scale_fill_manual(values = c(&quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
+                               &quot;Higher in control&quot; = treatment_colors[[&quot;Control&quot;]])) +
+  theme_classic() +
+  labs(
+    title = &quot;Significant infection DEGs within each diet&quot;,
+    x = &quot;Diet&quot;,
+    y = &quot;Number of significant genes&quot;,
+    fill = &quot;Direction&quot;
+  )
+
+p_deg_counts</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(file.path(out_dir, &quot;infection_within_diet_deg_count_barplot.png&quot;),
+       p_deg_counts, width = 7.5, height = 4.8, dpi = 300)
+write.csv(deg_bar_counts,
+          file.path(out_dir, &quot;infection_within_diet_direction_counts.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="publication-style-pca-and-deg-burden-panels"
+class="section level2">
+<h2>Publication-style PCA and DEG burden panels</h2>
+<p>These two panels mirror the AGY figure style. The PCA panel keeps
+individual samples visible, marks diet-by-treatment centroids, and draws
+one arrow per diet from the control centroid to the infected centroid.
+The DEG burden panel uses a diverging axis so genes higher in infected
+samples and genes higher in controls are immediately comparable.</p>
+<pre class="r"><code>centroid_control &lt;- pca_centroids[pca_centroids$Treatment == &quot;Control&quot;, ]
+centroid_infected &lt;- pca_centroids[pca_centroids$Treatment == &quot;Infected&quot;, ]
+centroid_arrows &lt;- merge(
+  centroid_control[, c(&quot;Diet&quot;, &quot;centroid_PC1&quot;, &quot;centroid_PC2&quot;)],
+  centroid_infected[, c(&quot;Diet&quot;, &quot;centroid_PC1&quot;, &quot;centroid_PC2&quot;)],
+  by = &quot;Diet&quot;,
+  suffixes = c(&quot;_control&quot;, &quot;_infected&quot;)
+)
+
+p_pca_arrows &lt;- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.16,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3,
+    alpha = 0.86
+  ) +
+  ggplot2::geom_segment(
+    data = centroid_arrows,
+    ggplot2::aes(x = centroid_PC1_control, y = centroid_PC2_control,
+                 xend = centroid_PC1_infected, yend = centroid_PC2_infected,
+                 color = Diet),
+    linewidth = 0.85,
+    arrow = grid::arrow(length = grid::unit(0.18, &quot;cm&quot;))
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Diet),
+    shape = 21,
+    fill = &quot;white&quot;,
+    stroke = 1,
+    size = 5
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Condition),
+    color = &quot;grey15&quot;,
+    fill = &quot;white&quot;,
+    label.size = 0.18,
+    size = 3.0,
+    min.segment.length = 0
+  ) +
+  ggplot2::scale_color_manual(values = diet_colors) +
+  ggplot2::scale_fill_manual(values = condition_surface_colors) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = &quot;bottom&quot;,
+                 legend.box = &quot;vertical&quot;) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 2),
+    color = ggplot2::guide_legend(nrow = 1),
+    shape = ggplot2::guide_legend(nrow = 1)
+  ) +
+  ggplot2::labs(
+    title = &quot;PCA centroid shift after infection&quot;,
+    subtitle = &quot;Arrows connect control and infected centroids within each diet&quot;,
+    x = paste0(&quot;PC1: &quot;, percent_var[1], &quot;% variance&quot;),
+    y = paste0(&quot;PC2: &quot;, percent_var[2], &quot;% variance&quot;),
+    color = &quot;Diet&quot;,
+    fill = &quot;Condition polygon&quot;,
+    shape = &quot;Treatment&quot;
+  )
+
+p_pca_arrows</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/pca-centroid-arrows-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;pca_centroid_infection_arrows.png&quot;),
+                p_pca_arrows, width = 10, height = 6.2, dpi = 300)
+write.csv(centroid_arrows,
+          file.path(out_dir, &quot;pca_centroid_infection_arrows.csv&quot;),
+          row.names = FALSE)</code></pre>
+<pre class="r"><code>deg_burden &lt;- deg_bar_counts
+deg_burden$diet &lt;- factor(deg_burden$diet,
+                          levels = levels(droplevels(metadata$Diet)))
+deg_burden$signed_n &lt;- ifelse(deg_burden$direction == &quot;Higher in infected&quot;,
+                              deg_burden$n_significant_genes,
+                              -deg_burden$n_significant_genes)
+max_burden &lt;- max(abs(deg_burden$signed_n), na.rm = TRUE)
+
+p_deg_burden &lt;- ggplot2::ggplot(
+  deg_burden,
+  ggplot2::aes(x = signed_n, y = diet, fill = direction)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = &quot;grey35&quot;) +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = n_significant_genes,
+                 hjust = ifelse(signed_n &gt; 0, -0.15, 1.15)),
+    size = 3.2
+  ) +
+  ggplot2::scale_x_continuous(labels = abs,
+                              limits = c(-max_burden * 1.25,
+                                         max_burden * 1.25)) +
+  ggplot2::scale_fill_manual(values = c(&quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
+                                        &quot;Higher in control&quot; = treatment_colors[[&quot;Control&quot;]])) +
+  ggplot2::theme_classic() +
+  ggplot2::labs(
+    title = &quot;Direction-aware infection DEG burden&quot;,
+    subtitle = &quot;Right: higher in infected; left: higher in control&quot;,
+    x = &quot;Number of significant genes&quot;,
+    y = &quot;Diet&quot;,
+    fill = &quot;Direction&quot;
+  )
+
+p_deg_burden</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-1.png" alt="" width="825.6" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;infection_deg_burden_diverging_barplot.png&quot;),
+                p_deg_burden, width = 8.6, height = 4.8, dpi = 300)
+write.csv(deg_burden,
+          file.path(out_dir, &quot;infection_deg_burden_diverging_counts.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="curated-deg-vst-heatmap" class="section level2">
+<h2>Curated DEG VST heatmap</h2>
+<p>The full VST heatmap is a broad QC view. This heatmap is narrower: it
+selects the strongest infected-control DEGs from each diet and
+direction, then adds significant DEGs with eggNOG descriptions matching
+immune or nutrition-related keywords. This follows the same idea as the
+AGY candidate heatmaps: keep the statistical DEG signal visible, but
+annotate genes that are biologically relevant to the manuscript
+question. Samples are ordered by infection status first and then diet
+instead of clustered, so the infected profiles appear together and
+diet-specific substructure can be compared directly. Genes are ordered
+first by how broadly they are detected as DEGs across diets, and then by
+their functional theme.</p>
+<pre class="r"><code>sig_for_heatmap &lt;- all_infection_results[all_infection_results$significant &amp;
+                                           !is.na(all_infection_results$padj) &amp;
+                                           !is.na(all_infection_results$log2FoldChange), ]
+sig_for_heatmap$direction &lt;- ifelse(sig_for_heatmap$log2FoldChange &gt; 0,
+                                    &quot;Higher in infected&quot;,
+                                    &quot;Higher in control&quot;)
+sig_for_heatmap &lt;- sig_for_heatmap[order(sig_for_heatmap$padj,
+                                         -abs(sig_for_heatmap$log2FoldChange)), ]
+
+select_top_degs &lt;- function(tab, n) {
+  tab &lt;- tab[order(tab$padj, -abs(tab$log2FoldChange)), ]
+  head(tab, n)
+}
+
+curated_pieces &lt;- split(sig_for_heatmap,
+                        paste(sig_for_heatmap$diet,
+                              sig_for_heatmap$direction, sep = &quot;__&quot;))
+top_deg_rows &lt;- do.call(rbind, lapply(curated_pieces, select_top_degs,
+                                      n = params$top_curated_degs_per_direction))
+top_deg_rows$Selection &lt;- &quot;Top DEG&quot;
+
+read_emapper &lt;- function(path) {
+  cols &lt;- c(
+    &quot;query&quot;, &quot;seed_ortholog&quot;, &quot;evalue&quot;, &quot;score&quot;, &quot;eggNOG_OGs&quot;,
+    &quot;max_annot_lvl&quot;, &quot;COG_category&quot;, &quot;Description&quot;, &quot;Preferred_name&quot;,
+    &quot;GOs&quot;, &quot;EC&quot;, &quot;KEGG_ko&quot;, &quot;KEGG_Pathway&quot;, &quot;KEGG_Module&quot;,
+    &quot;KEGG_Reaction&quot;, &quot;KEGG_rclass&quot;, &quot;BRITE&quot;, &quot;KEGG_TC&quot;, &quot;CAZy&quot;,
+    &quot;BiGG_Reaction&quot;, &quot;PFAMs&quot;
+  )
+  tab &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, fill = TRUE)
+  names(tab) &lt;- cols[seq_len(ncol(tab))]
+  tab$protein_id &lt;- sub(&quot;.*(XP_[0-9]+[.][0-9]+).*&quot;, &quot;\\1&quot;, tab$query)
+  tab
+}
+
+parse_cds_gene_bridge &lt;- function(path) {
+  gff &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, stringsAsFactors = FALSE)
+  names(gff)[1:9] &lt;- c(&quot;seqid&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;, &quot;score&quot;,
+                       &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)
+  cds &lt;- gff[gff$type == &quot;CDS&quot;, ]
+  data.frame(
+    protein_id = sub(&quot;.*protein_id=([^;]+).*&quot;, &quot;\\1&quot;, cds$attributes),
+    gene_id = sub(&quot;.*gene=([^;]+).*&quot;, &quot;\\1&quot;, cds$attributes),
+    stringsAsFactors = FALSE
+  ) |&gt;
+    dplyr::filter(grepl(&quot;^XP_&quot;, protein_id), grepl(&quot;^LOC&quot;, gene_id)) |&gt;
+    dplyr::distinct()
+}
+
+eggnog_path &lt;- file.path(project_dir, params$eggnog_file)
+gff_path &lt;- file.path(project_dir, params$gff_file)
+if (file.exists(eggnog_path) &amp;&amp; file.exists(gff_path)) {
+  eggnog &lt;- read_emapper(eggnog_path)
+  protein_to_gene &lt;- parse_cds_gene_bridge(gff_path)
+  gene_annotation &lt;- eggnog |&gt;
+    dplyr::left_join(protein_to_gene, by = &quot;protein_id&quot;) |&gt;
+    dplyr::filter(!is.na(gene_id)) |&gt;
+    dplyr::distinct(gene_id, .keep_all = TRUE) |&gt;
+    dplyr::select(gene_id, Preferred_name, Description, GOs, KEGG_ko,
+                  KEGG_Pathway, PFAMs)
+} else {
+  gene_annotation &lt;- data.frame(gene_id = character(),
+                                Preferred_name = character(),
+                                Description = character(),
+                                GOs = character(),
+                                KEGG_ko = character(),
+                                KEGG_Pathway = character(),
+                                PFAMs = character())
+}
+
+annotated_sig &lt;- sig_for_heatmap |&gt;
+  dplyr::left_join(gene_annotation, by = &quot;gene_id&quot;)
+annotation_text &lt;- apply(annotated_sig[, c(&quot;Preferred_name&quot;, &quot;Description&quot;,
+                                           &quot;GOs&quot;, &quot;KEGG_ko&quot;, &quot;KEGG_Pathway&quot;,
+                                           &quot;PFAMs&quot;)],
+                         1, paste, collapse = &quot; &quot;)
+
+immune_keywords &lt;- paste(c(
+  &quot;immune&quot;, &quot;immun&quot;, &quot;defensin&quot;, &quot;antimicrobial&quot;, &quot;lysozyme&quot;,
+  &quot;phenoloxidase&quot;, &quot;prophenoloxidase&quot;, &quot;toll&quot;, &quot;imd&quot;, &quot;jak&quot;, &quot;stat&quot;,
+  &quot;lectin&quot;, &quot;peptidoglycan&quot;, &quot;hemocyte&quot;, &quot;serpin&quot;, &quot;clip&quot;, &quot;thioester&quot;,
+  &quot;pathogen&quot;, &quot;fungal&quot;, &quot;fungus&quot;, &quot;melanization&quot;
+), collapse = &quot;|&quot;)
+
+nutrition_keywords &lt;- paste(c(
+  &quot;nutrition&quot;, &quot;nutrient&quot;, &quot;metabolism&quot;, &quot;metabolic&quot;, &quot;lipid&quot;, &quot;fatty&quot;,
+  &quot;carbohydrate&quot;, &quot;glucose&quot;, &quot;glycogen&quot;, &quot;trehalose&quot;, &quot;insulin&quot;,
+  &quot;amino acid&quot;, &quot;protease&quot;, &quot;peptidase&quot;, &quot;trypsin&quot;, &quot;chymotrypsin&quot;,
+  &quot;lipase&quot;, &quot;amylase&quot;, &quot;digestion&quot;, &quot;digestive&quot;, &quot;transporter&quot;
+), collapse = &quot;|&quot;)
+
+annotated_sig$Functional_theme &lt;- dplyr::case_when(
+  grepl(immune_keywords, annotation_text, ignore.case = TRUE) ~ &quot;Immune-related&quot;,
+  grepl(nutrition_keywords, annotation_text, ignore.case = TRUE) ~ &quot;Nutrition/metabolism&quot;,
+  TRUE ~ &quot;Other&quot;
+)
+
+theme_rows &lt;- annotated_sig |&gt;
+  dplyr::filter(Functional_theme != &quot;Other&quot;) |&gt;
+  dplyr::group_by(Functional_theme) |&gt;
+  dplyr::arrange(padj, dplyr::desc(abs(log2FoldChange)), .by_group = TRUE) |&gt;
+  dplyr::slice_head(n = params$top_functional_degs_per_theme) |&gt;
+  dplyr::ungroup() |&gt;
+  dplyr::mutate(Selection = Functional_theme)
+
+gene_deg_summary &lt;- sig_for_heatmap |&gt;
+  dplyr::group_by(gene_id) |&gt;
+  dplyr::summarise(
+    DEG_diet_count = dplyr::n_distinct(diet),
+    DEG_diets = paste(sort(unique(as.character(diet))), collapse = &quot;, &quot;),
+    DEG_direction_summary = dplyr::if_else(
+      dplyr::n_distinct(direction) == 1,
+      dplyr::first(direction),
+      &quot;Mixed directions&quot;
+    ),
+    min_padj = min(padj, na.rm = TRUE),
+    max_abs_lfc = max(abs(log2FoldChange), na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  ) |&gt;
+  dplyr::mutate(
+    DEG_status = dplyr::case_when(
+      DEG_diet_count == length(levels(droplevels(metadata$Diet))) ~
+        &quot;DEG in all diets&quot;,
+      DEG_diet_count &gt; 1 ~ &quot;DEG in multiple diets&quot;,
+      DEG_diet_count == 1 ~ &quot;DEG in one diet&quot;,
+      TRUE ~ &quot;Functional candidate (not DEG)&quot;
+    )
+  )
+
+deg_status_levels &lt;- c(&quot;DEG in all diets&quot;, &quot;DEG in multiple diets&quot;,
+                       &quot;DEG in one diet&quot;, &quot;Functional candidate (not DEG)&quot;)
+functional_theme_levels &lt;- c(&quot;Immune-related&quot;, &quot;Nutrition/metabolism&quot;,
+                             &quot;Top DEG&quot;, &quot;Other&quot;)
+
+curated_degs &lt;- dplyr::bind_rows(top_deg_rows, theme_rows) |&gt;
+  dplyr::left_join(gene_annotation, by = &quot;gene_id&quot;, suffix = c(&quot;&quot;, &quot;.anno&quot;)) |&gt;
+  dplyr::left_join(gene_deg_summary, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    Preferred_name = dplyr::coalesce(Preferred_name, Preferred_name.anno),
+    Description = dplyr::coalesce(Description, Description.anno),
+    GOs = dplyr::coalesce(GOs, GOs.anno),
+    KEGG_ko = dplyr::coalesce(KEGG_ko, KEGG_ko.anno),
+    KEGG_Pathway = dplyr::coalesce(KEGG_Pathway, KEGG_Pathway.anno),
+    PFAMs = dplyr::coalesce(PFAMs, PFAMs.anno),
+    curated_annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
+                                    KEGG_Pathway, PFAMs),
+    Functional_theme = dplyr::case_when(
+      grepl(immune_keywords, curated_annotation_text, ignore.case = TRUE) ~
+        &quot;Immune-related&quot;,
+      grepl(nutrition_keywords, curated_annotation_text, ignore.case = TRUE) ~
+        &quot;Nutrition/metabolism&quot;,
+      Selection %in% c(&quot;Immune-related&quot;, &quot;Nutrition/metabolism&quot;) ~ Selection,
+      TRUE ~ &quot;Top DEG&quot;
+    ),
+    DEG_status = factor(DEG_status, levels = deg_status_levels),
+    Functional_theme = factor(Functional_theme, levels = functional_theme_levels)
+  ) |&gt;
+  dplyr::arrange(DEG_status, Functional_theme, DEG_direction_summary,
+                 DEG_diets, min_padj, dplyr::desc(max_abs_lfc)) |&gt;
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+curated_genes &lt;- curated_degs$gene_id[curated_degs$gene_id %in% rownames(vst_mat)]
+treatment_order &lt;- factor(as.character(metadata$Treatment),
+                          levels = c(&quot;Infected&quot;, &quot;Control&quot;))
+sample_order &lt;- metadata$label[order(treatment_order, metadata$Diet,
+                                     metadata$label)]
+
+sample_annotation &lt;- data.frame(
+  Treatment = metadata[sample_order, &quot;Treatment&quot;],
+  Diet = metadata[sample_order, &quot;Diet&quot;]
+)
+rownames(sample_annotation) &lt;- sample_order
+
+gene_annotation_display &lt;- curated_degs[match(curated_genes, curated_degs$gene_id),
+                                        c(&quot;DEG_status&quot;,
+                                          &quot;DEG_direction_summary&quot;,
+                                          &quot;Selection&quot;,
+                                          &quot;Functional_theme&quot;), drop = FALSE]
+names(gene_annotation_display) &lt;- c(&quot;DEG_status&quot;, &quot;DEG_direction&quot;,
+                                    &quot;Selection&quot;, &quot;Functional_theme&quot;)
+rownames(gene_annotation_display) &lt;- curated_genes
+
+label_source &lt;- curated_degs[match(curated_genes, curated_degs$gene_id), ]
+label_text &lt;- ifelse(!is.na(label_source$Preferred_name) &amp;
+                       label_source$Preferred_name != &quot;-&quot;,
+                     label_source$Preferred_name,
+                     label_source$Description)
+label_text[is.na(label_text) | label_text == &quot;-&quot; | label_text == &quot;&quot;] &lt;- &quot;unannotated&quot;
+label_text &lt;- substr(label_text, 1, 45)
+col_labels &lt;- paste(curated_genes, label_text, sep = &quot; | &quot;)
+
+find_gaps &lt;- function(groups) {
+  groups &lt;- as.character(groups)
+  if (length(groups) &lt; 2) {
+    return(integer())
+  }
+  which(groups[-length(groups)] != groups[-1])
+}
+
+sample_gaps &lt;- find_gaps(paste(sample_annotation$Treatment,
+                               sample_annotation$Diet))
+gene_gaps &lt;- find_gaps(paste(gene_annotation_display$DEG_status,
+                             gene_annotation_display$Functional_theme))
+
+annotation_colors &lt;- list(
+  Diet = diet_colors,
+  Treatment = treatment_colors,
+  DEG_direction = c(&quot;Higher in infected&quot; = treatment_colors[[&quot;Infected&quot;]],
+                    &quot;Higher in control&quot; = treatment_colors[[&quot;Control&quot;]],
+                    &quot;Mixed directions&quot; = &quot;#4B5563&quot;),
+  DEG_status = c(&quot;DEG in all diets&quot; = &quot;#111827&quot;,
+                 &quot;DEG in multiple diets&quot; = &quot;#4B5563&quot;,
+                 &quot;DEG in one diet&quot; = &quot;#9CA3AF&quot;,
+                 &quot;Functional candidate (not DEG)&quot; = &quot;#E5E7EB&quot;),
+  Selection = c(&quot;Top DEG&quot; = &quot;#374151&quot;,
+                &quot;Immune-related&quot; = &quot;#237C8E&quot;,
+                &quot;Nutrition/metabolism&quot; = &quot;#B8643C&quot;),
+  Functional_theme = c(&quot;Top DEG&quot; = &quot;#374151&quot;,
+                       &quot;Immune-related&quot; = &quot;#237C8E&quot;,
+                       &quot;Nutrition/metabolism&quot; = &quot;#B8643C&quot;,
+                       &quot;Other&quot; = &quot;#9CA3AF&quot;)
+)
+
+heatmap_expression_colors &lt;- grDevices::colorRampPalette(
+  c(&quot;#237C8E&quot;, &quot;#F7F3E8&quot;, &quot;#C85A54&quot;)
+)(101)
+heatmap_expression_breaks &lt;- seq(-3, 3, length.out = 102)
+
+heatmap_display &lt;- pheatmap::pheatmap(
+  t(vst_mat[curated_genes, sample_order, drop = FALSE]),
+  scale = &quot;column&quot;,
+  color = heatmap_expression_colors,
+  breaks = heatmap_expression_breaks,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  gaps_row = sample_gaps,
+  gaps_col = gene_gaps,
+  show_rownames = TRUE,
+  show_colnames = FALSE,
+  labels_col = col_labels,
+  fontsize_row = 6,
+  annotation_col = gene_annotation_display,
+  annotation_row = sample_annotation,
+  annotation_colors = annotation_colors,
+  main = &quot;Curated infection, immune, and nutrition DEGs&quot;,
+  filename = file.path(out_dir, &quot;curated_infection_deg_vst_heatmap.png&quot;),
+  width = 14,
+  height = 11
+)
+
+display_dir &lt;- file.path(project_dir, &quot;docs&quot;, &quot;figure&quot;,
+                         &quot;06-infection-within-diet-deg.Rmd&quot;)
+dir.create(display_dir, recursive = TRUE, showWarnings = FALSE)
+display_png &lt;- file.path(display_dir, &quot;curated-deg-heatmap-display.png&quot;)
+file.copy(file.path(out_dir, &quot;curated_infection_deg_vst_heatmap.png&quot;),
+          display_png, overwrite = TRUE)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>curated_heatmap_src &lt;- file.path(&quot;figure&quot;, &quot;06-infection-within-diet-deg.Rmd&quot;,
+                                 &quot;curated-deg-heatmap-display.png&quot;)
+
+write.csv(curated_degs,
+          file.path(out_dir, &quot;curated_infection_deg_heatmap_genes.csv&quot;),
+          row.names = FALSE)</code></pre>
+<p>
+<img src="figure/06-infection-within-diet-deg.Rmd/curated-deg-heatmap-display.png" alt="Curated infection, immune, and nutrition DEG VST heatmap" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
+</div>
+<div id="curated-immune-and-nutrition-deg-summary"
+class="section level2">
+<h2>Curated immune and nutrition DEG summary</h2>
+<p>This compact figure uses the same curated gene table as the heatmap,
+but summarizes it by diet, direction, and biological theme. It is easier
+to read quickly than the full heatmap and is the better candidate for a
+publication-style overview panel.</p>
+<pre class="r"><code>curated_summary &lt;- curated_degs |&gt;
+  dplyr::filter(Functional_theme %in% c(&quot;Immune-related&quot;,
+                                        &quot;Nutrition/metabolism&quot;)) |&gt;
+  dplyr::mutate(
+    diet = factor(diet, levels = levels(droplevels(metadata$Diet))),
+    direction = factor(direction, levels = c(&quot;Higher in infected&quot;,
+                                             &quot;Higher in control&quot;)),
+    Functional_theme = factor(Functional_theme,
+                              levels = c(&quot;Immune-related&quot;,
+                                         &quot;Nutrition/metabolism&quot;))
+  ) |&gt;
+  dplyr::count(diet, direction, Functional_theme,
+               name = &quot;n_curated_degs&quot;)
+
+p_curated_summary &lt;- ggplot(curated_summary,
+                            aes(x = diet, y = n_curated_degs,
+                                fill = Functional_theme)) +
+  geom_col(position = position_dodge(width = 0.76), width = 0.68) +
+  geom_text(aes(label = n_curated_degs),
+            position = position_dodge(width = 0.76),
+            vjust = -0.35, size = 3.1) +
+  facet_wrap(~ direction) +
+  scale_fill_manual(values = c(&quot;Immune-related&quot; = &quot;#237C8E&quot;,
+                               &quot;Nutrition/metabolism&quot; = &quot;#B8643C&quot;)) +
+  theme_classic() +
+  theme(legend.position = &quot;bottom&quot;) +
+  labs(
+    title = &quot;Curated immune and nutrition DEGs&quot;,
+    subtitle = &quot;Significant infected-control DEGs selected from eggNOG descriptions&quot;,
+    x = &quot;Diet&quot;,
+    y = &quot;Number of curated DEGs&quot;,
+    fill = &quot;Functional theme&quot;
+  )
+
+p_curated_summary</code></pre>
+<p><img src="figure/06-infection-within-diet-deg.Rmd/curated-theme-barplot-1.png" alt="" width="816" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(file.path(out_dir, &quot;curated_immune_nutrition_deg_barplot.png&quot;),
+       p_curated_summary, width = 8.5, height = 5.2, dpi = 300)
+write.csv(curated_summary,
+          file.path(out_dir, &quot;curated_immune_nutrition_deg_summary.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>The summary table collapses each diet-specific result into a total
+DEG count. It is deliberately simple, because the direction-aware
+barplot above carries the visual comparison and the full CSV files keep
+the gene-level statistics.</p>
+<pre class="r"><code>summary_table &lt;- aggregate(significant ~ diet, all_infection_results, sum)
+names(summary_table)[2] &lt;- &quot;n_significant_genes&quot;
+knitr::kable(summary_table)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">diet</th>
+<th align="right">n_significant_genes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">33</td>
+<td align="right">1124</td>
+</tr>
+<tr class="even">
+<td align="left">50</td>
+<td align="right">1735</td>
+</tr>
+<tr class="odd">
+<td align="left">83</td>
+<td align="right">657</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write.csv(summary_table, file.path(out_dir, &quot;infection_within_diet_summary.csv&quot;),
+          row.names = FALSE)</code></pre>
+<pre class="r"><code>writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, &quot;sessionInfo.txt&quot;))
+sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3   workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
+ [3] xfun_0.57                   bslib_0.10.0               
+ [5] ggrepel_0.9.8               processx_3.9.0             
+ [7] Biobase_2.72.0              lattice_0.22-9             
+ [9] callr_3.7.6                 vctrs_0.7.3                
+[11] tools_4.6.0                 generics_0.1.4             
+[13] stats4_4.6.0                parallel_4.6.0             
+[15] tibble_3.3.1                pkgconfig_2.0.3            
+[17] pheatmap_1.0.13             Matrix_1.7-5               
+[19] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
+[21] S7_0.2.2                    S4Vectors_0.50.1           
+[23] lifecycle_1.0.5             compiler_4.6.0             
+[25] farver_2.1.2                stringr_1.6.0              
+[27] git2r_0.36.2                textshaping_1.0.5          
+[29] DESeq2_1.52.0               getPass_0.2-4              
+[31] Seqinfo_1.2.0               codetools_0.2-20           
+[33] httpuv_1.6.17               htmltools_0.5.9            
+[35] sass_0.4.10                 yaml_2.3.12                
+[37] later_1.4.8                 pillar_1.11.1              
+[39] jquerylib_0.1.4             whisker_0.4.1              
+[41] BiocParallel_1.46.0         cachem_1.1.0               
+[43] DelayedArray_0.38.1         abind_1.4-8                
+[45] locfit_1.5-9.12             tidyselect_1.2.1           
+[47] digest_0.6.39               stringi_1.8.7              
+[49] dplyr_1.2.1                 labeling_0.4.3             
+[51] rprojroot_2.1.1             fastmap_1.2.0              
+[53] grid_4.6.0                  cli_3.6.6                  
+[55] SparseArray_1.12.2          magrittr_2.0.5             
+[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
+[59] withr_3.0.2                 scales_1.4.0               
+[61] promises_1.5.0              rmarkdown_2.31             
+[63] XVector_0.52.0              httr_1.4.8                 
+[65] matrixStats_1.5.0           otel_0.2.0                 
+[67] ragg_1.5.2                  evaluate_1.0.5             
+[69] knitr_1.51                  GenomicRanges_1.64.0       
+[71] IRanges_2.46.0              rlang_1.2.0                
+[73] Rcpp_1.1.1-1.1              glue_1.8.1                 
+[75] BiocGenerics_0.58.0         rstudioapi_0.18.0          
+[77] jsonlite_2.0.0              R6_2.6.1                   
+[79] systemfonts_1.3.2           MatrixGenerics_1.24.0      
+[81] fs_2.1.0                   </code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3   workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
+ [3] xfun_0.57                   bslib_0.10.0               
+ [5] ggrepel_0.9.8               processx_3.9.0             
+ [7] Biobase_2.72.0              lattice_0.22-9             
+ [9] callr_3.7.6                 vctrs_0.7.3                
+[11] tools_4.6.0                 generics_0.1.4             
+[13] stats4_4.6.0                parallel_4.6.0             
+[15] tibble_3.3.1                pkgconfig_2.0.3            
+[17] pheatmap_1.0.13             Matrix_1.7-5               
+[19] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
+[21] S7_0.2.2                    S4Vectors_0.50.1           
+[23] lifecycle_1.0.5             compiler_4.6.0             
+[25] farver_2.1.2                stringr_1.6.0              
+[27] git2r_0.36.2                textshaping_1.0.5          
+[29] DESeq2_1.52.0               getPass_0.2-4              
+[31] Seqinfo_1.2.0               codetools_0.2-20           
+[33] httpuv_1.6.17               htmltools_0.5.9            
+[35] sass_0.4.10                 yaml_2.3.12                
+[37] later_1.4.8                 pillar_1.11.1              
+[39] jquerylib_0.1.4             whisker_0.4.1              
+[41] BiocParallel_1.46.0         cachem_1.1.0               
+[43] DelayedArray_0.38.1         abind_1.4-8                
+[45] locfit_1.5-9.12             tidyselect_1.2.1           
+[47] digest_0.6.39               stringi_1.8.7              
+[49] dplyr_1.2.1                 labeling_0.4.3             
+[51] rprojroot_2.1.1             fastmap_1.2.0              
+[53] grid_4.6.0                  cli_3.6.6                  
+[55] SparseArray_1.12.2          magrittr_2.0.5             
+[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
+[59] withr_3.0.2                 scales_1.4.0               
+[61] promises_1.5.0              rmarkdown_2.31             
+[63] XVector_0.52.0              httr_1.4.8                 
+[65] matrixStats_1.5.0           otel_0.2.0                 
+[67] ragg_1.5.2                  evaluate_1.0.5             
+[69] knitr_1.51                  GenomicRanges_1.64.0       
+[71] IRanges_2.46.0              rlang_1.2.0                
+[73] Rcpp_1.1.1-1.1              glue_1.8.1                 
+[75] BiocGenerics_0.58.0         rstudioapi_0.18.0          
+[77] jsonlite_2.0.0              R6_2.6.1                   
+[79] systemfonts_1.3.2           MatrixGenerics_1.24.0      
+[81] fs_2.1.0                   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

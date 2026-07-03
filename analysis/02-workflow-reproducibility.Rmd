@@ -1,0 +1,113 @@
+---
+title: "Workflow and reproducibility"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts.csv"
+  output_tag: "workflow-reproducibility"
+---
+
+## Purpose
+
+This page is the reproducibility map for the project. It explains where inputs
+live, where new results are written, and how to rerun the workflowR pages
+without relying on hidden helper scripts.
+
+## Repository layout
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+```{r repo-layout}
+layout <- data.frame(
+  folder = c("analysis/", "data/metadata/", "data/raw_read_counts/",
+             "data/reference/", "docs/", "output/rmd_runs/", "scripts/"),
+  role = c(
+    "workflowR R Markdown pages; new analysis code should live here",
+    "sample metadata used to align counts with biological groups",
+    "raw and merged gene count tables",
+    "reference annotation files",
+    "rendered workflowR website and committed visual assets",
+    "fresh output folders created by each Rmd render",
+    "legacy standalone scripts retained for provenance"
+  )
+)
+
+knitr::kable(layout)
+```
+
+## Rerun commands
+
+Run these commands from the repository root. Each rendered analysis page makes a
+new timestamped folder under `output/rmd_runs/`.
+
+```{bash, eval=FALSE}
+# Render one page after editing its parameters.
+Rscript -e 'workflowr::wflow_build("analysis/03-count-qc-exploration.Rmd")'
+
+# Render the main manuscript-oriented pages.
+Rscript -e 'workflowr::wflow_build(c(
+  "analysis/01-study-design-data.Rmd",
+  "analysis/02-workflow-reproducibility.Rmd",
+  "analysis/03-count-qc-exploration.Rmd",
+  "analysis/04-deseq2-interaction-model.Rmd",
+  "analysis/05-diet-pairwise-deg.Rmd",
+  "analysis/06-infection-within-diet-deg.Rmd",
+  "analysis/07-deg-overlap-prioritization.Rmd",
+  "analysis/08-publication-figures.Rmd"
+))'
+
+# Preview the workflowR status before publishing.
+Rscript -e 'workflowr::wflow_status()'
+```
+
+## Packages used by the analysis pages
+
+```{r package-check}
+packages <- c(
+  "workflowr", "knitr", "rmarkdown", "ggplot2", "scales",
+  "DESeq2", "pheatmap", "ggrepel", "EnhancedVolcano", "UpSetR"
+)
+
+package_status <- data.frame(
+  package = packages,
+  installed = vapply(packages, requireNamespace, logical(1), quietly = TRUE)
+)
+
+knitr::kable(package_status)
+
+write.csv(package_status, file.path(out_dir, "package_status.csv"),
+          row.names = FALSE)
+```
+
+## Analysis contract
+
+The current analysis pages follow this pattern:
+
+1. Put editable file paths, thresholds, and model choices in the page `params`.
+2. Load metadata and counts directly in the Rmd.
+3. Check that count columns match metadata before modeling.
+4. Write derived tables and figures to a new folder under `output/rmd_runs/`.
+5. Save `sessionInfo()` in the same folder as the results.
+
+This keeps the manuscript figures reproducible while leaving the older scripts
+available for comparison.
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

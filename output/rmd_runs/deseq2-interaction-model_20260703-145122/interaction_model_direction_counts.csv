@@ -1,0 +1,11 @@
+"coefficient","direction","n_significant_genes"
+"Diet_33_vs_50","Positive coefficient",12
+"Diet_83_vs_50","Positive coefficient",31
+"Treatment_Infected_vs_Control","Positive coefficient",1224
+"Diet33.TreatmentInfected","Positive coefficient",3
+"Diet83.TreatmentInfected","Positive coefficient",1
+"Diet_33_vs_50","Negative coefficient",3
+"Diet_83_vs_50","Negative coefficient",5
+"Treatment_Infected_vs_Control","Negative coefficient",416
+"Diet33.TreatmentInfected","Negative coefficient",80
+"Diet83.TreatmentInfected","Negative coefficient",4

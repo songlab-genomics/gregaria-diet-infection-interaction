@@ -1,0 +1,938 @@
+---
+title: "Infection within diet DEGs"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  min_total_count: 10
+  top_variable_genes: 500
+  top_curated_degs_per_direction: 12
+  top_functional_degs_per_theme: 18
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "infection-within-diet-deg"
+---
+
+## Purpose
+
+This page tests infected versus control samples separately within each diet.
+This is a simple and readable complement to the full interaction model.
+
+The reason to split by diet is biological and statistical: infection may not
+produce the same transcriptional response under every nutritional condition.
+The full interaction model tests whether diet modifies the infection effect;
+this page then turns that question into three direct infected-control
+comparisons that are easier to inspect, plot, and interpret.
+
+## Setup and data loading
+
+The code first matches metadata rows to count-matrix columns using the sample
+labels. This makes the analysis self-contained in the R Markdown file and keeps
+the model inputs visible before any statistics are run.
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "pheatmap", "ggrepel",
+              "dplyr", "SummarizedExperiment")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+library(ggplot2)
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+treatment_colors <- c("Control" = "#7B8794", "Infected" = "#C85A54")
+treatment_fills <- c("Control" = "#D8DEE2", "Infected" = "#F0C7BF")
+condition_surface_colors <- c(
+  "33 Control" = "#F7D6A6",
+  "33 Infected" = "#C75C1B",
+  "50 Control" = "#CDE8D5",
+  "50 Infected" = "#1F6F43",
+  "83 Control" = "#D8C7E8",
+  "83 Infected" = "#5B2E83"
+)
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata <- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- relevel(factor(metadata$Treatment), ref = "Control")
+
+counts_raw <- read.csv(file.path(project_dir, params$counts_file),
+                       check.names = FALSE)
+counts <- as.matrix(counts_raw[, -1])
+rownames(counts) <- counts_raw[[1]]
+storage.mode(counts) <- "integer"
+
+count_labels <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
+metadata <- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) <- metadata$label
+colnames(counts) <- count_labels
+
+keep_vst <- rowSums(counts) >= params$min_total_count
+dds_vst <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_vst, ],
+  colData = metadata,
+  design = ~ Diet + Treatment
+)
+
+vsd <- DESeq2::vst(dds_vst, blind = TRUE)
+vst_mat <- SummarizedExperiment::assay(vsd)
+```
+
+## VST PCA with condition centroids
+
+PCA is the most transparent ordination for this step because the axes show how
+much expression variance they explain. UMAP can be useful for pattern discovery,
+but it does not give the same direct variance accounting and can change with
+parameter choices. Here the small points are individual libraries, the larger
+points are diet-by-treatment centroids, and the pale condition polygons connect
+the outermost samples from each diet-by-treatment group in the first two PCs.
+
+```{r vst-pca-centroids, fig.height=5.8, fig.width=8}
+nonzero_variance <- apply(vst_mat, 1, var) > 0
+pca <- prcomp(t(vst_mat[nonzero_variance, , drop = FALSE]), scale. = FALSE)
+percent_var <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+
+pca_scores <- data.frame(
+  label = rownames(pca$x),
+  PC1 = pca$x[, "PC1"],
+  PC2 = pca$x[, "PC2"],
+  Diet = metadata$Diet,
+  Treatment = metadata$Treatment,
+  check.names = FALSE
+)
+pca_scores$Condition <- interaction(pca_scores$Diet, pca_scores$Treatment,
+                                    sep = " ")
+
+pca_centroids <- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
+                           pca_scores, mean)
+names(pca_centroids)[names(pca_centroids) == "PC1"] <- "centroid_PC1"
+names(pca_centroids)[names(pca_centroids) == "PC2"] <- "centroid_PC2"
+
+make_condition_hull <- function(df) {
+  if (nrow(df) < 3) return(df[0, ])
+  df[chull(df$PC1, df$PC2), ]
+}
+
+pca_hulls <- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
+                                   make_condition_hull))
+
+p_pca_centroids <- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.20,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3,
+    alpha = 0.88
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Diet),
+    shape = 21,
+    fill = "white",
+    stroke = 0.8,
+    size = 5
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Condition),
+    color = "grey15",
+    fill = "white",
+    label.size = 0.18,
+    size = 3.1,
+    min.segment.length = 0
+  ) +
+  ggplot2::scale_color_manual(values = diet_colors) +
+  ggplot2::scale_fill_manual(values = condition_surface_colors) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = "bottom") +
+  ggplot2::labs(
+    title = "VST PCA with diet-by-treatment centroids",
+    x = paste0("PC1: ", percent_var[1], "% variance"),
+    y = paste0("PC2: ", percent_var[2], "% variance"),
+    color = "Diet",
+    fill = "Condition polygon",
+    shape = "Treatment"
+  )
+
+p_pca_centroids
+ggplot2::ggsave(file.path(out_dir, "vst_pca_condition_centroids.png"),
+                p_pca_centroids, width = 8, height = 5.8, dpi = 300)
+write.csv(pca_scores, file.path(out_dir, "vst_pca_sample_scores.csv"),
+          row.names = FALSE)
+write.csv(pca_centroids, file.path(out_dir, "vst_pca_condition_centroids.csv"),
+          row.names = FALSE)
+```
+
+## VST heatmap across samples
+
+Before reading the infected-control tests, it helps to see the expression
+structure across all samples. This heatmap uses the most variable
+variance-stabilized genes, with diet and treatment annotations above the
+columns. The VST transformation is used because raw RNA-seq counts have
+mean-dependent variance; without transformation, very highly expressed genes can
+overwhelm the visual structure.
+
+```{r vst-sample-heatmap, fig.height=8, fig.width=9}
+gene_variance <- apply(vst_mat, 1, var)
+top_n <- min(params$top_variable_genes, length(gene_variance))
+top_genes <- names(sort(gene_variance, decreasing = TRUE))[seq_len(top_n)]
+
+annotation_col <- data.frame(
+  Diet = metadata$Diet,
+  Treatment = metadata$Treatment
+)
+rownames(annotation_col) <- colnames(vst_mat)
+
+png(file.path(out_dir, "vst_top_variable_gene_heatmap.png"),
+    width = 1800, height = 1600, res = 180)
+pheatmap::pheatmap(
+  vst_mat[top_genes, ],
+  scale = "row",
+  show_rownames = FALSE,
+  annotation_col = annotation_col,
+  main = paste("Top", top_n, "variable VST genes across samples")
+)
+dev.off()
+
+pheatmap::pheatmap(
+  vst_mat[top_genes, ],
+  scale = "row",
+  show_rownames = FALSE,
+  annotation_col = annotation_col,
+  main = paste("Top", top_n, "variable VST genes across samples")
+)
+```
+
+## Run one infected-control test per diet
+
+For each diet, the code keeps only samples from that diet and fits a simple
+`~ Treatment` DESeq2 model. This avoids averaging the infection effect across
+diets. A positive log2 fold-change means higher expression in infected samples;
+a negative log2 fold-change means higher expression in controls. Genes are
+called significant only when they pass both the adjusted p-value threshold and
+the absolute log2 fold-change threshold.
+
+```{r infection-tests, fig.height=7, fig.width=8}
+diet_results <- list()
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  message("Running infection contrast for diet ", diet_level)
+
+  sample_keep <- metadata$Diet == diet_level
+  metadata_sub <- droplevels(metadata[sample_keep, ])
+  counts_sub <- counts[, sample_keep]
+  gene_keep <- rowSums(counts_sub) >= params$min_total_count
+
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_sub[gene_keep, ],
+    colData = metadata_sub,
+    design = ~ Treatment
+  )
+  dds <- DESeq2::DESeq(dds)
+
+  res <- DESeq2::results(dds,
+                         contrast = c("Treatment", "Infected", "Control"),
+                         alpha = params$alpha)
+  res_df <- as.data.frame(res)
+  res_df$gene_id <- rownames(res_df)
+  res_df$diet <- diet_level
+  res_df$significant <- !is.na(res_df$padj) &
+    res_df$padj < params$alpha &
+    abs(res_df$log2FoldChange) >= params$lfc_threshold
+
+  diet_results[[diet_level]] <- res_df
+  write.csv(res_df, file.path(out_dir,
+                              paste0("DESeq2_infected_vs_control_diet_",
+                                     diet_level, ".csv")),
+            row.names = FALSE)
+  writeLines(res_df$gene_id[res_df$significant],
+             file.path(out_dir,
+                       paste0("significant_genes_infection_diet_",
+                              diet_level, ".txt")))
+
+  print(EnhancedVolcano::EnhancedVolcano(
+    res_df,
+    lab = res_df$gene_id,
+    x = "log2FoldChange",
+    y = "padj",
+    pCutoff = params$alpha,
+    FCcutoff = params$lfc_threshold,
+    title = paste("Infected vs control in diet", diet_level)
+  ))
+}
+
+all_infection_results <- do.call(rbind, diet_results)
+write.csv(all_infection_results,
+          file.path(out_dir, "all_infection_within_diet_results.csv"),
+          row.names = FALSE)
+```
+
+## Diet-specific DEG PCA
+
+The PCA above uses all filtered genes and all samples, so it describes global
+expression structure. This section asks a narrower question for each diet: if we
+look only at the genes that are differentially expressed between infected and
+control samples within that diet, do the samples separate by treatment? This is
+closer to the DEG result itself, and it avoids using genes from another diet to
+explain the infected-control pattern.
+
+```{r diet-specific-deg-pca, fig.height=5.2, fig.width=7.2}
+make_deg_pca <- function(diet_level) {
+  res <- diet_results[[diet_level]]
+  deg_genes <- res$gene_id[res$significant & !is.na(res$gene_id)]
+  deg_genes <- intersect(deg_genes, rownames(vst_mat))
+  sample_keep <- metadata$Diet == diet_level
+  metadata_sub <- droplevels(metadata[sample_keep, ])
+
+  if (length(deg_genes) < 3 || nrow(metadata_sub) < 4) {
+    return(NULL)
+  }
+
+  mat <- vst_mat[deg_genes, metadata_sub$label, drop = FALSE]
+  keep_gene <- apply(mat, 1, var) > 0
+  mat <- mat[keep_gene, , drop = FALSE]
+  if (nrow(mat) < 3) return(NULL)
+
+  pca_local <- prcomp(t(mat), scale. = FALSE)
+  percent_local <- round(100 * (pca_local$sdev^2 / sum(pca_local$sdev^2)), 1)
+  scores <- data.frame(
+    label = rownames(pca_local$x),
+    PC1 = pca_local$x[, "PC1"],
+    PC2 = pca_local$x[, "PC2"],
+    Diet = metadata_sub$Diet,
+    Treatment = metadata_sub$Treatment,
+    check.names = FALSE
+  )
+
+  centroids <- aggregate(cbind(PC1, PC2) ~ Treatment, scores, mean)
+  names(centroids)[names(centroids) == "PC1"] <- "centroid_PC1"
+  names(centroids)[names(centroids) == "PC2"] <- "centroid_PC2"
+
+  treatment_hulls <- do.call(rbind, lapply(split(scores, scores$Treatment),
+                                           make_condition_hull))
+
+  p <- ggplot2::ggplot(scores, ggplot2::aes(PC1, PC2)) +
+    ggplot2::geom_polygon(
+      data = treatment_hulls,
+      ggplot2::aes(x = PC1, y = PC2, fill = Treatment, group = Treatment),
+      alpha = 0.22,
+      color = NA,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_point(ggplot2::aes(color = Treatment, shape = Treatment),
+                        size = 3.2, alpha = 0.9) +
+    ggplot2::geom_point(
+      data = centroids,
+      ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Treatment),
+      shape = 21,
+      fill = "white",
+      stroke = 0.8,
+      size = 5,
+      inherit.aes = FALSE
+    ) +
+    ggrepel::geom_label_repel(
+      data = centroids,
+      ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Treatment),
+      color = "grey15",
+      fill = "white",
+      label.size = 0.18,
+      size = 3.2,
+      min.segment.length = 0,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::scale_color_manual(values = treatment_colors) +
+    ggplot2::scale_fill_manual(values = treatment_fills) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::labs(
+      title = paste("Diet", diet_level, "PCA using infection DEGs only"),
+      subtitle = paste(length(deg_genes), "significant genes"),
+      x = paste0("PC1: ", percent_local[1], "% variance"),
+      y = paste0("PC2: ", percent_local[2], "% variance"),
+      color = "Treatment",
+      fill = "Treatment",
+      shape = "Treatment"
+    )
+
+  ggsave(file.path(out_dir,
+                   paste0("diet_", diet_level, "_infection_deg_pca.png")),
+         p, width = 7.2, height = 5.2, dpi = 300)
+  write.csv(scores, file.path(out_dir,
+                              paste0("diet_", diet_level,
+                                     "_infection_deg_pca_scores.csv")),
+            row.names = FALSE)
+  write.csv(centroids, file.path(out_dir,
+                                 paste0("diet_", diet_level,
+                                        "_infection_deg_pca_centroids.csv")),
+            row.names = FALSE)
+  p
+}
+
+for (diet_level in levels(droplevels(metadata$Diet))) {
+  p_local <- make_deg_pca(diet_level)
+  if (is.null(p_local)) {
+    cat("Diet", diet_level,
+        "does not have enough significant, variable genes for DEG-only PCA.\n")
+  } else {
+    print(p_local)
+  }
+}
+```
+
+## DEG count barplot
+
+The volcano plots are good for seeing whether a contrast has many small effects
+or a few strong effects. This barplot answers the simpler question: how many
+genes pass the current DEG thresholds in each diet, and are they higher in
+infected or control samples?
+
+```{r deg-count-barplot, fig.height=4.8, fig.width=7.5}
+sig_infection <- all_infection_results[all_infection_results$significant &
+                                         !is.na(all_infection_results$log2FoldChange), ]
+sig_infection$diet <- factor(sig_infection$diet,
+                             levels = levels(droplevels(metadata$Diet)))
+sig_infection$direction <- ifelse(sig_infection$log2FoldChange > 0,
+                                  "Higher in infected",
+                                  "Higher in control")
+sig_infection$direction <- factor(sig_infection$direction,
+                                  levels = c("Higher in infected",
+                                             "Higher in control"))
+
+deg_bar_counts <- as.data.frame(table(
+  diet = sig_infection$diet,
+  direction = sig_infection$direction
+))
+names(deg_bar_counts)[3] <- "n_significant_genes"
+
+p_deg_counts <- ggplot(deg_bar_counts,
+                       aes(x = diet, y = n_significant_genes,
+                           fill = direction)) +
+  geom_col(position = position_dodge(width = 0.78), width = 0.68) +
+  geom_text(aes(label = n_significant_genes),
+            position = position_dodge(width = 0.78),
+            vjust = -0.35, size = 3.2) +
+  scale_fill_manual(values = c("Higher in infected" = treatment_colors[["Infected"]],
+                               "Higher in control" = treatment_colors[["Control"]])) +
+  theme_classic() +
+  labs(
+    title = "Significant infection DEGs within each diet",
+    x = "Diet",
+    y = "Number of significant genes",
+    fill = "Direction"
+  )
+
+p_deg_counts
+ggsave(file.path(out_dir, "infection_within_diet_deg_count_barplot.png"),
+       p_deg_counts, width = 7.5, height = 4.8, dpi = 300)
+write.csv(deg_bar_counts,
+          file.path(out_dir, "infection_within_diet_direction_counts.csv"),
+          row.names = FALSE)
+```
+
+## Publication-style PCA and DEG burden panels
+
+These two panels mirror the AGY figure style. The PCA panel keeps individual
+samples visible, marks diet-by-treatment centroids, and draws one arrow per diet
+from the control centroid to the infected centroid. The DEG burden panel uses a
+diverging axis so genes higher in infected samples and genes higher in controls
+are immediately comparable.
+
+```{r pca-centroid-arrows, fig.height=6.2, fig.width=10}
+centroid_control <- pca_centroids[pca_centroids$Treatment == "Control", ]
+centroid_infected <- pca_centroids[pca_centroids$Treatment == "Infected", ]
+centroid_arrows <- merge(
+  centroid_control[, c("Diet", "centroid_PC1", "centroid_PC2")],
+  centroid_infected[, c("Diet", "centroid_PC1", "centroid_PC2")],
+  by = "Diet",
+  suffixes = c("_control", "_infected")
+)
+
+p_pca_arrows <- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.16,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3,
+    alpha = 0.86
+  ) +
+  ggplot2::geom_segment(
+    data = centroid_arrows,
+    ggplot2::aes(x = centroid_PC1_control, y = centroid_PC2_control,
+                 xend = centroid_PC1_infected, yend = centroid_PC2_infected,
+                 color = Diet),
+    linewidth = 0.85,
+    arrow = grid::arrow(length = grid::unit(0.18, "cm"))
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, color = Diet),
+    shape = 21,
+    fill = "white",
+    stroke = 1,
+    size = 5
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(x = centroid_PC1, y = centroid_PC2, label = Condition),
+    color = "grey15",
+    fill = "white",
+    label.size = 0.18,
+    size = 3.0,
+    min.segment.length = 0
+  ) +
+  ggplot2::scale_color_manual(values = diet_colors) +
+  ggplot2::scale_fill_manual(values = condition_surface_colors) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = "bottom",
+                 legend.box = "vertical") +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 2),
+    color = ggplot2::guide_legend(nrow = 1),
+    shape = ggplot2::guide_legend(nrow = 1)
+  ) +
+  ggplot2::labs(
+    title = "PCA centroid shift after infection",
+    subtitle = "Arrows connect control and infected centroids within each diet",
+    x = paste0("PC1: ", percent_var[1], "% variance"),
+    y = paste0("PC2: ", percent_var[2], "% variance"),
+    color = "Diet",
+    fill = "Condition polygon",
+    shape = "Treatment"
+  )
+
+p_pca_arrows
+ggplot2::ggsave(file.path(out_dir, "pca_centroid_infection_arrows.png"),
+                p_pca_arrows, width = 10, height = 6.2, dpi = 300)
+write.csv(centroid_arrows,
+          file.path(out_dir, "pca_centroid_infection_arrows.csv"),
+          row.names = FALSE)
+```
+
+```{r diverging-deg-burden, fig.height=4.8, fig.width=8.6}
+deg_burden <- deg_bar_counts
+deg_burden$diet <- factor(deg_burden$diet,
+                          levels = levels(droplevels(metadata$Diet)))
+deg_burden$signed_n <- ifelse(deg_burden$direction == "Higher in infected",
+                              deg_burden$n_significant_genes,
+                              -deg_burden$n_significant_genes)
+max_burden <- max(abs(deg_burden$signed_n), na.rm = TRUE)
+
+p_deg_burden <- ggplot2::ggplot(
+  deg_burden,
+  ggplot2::aes(x = signed_n, y = diet, fill = direction)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = "grey35") +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = n_significant_genes,
+                 hjust = ifelse(signed_n > 0, -0.15, 1.15)),
+    size = 3.2
+  ) +
+  ggplot2::scale_x_continuous(labels = abs,
+                              limits = c(-max_burden * 1.25,
+                                         max_burden * 1.25)) +
+  ggplot2::scale_fill_manual(values = c("Higher in infected" = treatment_colors[["Infected"]],
+                                        "Higher in control" = treatment_colors[["Control"]])) +
+  ggplot2::theme_classic() +
+  ggplot2::labs(
+    title = "Direction-aware infection DEG burden",
+    subtitle = "Right: higher in infected; left: higher in control",
+    x = "Number of significant genes",
+    y = "Diet",
+    fill = "Direction"
+  )
+
+p_deg_burden
+ggplot2::ggsave(file.path(out_dir, "infection_deg_burden_diverging_barplot.png"),
+                p_deg_burden, width = 8.6, height = 4.8, dpi = 300)
+write.csv(deg_burden,
+          file.path(out_dir, "infection_deg_burden_diverging_counts.csv"),
+          row.names = FALSE)
+```
+
+## Curated DEG VST heatmap
+
+The full VST heatmap is a broad QC view. This heatmap is narrower: it selects
+the strongest infected-control DEGs from each diet and direction, then adds
+significant DEGs with eggNOG descriptions matching immune or nutrition-related
+keywords. This follows the same idea as the AGY candidate heatmaps: keep the
+statistical DEG signal visible, but annotate genes that are biologically
+relevant to the manuscript question. Samples are ordered by infection status
+first and then diet instead of clustered, so the infected profiles appear
+together and diet-specific substructure can be compared directly. Genes are
+ordered first by how broadly they are detected as DEGs across diets, and then by
+their functional theme.
+
+```{r curated-deg-heatmap, fig.height=9, fig.width=10}
+sig_for_heatmap <- all_infection_results[all_infection_results$significant &
+                                           !is.na(all_infection_results$padj) &
+                                           !is.na(all_infection_results$log2FoldChange), ]
+sig_for_heatmap$direction <- ifelse(sig_for_heatmap$log2FoldChange > 0,
+                                    "Higher in infected",
+                                    "Higher in control")
+sig_for_heatmap <- sig_for_heatmap[order(sig_for_heatmap$padj,
+                                         -abs(sig_for_heatmap$log2FoldChange)), ]
+
+select_top_degs <- function(tab, n) {
+  tab <- tab[order(tab$padj, -abs(tab$log2FoldChange)), ]
+  head(tab, n)
+}
+
+curated_pieces <- split(sig_for_heatmap,
+                        paste(sig_for_heatmap$diet,
+                              sig_for_heatmap$direction, sep = "__"))
+top_deg_rows <- do.call(rbind, lapply(curated_pieces, select_top_degs,
+                                      n = params$top_curated_degs_per_direction))
+top_deg_rows$Selection <- "Top DEG"
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab$protein_id <- sub(".*(XP_[0-9]+[.][0-9]+).*", "\\1", tab$query)
+  tab
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  cds <- gff[gff$type == "CDS", ]
+  data.frame(
+    protein_id = sub(".*protein_id=([^;]+).*", "\\1", cds$attributes),
+    gene_id = sub(".*gene=([^;]+).*", "\\1", cds$attributes),
+    stringsAsFactors = FALSE
+  ) |>
+    dplyr::filter(grepl("^XP_", protein_id), grepl("^LOC", gene_id)) |>
+    dplyr::distinct()
+}
+
+eggnog_path <- file.path(project_dir, params$eggnog_file)
+gff_path <- file.path(project_dir, params$gff_file)
+if (file.exists(eggnog_path) && file.exists(gff_path)) {
+  eggnog <- read_emapper(eggnog_path)
+  protein_to_gene <- parse_cds_gene_bridge(gff_path)
+  gene_annotation <- eggnog |>
+    dplyr::left_join(protein_to_gene, by = "protein_id") |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE) |>
+    dplyr::select(gene_id, Preferred_name, Description, GOs, KEGG_ko,
+                  KEGG_Pathway, PFAMs)
+} else {
+  gene_annotation <- data.frame(gene_id = character(),
+                                Preferred_name = character(),
+                                Description = character(),
+                                GOs = character(),
+                                KEGG_ko = character(),
+                                KEGG_Pathway = character(),
+                                PFAMs = character())
+}
+
+annotated_sig <- sig_for_heatmap |>
+  dplyr::left_join(gene_annotation, by = "gene_id")
+annotation_text <- apply(annotated_sig[, c("Preferred_name", "Description",
+                                           "GOs", "KEGG_ko", "KEGG_Pathway",
+                                           "PFAMs")],
+                         1, paste, collapse = " ")
+
+immune_keywords <- paste(c(
+  "immune", "immun", "defensin", "antimicrobial", "lysozyme",
+  "phenoloxidase", "prophenoloxidase", "toll", "imd", "jak", "stat",
+  "lectin", "peptidoglycan", "hemocyte", "serpin", "clip", "thioester",
+  "pathogen", "fungal", "fungus", "melanization"
+), collapse = "|")
+
+nutrition_keywords <- paste(c(
+  "nutrition", "nutrient", "metabolism", "metabolic", "lipid", "fatty",
+  "carbohydrate", "glucose", "glycogen", "trehalose", "insulin",
+  "amino acid", "protease", "peptidase", "trypsin", "chymotrypsin",
+  "lipase", "amylase", "digestion", "digestive", "transporter"
+), collapse = "|")
+
+annotated_sig$Functional_theme <- dplyr::case_when(
+  grepl(immune_keywords, annotation_text, ignore.case = TRUE) ~ "Immune-related",
+  grepl(nutrition_keywords, annotation_text, ignore.case = TRUE) ~ "Nutrition/metabolism",
+  TRUE ~ "Other"
+)
+
+theme_rows <- annotated_sig |>
+  dplyr::filter(Functional_theme != "Other") |>
+  dplyr::group_by(Functional_theme) |>
+  dplyr::arrange(padj, dplyr::desc(abs(log2FoldChange)), .by_group = TRUE) |>
+  dplyr::slice_head(n = params$top_functional_degs_per_theme) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(Selection = Functional_theme)
+
+gene_deg_summary <- sig_for_heatmap |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    DEG_diet_count = dplyr::n_distinct(diet),
+    DEG_diets = paste(sort(unique(as.character(diet))), collapse = ", "),
+    DEG_direction_summary = dplyr::if_else(
+      dplyr::n_distinct(direction) == 1,
+      dplyr::first(direction),
+      "Mixed directions"
+    ),
+    min_padj = min(padj, na.rm = TRUE),
+    max_abs_lfc = max(abs(log2FoldChange), na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    DEG_status = dplyr::case_when(
+      DEG_diet_count == length(levels(droplevels(metadata$Diet))) ~
+        "DEG in all diets",
+      DEG_diet_count > 1 ~ "DEG in multiple diets",
+      DEG_diet_count == 1 ~ "DEG in one diet",
+      TRUE ~ "Functional candidate (not DEG)"
+    )
+  )
+
+deg_status_levels <- c("DEG in all diets", "DEG in multiple diets",
+                       "DEG in one diet", "Functional candidate (not DEG)")
+functional_theme_levels <- c("Immune-related", "Nutrition/metabolism",
+                             "Top DEG", "Other")
+
+curated_degs <- dplyr::bind_rows(top_deg_rows, theme_rows) |>
+  dplyr::left_join(gene_annotation, by = "gene_id", suffix = c("", ".anno")) |>
+  dplyr::left_join(gene_deg_summary, by = "gene_id") |>
+  dplyr::mutate(
+    Preferred_name = dplyr::coalesce(Preferred_name, Preferred_name.anno),
+    Description = dplyr::coalesce(Description, Description.anno),
+    GOs = dplyr::coalesce(GOs, GOs.anno),
+    KEGG_ko = dplyr::coalesce(KEGG_ko, KEGG_ko.anno),
+    KEGG_Pathway = dplyr::coalesce(KEGG_Pathway, KEGG_Pathway.anno),
+    PFAMs = dplyr::coalesce(PFAMs, PFAMs.anno),
+    curated_annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
+                                    KEGG_Pathway, PFAMs),
+    Functional_theme = dplyr::case_when(
+      grepl(immune_keywords, curated_annotation_text, ignore.case = TRUE) ~
+        "Immune-related",
+      grepl(nutrition_keywords, curated_annotation_text, ignore.case = TRUE) ~
+        "Nutrition/metabolism",
+      Selection %in% c("Immune-related", "Nutrition/metabolism") ~ Selection,
+      TRUE ~ "Top DEG"
+    ),
+    DEG_status = factor(DEG_status, levels = deg_status_levels),
+    Functional_theme = factor(Functional_theme, levels = functional_theme_levels)
+  ) |>
+  dplyr::arrange(DEG_status, Functional_theme, DEG_direction_summary,
+                 DEG_diets, min_padj, dplyr::desc(max_abs_lfc)) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+curated_genes <- curated_degs$gene_id[curated_degs$gene_id %in% rownames(vst_mat)]
+treatment_order <- factor(as.character(metadata$Treatment),
+                          levels = c("Infected", "Control"))
+sample_order <- metadata$label[order(treatment_order, metadata$Diet,
+                                     metadata$label)]
+
+sample_annotation <- data.frame(
+  Treatment = metadata[sample_order, "Treatment"],
+  Diet = metadata[sample_order, "Diet"]
+)
+rownames(sample_annotation) <- sample_order
+
+gene_annotation_display <- curated_degs[match(curated_genes, curated_degs$gene_id),
+                                        c("DEG_status",
+                                          "DEG_direction_summary",
+                                          "Selection",
+                                          "Functional_theme"), drop = FALSE]
+names(gene_annotation_display) <- c("DEG_status", "DEG_direction",
+                                    "Selection", "Functional_theme")
+rownames(gene_annotation_display) <- curated_genes
+
+label_source <- curated_degs[match(curated_genes, curated_degs$gene_id), ]
+label_text <- ifelse(!is.na(label_source$Preferred_name) &
+                       label_source$Preferred_name != "-",
+                     label_source$Preferred_name,
+                     label_source$Description)
+label_text[is.na(label_text) | label_text == "-" | label_text == ""] <- "unannotated"
+label_text <- substr(label_text, 1, 45)
+col_labels <- paste(curated_genes, label_text, sep = " | ")
+
+find_gaps <- function(groups) {
+  groups <- as.character(groups)
+  if (length(groups) < 2) {
+    return(integer())
+  }
+  which(groups[-length(groups)] != groups[-1])
+}
+
+sample_gaps <- find_gaps(paste(sample_annotation$Treatment,
+                               sample_annotation$Diet))
+gene_gaps <- find_gaps(paste(gene_annotation_display$DEG_status,
+                             gene_annotation_display$Functional_theme))
+
+annotation_colors <- list(
+  Diet = diet_colors,
+  Treatment = treatment_colors,
+  DEG_direction = c("Higher in infected" = treatment_colors[["Infected"]],
+                    "Higher in control" = treatment_colors[["Control"]],
+                    "Mixed directions" = "#4B5563"),
+  DEG_status = c("DEG in all diets" = "#111827",
+                 "DEG in multiple diets" = "#4B5563",
+                 "DEG in one diet" = "#9CA3AF",
+                 "Functional candidate (not DEG)" = "#E5E7EB"),
+  Selection = c("Top DEG" = "#374151",
+                "Immune-related" = "#237C8E",
+                "Nutrition/metabolism" = "#B8643C"),
+  Functional_theme = c("Top DEG" = "#374151",
+                       "Immune-related" = "#237C8E",
+                       "Nutrition/metabolism" = "#B8643C",
+                       "Other" = "#9CA3AF")
+)
+
+heatmap_expression_colors <- grDevices::colorRampPalette(
+  c("#237C8E", "#F7F3E8", "#C85A54")
+)(101)
+heatmap_expression_breaks <- seq(-3, 3, length.out = 102)
+
+heatmap_display <- pheatmap::pheatmap(
+  t(vst_mat[curated_genes, sample_order, drop = FALSE]),
+  scale = "column",
+  color = heatmap_expression_colors,
+  breaks = heatmap_expression_breaks,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  gaps_row = sample_gaps,
+  gaps_col = gene_gaps,
+  show_rownames = TRUE,
+  show_colnames = FALSE,
+  labels_col = col_labels,
+  fontsize_row = 6,
+  annotation_col = gene_annotation_display,
+  annotation_row = sample_annotation,
+  annotation_colors = annotation_colors,
+  main = "Curated infection, immune, and nutrition DEGs",
+  filename = file.path(out_dir, "curated_infection_deg_vst_heatmap.png"),
+  width = 14,
+  height = 11
+)
+
+display_dir <- file.path(project_dir, "docs", "figure",
+                         "06-infection-within-diet-deg.Rmd")
+dir.create(display_dir, recursive = TRUE, showWarnings = FALSE)
+display_png <- file.path(display_dir, "curated-deg-heatmap-display.png")
+file.copy(file.path(out_dir, "curated_infection_deg_vst_heatmap.png"),
+          display_png, overwrite = TRUE)
+curated_heatmap_src <- file.path("figure", "06-infection-within-diet-deg.Rmd",
+                                 "curated-deg-heatmap-display.png")
+
+write.csv(curated_degs,
+          file.path(out_dir, "curated_infection_deg_heatmap_genes.csv"),
+          row.names = FALSE)
+```
+
+```{r curated-deg-heatmap-display, echo=FALSE, results='asis'}
+cat(paste0(
+  '<p><img src="', curated_heatmap_src,
+  '" alt="Curated infection, immune, and nutrition DEG VST heatmap" ',
+  'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
+))
+```
+
+## Curated immune and nutrition DEG summary
+
+This compact figure uses the same curated gene table as the heatmap, but
+summarizes it by diet, direction, and biological theme. It is easier to read
+quickly than the full heatmap and is the better candidate for a publication-style
+overview panel.
+
+```{r curated-theme-barplot, fig.height=5.2, fig.width=8.5}
+curated_summary <- curated_degs |>
+  dplyr::filter(Functional_theme %in% c("Immune-related",
+                                        "Nutrition/metabolism")) |>
+  dplyr::mutate(
+    diet = factor(diet, levels = levels(droplevels(metadata$Diet))),
+    direction = factor(direction, levels = c("Higher in infected",
+                                             "Higher in control")),
+    Functional_theme = factor(Functional_theme,
+                              levels = c("Immune-related",
+                                         "Nutrition/metabolism"))
+  ) |>
+  dplyr::count(diet, direction, Functional_theme,
+               name = "n_curated_degs")
+
+p_curated_summary <- ggplot(curated_summary,
+                            aes(x = diet, y = n_curated_degs,
+                                fill = Functional_theme)) +
+  geom_col(position = position_dodge(width = 0.76), width = 0.68) +
+  geom_text(aes(label = n_curated_degs),
+            position = position_dodge(width = 0.76),
+            vjust = -0.35, size = 3.1) +
+  facet_wrap(~ direction) +
+  scale_fill_manual(values = c("Immune-related" = "#237C8E",
+                               "Nutrition/metabolism" = "#B8643C")) +
+  theme_classic() +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Curated immune and nutrition DEGs",
+    subtitle = "Significant infected-control DEGs selected from eggNOG descriptions",
+    x = "Diet",
+    y = "Number of curated DEGs",
+    fill = "Functional theme"
+  )
+
+p_curated_summary
+ggsave(file.path(out_dir, "curated_immune_nutrition_deg_barplot.png"),
+       p_curated_summary, width = 8.5, height = 5.2, dpi = 300)
+write.csv(curated_summary,
+          file.path(out_dir, "curated_immune_nutrition_deg_summary.csv"),
+          row.names = FALSE)
+```
+
+## Summary
+
+The summary table collapses each diet-specific result into a total DEG count.
+It is deliberately simple, because the direction-aware barplot above carries
+the visual comparison and the full CSV files keep the gene-level statistics.
+
+```{r summary}
+summary_table <- aggregate(significant ~ diet, all_infection_results, sum)
+names(summary_table)[2] <- "n_significant_genes"
+knitr::kable(summary_table)
+
+write.csv(summary_table, file.path(out_dir, "infection_within_diet_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

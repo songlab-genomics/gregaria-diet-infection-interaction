@@ -1,45 +1,57 @@
-name: "Effect of Diet on Metarhizium Infection in S. Gregaria"
+name: "gregaria-diet-infection-interaction"
 output_dir: ../docs
 navbar:
-  title: "Effect of Diet on Metarhizium Infection in S. Gregaria"
+  title: "S. gregaria diet x infection"
   left:
-  - text: Home
+  - text: "Home"
     href: index.html
-  - text: Data Processing
+  - text: "Overview"
     menu:
-      - text: Data Trimming and Filtering
-        href:
-      - text: Mapping to Reference Genome
-        href:
-  - text: Target Gene Analysis
+      - text: "Study design and data"
+        href: 01-study-design-data.html
+      - text: "Workflow and reproducibility"
+        href: 02-workflow-reproducibility.html
+      - text: "Count QC and exploration"
+        href: 03-count-qc-exploration.html
+  - text: "Differential expression"
     menu:
-      - text: rRNA Included
-        menu:
-          - text: Gene Expression Analysis
-            href: deg.html
-          - text: Overlap of DEGs
-            href: overlap.html
-          - text: GO Term Enrichment
-            href:
-          - text: KEGG Pathway Enrichment
-      - text: rRNA Removed (No SVA)
-        menu:
-          - text: Gene Expression Analysis
-            href: deg-no-rrna.html
-          - text: Overlap of DEGs
-            href:
-          - text: Go Term Enrichment
-            href:
-          - text: KEGG Pathway Enrichment
-            href:
-      - text: rRNA Removed (SVA)
-        menu:
-          - text: Gene Expression Analysis
-            href: deg-no-rrna-sva.html
-
+      - text: "Diet x infection interaction"
+        href: 04-deseq2-interaction-model.html
+      - text: "Diet pairwise DEGs"
+        href: 05-diet-pairwise-deg.html
+      - text: "Infection within diet DEGs"
+        href: 06-infection-within-diet-deg.html
+      - text: "DEG overlap and prioritization"
+        href: 07-deg-overlap-prioritization.html
+  - text: "Interpretation"
+    menu:
+      - text: "Quality sensitivity and enrichment"
+        href: 09-outliers-load-enrichment.html
+      - text: "Publication figure exports"
+        href: 08-publication-figures.html
+  - text: "Archive"
+    menu:
+      - text: "Original file preparation"
+        href: file_prep.html
+      - text: "Original DEG with rRNA"
+        href: deg.html
+      - text: "Original DEG without rRNA"
+        href: deg-no-rrna.html
+      - text: "Original DEG without rRNA + SVA"
+        href: deg-no-rrna-sva.html
+      - text: "Original overlap page"
+        href: overlap.html
+  - text: "License"
+    href: license.html
+  right:
+  - icon: fab fa-github
+    text: "Source code"
+    href: https://github.com/MaevaTecher/gregaria-diet-infection-interaction
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
-    theme: cosmo
+    theme: flatly
     highlight: textmate
+    code_folding: hide
+    css: site-style.css

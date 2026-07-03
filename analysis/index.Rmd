@@ -1,11 +1,126 @@
 ---
-title: "Home"
+title: "Diet and Metarhizium infection interaction in Schistocerca gregaria"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
     toc: false
-editor_options:
-  chunk_output_type: console
 ---
 
-Welcome to my research website.
+```{r setup, include=FALSE}
+metadata <- read.delim("data/metadata/mehreen_metadata_fixed.txt",
+                       check.names = FALSE)
+metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
+                     drop = FALSE]
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+counts <- read.csv("data/raw_read_counts/master_counts.csv",
+                   check.names = FALSE)
+```
+
+```{r hero, echo=FALSE, results='asis'}
+cat('
+<div class="hero-panel">
+<div class="hero-copy">
+<p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
+<h1>Diet-conditioned transcriptional response to <em>Metarhizium</em> exposure</h1>
+<p class="lede">
+A workflowR analysis site for tracking sample structure, count quality,
+differential expression, DEG overlap, and functional enrichment in
+<em>Schistocerca gregaria</em>.
+</p>
+<div class="hero-actions">
+<a href="03-count-qc-exploration.html">Explore QC</a>
+<a href="04-deseq2-interaction-model.html">Open DESeq2 model</a>
+<a href="09-outliers-load-enrichment.html">View enrichment</a>
+</div>
+</div>
+<div class="hero-figure">
+<img src="figure/03-count-qc-exploration.Rmd/pca-1.png" alt="Variance-stabilized PCA preview">
+</div>
+</div>
+')
+```
+
+```{r metrics, echo=FALSE, results='asis'}
+n_samples <- nrow(metadata)
+n_genes <- nrow(counts)
+diet_levels <- paste(levels(droplevels(metadata$Diet)), collapse = " / ")
+treatment_levels <- paste(levels(droplevels(metadata$Treatment)), collapse = " / ")
+
+cat('<div class="metric-grid">')
+cat(sprintf('<div class="metric"><span>%s</span><strong>samples</strong></div>', n_samples))
+cat(sprintf('<div class="metric"><span>%s</span><strong>counted genes</strong></div>',
+            format(n_genes, big.mark = ",")))
+cat(sprintf('<div class="metric"><span>%s</span><strong>diet levels</strong></div>', diet_levels))
+cat(sprintf('<div class="metric"><span>%s</span><strong>treatments</strong></div>', treatment_levels))
+cat('</div>')
+```
+
+## Analysis Map
+
+<div class="analysis-grid">
+  <a class="analysis-tile" href="01-study-design-data.html">
+    <span>01</span>
+    <strong>Study Design and Data</strong>
+    <p>Input files, metadata balance, sample names, and count-depth checks.</p>
+  </a>
+  <a class="analysis-tile" href="03-count-qc-exploration.html">
+    <span>03</span>
+    <strong>Count QC and Exploration</strong>
+    <p>Library sizes, filtering, PCA, sample distance, and variable genes.</p>
+  </a>
+  <a class="analysis-tile" href="04-deseq2-interaction-model.html">
+    <span>04</span>
+    <strong>Diet x Infection Model</strong>
+    <p>Full DESeq2 model for diet, treatment, and interaction terms.</p>
+  </a>
+  <a class="analysis-tile" href="05-diet-pairwise-deg.html">
+    <span>05</span>
+    <strong>Diet Pairwise DEGs</strong>
+    <p>Pairwise diet contrasts across the available expression matrix.</p>
+  </a>
+  <a class="analysis-tile" href="06-infection-within-diet-deg.html">
+    <span>06</span>
+    <strong>Infection Within Diet</strong>
+    <p>Infected-versus-control contrasts split by diet level.</p>
+  </a>
+  <a class="analysis-tile" href="07-deg-overlap-prioritization.html">
+    <span>07</span>
+    <strong>DEG Overlap</strong>
+    <p>Shared and contrast-specific genes across the current DEG sets.</p>
+  </a>
+  <a class="analysis-tile" href="09-outliers-load-enrichment.html">
+    <span>09</span>
+    <strong>Quality Sensitivity and Enrichment</strong>
+    <p>Outlier status, annotation lifting, GO enrichment, and KEGG pathways.</p>
+  </a>
+  <a class="analysis-tile" href="08-publication-figures.html">
+    <span>08</span>
+    <strong>Figure Exports</strong>
+    <p>Rendered panels gathered from current analysis and legacy assets.</p>
+  </a>
+</div>
+
+## Current Visual Signals
+
+<div class="figure-strip">
+  <figure>
+    <img src="figure/03-count-qc-exploration.Rmd/library-size-1.png" alt="Library size by group">
+    <figcaption>Library depth</figcaption>
+  </figure>
+  <figure>
+    <img src="figure/04-deseq2-interaction-model.Rmd/volcano-main-effect-1.png" alt="Main effect volcano">
+    <figcaption>Infection effect</figcaption>
+  </figure>
+  <figure>
+    <img src="figure/07-deg-overlap-prioritization.Rmd/overlap-plot-1.png" alt="DEG overlap matrix">
+    <figcaption>DEG overlap</figcaption>
+  </figure>
+</div>
+
+The archive menu preserves the original workflowR pages and older generated
+assets as provenance. The main navigation highlights the current reproducible
+R Markdown analyses.
