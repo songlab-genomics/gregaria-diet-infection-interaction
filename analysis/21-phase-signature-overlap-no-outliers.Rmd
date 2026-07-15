@@ -1,0 +1,2701 @@
+---
+title: "Phase-signature overlap with outliers removed"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  latest_results_root: "output/rmd_runs"
+  phase_reference_dir: "data/external/phase_reference"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  timecourse_fatbody_reference_dir: "data/external/timecourse_fatbody_reference"
+  timecourse_head_thorax_counts_dir: "data/raw_read_counts/03-gregaria-DESeq2"
+  curated_infection_heatmap_gene_table: ""
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  alpha: 0.05
+  lfc_threshold: 1
+  phase_alpha: 0.05
+  phase_lfc_threshold: 1
+  heatmap_gene_n: 55
+  timecourse_vst_delta_threshold: 1
+  timecourse_top_gene_n: 500
+  cross_tissue_top_variable_gene_n: 120
+  cross_tissue_fatbody_deg_heatmap_n: 150
+  analysis_scenario: "Current outliers removed"
+  exclude_experiment_outliers: true
+  tissue_vst_range_threshold: 2
+  source_partition_top_gene_n: 80
+  display_rmd_dir: "21-phase-signature-overlap-no-outliers.Rmd"
+  output_tag: "phase-signature-overlap-no-outliers"
+---
+
+## Purpose
+
+This page asks whether the fat body DEGs from the diet-by-infection experiment
+also overlap with independent phase-responsive genes from *S. gregaria* head
+and thorax transcriptomes.
+
+The concern is biological rather than technical: fat bodies were sampled after
+animals experienced the diet and infection treatments, but the experimental
+context may also include a shift toward semi-isolated conditions. If some fat
+body DEGs are also known phase-transition genes, those genes should be treated
+as potentially density-state sensitive. They are not removed from the analysis;
+they are flagged so the infection and diet interpretation can be more careful.
+
+In the comparative phase dataset, isolated or solitarious animals were the
+reference state. Therefore, a positive phase log2 fold-change means a gene is
+higher in crowded/gregarious animals, and a negative phase log2 fold-change
+means a gene is higher in isolated/solitarious animals.
+
+This rendered page uses the fat body DEG scenario
+`r params$analysis_scenario`. Experiment fat body sample displays use
+`r if (isTRUE(params$exclude_experiment_outliers)) "the current outlier-removed sample set" else "all experiment samples, including the current outlier flags"`.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "dplyr", "tidyr", "stringr", "ggplot2", "forcats",
+              "DT", "SummarizedExperiment", "tibble", "scales", "pheatmap")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+library(ggplot2)
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root <- file.path(project_dir, params$latest_results_root)
+phase_dir <- file.path(project_dir, params$phase_reference_dir)
+counts_file <- file.path(project_dir, params$counts_file)
+metadata_file <- file.path(project_dir, params$metadata_file)
+timecourse_fatbody_dir <- file.path(project_dir, params$timecourse_fatbody_reference_dir)
+timecourse_head_thorax_dir <- file.path(project_dir, params$timecourse_head_thorax_counts_dir)
+curated_infection_heatmap_gene_table <- params$curated_infection_heatmap_gene_table
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+treatment_colors <- c("Control" = "#7B8794", "Infected" = "#C85A54")
+
+phase_colors <- c(
+  "Gregarious-up" = "#B23A48",
+  "Solitarious-up" = "#2166AC",
+  "Discordant phase direction" = "#6B7280",
+  "No phase DEG" = "#D1D5DB",
+  "No phase reference" = "#F3F4F6"
+)
+
+shift_colors <- c(
+  "Numerator more gregarious-like" = "#B23A48",
+  "Numerator more solitarious-like" = "#2166AC",
+  "Mixed head/thorax phase signal" = "#6B7280",
+  "Not phase-associated" = "#D1D5DB"
+)
+
+fat_direction_colors <- c(
+  "Upregulated" = "#E41A1C",
+  "Downregulated" = "#1E88E5"
+)
+
+condition_colors <- c(
+  "Infected_33" = "#C45A1A",
+  "Control_33" = "#F3B36B",
+  "Infected_50" = "#1E6F46",
+  "Control_50" = "#8DD3A7",
+  "Infected_83" = "#5F3A8A",
+  "Control_83" = "#C4A4E0",
+  "Gregarious reference" = "#111827",
+  "Solitarious reference" = "#6B7280"
+)
+
+cross_tissue_colors <- c(
+  condition_colors[c(
+    "Infected_33", "Control_33", "Infected_50",
+    "Control_50", "Infected_83", "Control_83"
+  )],
+  "Fat body: gregarious/crowded control" = "#111827",
+  "Fat body: solitarious/isolated control" = "#6B7280",
+  "Head: crowded/gregarious" = "#009E9A",
+  "Head: isolated/solitarious" = "#8DDDD8",
+  "Thorax: crowded/gregarious" = "#C51B7D",
+  "Thorax: isolated/solitarious" = "#F1A6C8"
+)
+
+current_outliers <- c("1007", "1036", "1037", "1039")
+sample_filter_label <- if (isTRUE(params$exclude_experiment_outliers)) {
+  "current outliers removed"
+} else {
+  "all experiment samples included"
+}
+analysis_scenario_label <- as.character(params$analysis_scenario)
+```
+
+## Input data
+
+The phase-reference tables were copied from `locust-comparative-genomics` into
+this repository. This page only reads those copied files, so the comparative
+repository is not modified.
+
+```{r input-files}
+phase_files <- tibble::tibble(
+  tissue = c("Head", "Thorax"),
+  result_file = file.path(
+    phase_dir,
+    c("DESeq2_results_sva_Head_gregaria_togregaria.csv",
+      "DESeq2_results_sva_Thorax_gregaria_togregaria.csv")
+  ),
+  significant_file = file.path(
+    phase_dir,
+    c("DESeq2_sigresults_sva_Head_gregaria_togregaria.csv",
+      "DESeq2_sigresults_sva_Thorax_gregaria_togregaria.csv")
+  )
+)
+
+if (any(!file.exists(phase_files$result_file))) {
+  stop("Missing phase-reference files: ",
+       paste(phase_files$result_file[!file.exists(phase_files$result_file)],
+             collapse = ", "))
+}
+
+knitr::kable(
+  phase_files |>
+    dplyr::mutate(
+      result_file = basename(result_file),
+      significant_file = basename(significant_file)
+    ),
+  caption = "Copied phase-reference DEG files"
+)
+```
+
+## Helper functions
+
+```{r helper-functions}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+resolve_curated_infection_gene_table <- function(path_param) {
+  explicit_path <- if (is.null(path_param) || !nzchar(path_param)) {
+    NA_character_
+  } else if (grepl("^/", path_param)) {
+    path_param
+  } else {
+    file.path(project_dir, path_param)
+  }
+  if (!is.na(explicit_path) && file.exists(explicit_path)) {
+    return(explicit_path)
+  }
+  infection_dir <- latest_dir("^infection-within-diet-deg_")
+  if (is.na(infection_dir)) {
+    return(explicit_path)
+  }
+  candidate <- file.path(infection_dir, "curated_infection_deg_heatmap_genes.csv")
+  if (file.exists(candidate)) {
+    return(candidate)
+  }
+  explicit_path
+}
+
+curated_infection_heatmap_gene_table <- resolve_curated_infection_gene_table(
+  curated_infection_heatmap_gene_table
+)
+
+read_phase_table <- function(path, tissue) {
+  tab <- read.csv(path, check.names = FALSE)
+  bad_names <- is.na(names(tab)) | names(tab) == ""
+  names(tab)[bad_names] <- paste0("row_id", seq_len(sum(bad_names)))
+  if (!"GeneID" %in% names(tab)) {
+    tab$GeneID <- tab[[1]]
+  }
+  tab |>
+    dplyr::transmute(
+      gene_id = as.character(GeneID),
+      tissue = tissue,
+      phase_baseMean = baseMean,
+      phase_log2FoldChange = log2FoldChange,
+      phase_padj = padj,
+      phase_significant = !is.na(padj) &
+        padj < params$phase_alpha &
+        abs(log2FoldChange) >= params$phase_lfc_threshold,
+      phase_direction = dplyr::case_when(
+        !phase_significant ~ "No phase DEG",
+        log2FoldChange > 0 ~ "Gregarious-up",
+        log2FoldChange < 0 ~ "Solitarious-up",
+        TRUE ~ "No phase DEG"
+      )
+    )
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+safe_neglog10 <- function(x) {
+  x <- ifelse(is.na(x), NA_real_, x)
+  -log10(pmax(x, .Machine$double.xmin))
+}
+
+read_featurecounts_gene_counts <- function(path, sample_id) {
+  tab <- read.delim(path, comment.char = "#", check.names = FALSE)
+  if ("Geneid" %in% names(tab)) {
+    count_col <- names(tab)[ncol(tab)]
+    out <- tibble::tibble(
+      gene_id = as.character(tab[["Geneid"]]),
+      count = as.integer(tab[[count_col]])
+    )
+  } else {
+    tab <- read.delim(path, comment.char = "#", header = FALSE,
+                      check.names = FALSE)
+    if (ncol(tab) < 2) {
+      stop("Count file must contain at least gene ID and count columns: ", path)
+    }
+    out <- tibble::tibble(
+      gene_id = as.character(tab[[1]]),
+      count = as.integer(tab[[ncol(tab)]])
+    )
+  }
+  out <- out |>
+    dplyr::filter(!is.na(gene_id), nzchar(gene_id)) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(count = sum(count, na.rm = TRUE), .groups = "drop")
+  names(out)[2] <- sample_id
+  out
+}
+
+parse_head_thorax_reference_metadata <- function(reference_dir) {
+  files <- list.files(
+    reference_dir,
+    pattern = "^SGRE-(HEAD|THOX)-(CRD|ISO)-[0-9]+_MERGE_featurecounts[.]txt$",
+    full.names = TRUE
+  )
+  if (length(files) == 0) {
+    return(tibble::tibble(
+      sample_id = character(),
+      count_file = character(),
+      tissue = character(),
+      phase = character(),
+      rearing_condition = character(),
+      replicate = integer(),
+      source = character(),
+      display_group = character(),
+      reference_role = character(),
+      sample_label = character(),
+      sample_block = character()
+    ))
+  }
+
+  parsed <- stringr::str_match(
+    basename(files),
+    "^SGRE-(HEAD|THOX)-(CRD|ISO)-([0-9]+)_MERGE_featurecounts[.]txt$"
+  )
+  tibble::tibble(
+    sample_id = stringr::str_remove(basename(files), "_featurecounts[.]txt$"),
+    count_file = files,
+    tissue_code = parsed[, 2],
+    rearing_code = parsed[, 3],
+    replicate = as.integer(parsed[, 4])
+  ) |>
+    dplyr::filter(!is.na(tissue_code), !is.na(rearing_code)) |>
+    dplyr::mutate(
+      tissue = dplyr::case_when(
+        tissue_code == "HEAD" ~ "Head",
+        tissue_code == "THOX" ~ "Thorax",
+        TRUE ~ tissue_code
+      ),
+      phase = dplyr::case_when(
+        rearing_code == "CRD" ~ "Gregarious",
+        rearing_code == "ISO" ~ "Solitarious",
+        TRUE ~ rearing_code
+      ),
+      rearing_condition = dplyr::case_when(
+        rearing_code == "CRD" ~ "Crowded",
+        rearing_code == "ISO" ~ "Isolated",
+        TRUE ~ rearing_code
+      ),
+      source = "Time-course head/thorax phase reference",
+      display_group = paste0(
+        tissue, ": ",
+        dplyr::if_else(rearing_condition == "Crowded",
+                       "crowded/gregarious", "isolated/solitarious")
+      ),
+      reference_role = paste(tissue, tolower(rearing_condition),
+                             "rep", replicate),
+      sample_label = paste0(substr(tissue, 1, 1), "-",
+                            rearing_code, "-", replicate),
+      sample_block = paste(tissue, "reference")
+    ) |>
+    dplyr::arrange(tissue, rearing_condition, replicate)
+}
+
+find_gaps <- function(groups) {
+  groups <- as.character(groups)
+  if (length(groups) < 2) {
+    return(integer())
+  }
+  which(groups[-length(groups)] != groups[-1])
+}
+```
+
+## Phase signatures
+
+```{r phase-signatures}
+phase_all <- dplyr::bind_rows(lapply(seq_len(nrow(phase_files)), function(i) {
+  read_phase_table(phase_files$result_file[i], phase_files$tissue[i])
+}))
+
+phase_sig <- phase_all |>
+  dplyr::filter(phase_significant)
+
+phase_by_gene <- phase_sig |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    n_phase_tissues = dplyr::n_distinct(tissue),
+    phase_tissues = paste(sort(unique(tissue)), collapse = " + "),
+    phase_directions = paste(sort(unique(phase_direction)), collapse = " + "),
+    phase_mean_log2FC = mean(phase_log2FoldChange, na.rm = TRUE),
+    phase_max_abs_log2FC = max(abs(phase_log2FoldChange), na.rm = TRUE),
+    head_phase_log2FC = phase_log2FoldChange[tissue == "Head"][1],
+    thorax_phase_log2FC = phase_log2FoldChange[tissue == "Thorax"][1],
+    head_phase_padj = phase_padj[tissue == "Head"][1],
+    thorax_phase_padj = phase_padj[tissue == "Thorax"][1],
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    phase_consensus = dplyr::case_when(
+      stringr::str_detect(phase_directions, "[+]") ~ "Discordant phase direction",
+      phase_directions == "Gregarious-up" ~ "Gregarious-up",
+      phase_directions == "Solitarious-up" ~ "Solitarious-up",
+      TRUE ~ "No phase DEG"
+    ),
+    phase_class = dplyr::case_when(
+      n_phase_tissues >= 2 ~ "Shared head/thorax phase DEG",
+      phase_tissues == "Head" ~ "Head phase DEG only",
+      phase_tissues == "Thorax" ~ "Thorax phase DEG only",
+      TRUE ~ "No phase DEG"
+    )
+  )
+
+phase_gene_all <- tibble::tibble(gene_id = unique(phase_all$gene_id)) |>
+  dplyr::left_join(phase_by_gene, by = "gene_id") |>
+  dplyr::mutate(
+    n_phase_tissues = dplyr::coalesce(n_phase_tissues, 0L),
+    phase_tissues = dplyr::coalesce(phase_tissues, "None"),
+    phase_directions = dplyr::coalesce(phase_directions, "No phase DEG"),
+    phase_consensus = dplyr::coalesce(phase_consensus, "No phase DEG"),
+    phase_class = dplyr::coalesce(phase_class, "No phase DEG")
+  )
+
+phase_summary <- phase_sig |>
+  dplyr::count(tissue, phase_direction, name = "n_genes")
+
+write.csv(phase_summary, file.path(out_dir, "phase_signature_summary.csv"),
+          row.names = FALSE)
+write.csv(phase_gene_all, file.path(out_dir, "phase_signature_by_gene.csv"),
+          row.names = FALSE)
+
+knitr::kable(phase_summary, caption = "Phase DEG counts from the copied reference")
+```
+
+```{r phase-summary-plot, fig.width=8, fig.height=4.8}
+phase_summary_plot <- ggplot(phase_summary,
+                             aes(x = tissue, y = n_genes,
+                                 fill = phase_direction)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.68,
+           color = "grey25", linewidth = 0.25) +
+  scale_fill_manual(values = phase_colors) +
+  labs(
+    title = "Reference phase signatures",
+    subtitle = "Positive phase log2FC means higher in crowded/gregarious animals",
+    x = NULL, y = "Number of phase DEGs", fill = "Phase direction"
+  ) +
+  theme_classic(base_size = 13) +
+  theme(legend.position = "bottom")
+
+phase_summary_plot
+ggsave(file.path(out_dir, "phase_signature_summary.png"), phase_summary_plot,
+       width = 8, height = 4.8, dpi = 300)
+```
+
+## Fat body DEG results
+
+The page uses the newest `DEG sample-filter scenarios` output if it exists.
+That lets this phase audit cover all samples, the current outlier-filtered
+analysis, and the editable expanded-outlier scenario with the same code.
+
+```{r fat-body-results}
+scenario_dir <- latest_dir("^deg-sample-filter-scenarios_")
+if (is.na(scenario_dir)) {
+  stop("Render 12-deg-sample-filter-scenarios.Rmd before this page.")
+}
+
+fat_source <- file.path(scenario_dir, "all_deseq2_results.csv")
+fat_results <- read.csv(fat_source, check.names = FALSE) |>
+  dplyr::mutate(
+    significant = !is.na(padj) &
+      padj < params$alpha &
+      abs(log2FoldChange) >= params$lfc_threshold,
+    direction = dplyr::case_when(
+      !significant ~ "Not DEG",
+      log2FoldChange > 0 ~ "Upregulated",
+      log2FoldChange < 0 ~ "Downregulated",
+      TRUE ~ "Not DEG"
+    )
+  )
+
+fat_sig <- fat_results |>
+  dplyr::filter(significant)
+
+knitr::kable(
+  fat_sig |>
+    dplyr::count(scenario, comparison_type, name = "n_significant_rows"),
+  caption = "Significant fat body DEG rows used for phase layering"
+)
+```
+
+## Layer phase signatures onto fat body DEGs
+
+For every fat body comparison, the numerator is the condition named first in the
+contrast. For example, `Diet 33: infected vs control` has infected as the
+numerator. If a phase-linked fat body DEG moves in the same sign as the
+gregarious-vs-solitarious phase signature, the numerator is described as more
+gregarious-like for that gene. If it moves in the opposite sign, the numerator
+is described as more solitarious-like.
+
+```{r layered-results}
+phase_layered <- fat_results |>
+  dplyr::left_join(phase_gene_all, by = "gene_id") |>
+  dplyr::mutate(
+    phase_class = dplyr::coalesce(phase_class, "No phase reference"),
+    phase_consensus = dplyr::coalesce(phase_consensus, "No phase reference"),
+    n_phase_tissues = dplyr::coalesce(n_phase_tissues, 0L),
+    phase_shift = dplyr::case_when(
+      !significant | n_phase_tissues == 0 ~ "Not phase-associated",
+      phase_consensus == "Discordant phase direction" ~ "Mixed head/thorax phase signal",
+      sign(log2FoldChange) == sign(phase_mean_log2FC) ~ "Numerator more gregarious-like",
+      sign(log2FoldChange) == -sign(phase_mean_log2FC) ~ "Numerator more solitarious-like",
+      TRUE ~ "Not phase-associated"
+    )
+  )
+
+phase_layered_sig <- phase_layered |>
+  dplyr::filter(significant)
+
+write.csv(phase_layered,
+          gzfile(file.path(out_dir, "fat_body_degs_with_phase_layer_all_rows.csv.gz")),
+          row.names = FALSE)
+write.csv(phase_layered_sig, file.path(out_dir, "fat_body_degs_with_phase_layer_significant.csv"),
+          row.names = FALSE)
+
+phase_overlap_summary <- phase_layered_sig |>
+  dplyr::count(scenario, comparison_type, comparison, phase_class, phase_shift,
+               direction, name = "n_genes")
+
+write.csv(phase_overlap_summary,
+          file.path(out_dir, "phase_overlap_summary_by_comparison.csv"),
+          row.names = FALSE)
+```
+
+```{r phase-overlap-table}
+main_overlap_table <- phase_layered_sig |>
+  dplyr::count(scenario, comparison_type, comparison, phase_class, name = "n_genes") |>
+  tidyr::pivot_wider(names_from = phase_class, values_from = n_genes,
+                     values_fill = 0) |>
+  dplyr::arrange(scenario, comparison_type, comparison)
+
+DT::datatable(
+  main_overlap_table,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 12, scrollX = TRUE),
+  caption = "Fat body DEGs classified by independent phase signature"
+)
+```
+
+```{r infection-phase-burden, fig.width=14, fig.height=7}
+infection_phase_burden <- phase_layered_sig |>
+  dplyr::filter(comparison_type == "Infection within diet") |>
+  dplyr::mutate(
+    comparison_plot = stringr::str_remove(comparison, ": infected vs control"),
+    phase_class = factor(
+      phase_class,
+      levels = c("No phase DEG", "Head phase DEG only",
+                 "Thorax phase DEG only", "Shared head/thorax phase DEG",
+                 "No phase reference")
+    )
+  ) |>
+  dplyr::count(scenario, comparison_plot, phase_class, name = "n_genes")
+
+infection_phase_burden_plot <- ggplot(
+  infection_phase_burden,
+  aes(x = comparison_plot, y = n_genes, fill = phase_class)
+) +
+  geom_col(color = "grey20", linewidth = 0.2) +
+  facet_wrap(~ scenario, nrow = 1) +
+  scale_fill_manual(
+    values = c(
+      "No phase DEG" = "#D1D5DB",
+      "Head phase DEG only" = "#F59E0B",
+      "Thorax phase DEG only" = "#10B981",
+      "Shared head/thorax phase DEG" = "#7C3AED",
+      "No phase reference" = "#F3F4F6"
+    )
+  ) +
+  labs(
+    title = "Infection-within-diet DEG burden with phase-signature layer",
+    subtitle = "Phase-linked DEGs are retained but flagged as possible density-state sensitive genes",
+    x = NULL, y = "Number of significant fat body DEGs", fill = "Phase class"
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold")
+  )
+
+infection_phase_burden_plot
+ggsave(file.path(out_dir, "infection_within_diet_phase_burden.png"),
+       infection_phase_burden_plot, width = 14, height = 7, dpi = 300)
+```
+
+```{r infection-phase-shift, fig.width=13, fig.height=7}
+phase_shift_counts <- phase_layered_sig |>
+  dplyr::filter(comparison_type == "Infection within diet",
+                phase_shift != "Not phase-associated") |>
+  dplyr::mutate(
+    comparison_plot = stringr::str_remove(comparison, ": infected vs control")
+  ) |>
+  dplyr::count(scenario, comparison_plot, phase_shift, direction, name = "n_genes")
+
+phase_shift_plot <- ggplot(
+  phase_shift_counts,
+  aes(x = comparison_plot, y = n_genes, fill = phase_shift)
+) +
+  geom_col(position = position_dodge(width = 0.72), width = 0.64,
+           color = "grey20", linewidth = 0.2) +
+  facet_grid(direction ~ scenario, scales = "free_y") +
+  scale_fill_manual(values = shift_colors) +
+  labs(
+    title = "Direction of phase-linked infection DEGs",
+    subtitle = "For infection contrasts, the numerator is infected and the denominator is control",
+    x = NULL, y = "Number of phase-linked DEGs", fill = "Phase interpretation"
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold")
+  )
+
+phase_shift_plot
+ggsave(file.path(out_dir, "infection_phase_direction_shift.png"),
+       phase_shift_plot, width = 13, height = 7, dpi = 300)
+```
+
+## Enrichment and concordance tests
+
+The overlap tests ask whether fat body DEGs are enriched for phase-DEG genes
+more than expected from the analyzed gene universe. The sign tests ask whether
+overlapping genes tend to move in the same direction as the phase signature or
+the opposite direction.
+
+```{r overlap-statistics}
+universe_genes <- intersect(unique(fat_results$gene_id), unique(phase_gene_all$gene_id))
+
+phase_sets <- list(
+  "Any phase DEG" = phase_gene_all$gene_id[phase_gene_all$n_phase_tissues > 0],
+  "Head phase DEG" = phase_sig$gene_id[phase_sig$tissue == "Head"],
+  "Thorax phase DEG" = phase_sig$gene_id[phase_sig$tissue == "Thorax"],
+  "Shared head/thorax phase DEG" =
+    phase_gene_all$gene_id[phase_gene_all$phase_class == "Shared head/thorax phase DEG"]
+)
+
+fisher_one <- function(sig_genes, phase_genes, universe) {
+  sig_genes <- intersect(unique(sig_genes), universe)
+  phase_genes <- intersect(unique(phase_genes), universe)
+  overlap <- length(intersect(sig_genes, phase_genes))
+  tab <- matrix(c(
+    overlap,
+    length(setdiff(sig_genes, phase_genes)),
+    length(setdiff(phase_genes, sig_genes)),
+    length(setdiff(universe, union(sig_genes, phase_genes)))
+  ), nrow = 2)
+  test <- fisher.test(tab, alternative = "greater")
+  tibble::tibble(
+    n_fat_degs = length(sig_genes),
+    n_phase_genes = length(phase_genes),
+    n_overlap = overlap,
+    odds_ratio = unname(test$estimate),
+    p_value = test$p.value
+  )
+}
+
+overlap_tests <- phase_layered_sig |>
+  dplyr::group_by(scenario, comparison_type, comparison) |>
+  dplyr::summarise(sig_genes = list(unique(gene_id)), .groups = "drop") |>
+  tidyr::crossing(phase_set = names(phase_sets)) |>
+  dplyr::rowwise() |>
+  dplyr::mutate(stats = list(fisher_one(sig_genes, phase_sets[[phase_set]],
+                                        universe_genes))) |>
+  tidyr::unnest(stats) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(p_adj = p.adjust(p_value, method = "BH")) |>
+  dplyr::select(-sig_genes) |>
+  dplyr::arrange(p_adj, p_value)
+
+write.csv(overlap_tests, file.path(out_dir, "phase_overlap_fisher_tests.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  overlap_tests,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 12, scrollX = TRUE),
+  caption = "Fisher exact tests for enrichment of phase genes among fat body DEGs"
+)
+```
+
+```{r concordance-statistics}
+phase_long_for_tests <- phase_all |>
+  dplyr::filter(phase_significant) |>
+  dplyr::select(gene_id, phase_tissue = tissue,
+                phase_log2FoldChange, phase_direction)
+
+phase_fat_long <- phase_layered_sig |>
+  dplyr::inner_join(phase_long_for_tests, by = "gene_id") |>
+  dplyr::mutate(
+    same_direction = sign(log2FoldChange) == sign(phase_log2FoldChange)
+  )
+
+sign_test_one <- function(same_direction) {
+  same_direction <- same_direction[!is.na(same_direction)]
+  if (length(same_direction) < 2) {
+    return(tibble::tibble(n_overlap = length(same_direction),
+                          n_same_direction = sum(same_direction),
+                          n_opposite_direction = sum(!same_direction),
+                          p_value = NA_real_))
+  }
+  test <- binom.test(sum(same_direction), length(same_direction), p = 0.5)
+  tibble::tibble(n_overlap = length(same_direction),
+                 n_same_direction = sum(same_direction),
+                 n_opposite_direction = sum(!same_direction),
+                 p_value = test$p.value)
+}
+
+concordance_tests <- phase_fat_long |>
+  dplyr::group_by(scenario, comparison_type, comparison, phase_tissue) |>
+  dplyr::summarise(stats = list(sign_test_one(same_direction)),
+                   .groups = "drop") |>
+  tidyr::unnest(stats) |>
+  dplyr::mutate(p_adj = p.adjust(p_value, method = "BH")) |>
+  dplyr::arrange(p_adj, p_value)
+
+write.csv(concordance_tests,
+          file.path(out_dir, "phase_fatbody_sign_concordance_tests.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  concordance_tests,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 12, scrollX = TRUE),
+  caption = "Sign concordance between fat body DEGs and head/thorax phase signatures"
+)
+```
+
+## Fat body log2FC versus phase log2FC
+
+This scatterplot focuses on the selected infection-within-diet DEG scenario:
+`r params$analysis_scenario`. Points to the same side of zero on both axes indicate that infected
+animals move in the same direction as the gregarious phase signature for that
+gene. Points in opposite quadrants indicate an infected state moving opposite
+to the gregarious signature, which is the more solitarization-like pattern.
+
+```{r lfc-scatter, fig.width=13, fig.height=8}
+scatter_data <- phase_fat_long |>
+  dplyr::filter(
+    scenario == params$analysis_scenario,
+    comparison_type == "Infection within diet"
+  ) |>
+  dplyr::mutate(
+    diet = stringr::str_extract(comparison, "Diet [0-9]+"),
+    direction_relation = dplyr::case_when(
+      same_direction ~ "Numerator more gregarious-like",
+      !same_direction ~ "Numerator more solitarious-like",
+      TRUE ~ "Not phase-associated"
+    )
+  )
+
+lfc_scatter_plot <- ggplot(
+  scatter_data,
+  aes(x = phase_log2FoldChange, y = log2FoldChange,
+      color = direction_relation)
+) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey45") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey45") +
+  geom_point(alpha = 0.72, size = 2.2) +
+  facet_grid(phase_tissue ~ diet) +
+  scale_color_manual(values = shift_colors) +
+  labs(
+    title = "Infection response compared with independent phase signatures",
+    subtitle = paste0(
+      "DEG scenario: ", params$analysis_scenario,
+      "; positive phase log2FC means gregarious-up"
+    ),
+    x = "Phase log2FC: crowded/gregarious vs isolated/solitarious",
+    y = "Fat body log2FC: infected vs control",
+    color = "Interpretation"
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold")
+  )
+
+lfc_scatter_plot
+ggsave(file.path(out_dir, "infection_fatbody_vs_phase_lfc_scatter.png"),
+       lfc_scatter_plot, width = 13, height = 8, dpi = 300)
+```
+
+## Annotated candidate gene table
+
+The table below highlights significant fat body DEGs that are also phase DEGs.
+The priority score favors genes with phase support in both tissues, large fat
+body effect size, strong fat body adjusted p-value, and large phase effect.
+
+```{r gene-annotation}
+if (file.exists(eggnog_file) && file.exists(gff_file)) {
+  eggnog <- read_emapper(eggnog_file)
+  protein_to_gene <- parse_cds_gene_bridge(gff_file)
+  annotation <- eggnog |>
+    dplyr::left_join(protein_to_gene, by = "protein_id") |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE) |>
+    dplyr::transmute(
+      gene_id,
+      Preferred_name = dplyr::na_if(Preferred_name, "-"),
+      Description = dplyr::na_if(Description, "-"),
+      GOs = dplyr::na_if(GOs, "-"),
+      KEGG_ko = dplyr::na_if(KEGG_ko, "-"),
+      KEGG_Pathway = dplyr::na_if(KEGG_Pathway, "-"),
+      PFAMs = dplyr::na_if(PFAMs, "-")
+    )
+} else {
+  annotation <- tibble::tibble(
+    gene_id = character(),
+    Preferred_name = character(),
+    Description = character(),
+    GOs = character(),
+    KEGG_ko = character(),
+    KEGG_Pathway = character(),
+    PFAMs = character()
+  )
+}
+
+candidate_phase_degs <- phase_layered_sig |>
+  dplyr::filter(n_phase_tissues > 0) |>
+  dplyr::left_join(annotation, by = "gene_id") |>
+  dplyr::mutate(
+    neglog10_padj = safe_neglog10(padj),
+    priority_score = n_phase_tissues * 10 +
+      abs(log2FoldChange) +
+      phase_max_abs_log2FC +
+      dplyr::coalesce(neglog10_padj, 0),
+    phase_interpretation = dplyr::case_when(
+      phase_shift == "Numerator more solitarious-like" &
+        comparison_type == "Infection within diet" ~
+        "Infected expression is more solitarious-like than control",
+      phase_shift == "Numerator more gregarious-like" &
+        comparison_type == "Infection within diet" ~
+        "Infected expression is more gregarious-like than control",
+      TRUE ~ phase_shift
+    )
+  ) |>
+  dplyr::arrange(dplyr::desc(priority_score), scenario, comparison)
+
+write.csv(candidate_phase_degs,
+          file.path(out_dir, "phase_linked_fat_body_deg_candidates.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  candidate_phase_degs |>
+    dplyr::select(
+      scenario, comparison_type, comparison, gene_id, Preferred_name,
+      Description, log2FoldChange, padj, direction, phase_class,
+      phase_consensus, phase_shift, phase_interpretation, phase_tissues,
+      phase_mean_log2FC, priority_score
+    ),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = "Phase-linked fat body DEG candidates"
+)
+```
+
+## Curated VST heatmap
+
+This heatmap uses the `r params$analysis_scenario` DEG scenario and
+`r sample_filter_label`. Genes are selected from significant
+infection-within-diet DEGs that also overlap a phase signature, with shared
+head/thorax phase DEGs prioritized first. Samples are grouped by infection
+status and then diet.
+
+```{r phase-linked-vst-heatmap, fig.width=15, fig.height=12}
+read_metadata <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  tab <- tab[, !is.na(names(tab)) & nzchar(names(tab)), drop = FALSE]
+  tab$label <- as.character(tab$label)
+  tab$Diet <- factor(tab$Diet, levels = c("33", "50", "83"))
+  tab$Treatment <- factor(tab$Treatment, levels = c("Infected", "Control"))
+  tab
+}
+
+metadata_full <- read_metadata(metadata_file)
+if (isTRUE(params$exclude_experiment_outliers)) {
+  metadata_full <- metadata_full |>
+    dplyr::filter(!label %in% current_outliers)
+}
+metadata_full <- metadata_full |>
+  dplyr::arrange(Treatment, Diet, label)
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_all <- as.matrix(counts_raw[, -1])
+rownames(counts_all) <- counts_raw[[1]]
+storage.mode(counts_all) <- "integer"
+colnames(counts_all) <- sub("_MERGE$", "", sub("^mehreen_", "",
+                                                colnames(counts_all)))
+counts_heat <- counts_all[, metadata_full$label, drop = FALSE]
+rownames(metadata_full) <- metadata_full$label
+
+heatmap_genes <- candidate_phase_degs |>
+  dplyr::filter(
+    scenario == params$analysis_scenario,
+    comparison_type == "Infection within diet"
+  ) |>
+  dplyr::group_by(gene_id) |>
+  dplyr::slice_max(order_by = priority_score, n = 1, with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(
+    dplyr::desc(n_phase_tissues),
+    phase_consensus,
+    dplyr::desc(priority_score)
+  ) |>
+  dplyr::slice_head(n = params$heatmap_gene_n)
+
+if (nrow(heatmap_genes) > 1) {
+  keep <- rowSums(counts_heat) >= 10
+  dds_heat <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_heat[keep, ],
+    colData = metadata_full,
+    design = ~ Diet + Treatment
+  )
+  vst_heat <- DESeq2::vst(dds_heat, blind = TRUE)
+  vst_mat <- SummarizedExperiment::assay(vst_heat)
+  heatmap_gene_ids <- intersect(heatmap_genes$gene_id, rownames(vst_mat))
+  zmat <- t(scale(t(vst_mat[heatmap_gene_ids, , drop = FALSE])))
+  zmat[is.na(zmat)] <- 0
+
+  gene_labels <- heatmap_genes |>
+    dplyr::filter(gene_id %in% heatmap_gene_ids) |>
+    dplyr::mutate(
+      label = paste0(
+        gene_id, " | ",
+        dplyr::coalesce(Preferred_name, "unannotated"), " | ",
+        stringr::str_trunc(dplyr::coalesce(Description, "no description"), 48)
+      )
+    ) |>
+    dplyr::select(gene_id, label, phase_consensus, phase_class, phase_shift)
+
+  heatmap_long <- as.data.frame(zmat) |>
+    tibble::rownames_to_column("gene_id") |>
+    tidyr::pivot_longer(-gene_id, names_to = "sample", values_to = "z_vst") |>
+    dplyr::left_join(gene_labels, by = "gene_id") |>
+    dplyr::left_join(
+      metadata_full |>
+        tibble::rownames_to_column("sample") |>
+        dplyr::select(sample, Diet, Treatment),
+      by = "sample"
+    ) |>
+    dplyr::mutate(
+      sample = factor(sample, levels = metadata_full$label),
+      label = factor(label, levels = rev(gene_labels$label)),
+      condition = paste(Treatment, Diet, sep = "_")
+    )
+
+  phase_heatmap_plot <- ggplot(heatmap_long,
+                               aes(x = sample, y = label, fill = z_vst)) +
+    geom_tile(color = "white", linewidth = 0.08) +
+    geom_tile(aes(y = label, x = sample, color = condition),
+              fill = NA, linewidth = 0.18, show.legend = FALSE) +
+    scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B",
+                         midpoint = 0, limits = c(-2.5, 2.5),
+                         oob = scales::squish, name = "Row-z VST") +
+    scale_color_manual(values = condition_colors) +
+    labs(
+      title = "Curated phase-linked infection DEG heatmap",
+      subtitle = paste0(
+        "DEG scenario: ", params$analysis_scenario,
+        "; ", sample_filter_label,
+        "; samples grouped by infection status and diet"
+      ),
+      x = NULL, y = NULL
+    ) +
+    theme_classic(base_size = 11) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 8),
+      axis.text.y = element_text(size = 7),
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold")
+    )
+
+  phase_heatmap_plot
+  ggsave(file.path(out_dir, "phase_linked_infection_deg_vst_heatmap.png"),
+         phase_heatmap_plot, width = 15, height = 12, dpi = 300)
+  write.csv(heatmap_genes,
+            file.path(out_dir, "phase_linked_heatmap_genes.csv"),
+            row.names = FALSE)
+} else {
+  message("Not enough phase-linked infection DEGs for the heatmap.")
+}
+```
+
+## Time-course fat body single-pair reference
+
+The time-course project contains two non-`FULL` *S. gregaria* fat body samples:
+one gregarious/crowded control and one solitarious/isolated control. This is
+not enough replication for a formal DEG analysis, but it is useful as a
+tissue-matched qualitative phase anchor.
+
+The main time-course metadata labels `GREG_S_ICT_9_FAT_MERGE` as gregarious,
+but the sample name and the derived time-course metadata identify it as the
+isolated/solitarious control. This page uses the corrected local metadata below.
+
+```{r timecourse-fatbody-reference-files}
+timecourse_reference_metadata <- file.path(
+  timecourse_fatbody_dir,
+  "gregaria_FAT_phase_reference_metadata.csv"
+)
+
+timecourse_ref_meta <- read.csv(timecourse_reference_metadata,
+                                check.names = FALSE) |>
+  dplyr::filter(tissue == "FAT")
+
+timecourse_ref_meta <- timecourse_ref_meta |>
+  dplyr::mutate(
+    count_file = file.path(timecourse_fatbody_dir, "readcounts", file_name),
+    file_present = file.exists(count_file)
+  )
+
+knitr::kable(
+  timecourse_ref_meta |>
+    dplyr::select(sample_id, phase, rearing_condition, reference_role,
+                  file_name, file_present),
+  caption = "Time-course fat body reference samples"
+)
+```
+
+```{r timecourse-fatbody-pca-heatmap, fig.width=10, fig.height=8}
+if (all(timecourse_ref_meta$file_present)) {
+  reference_count_tables <- Map(
+    read_featurecounts_gene_counts,
+    timecourse_ref_meta$count_file,
+    timecourse_ref_meta$sample_id
+  )
+  timecourse_counts_df <- Reduce(function(x, y) dplyr::full_join(x, y, by = "gene_id"),
+                                 reference_count_tables)
+  timecourse_counts <- as.matrix(timecourse_counts_df[, -1, drop = FALSE])
+  rownames(timecourse_counts) <- timecourse_counts_df$gene_id
+  timecourse_counts[is.na(timecourse_counts)] <- 0L
+  storage.mode(timecourse_counts) <- "integer"
+
+  diet_counts_current <- counts_all[, metadata_full$label, drop = FALSE]
+  shared_genes <- intersect(rownames(diet_counts_current), rownames(timecourse_counts))
+  combined_counts <- cbind(
+    diet_counts_current[shared_genes, , drop = FALSE],
+    timecourse_counts[shared_genes, timecourse_ref_meta$sample_id, drop = FALSE]
+  )
+
+  diet_metadata_plot <- metadata_full |>
+    dplyr::mutate(
+      sample_id = label,
+      source = "Diet-infection fat body",
+      display_group = paste(Treatment, Diet, sep = "_"),
+      reference_role = paste(Treatment, "diet", Diet),
+      phase = NA_character_,
+      rearing_condition = NA_character_
+    ) |>
+    dplyr::select(sample_id, source, display_group, reference_role,
+                  phase, rearing_condition)
+
+  timecourse_metadata_plot <- timecourse_ref_meta |>
+    dplyr::mutate(
+      source = "Time-course single-pair fat body",
+      display_group = dplyr::case_when(
+        phase == "Gregarious" ~ "Gregarious reference",
+        phase == "Solitarious" ~ "Solitarious reference",
+        TRUE ~ "Reference"
+      )
+    ) |>
+    dplyr::select(sample_id, source, display_group, reference_role,
+                  phase, rearing_condition)
+
+  combined_metadata <- dplyr::bind_rows(diet_metadata_plot, timecourse_metadata_plot)
+  combined_metadata <- combined_metadata[match(colnames(combined_counts),
+                                               combined_metadata$sample_id), ]
+  rownames(combined_metadata) <- combined_metadata$sample_id
+
+  keep_combined <- rowSums(combined_counts) >= 10
+  dds_combined <- DESeq2::DESeqDataSetFromMatrix(
+    countData = combined_counts[keep_combined, , drop = FALSE],
+    colData = combined_metadata,
+    design = ~ 1
+  )
+  vst_combined <- DESeq2::vst(dds_combined, blind = TRUE)
+  vst_combined_mat <- SummarizedExperiment::assay(vst_combined)
+
+  pca <- prcomp(t(vst_combined_mat), center = TRUE, scale. = FALSE)
+  pct <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+  pca_scores <- as.data.frame(pca$x[, 1:4, drop = FALSE]) |>
+    tibble::rownames_to_column("sample_id") |>
+    dplyr::left_join(combined_metadata |>
+                       tibble::rownames_to_column("sample_id_meta"),
+                     by = c("sample_id" = "sample_id_meta"))
+
+  write.csv(pca_scores,
+            file.path(out_dir, "timecourse_fatbody_reference_combined_pca_scores.csv"),
+            row.names = FALSE)
+
+  pca_reference_labels <- pca_scores |>
+    dplyr::filter(source == "Time-course single-pair fat body") |>
+    dplyr::mutate(
+      label_x = PC1,
+      label_y = PC2 + dplyr::if_else(phase == "Gregarious", 7, -7)
+    )
+
+  pca_plot <- ggplot(
+    pca_scores,
+    aes(x = PC1, y = PC2, color = display_group, shape = source)
+  ) +
+    geom_point(size = 3.2, alpha = 0.84) +
+    geom_segment(
+      data = pca_reference_labels,
+      aes(x = PC1, y = PC2, xend = label_x, yend = label_y),
+      inherit.aes = FALSE,
+      color = "#4B5563",
+      linewidth = 0.25
+    ) +
+    geom_label(
+      data = pca_reference_labels,
+      aes(x = label_x, y = label_y, label = reference_role,
+          color = display_group),
+      inherit.aes = FALSE,
+      size = 3.5,
+      fill = "white",
+      label.size = 0.15,
+      show.legend = FALSE
+    ) +
+    scale_color_manual(values = condition_colors) +
+    scale_x_continuous(expand = ggplot2::expansion(mult = 0.16)) +
+    scale_y_continuous(expand = ggplot2::expansion(mult = 0.12)) +
+    scale_shape_manual(values = c("Diet-infection fat body" = 16,
+                                  "Time-course single-pair fat body" = 17)) +
+    labs(
+      title = "PCA with time-course fat body phase reference",
+      subtitle = "Exploratory only: one gregarious/crowded and one solitarious/isolated fat body sample",
+      x = paste0("PC1 (", pct[1], "%)"),
+      y = paste0("PC2 (", pct[2], "%)"),
+      color = "Sample group",
+      shape = "Source"
+    ) +
+    guides(
+      color = ggplot2::guide_legend(nrow = 2, byrow = TRUE, order = 2),
+      shape = ggplot2::guide_legend(order = 1)
+    ) +
+    coord_cartesian(clip = "off") +
+    theme_classic(base_size = 13) +
+    theme(
+      legend.position = "bottom",
+      legend.box = "vertical",
+      plot.margin = ggplot2::margin(10, 80, 10, 10)
+    )
+
+  print(pca_plot)
+  ggsave(file.path(out_dir, "timecourse_fatbody_reference_combined_pca.png"),
+         pca_plot, width = 13, height = 8, dpi = 300)
+
+  timecourse_direction_all <- tibble::tibble(
+    gene_id = rownames(vst_combined_mat),
+    timecourse_fatbody_gregarious_minus_solitarious =
+      vst_combined_mat[, "GREG_G_CCT_11_FAT"] -
+      vst_combined_mat[, "GREG_S_ICT_9_FAT"]
+  ) |>
+    dplyr::mutate(
+      abs_timecourse_delta = abs(timecourse_fatbody_gregarious_minus_solitarious),
+      tissue_matched_direction = dplyr::case_when(
+        timecourse_fatbody_gregarious_minus_solitarious > 0 ~
+          "Higher in gregarious/crowded reference",
+        timecourse_fatbody_gregarious_minus_solitarious < 0 ~
+          "Higher in solitarious/isolated reference",
+        TRUE ~ "No difference in single-pair reference"
+      ),
+      exploratory_shift = abs_timecourse_delta >= params$timecourse_vst_delta_threshold
+    )
+
+  write.csv(
+    timecourse_direction_all,
+    file.path(out_dir, "timecourse_fatbody_single_pair_vst_direction_all_genes.csv"),
+    row.names = FALSE
+  )
+
+  if (exists("heatmap_genes") && nrow(heatmap_genes) > 1) {
+    ref_heatmap_genes <- heatmap_genes |>
+      dplyr::filter(gene_id %in% rownames(vst_combined_mat)) |>
+      dplyr::arrange(dplyr::desc(n_phase_tissues),
+                     phase_consensus,
+                     dplyr::desc(priority_score)) |>
+      dplyr::slice_head(n = params$heatmap_gene_n)
+
+    ref_gene_ids <- ref_heatmap_genes$gene_id
+    ref_zmat <- t(scale(t(vst_combined_mat[ref_gene_ids, , drop = FALSE])))
+    ref_zmat[is.na(ref_zmat)] <- 0
+
+    ref_gene_labels <- ref_heatmap_genes |>
+      dplyr::mutate(
+        label = paste0(
+          gene_id, " | ",
+          dplyr::coalesce(Preferred_name, "unannotated"), " | ",
+          stringr::str_trunc(dplyr::coalesce(Description, "no description"), 54)
+        )
+      ) |>
+      dplyr::select(gene_id, label)
+
+    ref_heatmap_long <- as.data.frame(
+      ref_zmat[, timecourse_ref_meta$sample_id, drop = FALSE]
+    ) |>
+      tibble::rownames_to_column("gene_id") |>
+      tidyr::pivot_longer(-gene_id, names_to = "sample_id",
+                          values_to = "z_vst") |>
+      dplyr::left_join(ref_gene_labels, by = "gene_id") |>
+      dplyr::left_join(timecourse_metadata_plot, by = "sample_id") |>
+      dplyr::mutate(
+        label = factor(label, levels = rev(ref_gene_labels$label)),
+        sample_label = factor(reference_role,
+                              levels = timecourse_ref_meta$reference_role)
+      )
+
+    ref_heatmap_plot <- ggplot(ref_heatmap_long,
+                               aes(x = sample_label, y = label, fill = z_vst)) +
+      geom_tile(color = "white", linewidth = 0.12) +
+      scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B",
+                           midpoint = 0, limits = c(-2.5, 2.5),
+                           oob = scales::squish, name = "Row-z VST") +
+      labs(
+        title = "Phase-linked candidate genes in time-course fat body controls",
+        subtitle = "Rows are z-scored using the combined diet-infection plus time-course VST matrix",
+        x = NULL, y = NULL
+      ) +
+      theme_classic(base_size = 11) +
+      theme(
+        axis.text.x = element_text(angle = 20, hjust = 1, size = 10),
+        axis.text.y = element_text(size = 7),
+        legend.position = "bottom",
+        plot.title = element_text(face = "bold")
+      )
+
+    print(ref_heatmap_plot)
+    ggsave(file.path(out_dir, "timecourse_fatbody_reference_phase_linked_heatmap.png"),
+           ref_heatmap_plot, width = 10, height = 12, dpi = 300)
+
+    reference_direction <- ref_heatmap_genes |>
+      dplyr::select(gene_id, Preferred_name, Description, phase_class,
+                    phase_consensus, phase_mean_log2FC, priority_score) |>
+      dplyr::left_join(timecourse_direction_all, by = "gene_id")
+
+    write.csv(reference_direction,
+              file.path(out_dir, "timecourse_fatbody_single_pair_phase_direction.csv"),
+              row.names = FALSE)
+  }
+
+  timecourse_gene_sets <- list(
+    "Any large single-pair shift" =
+      timecourse_direction_all$gene_id[timecourse_direction_all$exploratory_shift],
+    "Higher in gregarious/crowded reference" =
+      timecourse_direction_all$gene_id[
+        timecourse_direction_all$exploratory_shift &
+          timecourse_direction_all$tissue_matched_direction ==
+          "Higher in gregarious/crowded reference"
+      ],
+    "Higher in solitarious/isolated reference" =
+      timecourse_direction_all$gene_id[
+        timecourse_direction_all$exploratory_shift &
+          timecourse_direction_all$tissue_matched_direction ==
+          "Higher in solitarious/isolated reference"
+      ],
+    "Top absolute single-pair shifts" =
+      timecourse_direction_all |>
+        dplyr::slice_max(order_by = abs_timecourse_delta,
+                         n = params$timecourse_top_gene_n,
+                         with_ties = FALSE) |>
+        dplyr::pull(gene_id)
+  )
+
+  overlap_one_set <- function(deg_genes, reference_genes) {
+    deg_genes <- unique(deg_genes)
+    reference_genes <- unique(reference_genes)
+    overlap_genes <- intersect(deg_genes, reference_genes)
+    tibble::tibble(
+      n_fat_body_degs = length(deg_genes),
+      n_reference_genes = length(reference_genes),
+      n_overlap = length(overlap_genes),
+      percent_fat_body_degs = 100 * length(overlap_genes) / max(length(deg_genes), 1),
+      percent_reference_genes = 100 * length(overlap_genes) / max(length(reference_genes), 1),
+      jaccard = length(overlap_genes) / max(length(union(deg_genes, reference_genes)), 1),
+      overlap_gene_ids = paste(sort(overlap_genes), collapse = ";")
+    )
+  }
+
+  timecourse_overlap_summary <- phase_layered_sig |>
+    dplyr::group_by(scenario, comparison_type, comparison, direction) |>
+    dplyr::summarise(fat_body_deg_genes = list(unique(gene_id)), .groups = "drop") |>
+    tidyr::crossing(timecourse_reference_set = names(timecourse_gene_sets)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      stats = list(overlap_one_set(
+        fat_body_deg_genes,
+        timecourse_gene_sets[[timecourse_reference_set]]
+      ))
+    ) |>
+    tidyr::unnest(stats) |>
+    dplyr::ungroup() |>
+    dplyr::select(-fat_body_deg_genes) |>
+    dplyr::arrange(scenario, comparison_type, comparison,
+                   dplyr::desc(n_overlap))
+
+  write.csv(
+    timecourse_overlap_summary,
+    file.path(out_dir, "timecourse_fatbody_single_pair_overlap_summary.csv"),
+    row.names = FALSE
+  )
+
+  timecourse_overlap_plot_data <- timecourse_overlap_summary |>
+    dplyr::filter(comparison_type == "Infection within diet",
+                  timecourse_reference_set != "Top absolute single-pair shifts") |>
+    dplyr::mutate(
+      comparison_plot = stringr::str_remove(comparison, ": infected vs control"),
+      timecourse_reference_set = factor(
+        timecourse_reference_set,
+        levels = c("Any large single-pair shift",
+                   "Higher in gregarious/crowded reference",
+                   "Higher in solitarious/isolated reference")
+      )
+    )
+
+  timecourse_overlap_plot <- ggplot(
+    timecourse_overlap_plot_data,
+    aes(x = comparison_plot, y = n_overlap, fill = timecourse_reference_set)
+  ) +
+    geom_col(position = position_dodge(width = 0.75), width = 0.68,
+             color = "grey25", linewidth = 0.2) +
+    facet_grid(direction ~ scenario, scales = "free_y") +
+    scale_fill_manual(
+      values = c(
+        "Any large single-pair shift" = "#6B7280",
+        "Higher in gregarious/crowded reference" = "#B23A48",
+        "Higher in solitarious/isolated reference" = "#2166AC"
+      )
+    ) +
+    labs(
+      title = "Overlap with exploratory time-course fat body phase shifts",
+      subtitle = paste0(
+        "Large single-pair shifts use |gregarious - solitarious VST| >= ",
+        params$timecourse_vst_delta_threshold
+      ),
+      x = NULL,
+      y = "Number of overlapping genes",
+      fill = "Time-course fat body reference"
+    ) +
+    theme_classic(base_size = 13) +
+    theme(
+      axis.text.x = element_text(angle = 35, hjust = 1),
+      legend.position = "bottom",
+      strip.text = element_text(face = "bold")
+    )
+
+  print(timecourse_overlap_plot)
+  ggsave(file.path(out_dir, "timecourse_fatbody_single_pair_overlap.png"),
+         timecourse_overlap_plot, width = 13, height = 8, dpi = 300)
+
+  DT::datatable(
+    timecourse_overlap_summary |>
+      dplyr::select(-overlap_gene_ids),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 12, scrollX = TRUE),
+    caption = "Exploratory overlap between fat body DEGs and time-course single-pair phase shifts"
+  )
+} else {
+  missing_files <- timecourse_ref_meta |>
+    dplyr::filter(!file_present) |>
+    dplyr::transmute(
+      missing_featurecounts_file = file.path("data/external/timecourse_fatbody_reference",
+                                             "readcounts", file_name)
+    )
+
+  knitr::kable(
+    missing_files,
+    caption = "Copy these featureCounts files to enable the exploratory PCA and heatmap"
+  )
+}
+```
+
+## Cross-tissue VST overview
+
+This exploratory view combines the diet-infection fat body experiment, the two
+time-course fat body controls, and the time-course gregaria head/thorax
+phase-reference samples. The purpose is to ask where the present fat body
+samples sit relative to independent tissue and phase references. Because tissue
+identity and library context can dominate this kind of visualization, the PCA
+and heatmap should be read as a structure/QC view, not as a formal cross-tissue
+differential-expression test.
+
+The heatmap includes all sample columns, but only the most variable shared genes
+are drawn as rows so that the plot remains readable. The complete combined VST
+matrix is written to the output folder for follow-up checks.
+
+```{r cross-tissue-reference-files}
+head_thorax_ref_meta <- parse_head_thorax_reference_metadata(
+  timecourse_head_thorax_dir
+) |>
+  dplyr::mutate(file_present = file.exists(count_file))
+
+fatbody_ref_meta_cross <- timecourse_ref_meta |>
+  dplyr::mutate(
+    tissue = "Fat body",
+    source = "Time-course fat body phase control",
+    display_group = dplyr::case_when(
+      phase == "Gregarious" ~ "Fat body: gregarious/crowded control",
+      phase == "Solitarious" ~ "Fat body: solitarious/isolated control",
+      TRUE ~ "Fat body: reference control"
+    ),
+    sample_label = dplyr::case_when(
+      phase == "Gregarious" ~ "FAT-G-ctrl",
+      phase == "Solitarious" ~ "FAT-S-ctrl",
+      TRUE ~ sample_id
+    ),
+    sample_block = "FAT controls",
+    infection_status = "Control",
+    diet = "Reference",
+    outlier_status = "Reference sample"
+  ) |>
+  dplyr::select(
+    sample_id, count_file, tissue, phase, rearing_condition, replicate,
+    source, display_group, reference_role, sample_label, sample_block,
+    infection_status, diet, outlier_status, file_present
+  )
+
+head_thorax_ref_meta_cross <- head_thorax_ref_meta |>
+  dplyr::mutate(
+    infection_status = "Control",
+    diet = "Reference",
+    outlier_status = "Reference sample"
+  ) |>
+  dplyr::select(
+    sample_id, count_file, tissue, phase, rearing_condition, replicate,
+    source, display_group, reference_role, sample_label, sample_block,
+    infection_status, diet, outlier_status, file_present
+  )
+
+cross_reference_manifest <- dplyr::bind_rows(
+  fatbody_ref_meta_cross,
+  head_thorax_ref_meta_cross
+)
+
+knitr::kable(
+  cross_reference_manifest |>
+    dplyr::count(sample_block, tissue, phase, rearing_condition,
+                 file_present, name = "n_samples"),
+  caption = "Reference samples available for the cross-tissue VST overview"
+)
+```
+
+```{r cross-tissue-vst-build}
+cross_tissue_ready <- nrow(cross_reference_manifest) > 0 &&
+  all(cross_reference_manifest$file_present)
+
+if (cross_tissue_ready) {
+  metadata_all_samples <- read_metadata(metadata_file)
+  if (isTRUE(params$exclude_experiment_outliers)) {
+    metadata_all_samples <- metadata_all_samples |>
+      dplyr::filter(!label %in% current_outliers)
+  }
+  metadata_all_samples <- metadata_all_samples |>
+    dplyr::arrange(Treatment, Diet, label)
+
+  experiment_counts <- counts_all[, metadata_all_samples$label, drop = FALSE]
+
+  experiment_meta_cross <- metadata_all_samples |>
+    dplyr::mutate(
+      sample_id = label,
+      count_file = NA_character_,
+      tissue = "Fat body",
+      phase = "Diet-infection experiment",
+      rearing_condition = "Semi-isolated experiment",
+      replicate = NA_integer_,
+      source = "Diet-infection fat body experiment",
+      display_group = paste(Treatment, Diet, sep = "_"),
+      reference_role = paste("Fat body", Treatment, "diet", Diet),
+      sample_label = paste0(label, "_",
+                            dplyr::if_else(Treatment == "Infected", "I", "C"),
+                            Diet),
+      sample_block = "Experiment fat body",
+      infection_status = as.character(Treatment),
+      diet = as.character(Diet),
+      outlier_status = dplyr::if_else(
+        label %in% current_outliers,
+        "Current outlier flag",
+        "Retained in current analysis"
+      ),
+      file_present = TRUE
+    ) |>
+    dplyr::select(
+      sample_id, count_file, tissue, phase, rearing_condition, replicate,
+      source, display_group, reference_role, sample_label, sample_block,
+      infection_status, diet, outlier_status, file_present
+    )
+
+  reference_count_tables <- Map(
+    read_featurecounts_gene_counts,
+    cross_reference_manifest$count_file,
+    cross_reference_manifest$sample_id
+  )
+  reference_counts_df <- Reduce(
+    function(x, y) dplyr::full_join(x, y, by = "gene_id"),
+    reference_count_tables
+  )
+  reference_counts <- as.matrix(reference_counts_df[, -1, drop = FALSE])
+  rownames(reference_counts) <- reference_counts_df$gene_id
+  reference_counts[is.na(reference_counts)] <- 0L
+  storage.mode(reference_counts) <- "integer"
+
+  shared_cross_genes <- Reduce(
+    intersect,
+    list(rownames(experiment_counts), rownames(reference_counts))
+  )
+
+  cross_counts <- cbind(
+    experiment_counts[shared_cross_genes, , drop = FALSE],
+    reference_counts[
+      shared_cross_genes,
+      cross_reference_manifest$sample_id,
+      drop = FALSE
+    ]
+  )
+
+  cross_metadata <- dplyr::bind_rows(
+    experiment_meta_cross,
+    cross_reference_manifest
+  ) |>
+    dplyr::mutate(
+      sample_block = factor(
+        sample_block,
+        levels = c(
+          "Experiment fat body",
+          "FAT controls",
+          "Head reference",
+          "Thorax reference"
+        )
+      ),
+      tissue = factor(tissue, levels = c("Fat body", "Head", "Thorax")),
+      display_group = factor(display_group, levels = names(cross_tissue_colors))
+    )
+
+  cross_metadata <- cross_metadata[match(colnames(cross_counts),
+                                         cross_metadata$sample_id), ]
+  rownames(cross_metadata) <- cross_metadata$sample_id
+
+  keep_cross <- rowSums(cross_counts) >= 10
+  dds_cross <- DESeq2::DESeqDataSetFromMatrix(
+    countData = cross_counts[keep_cross, , drop = FALSE],
+    colData = cross_metadata,
+    design = ~ 1
+  )
+  vst_cross <- DESeq2::vst(dds_cross, blind = TRUE)
+  vst_cross_mat <- SummarizedExperiment::assay(vst_cross)
+
+  write.csv(
+    cross_metadata,
+    file.path(out_dir, "cross_tissue_reference_sample_metadata.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    tibble::rownames_to_column(as.data.frame(vst_cross_mat), "gene_id"),
+    gzfile(file.path(out_dir, "cross_tissue_reference_vst_matrix_all_genes.csv.gz")),
+    row.names = FALSE
+  )
+
+  cross_pca <- prcomp(t(vst_cross_mat), center = TRUE, scale. = FALSE)
+  cross_pct <- round(100 * (cross_pca$sdev^2 / sum(cross_pca$sdev^2)), 1)
+  cross_pca_scores <- as.data.frame(cross_pca$x[, 1:4, drop = FALSE]) |>
+    tibble::rownames_to_column("sample_id") |>
+    dplyr::left_join(
+      cross_metadata |>
+        tibble::rownames_to_column("sample_id_meta"),
+      by = c("sample_id" = "sample_id_meta")
+    )
+
+  write.csv(
+    cross_pca_scores,
+    file.path(out_dir, "cross_tissue_reference_combined_pca_scores.csv"),
+    row.names = FALSE
+  )
+
+  pca_fatbody_reference_labels <- cross_pca_scores |>
+    dplyr::filter(sample_block == "FAT controls") |>
+    dplyr::mutate(
+      label_x = PC1,
+      label_y = PC2 + dplyr::if_else(phase == "Gregarious", 6, -6)
+    )
+
+  cross_pca_plot <- ggplot(
+    cross_pca_scores,
+    aes(x = PC1, y = PC2, color = display_group, shape = sample_block)
+  ) +
+    geom_point(size = 3.1, alpha = 0.86) +
+    geom_segment(
+      data = pca_fatbody_reference_labels,
+      aes(x = PC1, y = PC2, xend = label_x, yend = label_y),
+      inherit.aes = FALSE,
+      color = "#4B5563",
+      linewidth = 0.25
+    ) +
+    geom_label(
+      data = pca_fatbody_reference_labels,
+      aes(x = label_x, y = label_y, label = reference_role,
+          color = display_group),
+      inherit.aes = FALSE,
+      fill = "white",
+      label.size = 0.15,
+      size = 3.2,
+      show.legend = FALSE
+    ) +
+    scale_color_manual(values = cross_tissue_colors, drop = FALSE) +
+    scale_shape_manual(
+      values = c(
+        "Experiment fat body" = 16,
+        "FAT controls" = 17,
+        "Head reference" = 15,
+        "Thorax reference" = 18
+      ),
+      drop = FALSE
+    ) +
+    scale_x_continuous(expand = ggplot2::expansion(mult = 0.12)) +
+    scale_y_continuous(expand = ggplot2::expansion(mult = 0.12)) +
+    labs(
+      title = "PCA of experiment fat body with fat body, head, and thorax references",
+      subtitle = paste0(
+        "Exploratory VST PCA across shared expressed genes; ",
+        sample_filter_label
+      ),
+      x = paste0("PC1 (", cross_pct[1], "%)"),
+      y = paste0("PC2 (", cross_pct[2], "%)"),
+      color = "Sample group",
+      shape = "Sample block"
+    ) +
+    guides(
+      color = ggplot2::guide_legend(ncol = 2, byrow = TRUE, order = 2),
+      shape = ggplot2::guide_legend(nrow = 2, byrow = TRUE, order = 1)
+    ) +
+    coord_cartesian(clip = "off") +
+    theme_classic(base_size = 13) +
+    theme(
+      legend.position = "bottom",
+      legend.box = "vertical",
+      plot.title = element_text(face = "bold"),
+      plot.margin = ggplot2::margin(10, 70, 10, 10)
+    )
+
+  cross_gene_variance <- apply(vst_cross_mat, 1, stats::var)
+  cross_top_gene_ids <- names(sort(cross_gene_variance, decreasing = TRUE))[
+    seq_len(min(params$cross_tissue_top_variable_gene_n,
+                length(cross_gene_variance)))
+  ]
+
+  cross_heatmap_genes <- tibble::tibble(
+    gene_id = cross_top_gene_ids,
+    vst_variance = cross_gene_variance[cross_top_gene_ids]
+  ) |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::left_join(phase_gene_all, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      phase_class = dplyr::coalesce(phase_class, "No phase DEG"),
+      label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 42)
+      )
+    )
+
+  write.csv(
+    cross_heatmap_genes,
+    file.path(out_dir, "cross_tissue_top_variable_vst_heatmap_genes.csv"),
+    row.names = FALSE
+  )
+
+  cross_zmat <- t(scale(t(vst_cross_mat[cross_top_gene_ids, , drop = FALSE])))
+  cross_zmat[is.na(cross_zmat)] <- 0
+
+  cross_heatmap_long <- as.data.frame(cross_zmat) |>
+    tibble::rownames_to_column("gene_id") |>
+    tidyr::pivot_longer(-gene_id, names_to = "sample_id",
+                        values_to = "z_vst") |>
+    dplyr::left_join(
+      cross_heatmap_genes |>
+        dplyr::select(gene_id, label, vst_variance, phase_class),
+      by = "gene_id"
+    ) |>
+    dplyr::left_join(
+      cross_metadata |>
+        dplyr::select(sample_id, sample_label, sample_block, display_group,
+                      tissue, outlier_status),
+      by = "sample_id"
+    ) |>
+    dplyr::mutate(
+      sample_label = factor(sample_label, levels = cross_metadata$sample_label),
+      label = factor(label, levels = rev(cross_heatmap_genes$label))
+    )
+
+  cross_heatmap_plot <- ggplot(
+    cross_heatmap_long,
+    aes(x = sample_label, y = label, fill = z_vst)
+  ) +
+    geom_tile(color = "white", linewidth = 0.03) +
+    facet_grid(. ~ sample_block, scales = "free_x", space = "free_x") +
+    scale_fill_gradient2(
+      low = "#2166AC", mid = "white", high = "#B2182B",
+      midpoint = 0, limits = c(-2.5, 2.5),
+      oob = scales::squish, name = "Row-z VST"
+    ) +
+    labs(
+      title = "Cross-tissue VST heatmap with experiment and phase-reference samples",
+      subtitle = paste0(
+        "Top ", length(cross_top_gene_ids),
+        " most variable shared genes; ", sample_filter_label
+      ),
+      x = NULL,
+      y = NULL
+    ) +
+    theme_classic(base_size = 10) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 5.5),
+      axis.text.y = element_text(size = 4.8),
+      legend.position = "bottom",
+      strip.text.x = element_text(face = "bold", size = 11),
+      panel.spacing.x = grid::unit(0.6, "lines"),
+      plot.title = element_text(face = "bold")
+    )
+} else {
+  missing_cross_files <- cross_reference_manifest |>
+    dplyr::filter(!file_present) |>
+    dplyr::select(sample_id, sample_block, count_file)
+
+  knitr::kable(
+    missing_cross_files,
+    caption = "Missing reference files for the cross-tissue VST overview"
+  )
+}
+```
+
+```{r cross-tissue-pca, fig.width=13, fig.height=8}
+if (exists("cross_pca_plot")) {
+  print(cross_pca_plot)
+  ggsave(
+    file.path(out_dir, "cross_tissue_reference_combined_pca.png"),
+    cross_pca_plot,
+    width = 13,
+    height = 8,
+    dpi = 300
+  )
+}
+```
+
+```{r cross-tissue-vst-heatmap, fig.width=24, fig.height=20}
+if (exists("cross_heatmap_plot")) {
+  print(cross_heatmap_plot)
+  ggsave(
+    file.path(out_dir, "cross_tissue_top_variable_vst_heatmap.png"),
+    cross_heatmap_plot,
+    width = 24,
+    height = 20,
+    dpi = 300
+  )
+}
+```
+
+## Fat body DEGs in reference samples
+
+The heatmap above uses the most variable shared genes, which is useful for
+seeing sample structure. The plot below asks a narrower biological question:
+among genes called differentially expressed in the fat body experiment, how do
+those same genes look in the independent reference samples?
+
+Rows are selected from the `r params$analysis_scenario` fat body DEG results.
+Columns are only the reference samples: the two time-course fat body controls
+plus the head and thorax phase-reference samples. Row z-scores are calculated
+across reference samples only, so red and blue indicate relative expression
+within the reference panel for each experimental DEG.
+
+```{r fatbody-degs-in-reference-samples, fig.width=18, fig.height=22}
+if (exists("vst_cross_mat") && exists("cross_metadata")) {
+  fatbody_deg_reference_genes_all <- phase_layered_sig |>
+    dplyr::filter(scenario == params$analysis_scenario) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      n_deg_contrasts = dplyr::n_distinct(comparison),
+      has_infection_deg = any(comparison_type == "Infection within diet"),
+      comparison_types = paste(sort(unique(comparison_type)), collapse = "; "),
+      comparisons = paste(sort(unique(comparison)), collapse = "; "),
+      directions = paste(sort(unique(direction)), collapse = "; "),
+      max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+      min_padj = min(padj, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(
+      deg_priority_score = n_deg_contrasts * 10 +
+        dplyr::if_else(has_infection_deg, 5, 0) +
+        max_abs_log2FC + safe_neglog10(min_padj)
+    ) |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::left_join(phase_gene_all, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      phase_class = dplyr::coalesce(phase_class, "No phase DEG"),
+      phase_consensus = dplyr::coalesce(phase_consensus, "No phase DEG")
+    ) |>
+    dplyr::arrange(
+      dplyr::desc(has_infection_deg),
+      dplyr::desc(n_deg_contrasts),
+      min_padj,
+      dplyr::desc(max_abs_log2FC)
+    )
+
+  write.csv(
+    fatbody_deg_reference_genes_all,
+    file.path(out_dir, "cross_tissue_fatbody_deg_reference_heatmap_all_deg_genes.csv"),
+    row.names = FALSE
+  )
+
+  fatbody_deg_reference_genes <- fatbody_deg_reference_genes_all |>
+    dplyr::filter(gene_id %in% rownames(vst_cross_mat)) |>
+    dplyr::slice_head(n = params$cross_tissue_fatbody_deg_heatmap_n) |>
+    dplyr::mutate(
+      label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 44)
+      )
+    )
+
+  reference_only_metadata <- cross_metadata |>
+    tibble::rownames_to_column("sample_id_row") |>
+    dplyr::filter(sample_block != "Experiment fat body") |>
+    dplyr::select(-sample_id_row)
+
+  reference_sample_ids <- reference_only_metadata$sample_id
+  reference_deg_ids <- intersect(
+    fatbody_deg_reference_genes$gene_id,
+    rownames(vst_cross_mat)
+  )
+
+  if (length(reference_deg_ids) > 1) {
+    deg_reference_zmat <- t(scale(t(
+      vst_cross_mat[reference_deg_ids, reference_sample_ids, drop = FALSE]
+    )))
+    deg_reference_zmat[is.na(deg_reference_zmat)] <- 0
+
+    write.csv(
+      fatbody_deg_reference_genes,
+      file.path(out_dir, "cross_tissue_fatbody_deg_reference_heatmap_genes.csv"),
+      row.names = FALSE
+    )
+
+    deg_reference_long <- as.data.frame(deg_reference_zmat) |>
+      tibble::rownames_to_column("gene_id") |>
+      tidyr::pivot_longer(-gene_id, names_to = "sample_id",
+                          values_to = "z_vst") |>
+      dplyr::left_join(
+        fatbody_deg_reference_genes |>
+          dplyr::select(
+            gene_id, label, has_infection_deg, n_deg_contrasts,
+            comparison_types, phase_class, phase_consensus
+          ),
+        by = "gene_id"
+      ) |>
+      dplyr::left_join(
+        reference_only_metadata |>
+          dplyr::select(sample_id, sample_label, sample_block, display_group,
+                        tissue, phase, rearing_condition),
+        by = "sample_id"
+      ) |>
+      dplyr::mutate(
+        sample_label = factor(sample_label,
+                              levels = reference_only_metadata$sample_label),
+        label = factor(label, levels = rev(fatbody_deg_reference_genes$label))
+      )
+
+    fatbody_deg_reference_heatmap <- ggplot(
+      deg_reference_long,
+      aes(x = sample_label, y = label, fill = z_vst)
+    ) +
+      geom_tile(color = "white", linewidth = 0.04) +
+      facet_grid(. ~ sample_block, scales = "free_x", space = "free_x") +
+      scale_fill_gradient2(
+        low = "#2166AC", mid = "white", high = "#B2182B",
+        midpoint = 0, limits = c(-2.5, 2.5),
+        oob = scales::squish, name = "Reference row-z VST"
+      ) +
+      labs(
+        title = "Experimental fat body DEGs in reference samples",
+        subtitle = paste0(
+          "Top ", length(reference_deg_ids),
+          " ", params$analysis_scenario,
+          " fat body DEGs; columns show only FAT/head/thorax references"
+        ),
+        x = NULL,
+        y = NULL
+      ) +
+      theme_classic(base_size = 10) +
+      theme(
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+        axis.text.y = element_text(size = 5),
+        legend.position = "bottom",
+        strip.text.x = element_text(face = "bold", size = 12),
+        panel.spacing.x = grid::unit(0.8, "lines"),
+        plot.title = element_text(face = "bold")
+      )
+
+    print(fatbody_deg_reference_heatmap)
+    ggsave(
+      file.path(out_dir, "cross_tissue_fatbody_deg_reference_heatmap.png"),
+      fatbody_deg_reference_heatmap,
+      width = 18,
+      height = 22,
+      dpi = 300
+    )
+  } else {
+    message("Not enough fat body DEGs were available for the reference heatmap.")
+  }
+}
+```
+
+## Curated infection-response heatmap with references
+
+This version uses the same curated infection-response gene table as the
+publication-style heatmap in the infection-within-diet page, then appends the
+FAT, head, and thorax reference samples as extra sample rows. This keeps the
+gene order and functional annotations comparable to the original curated
+figure, while showing how those same genes behave in the reference samples.
+
+The values are VST-normalized counts from the combined count matrix, scaled
+within each gene across the displayed samples. This is therefore a visualization
+of relative expression patterns, not a new differential-expression test.
+
+```{r curated-infection-reference-heatmap, fig.width=26, fig.height=16}
+if (exists("vst_cross_mat") && exists("cross_metadata")) {
+  if (!file.exists(curated_infection_heatmap_gene_table)) {
+    stop("Missing curated heatmap gene table: ",
+         curated_infection_heatmap_gene_table)
+  }
+
+  curated_reference_gene_table <- read.csv(
+    curated_infection_heatmap_gene_table,
+    check.names = FALSE
+  ) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+
+  curated_reference_genes <- curated_reference_gene_table$gene_id[
+    curated_reference_gene_table$gene_id %in% rownames(vst_cross_mat)
+  ]
+
+  curated_reference_gene_table <- curated_reference_gene_table |>
+    dplyr::filter(gene_id %in% curated_reference_genes) |>
+    dplyr::mutate(
+      Functional_theme = factor(
+        Functional_theme,
+        levels = c(
+          "Immune-related",
+          "Storage/lipid transport",
+          "Nutrition/metabolism",
+          "Detoxification/stress",
+          "Other strong DEG"
+        )
+      ),
+      DEG_class = factor(DEG_class, levels = c("DEG", "Not DEG"))
+    )
+
+  curated_reference_genes <- curated_reference_gene_table$gene_id
+  curated_reference_sample_ids <- cross_metadata$sample_id
+  curated_reference_sample_labels <- dplyr::if_else(
+    cross_metadata$sample_block == "Experiment fat body",
+    cross_metadata$sample_id,
+    cross_metadata$sample_label
+  )
+
+  curated_reference_mat <- t(vst_cross_mat[
+    curated_reference_genes,
+    curated_reference_sample_ids,
+    drop = FALSE
+  ])
+  rownames(curated_reference_mat) <- curated_reference_sample_labels
+
+  curated_reference_sample_annotation <- cross_metadata |>
+    dplyr::transmute(
+      Sample_block = sample_block,
+      Diet = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        as.character(diet),
+        "Reference"
+      ),
+      Treatment = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        infection_status,
+        "Reference"
+      ),
+      Phase = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        "Experiment",
+        phase
+      )
+    )
+  rownames(curated_reference_sample_annotation) <- rownames(curated_reference_mat)
+
+  curated_reference_gene_annotation <- curated_reference_gene_table |>
+    dplyr::select(DEG_class, Functional_theme)
+  rownames(curated_reference_gene_annotation) <- curated_reference_genes
+
+  label_text <- dplyr::if_else(
+    !is.na(curated_reference_gene_table$Preferred_name) &
+      curated_reference_gene_table$Preferred_name != "-",
+    curated_reference_gene_table$Preferred_name,
+    curated_reference_gene_table$Description
+  )
+  label_text[is.na(label_text) | label_text == "-" | label_text == ""] <-
+    "unannotated"
+  label_text <- substr(label_text, 1, 45)
+  curated_reference_col_labels <- paste(curated_reference_genes,
+                                        label_text, sep = " | ")
+
+  curated_reference_sample_gaps <- find_gaps(paste(
+    curated_reference_sample_annotation$Sample_block,
+    curated_reference_sample_annotation$Treatment,
+    curated_reference_sample_annotation$Diet,
+    curated_reference_sample_annotation$Phase
+  ))
+  curated_reference_gene_gaps <- find_gaps(paste(
+    curated_reference_gene_annotation$DEG_class,
+    curated_reference_gene_annotation$Functional_theme
+  ))
+
+  curated_reference_annotation_colors <- list(
+    Sample_block = c(
+      "Experiment fat body" = "#4B5563",
+      "FAT controls" = "#111827",
+      "Head reference" = "#009E9A",
+      "Thorax reference" = "#C51B7D"
+    ),
+    Diet = c(diet_colors, "Reference" = "#D1D5DB"),
+    Treatment = c(treatment_colors, "Reference" = "#D1D5DB"),
+    Phase = c(
+      "Experiment" = "#4B5563",
+      "Gregarious" = "#B23A48",
+      "Solitarious" = "#2166AC"
+    ),
+    DEG_class = c("DEG" = "#111827",
+                  "Not DEG" = "#D1D5DB"),
+    Functional_theme = c(
+      "Immune-related" = "#237C8E",
+      "Storage/lipid transport" = "#D7832F",
+      "Nutrition/metabolism" = "#B8643C",
+      "Detoxification/stress" = "#8C6D31",
+      "Other strong DEG" = "#9CA3AF"
+    )
+  )
+
+  curated_reference_expression_colors <- grDevices::colorRampPalette(
+    c("#237C8E", "#F7F3E8", "#C85A54")
+  )(101)
+  curated_reference_expression_breaks <- seq(-3, 3, length.out = 102)
+
+  curated_reference_heatmap <- pheatmap::pheatmap(
+    curated_reference_mat,
+    scale = "column",
+    color = curated_reference_expression_colors,
+    breaks = curated_reference_expression_breaks,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    gaps_row = curated_reference_sample_gaps,
+    gaps_col = curated_reference_gene_gaps,
+    show_rownames = TRUE,
+    show_colnames = FALSE,
+    labels_col = curated_reference_col_labels,
+    fontsize_row = 5,
+    annotation_col = curated_reference_gene_annotation,
+    annotation_row = curated_reference_sample_annotation,
+    annotation_colors = curated_reference_annotation_colors,
+    main = "Curated fat body infection-response genes with reference samples",
+    filename = file.path(out_dir,
+                         "curated_infection_deg_vst_heatmap_with_references.png"),
+    width = 26,
+    height = 16,
+    silent = TRUE
+  )
+
+  curated_reference_labeled_heatmap <- pheatmap::pheatmap(
+    curated_reference_mat,
+    scale = "column",
+    color = curated_reference_expression_colors,
+    breaks = curated_reference_expression_breaks,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    gaps_row = curated_reference_sample_gaps,
+    gaps_col = curated_reference_gene_gaps,
+    show_rownames = TRUE,
+    show_colnames = TRUE,
+    labels_col = curated_reference_col_labels,
+    fontsize_row = 5,
+    fontsize_col = 4.2,
+    angle_col = 90,
+    annotation_col = curated_reference_gene_annotation,
+    annotation_row = curated_reference_sample_annotation,
+    annotation_colors = curated_reference_annotation_colors,
+    main = "Curated fat body infection-response genes with reference samples",
+    filename = file.path(
+      out_dir,
+      "curated_infection_deg_vst_heatmap_with_references_labeled.png"
+    ),
+    width = 28,
+    height = 16,
+    silent = TRUE
+  )
+
+  write.csv(
+    curated_reference_gene_table,
+    file.path(out_dir,
+              "curated_infection_deg_heatmap_with_references_genes.csv"),
+    row.names = FALSE
+  )
+  write.csv(
+    cbind(sample_id = curated_reference_sample_ids,
+          sample_label = curated_reference_sample_labels,
+          curated_reference_sample_annotation),
+    file.path(out_dir,
+              "curated_infection_deg_heatmap_with_references_samples.csv"),
+    row.names = FALSE
+  )
+
+  curated_reference_display_dir <- file.path(
+    project_dir,
+    "docs", "figure", params$display_rmd_dir
+  )
+  dir.create(curated_reference_display_dir, recursive = TRUE,
+             showWarnings = FALSE)
+  curated_reference_labeled_display_png <- file.path(
+    curated_reference_display_dir,
+    "curated-infection-reference-heatmap-labeled-display.png"
+  )
+  file.copy(
+    file.path(out_dir,
+              "curated_infection_deg_vst_heatmap_with_references_labeled.png"),
+    curated_reference_labeled_display_png,
+    overwrite = TRUE
+  )
+  curated_reference_labeled_heatmap_src <- file.path(
+    "figure", params$display_rmd_dir,
+    "curated-infection-reference-heatmap-labeled-display.png"
+  )
+
+  grid::grid.newpage()
+  grid::grid.draw(curated_reference_labeled_heatmap$gtable)
+}
+```
+
+```{r curated-infection-reference-heatmap-display, echo=FALSE, results='asis'}
+if (exists("curated_reference_labeled_heatmap_src")) {
+  cat(paste0(
+    '<p><img src="', curated_reference_labeled_heatmap_src,
+    '" style="width:100%;"></p>'
+  ))
+}
+```
+
+## Full fat body DEG heatmap with references
+
+The curated heatmap above is easier to read because it uses a selected set of
+infection-response and fat-body-relevant genes. This companion figure uses the
+full `r params$analysis_scenario` fat body DEG set instead. The sample rows are
+the same as in the curated reference heatmap: the selected diet-infection fat
+body samples, then the two FAT controls, then head and thorax reference samples.
+
+Individual gene labels are hidden because thousands of DEG columns cannot be
+read as text in a single figure. The exported gene table preserves the ordering,
+DEG context, phase class, adjusted p-values, effect sizes, and annotations.
+
+```{r full-fatbody-deg-reference-heatmap, fig.width=34, fig.height=16}
+if (exists("vst_cross_mat") && exists("cross_metadata") &&
+    exists("fatbody_deg_reference_genes_all")) {
+  full_deg_reference_gene_table <- fatbody_deg_reference_genes_all |>
+    dplyr::filter(gene_id %in% rownames(vst_cross_mat)) |>
+    dplyr::mutate(
+      DEG_context = dplyr::case_when(
+        has_infection_deg &
+          stringr::str_detect(comparison_types, "Diet contrasts") ~
+          "Infection and diet DEGs",
+        has_infection_deg ~ "Infection DEG",
+        TRUE ~ "Diet contrast DEG"
+      ),
+      DEG_context = factor(
+        DEG_context,
+        levels = c("Infection and diet DEGs",
+                   "Infection DEG",
+                   "Diet contrast DEG")
+      ),
+      phase_class = factor(
+        dplyr::case_when(
+          is.na(phase_class) ~ "No phase DEG",
+          phase_class %in% c("Shared head/thorax phase DEG",
+                             "Head phase DEG only",
+                             "Thorax phase DEG only",
+                             "No phase DEG") ~ phase_class,
+          TRUE ~ "No phase DEG"
+        ),
+        levels = c("Shared head/thorax phase DEG",
+                   "Head phase DEG only",
+                   "Thorax phase DEG only",
+                   "No phase DEG")
+      )
+    ) |>
+    dplyr::arrange(
+      DEG_context,
+      phase_class,
+      min_padj,
+      dplyr::desc(max_abs_log2FC)
+    )
+
+  full_deg_reference_genes <- full_deg_reference_gene_table$gene_id
+  full_deg_reference_sample_ids <- cross_metadata$sample_id
+  full_deg_reference_sample_labels <- dplyr::if_else(
+    cross_metadata$sample_block == "Experiment fat body",
+    cross_metadata$sample_id,
+    cross_metadata$sample_label
+  )
+
+  full_deg_reference_mat <- t(vst_cross_mat[
+    full_deg_reference_genes,
+    full_deg_reference_sample_ids,
+    drop = FALSE
+  ])
+  storage.mode(full_deg_reference_mat) <- "double"
+  rownames(full_deg_reference_mat) <- full_deg_reference_sample_labels
+
+  full_deg_reference_sample_annotation <- cross_metadata |>
+    dplyr::transmute(
+      Sample_block = sample_block,
+      Diet = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        as.character(diet),
+        "Reference"
+      ),
+      Treatment = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        infection_status,
+        "Reference"
+      ),
+      Phase = dplyr::if_else(
+        sample_block == "Experiment fat body",
+        "Experiment",
+        phase
+      )
+    ) |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
+  rownames(full_deg_reference_sample_annotation) <-
+    rownames(full_deg_reference_mat)
+
+  full_deg_reference_gene_annotation <- full_deg_reference_gene_table |>
+    dplyr::transmute(
+      DEG_context = as.character(DEG_context),
+      phase_class = as.character(phase_class)
+    )
+  rownames(full_deg_reference_gene_annotation) <- full_deg_reference_genes
+
+  full_deg_reference_sample_gaps <- find_gaps(paste(
+    full_deg_reference_sample_annotation$Sample_block,
+    full_deg_reference_sample_annotation$Treatment,
+    full_deg_reference_sample_annotation$Diet,
+    full_deg_reference_sample_annotation$Phase
+  ))
+  full_deg_reference_gene_gaps <- find_gaps(paste(
+    full_deg_reference_gene_annotation$DEG_context,
+    full_deg_reference_gene_annotation$phase_class
+  ))
+
+  full_deg_reference_zmat <- scale(full_deg_reference_mat)
+  full_deg_reference_zmat[is.na(full_deg_reference_zmat)] <- 0
+  full_deg_reference_zmat <- pmax(pmin(full_deg_reference_zmat, 3), -3)
+
+  full_deg_gene_order <- tibble::tibble(
+    gene_id = full_deg_reference_genes,
+    gene_index = seq_along(full_deg_reference_genes)
+  ) |>
+    dplyr::left_join(
+      full_deg_reference_gene_table |>
+        dplyr::select(gene_id, DEG_context, phase_class),
+      by = "gene_id"
+    )
+
+  full_deg_sample_order <- tibble::tibble(
+    sample_label = rownames(full_deg_reference_zmat),
+    sample_index = seq_len(nrow(full_deg_reference_zmat)),
+    y_plot = nrow(full_deg_reference_zmat) - sample_index + 1
+  ) |>
+    dplyr::bind_cols(full_deg_reference_sample_annotation |>
+                       tibble::rownames_to_column("sample_label_check") |>
+                       dplyr::select(-sample_label_check))
+
+  full_deg_reference_long <- as.data.frame(full_deg_reference_zmat) |>
+    tibble::rownames_to_column("sample_label") |>
+    tidyr::pivot_longer(-sample_label, names_to = "gene_id",
+                        values_to = "z_vst") |>
+    dplyr::left_join(full_deg_gene_order, by = "gene_id") |>
+    dplyr::left_join(full_deg_sample_order, by = "sample_label")
+
+  sample_gap_positions <- if (length(full_deg_reference_sample_gaps) > 0) {
+    nrow(full_deg_reference_zmat) - full_deg_reference_sample_gaps + 0.5
+  } else {
+    numeric()
+  }
+  gene_gap_positions <- if (length(full_deg_reference_gene_gaps) > 0) {
+    full_deg_reference_gene_gaps + 0.5
+  } else {
+    numeric()
+  }
+
+  full_deg_reference_heatmap <- ggplot(
+    full_deg_reference_long,
+    aes(x = gene_index, y = y_plot, fill = z_vst)
+  ) +
+    geom_raster() +
+    geom_hline(yintercept = sample_gap_positions,
+               color = "white", linewidth = 0.35) +
+    geom_vline(xintercept = gene_gap_positions,
+               color = "white", linewidth = 0.35) +
+    scale_fill_gradient2(
+      low = "#237C8E", mid = "#F7F3E8", high = "#C85A54",
+      midpoint = 0, limits = c(-3, 3),
+      oob = scales::squish, name = "Row-z VST"
+    ) +
+    scale_x_continuous(
+      breaks = NULL,
+      expand = c(0, 0)
+    ) +
+    scale_y_continuous(
+      breaks = full_deg_sample_order$y_plot,
+      labels = full_deg_sample_order$sample_label,
+      expand = c(0, 0)
+    ) +
+    labs(
+      title = "Full fat body DEG set with reference samples",
+      subtitle = paste0(
+        length(full_deg_reference_genes),
+        " ", params$analysis_scenario,
+        " fat body DEGs; genes ordered by DEG context and phase class"
+      ),
+      x = "Fat body DEG genes",
+      y = NULL
+    ) +
+    theme_classic(base_size = 10) +
+    theme(
+      axis.text.y = element_text(size = 5),
+      axis.ticks.y = element_blank(),
+      axis.line = element_blank(),
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold"),
+      plot.margin = ggplot2::margin(10, 10, 10, 10)
+    )
+
+  ggsave(
+    file.path(out_dir, "full_fatbody_deg_vst_heatmap_with_references.png"),
+    full_deg_reference_heatmap,
+    width = 34,
+    height = 16,
+    dpi = 300
+  )
+
+  write.csv(
+    full_deg_reference_gene_table,
+    file.path(out_dir,
+              "full_fatbody_deg_heatmap_with_references_genes.csv"),
+    row.names = FALSE
+  )
+  write.csv(
+    cbind(sample_id = full_deg_reference_sample_ids,
+          sample_label = full_deg_reference_sample_labels,
+          full_deg_reference_sample_annotation),
+    file.path(out_dir,
+              "full_fatbody_deg_heatmap_with_references_samples.csv"),
+    row.names = FALSE
+  )
+
+  full_deg_reference_display_dir <- file.path(
+    project_dir,
+    "docs", "figure", params$display_rmd_dir
+  )
+  dir.create(full_deg_reference_display_dir, recursive = TRUE,
+             showWarnings = FALSE)
+  full_deg_reference_display_png <- file.path(
+    full_deg_reference_display_dir,
+    "full-fatbody-deg-reference-heatmap-display.png"
+  )
+  file.copy(
+    file.path(out_dir,
+              "full_fatbody_deg_vst_heatmap_with_references.png"),
+    full_deg_reference_display_png,
+    overwrite = TRUE
+  )
+  full_deg_reference_heatmap_src <- file.path(
+    "figure", params$display_rmd_dir,
+    "full-fatbody-deg-reference-heatmap-display.png"
+  )
+
+  print(full_deg_reference_heatmap)
+}
+```
+
+```{r full-fatbody-deg-reference-heatmap-display, echo=FALSE, results='asis'}
+if (exists("full_deg_reference_heatmap_src")) {
+  cat(paste0(
+    '<p><img src="', full_deg_reference_heatmap_src,
+    '" style="width:100%;"></p>'
+  ))
+}
+```
+
+## Gene-source partition
+
+This section separates three evidence layers that could otherwise be mixed
+together in interpretation:
+
+- tissue-associated reference expression patterns, from the FAT/head/thorax
+  VST reference panel;
+- phase-associated genes, from the independent head/thorax phase DEG lists;
+- diet/infection-associated genes, from the selected fat body DEG scenario
+  (`r params$analysis_scenario`).
+
+The tissue layer is treated as an exploratory expression-pattern layer rather
+than a formal tissue DEG test, because the reference samples were not generated
+as a balanced replicated tissue-DEG experiment. A gene is called
+tissue-associated here when its mean VST differs by at least
+`r params$tissue_vst_range_threshold` across reference tissues.
+
+```{r source-partition, fig.width=12, fig.height=7}
+if (exists("vst_cross_mat") && exists("cross_metadata") &&
+    exists("phase_gene_all") && exists("phase_layered_sig")) {
+  reference_tissue_metadata <- as.data.frame(cross_metadata) |>
+    dplyr::filter(sample_block != "Experiment fat body") |>
+    dplyr::mutate(tissue = as.character(tissue))
+
+  reference_tissue_sample_ids <- intersect(
+    reference_tissue_metadata$sample_id,
+    colnames(vst_cross_mat)
+  )
+
+  reference_tissue_long <- as.data.frame(
+    vst_cross_mat[, reference_tissue_sample_ids, drop = FALSE]
+  ) |>
+    tibble::rownames_to_column("gene_id") |>
+    tidyr::pivot_longer(-gene_id, names_to = "sample_id",
+                        values_to = "vst") |>
+    dplyr::left_join(
+      reference_tissue_metadata |>
+        dplyr::select(sample_id, tissue),
+      by = "sample_id"
+    )
+
+  reference_tissue_signal <- reference_tissue_long |>
+    dplyr::group_by(gene_id, tissue) |>
+    dplyr::summarise(mean_vst = mean(vst, na.rm = TRUE), .groups = "drop") |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      n_reference_tissues = dplyr::n_distinct(tissue),
+      tissue_vst_range = diff(range(mean_vst, na.rm = TRUE)),
+      highest_reference_tissue = tissue[which.max(mean_vst)][1],
+      lowest_reference_tissue = tissue[which.min(mean_vst)][1],
+      reference_tissue_means = paste0(
+        tissue, "=", round(mean_vst, 2), collapse = "; "
+      ),
+      .groups = "drop"
+    )
+
+  tissue_pattern_gene_ids <- reference_tissue_signal |>
+    dplyr::filter(
+      n_reference_tissues >= 2,
+      tissue_vst_range >= params$tissue_vst_range_threshold
+    ) |>
+    dplyr::pull(gene_id)
+
+  phase_gene_evidence <- phase_gene_all |>
+    dplyr::transmute(
+      gene_id,
+      phase_associated = n_phase_tissues > 0,
+      phase_class,
+      phase_consensus,
+      phase_tissues,
+      phase_mean_log2FC,
+      phase_max_abs_log2FC
+    )
+
+  diet_infection_evidence <- phase_layered_sig |>
+    dplyr::filter(scenario == params$analysis_scenario) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      diet_infection_associated = TRUE,
+      infection_associated = any(comparison_type == "Infection within diet"),
+      diet_associated = any(comparison_type != "Infection within diet"),
+      n_deg_contrasts = dplyr::n_distinct(comparison),
+      deg_comparison_types = paste(sort(unique(comparison_type)),
+                                   collapse = "; "),
+      deg_comparisons = paste(sort(unique(comparison)), collapse = "; "),
+      deg_directions = paste(sort(unique(direction)), collapse = "; "),
+      max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+      min_padj = min(padj, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  partition_gene_ids <- Reduce(
+    union,
+    list(
+      tissue_pattern_gene_ids,
+      phase_gene_evidence$gene_id[phase_gene_evidence$phase_associated],
+      diet_infection_evidence$gene_id
+    )
+  )
+
+  source_partition_levels <- c(
+    "Tissue reference pattern only",
+    "Phase signature only",
+    "Diet/infection DEG only",
+    "Tissue + phase",
+    "Tissue + diet/infection",
+    "Phase + diet/infection",
+    "Tissue + phase + diet/infection"
+  )
+
+  gene_source_partition <- tibble::tibble(gene_id = partition_gene_ids) |>
+    dplyr::left_join(reference_tissue_signal, by = "gene_id") |>
+    dplyr::left_join(phase_gene_evidence, by = "gene_id") |>
+    dplyr::left_join(diet_infection_evidence, by = "gene_id") |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::mutate(
+      tissue_associated = gene_id %in% tissue_pattern_gene_ids,
+      phase_associated = dplyr::coalesce(phase_associated, FALSE),
+      diet_infection_associated =
+        dplyr::coalesce(diet_infection_associated, FALSE),
+      infection_associated = dplyr::coalesce(infection_associated, FALSE),
+      diet_associated = dplyr::coalesce(diet_associated, FALSE),
+      source_class = dplyr::case_when(
+        tissue_associated & !phase_associated & !diet_infection_associated ~
+          "Tissue reference pattern only",
+        !tissue_associated & phase_associated & !diet_infection_associated ~
+          "Phase signature only",
+        !tissue_associated & !phase_associated & diet_infection_associated ~
+          "Diet/infection DEG only",
+        tissue_associated & phase_associated & !diet_infection_associated ~
+          "Tissue + phase",
+        tissue_associated & !phase_associated & diet_infection_associated ~
+          "Tissue + diet/infection",
+        !tissue_associated & phase_associated & diet_infection_associated ~
+          "Phase + diet/infection",
+        tissue_associated & phase_associated & diet_infection_associated ~
+          "Tissue + phase + diet/infection",
+        TRUE ~ "No selected evidence"
+      ),
+      source_class = factor(source_class, levels = source_partition_levels),
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      priority_score = dplyr::coalesce(n_deg_contrasts, 0) * 10 +
+        dplyr::coalesce(tissue_vst_range, 0) +
+        dplyr::coalesce(phase_max_abs_log2FC, 0) +
+        dplyr::coalesce(safe_neglog10(min_padj), 0)
+    ) |>
+    dplyr::arrange(source_class, dplyr::desc(priority_score), gene_id)
+
+  source_partition_counts <- gene_source_partition |>
+    dplyr::count(source_class, name = "n_genes") |>
+    dplyr::filter(!is.na(source_class))
+
+  source_partition_plot <- ggplot(
+    source_partition_counts,
+    aes(x = n_genes, y = source_class, fill = source_class)
+  ) +
+    geom_col(width = 0.72, color = "grey25", linewidth = 0.25) +
+    geom_text(aes(label = scales::comma(n_genes)),
+              hjust = -0.15, size = 3.8) +
+    scale_fill_manual(
+      values = c(
+        "Tissue reference pattern only" = "#009E9A",
+        "Phase signature only" = "#7C3AED",
+        "Diet/infection DEG only" = "#C85A54",
+        "Tissue + phase" = "#4C78A8",
+        "Tissue + diet/infection" = "#D7832F",
+        "Phase + diet/infection" = "#B23A48",
+        "Tissue + phase + diet/infection" = "#111827"
+      ),
+      guide = "none"
+    ) +
+    scale_x_continuous(
+      labels = scales::comma,
+      expand = ggplot2::expansion(mult = c(0, 0.14))
+    ) +
+    labs(
+      title = "Partition of genes by tissue, phase, and diet/infection evidence",
+      subtitle = paste0(
+        "DEG scenario: ", params$analysis_scenario,
+        "; tissue pattern threshold: VST range >= ",
+        params$tissue_vst_range_threshold
+      ),
+      x = "Number of genes",
+      y = NULL
+    ) +
+    theme_classic(base_size = 13) +
+    theme(
+      axis.text.y = element_text(size = 11),
+      plot.title = element_text(face = "bold")
+    )
+
+  print(source_partition_plot)
+  ggsave(
+    file.path(out_dir, "gene_source_partition_counts.png"),
+    source_partition_plot,
+    width = 12,
+    height = 7,
+    dpi = 300
+  )
+
+  write.csv(
+    reference_tissue_signal,
+    file.path(out_dir, "reference_tissue_vst_signal_all_genes.csv"),
+    row.names = FALSE
+  )
+  write.csv(
+    gene_source_partition,
+    file.path(out_dir, "gene_source_partition_gene_table.csv"),
+    row.names = FALSE
+  )
+  write.csv(
+    source_partition_counts,
+    file.path(out_dir, "gene_source_partition_counts.csv"),
+    row.names = FALSE
+  )
+
+  strict_source_classes <- c(
+    "Tissue reference pattern only",
+    "Phase signature only",
+    "Diet/infection DEG only"
+  )
+
+  strict_source_partition <- gene_source_partition |>
+    dplyr::filter(source_class %in% strict_source_classes) |>
+    dplyr::group_by(source_class) |>
+    dplyr::slice_head(n = params$source_partition_top_gene_n) |>
+    dplyr::ungroup()
+
+  write.csv(
+    strict_source_partition,
+    file.path(out_dir, "gene_source_partition_strict_gene_table.csv"),
+    row.names = FALSE
+  )
+
+  DT::datatable(
+    strict_source_partition |>
+      dplyr::select(
+        source_class, gene_id, Preferred_name, Description,
+        tissue_vst_range, highest_reference_tissue, phase_class,
+        phase_consensus, n_deg_contrasts, deg_comparison_types,
+        deg_comparisons, max_abs_log2FC, min_padj
+      ),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = paste0(
+      "Top strict source-partition genes per class for ",
+      params$analysis_scenario
+    )
+  )
+}
+```
+
+## Interpretation guide
+
+The most useful output is not the raw overlap count alone, but the direction of
+the overlap:
+
+- `Numerator more gregarious-like` means the numerator condition moves in the
+  same direction as crowded/gregarious animals in the independent phase dataset.
+- `Numerator more solitarious-like` means the numerator condition moves opposite
+  to the crowded/gregarious signature, which is more consistent with an
+  isolated/solitarious-like expression direction.
+- `Mixed head/thorax phase signal` means the gene is phase responsive, but the
+  head and thorax reference signatures disagree in sign.
+
+These genes should not be discarded automatically. Instead, they should be
+highlighted in candidate-gene interpretation as possible density-state
+sensitive genes that could confound or mediate diet and infection effects.
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(
+  tibble::tibble(file = exports),
+  caption = paste("Files written to", out_dir)
+)
+```

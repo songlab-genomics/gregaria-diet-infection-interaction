@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-07-04" />
+<meta name="date" content="2026-07-15" />
 
 <title>Diet and Metarhizium infection interaction in Schistocerca gregaria</title>
 
@@ -263,19 +263,19 @@ $(document).ready(function () {
       <ul class="nav navbar-nav">
         <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    About
+    Start Here
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="index.html">Home</a>
+      <a href="index.html">Project overview</a>
     </li>
     <li>
       <a href="01-study-design-data.html">Study design and data</a>
     </li>
     <li>
-      <a href="02-workflow-reproducibility.html">RNAseq workflow and reproducibility</a>
+      <a href="02-workflow-reproducibility.html">RNA-seq workflow</a>
     </li>
     <li>
       <a href="03-count-qc-exploration.html">Count QC and exploration</a>
@@ -284,40 +284,47 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Transcriptomics
+    Fat Body Experiment
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">RNAseq pre-processing</li>
     <li>
-      <a href="02-workflow-reproducibility.html">HPC to workflowR overview</a>
-    </li>
-    <li>
-      <a href="03-count-qc-exploration.html">Control Quality</a>
+      <a href="03-count-qc-exploration.html">Experiment QC</a>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">DESeq2 analyses</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples retained</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="15-all-samples-diet-pairwise-deg.html">Diet pairwise DEGs</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Supporting analyses</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Current outliers removed</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="07-deg-overlap-prioritization.html">DEG overlap and prioritization</a>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Diet x infection interaction</a>
         </li>
         <li>
-          <a href="10-go-term-enrichment.html">GO term and KEGG enrichment</a>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sensitivity and filters</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenario table</a>
         </li>
         <li>
           <a href="11-outlier-sensitivity.html">Outlier sensitivity</a>
@@ -331,13 +338,37 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Publication
+    Interpretation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="13-physiology-candidate-genes.html">Physiology candidate genes</a>
+    </li>
+    <li>
+      <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+    </li>
+    <li>
       <a href="08-publication-figures.html">Publication figure exports</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Reference Context
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="22-deg-logical-set-construction.html">Fat body DEGs vs tissue / phase</a>
+    </li>
+    <li>
+      <a href="20-phase-signature-overlap.html">Phase signature - all samples</a>
+    </li>
+    <li>
+      <a href="21-phase-signature-overlap-no-outliers.html">Phase signature - outliers removed</a>
     </li>
   </ul>
 </li>
@@ -348,6 +379,23 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Earlier current-analysis pages</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="04-deseq2-interaction-model.html">Original interaction model</a>
+        </li>
+        <li>
+          <a href="05-diet-pairwise-deg.html">Original diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">Original infection-within-diet DEGs</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">Original DEG overlap and prioritization</a>
+        </li>
+      </ul>
+    </li>
     <li>
       <a href="file_prep.html">Original file preparation</a>
     </li>
@@ -397,7 +445,7 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">Diet and Metarhizium infection interaction
 in Schistocerca gregaria</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-07-04</h4>
+<h4 class="date">2026-07-15</h4>
 
 </div>
 
@@ -405,7 +453,7 @@ in Schistocerca gregaria</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -416,8 +464,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -426,13 +474,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-04
+<strong>Last updated:</strong> 2026-07-15
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -456,18 +504,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -558,15 +609,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreefb64139eb9e46bfdb2f1a4a1ed8ed05cd3096177targetblankfb64139a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/fb64139eb9e46bfdb2f1a4a1ed8ed05cd3096177" target="_blank">fb64139</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreefb64139eb9e46bfdb2f1a4a1ed8ed05cd3096177targetblankfb64139a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -576,7 +627,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/fb64139eb9e46bfdb2f1a4a1ed8ed05cd3096177" target="_blank">fb64139</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -591,40 +642,268 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    analysis/output/
+    Ignored:    code/R_timecourse_reference/
+    Ignored:    data/raw_read_counts/.DS_Store
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
+    Ignored:    data/reference/
+    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/
+    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
+    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-123921/
+    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/
+    Ignored:    output/rmd_runs/count-qc-exploration_20260715-123853/
+    Ignored:    output/rmd_runs/count-qc-exploration_20260715-130115/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-124354/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-130936/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-124947/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-124135/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-130357/
+    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-124821/
+    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
+    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-124842/
+    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260715-124306/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130705/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130848/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260715-131408/
+    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-124901/
+    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-124646/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-130514/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-124722/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-130550/
+    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-124024/
+    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
+    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-124040/
+    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-124056/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-130318/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-124605/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-131532/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-124523/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131105/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131452/
+    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-124250/
+    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
+    Ignored:    output/rmd_runs/publication-figures_20260715-124350/
+    Ignored:    output/rmd_runs/publication-figures_20260715-130931/
+    Ignored:    output/rmd_runs/study-design-data_20260715-123844/
+    Ignored:    output/rmd_runs/study-design-data_20260715-130107/
+    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-123846/
+    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-130109/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  data/reference/
-    Untracked:  manuscript/.DS_Store
-    Untracked:  manuscript/materials_methods_results_updated_no_rRNA.md
-    Untracked:  output/manual-validation/
-    Untracked:  output/rmd_runs/count-qc-exploration_20260704-001530/
-    Untracked:  output/rmd_runs/deg-overlap-prioritization_20260704-000130/
-    Untracked:  output/rmd_runs/deg-overlap-prioritization_20260704-001704/
-    Untracked:  output/rmd_runs/deseq2-interaction-model_20260704-001535/
-    Untracked:  output/rmd_runs/diet-pairwise-deg_All_20260704-001558/
-    Untracked:  output/rmd_runs/go-term-enrichment_20260704-001822/
-    Untracked:  output/rmd_runs/infection-within-diet-deg_20260703-225633/ .png
-    Untracked:  output/rmd_runs/infection-within-diet-deg_20260704-001618/
-    Untracked:  output/rmd_runs/outlier-sensitivity_20260704-001847/
-    Untracked:  output/rmd_runs/outliers-load-enrichment_20260704-001727/
-    Untracked:  output/rmd_runs/publication-figures_20260703-225720/.DS_Store
-    Untracked:  output/rmd_runs/publication-figures_20260704-001920/
-    Untracked:  output/rmd_runs/study-design-data_20260704-001519/
-    Untracked:  output/rmd_runs/workflow-reproducibility_20260704-001522/
+    Untracked:  analysis/12-deg-sample-filter-scenarios.Rmd
+    Untracked:  analysis/13-physiology-candidate-genes.Rmd
+    Untracked:  analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Untracked:  analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Untracked:  analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Untracked:  analysis/17-outliers-removed-deseq2-interaction-model.Rmd
+    Untracked:  analysis/18-outliers-removed-diet-pairwise-deg.Rmd
+    Untracked:  analysis/19-outliers-removed-infection-within-diet-deg.Rmd
+    Untracked:  analysis/20-phase-signature-overlap.Rmd
+    Untracked:  analysis/21-phase-signature-overlap-no-outliers.Rmd
+    Untracked:  analysis/22-deg-logical-set-construction.Rmd
+    Untracked:  code/README.timecourse-snakemake-source.md
+    Untracked:  code/Snakefile
+    Untracked:  code/Snakefile.eggnog_annotations
+    Untracked:  code/Snakefile.metatranscriptomics_qc
+    Untracked:  code/Snakefile.rnaseq_variants
+    Untracked:  code/__pycache__/
+    Untracked:  code/cluster.json
+    Untracked:  code/config.smk
+    Untracked:  code/pilot/
+    Untracked:  code/rules/
+    Untracked:  code/run_eggnog_desertlocustr.sh
+    Untracked:  code/scripts/
+    Untracked:  code/snakemake.eggnog.slurm
+    Untracked:  code/snakemake.fatbody_pilot.slurm
+    Untracked:  code/snakemake.metatx.slurm
+    Untracked:  code/snakemake.slurm
+    Untracked:  data/external/
+    Untracked:  data/raw_read_counts/03-FAT-DESeq2/
+    Untracked:  data/raw_read_counts/03-gregaria-DESeq2/
 
 Unstaged changes:
     Modified:   .DS_Store
-    Modified:   analysis/07-deg-overlap-prioritization.Rmd
-    Modified:   analysis/09-outliers-load-enrichment.Rmd
-    Modified:   analysis/11-outlier-sensitivity.Rmd
-    Modified:   data/metadata/mehreen_metadata_no_outliers.txt
-    Deleted:    manuscript/materials_methods_results_draft.md
+    Modified:   analysis/.DS_Store
+    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/site-style.css
+    Modified:   code/README.md
+    Modified:   data/.DS_Store
     Modified:   output/.DS_Store
     Modified:   output/rmd_runs/.DS_Store
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260703-225633/infection_deg_burden_by_biotype_diverging_barplot.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/filter_summary.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/library_size.csv
+    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/pca_vst.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_50.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_83.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_50_vs_83.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_50.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_83.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_50_vs_83.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/condition_specific_diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_presence_absence_matrix.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_size_barplot.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_summary.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_upsetr_current_sets.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/genes_seen_in_two_or_more_sets.csv
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/sessionInfo.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_50.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_83.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_50_vs_83.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_50.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_83.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_50_vs_83.txt
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_broad_deg_families.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_controls.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_infected.png
+    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_infection_degs_by_diet.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/all_model_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/deseq2_coefficients.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_coefficients.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_deg_count_barplot.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_direction_counts.csv
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_pca.png
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/sessionInfo.txt
+    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/significant_gene_counts.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_50.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_50_vs_83.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/all_diet_pairwise_results.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_deg_count_barplot.png
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_direction_counts.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_summary.csv
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/sessionInfo.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_50.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_83.txt
+    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_50_vs_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_33.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_50.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_83.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/all_infection_within_diet_results.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_gene_list.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_heatmap_genes.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap_labeled.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_ma_plot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_ma_plot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_ma_plot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_deg_count_barplot.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_direction_counts.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_summary.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/sessionInfo.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_33.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_50.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_83.txt
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.png
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_sample_scores.csv
+    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_top_variable_gene_heatmap.png
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.png
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.png
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.png
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_full_vs_no_outliers.png
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_scores_full_vs_no_outliers.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/removed_samples.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sample_counts_by_group.csv
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sessionInfo.txt
+    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/within_diet_results_full_vs_no_outliers.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2NAME.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_TERM2GENE.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_enrichment_all_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/all_enrichment_results.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_source_manifest.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_barplot.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_counts.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2NAME.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_by_ontology.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_with_ontology.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_KEGG_pathway_TERM2GENE.tsv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_term_overlap_heatmap.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_terms_seen_in_multiple_sets.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_deg_set_summary.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_dotplot_by_set.png
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/lncRNA_deg_table.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/removed_outlier_samples.csv
+    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/sessionInfo.txt
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_figure_inventory.csv
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/10_diet_33_infection_ma_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/11_diet_50_infection_ma_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/12_diet_83_infection_ma_plot.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/13_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/14_pca_vst.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/15_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/16_interaction_model_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/17_diet_33_infection_deg_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/18_diet_50_infection_deg_pca.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/19_deg_upsetr_current_sets.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/1_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/20_venn_broad_deg_families.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/21_venn_infection_degs_by_diet.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/22_deg_upsetr_current_sets.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/23_venn_broad_deg_families.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/24_venn_diet_degs_controls.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/25_25_25_25_25_25_Volcano_33_vs_50.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/26_26_26_26_26_26_Volcano_33_vs_50.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/27_27_27_27_27_27_Volcano_33_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/28_28_28_28_28_28_Volcano_33_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/29_29_29_29_29_29_Volcano_50_vs_83.pdf
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/2_sample_distance_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/30_30_30_30_30_30_Volcano_50_vs_83.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/3_curated_infection_deg_vst_heatmap_labeled.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/4_curated_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/5_diet_33_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/6_diet_50_infection_deg_vst_heatmap.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/7_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/8_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/9_deg_overlap_matrix.png
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/copied_candidate_panels.csv
+    Deleted:    output/rmd_runs/publication-figures_20260704-001920/sessionInfo.txt
+    Deleted:    output/rmd_runs/study-design-data_20260704-001519/library_size_by_sample.csv
+    Deleted:    output/rmd_runs/study-design-data_20260704-001519/sessionInfo.txt
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/hpc_to_workflowr_workflow.png
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/package_status.csv
+    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/sessionInfo.txt
 
 </code></pre>
 <p>
@@ -668,6 +947,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/bceb79b9f508d5c4029f6c2f95d7535d42b27649/docs/index.html" target="_blank">bceb79b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-04
+</td>
+<td>
+update outliers removal
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -919,22 +1215,24 @@ Start workflowr project.
 fat body RNA-seq / diet / fungal challenge
 </p>
 <h1>
-Diet-conditioned transcriptional response to <em>Metarhizium</em>
-exposure
+Fat body diet-infection RNA-seq analysis
 </h1>
 <p class="lede">
-A workflowR analysis site for tracking sample structure, rRNA-filtered
-count quality, differential expression, DEG overlap, and functional
-enrichment in <em>Schistocerca gregaria</em>.
+This workflowR site is organized as a collaborator-facing analysis
+trail: start with the fat body experiment and DESeq2 contrasts, then
+move to candidate genes, enrichment, and reference-context overlays that
+ask whether experiment DEGs also resemble tissue or phase signatures.
 </p>
 <div class="hero-actions">
-<p><a href="03-count-qc-exploration.html">Explore QC</a>
-<a href="04-deseq2-interaction-model.html">Open DESeq2 model</a>
-<a href="09-outliers-load-enrichment.html">View enrichment</a></p>
+<p><a href="16-all-samples-infection-within-diet-deg.html">Open fat body
+DEGs</a>
+<a href="19-outliers-removed-infection-within-diet-deg.html">Outliers
+removed</a> <a href="22-deg-logical-set-construction.html">Reference
+context</a></p>
 </div>
 </div>
 <div class="hero-figure">
-<p><img src="figure/03-count-qc-exploration.Rmd/pca-1.png" alt="Variance-stabilized PCA preview"></p>
+<p><img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Fat body VST PCA with condition centroids"></p>
 </div>
 </div>
 <div class="metric-grid">
@@ -951,48 +1249,162 @@ enrichment in <em>Schistocerca gregaria</em>.
 <span>Control / Infected</span><strong>treatments</strong>
 </div>
 </div>
-<div id="analysis-map" class="section level2">
-<h2>Analysis Map</h2>
-<div class="analysis-grid">
-<a class="analysis-tile" href="01-study-design-data.html">
-<span>01</span> <strong>Study Design and Data</strong>
+<div id="how-to-read-this-site" class="section level2">
+<h2>How To Read This Site</h2>
+<div class="note-panel">
 <p>
-Input files, metadata balance, sample names, and count-depth checks.
+The website now has one recommended path rather than a flat list of
+every page. Use <strong>Fat Body Experiment</strong> for the primary
+DESeq2 results and sample-filter/outlier sensitivity scenarios. Use
+<strong>Interpretation</strong> for candidate genes, GO/KEGG, and
+publication panels. Use <strong>Reference Context</strong> only after
+the experiment DEGs have been defined, to ask whether fat body DEGs also
+overlap tissue or phase signatures. Older exploratory pages remain under
+<strong>Archive</strong> for provenance, but they are no longer the main
+route through the analysis.
+</p>
+</div>
+</div>
+<div id="recommended-reading-path" class="section level2">
+<h2>Recommended Reading Path</h2>
+<div class="analysis-grid">
+<a class="analysis-tile" href="01-study-design-data.html"> <span>Step
+1</span> <strong>Study Design and Data</strong>
+<p>
+Confirm the diet, infection, sample metadata, rRNA-filtered counts, and
+inclusion logic.
+</p>
+</a> <a class="analysis-tile" href="02-workflow-reproducibility.html">
+<span>Step 2</span> <strong>RNA-seq Workflow</strong>
+<p>
+Document how reads move from trimming, STAR alignment, and featureCounts
+into the count matrix.
 </p>
 </a> <a class="analysis-tile" href="03-count-qc-exploration.html">
-<span>03</span> <strong>Count QC and Exploration</strong>
+<span>Step 3</span> <strong>Fat Body Count QC</strong>
 <p>
-Library sizes, filtering, PCA, sample distance, and variable genes.
+Check library sizes, PCA structure, sample distances, and broad
+expression quality.
 </p>
-</a> <a class="analysis-tile" href="04-deseq2-interaction-model.html">
-<span>04</span> <strong>Diet x Infection Model</strong>
+</a>
+<a class="analysis-tile featured-tile" href="16-all-samples-infection-within-diet-deg.html">
+<span>Step 4</span> <strong>Fat Body Infection DEGs</strong>
 <p>
-Full DESeq2 model for diet, treatment, and interaction terms.
+Define infected-versus-control DEGs within each diet using all fat body
+samples.
 </p>
-</a> <a class="analysis-tile" href="05-diet-pairwise-deg.html">
-<span>05</span> <strong>Diet Pairwise DEGs</strong>
+</a>
+<a class="analysis-tile" href="14-all-samples-deseq2-interaction-model.html">
+<span>Step 5</span> <strong>Diet x Infection Model</strong>
 <p>
-Pairwise diet contrasts across the available expression matrix.
+Check the formal full-model terms for diet, treatment, and their
+interaction.
 </p>
-</a> <a class="analysis-tile" href="06-infection-within-diet-deg.html">
-<span>06</span> <strong>Infection Within Diet</strong>
+</a>
+<a class="analysis-tile" href="19-outliers-removed-infection-within-diet-deg.html">
+<span>Step 6</span> <strong>Outlier-Removed DEGs</strong>
 <p>
-Infected-versus-control contrasts split by diet level.
+Repeat the key fat body DEG views after removing the current outlier
+set.
 </p>
-</a> <a class="analysis-tile" href="07-deg-overlap-prioritization.html">
-<span>07</span> <strong>DEG Overlap</strong>
+</a> <a class="analysis-tile" href="13-physiology-candidate-genes.html">
+<span>Step 7</span> <strong>Candidate Genes</strong>
 <p>
-Shared and contrast-specific genes across the current DEG sets.
+Focus on insect-relevant immune, energy-store, amino-acid, nutrition,
+and stress genes.
 </p>
-</a> <a class="analysis-tile" href="09-outliers-load-enrichment.html">
-<span>09</span> <strong>Quality Sensitivity and Enrichment</strong>
+</a> <a class="analysis-tile" href="10-go-term-enrichment.html">
+<span>Step 8</span> <strong>GO and KEGG Enrichment</strong>
 <p>
-Outlier status, annotation lifting, GO enrichment, and KEGG pathways.
+Review eggNOG-derived enrichment after understanding the DEG
+foregrounds.
+</p>
+</a>
+<a class="analysis-tile" href="22-deg-logical-set-construction.html">
+<span>Step 9</span> <strong>Reference Context</strong>
+<p>
+Ask whether fat body DEGs are shared with tissue-reference, head-phase,
+or thorax-phase signatures.
 </p>
 </a> <a class="analysis-tile" href="08-publication-figures.html">
-<span>08</span> <strong>Figure Exports</strong>
+<span>Step 10</span> <strong>Publication Figure Exports</strong>
 <p>
-Rendered panels gathered from current analysis and legacy assets.
+Find rendered panels that can be assembled or refined for manuscripts
+and collaborator slides.
+</p>
+<p></a></p>
+</div>
+</div>
+<div id="supporting-fat-body-pages" class="section level2">
+<h2>Supporting Fat Body Pages</h2>
+<div class="analysis-grid compact-grid">
+<a class="analysis-tile" href="14-all-samples-deseq2-interaction-model.html">
+<span>All samples</span> <strong>Interaction Model</strong>
+<p>
+Full DESeq2 diet x infection model with all fat body samples retained.
+</p>
+</a>
+<a class="analysis-tile" href="17-outliers-removed-deseq2-interaction-model.html">
+<span>Outliers removed</span> <strong>Interaction Model</strong>
+<p>
+Same model after removing the current outlier set for sensitivity.
+</p>
+</a>
+<a class="analysis-tile" href="12-deg-sample-filter-scenarios.html">
+<span>Scenarios</span> <strong>Sample Filters</strong>
+<p>
+Directly compare how DEG burden changes across inclusion choices.
+</p>
+</a> <a class="analysis-tile" href="11-outlier-sensitivity.html">
+<span>Sensitivity</span> <strong>Outlier Effects</strong>
+<p>
+Check PCA shifts, retained/lost/gained DEGs, and fold-change stability.
+</p>
+</a> <a class="analysis-tile" href="09-outliers-load-enrichment.html">
+<span>Sensitivity</span> <strong>Quality and Inferred Load</strong>
+<p>
+Earlier outlier, inferred load, annotation, and enrichment checks.
+</p>
+<p></a></p>
+</div>
+</div>
+<div id="reference-context-and-interpretation" class="section level2">
+<h2>Reference Context and Interpretation</h2>
+<div class="analysis-grid compact-grid">
+<a class="analysis-tile" href="13-physiology-candidate-genes.html">
+<span>Candidate genes</span> <strong>Physiology Themes</strong>
+<p>
+Immune, nutrition, storage, lipid transport, detoxification, and stress
+candidates.
+</p>
+</a> <a class="analysis-tile" href="10-go-term-enrichment.html">
+<span>Enrichment</span> <strong>GO and KEGG</strong>
+<p>
+eggNOG-derived GO terms and KEGG pathway themes for DEG foregrounds.
+</p>
+</a>
+<a class="analysis-tile" href="22-deg-logical-set-construction.html">
+<span>After DEGs</span> <strong>Tissue / Phase Overlap</strong>
+<p>
+Overlay phase and tissue-reference signatures onto fat body experiment
+DEGs.
+</p>
+</a> <a class="analysis-tile" href="20-phase-signature-overlap.html">
+<span>Reference samples</span> <strong>Phase Overlap</strong>
+<p>
+Compare the fat body experiment with head, thorax, and fat body phase
+references.
+</p>
+</a>
+<a class="analysis-tile" href="21-phase-signature-overlap-no-outliers.html">
+<span>Reference samples</span> <strong>Phase Overlap, Filtered</strong>
+<p>
+Repeat the phase/reference comparison after removing current outliers.
+</p>
+</a> <a class="analysis-tile" href="08-publication-figures.html">
+<span>Exports</span> <strong>Publication Figures</strong>
+<p>
+Centralized rendered panels copied from current analysis outputs.
 </p>
 <p></a></p>
 </div>
@@ -1001,27 +1413,28 @@ Rendered panels gathered from current analysis and legacy assets.
 <h2>Current Visual Signals</h2>
 <div class="figure-strip">
 <figure>
-<img src="figure/03-count-qc-exploration.Rmd/library-size-1.png" alt="Library size by group">
+<img src="figure/16-all-samples-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="Fat body DEG count barplot">
 <figcaption>
-Library depth
+Fat body DEG burden
 </figcaption>
 </figure>
 <figure>
-<img src="figure/04-deseq2-interaction-model.Rmd/volcano-main-effect-1.png" alt="Main effect volcano">
+<img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Fat body PCA with centroids">
 <figcaption>
-Infection effect
+Fat body PCA
 </figcaption>
 </figure>
 <figure>
-<img src="figure/07-deg-overlap-prioritization.Rmd/overlap-plot-1.png" alt="DEG overlap matrix">
+<img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-upset-1.png" alt="Fat body DEG reference-context UpSet plot">
 <figcaption>
-DEG overlap
+Reference-context overlap
 </figcaption>
 </figure>
 </div>
 <p>The archive menu preserves the original workflowR pages and older
-generated assets as provenance. The main navigation highlights the
-current reproducible R Markdown analyses.</p>
+generated assets as provenance. They are kept on the site so the
+analysis history remains traceable, but the recommended route above is
+the cleaner collaborator-facing version.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

@@ -1,0 +1,2411 @@
+---
+title: "Logical DEG set construction"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  latest_results_root: "output/rmd_runs"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  phase_reference_dir: "data/external/phase_reference"
+  fatbody_reference_dir: "data/raw_read_counts/03-FAT-DESeq2"
+  fatbody_reference_metadata: "data/external/timecourse_fatbody_reference/gregaria_FAT_phase_reference_metadata.csv"
+  head_thorax_counts_dir: "data/raw_read_counts/03-gregaria-DESeq2"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  analysis_scenario: "Current outliers removed"
+  alpha: 0.05
+  lfc_threshold: 1
+  tissue_alpha: 0.05
+  tissue_lfc_threshold: 1
+  phase_alpha: 0.05
+  phase_lfc_threshold: 1
+  tissue_heatmap_gene_n: 100
+  experiment_heatmap_gene_n: 120
+  phase_heatmap_gene_n: 80
+  category_heatmap_genes_per_class: 18
+  output_tag: "deg-logical-set-construction"
+---
+
+## Purpose
+
+This page separates the DEG questions before comparing them. The fat body
+experiment remains the primary dataset for diet and infection, but the reference
+data are now modeled independently instead of being forced to pass through the
+fat body DEG list first.
+
+The logic is:
+
+1. Fit DESeq2 on the reference tissues only, using all copied fat body, head, and
+   thorax reference samples regardless of phase. This gives tissue-associated
+   DEGs.
+2. Keep head and thorax phase-associated DEGs as the phase reference set. This
+   asks whether a fat body diet/infection DEG is also phase-related in another
+   sampled tissue.
+3. Keep fat body experiment DEGs as separate sets for diet among controls and
+   infection within each diet.
+4. Only after those independent sets exist, compare them with Venn/UpSet plots
+   and heatmaps.
+
+Here, DEG categories are set-membership categories, not causal labels. A gene
+can therefore belong to more than one biological hypothesis class. For example,
+a fat body infection-response DEG can also be a tissue DEG or a phase DEG in
+the reference data.
+
+The experiment fat body and the reference fat body are kept as separate sample
+blocks in PCA and heatmap annotations because they come from different
+experimental sources, even though both are fat body tissue.
+
+## DEG categories used here
+
+```{r deg-vocabulary-table}
+deg_vocabulary <- tibble::tribble(
+  ~category, ~status_in_this_page, ~definition,
+  "DEG Diet (controls)",
+  "Computed",
+  "Fat body genes significant in pairwise diet contrasts using control animals only.",
+	  "DEG infection x diet",
+	  "Final overlap set",
+	  "Fat body genes significant between infected and control animals within one diet.",
+	  "Pooled infection-only DEGs",
+	  "Computed but not used in final four-set overlap",
+	  "Fat body genes significant for infected versus control across all diets after accounting for diet with a DESeq2 model of ~ Diet + Treatment.",
+	  "Fat body experiment DEGs",
+	  "Visual QC set",
+	  "Union of fat body experiment DEG contrasts used for broad fat body heatmaps; the final overlap uses only DEG Diet (controls) and DEG infection x diet.",
+  "DEG tissues",
+  "Independent reference set",
+  "Genes significant in pairwise DESeq2 tissue contrasts among copied fat body, head, and thorax reference count files using the model ~ tissue. Phase is ignored for this first reference question.",
+	  "Head phase DEGs",
+	  "Included in phase reference set",
+	  "Head genes significant between gregarious and solitarious reference samples.",
+	  "Thorax phase DEGs",
+	  "Included in phase reference set",
+	  "Thorax genes significant between gregarious and solitarious reference samples.",
+	  "DEG phase changes",
+	  "Final overlap set",
+	  "Union of head phase DEGs and thorax phase DEGs. The exported table keeps head and thorax membership separately.",
+	  "Overlap categories",
+	  "Compared after independent DEG calling",
+	  "The final Venn/UpSet plots compare four independent sets: DEG tissues, DEG phase changes, DEG Diet (controls), and DEG infection x diet."
+)
+
+knitr::kable(
+  deg_vocabulary,
+  caption = "DEG vocabulary used to avoid mixing diet, infection, phase, and tissue questions"
+)
+```
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c(
+  "DESeq2", "dplyr", "tidyr", "stringr", "ggplot2", "forcats",
+  "DT", "SummarizedExperiment", "tibble", "scales", "UpSetR",
+  "ggVennDiagram"
+)
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+library(ggplot2)
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(
+  project_dir, "output", "rmd_runs",
+  paste(params$output_tag, run_stamp, sep = "_")
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root <- file.path(project_dir, params$latest_results_root)
+counts_file <- file.path(project_dir, params$counts_file)
+metadata_file <- file.path(project_dir, params$metadata_file)
+phase_dir <- file.path(project_dir, params$phase_reference_dir)
+fatbody_reference_dir <- file.path(project_dir, params$fatbody_reference_dir)
+fatbody_reference_metadata <- file.path(
+  project_dir,
+  params$fatbody_reference_metadata
+)
+head_thorax_counts_dir <- file.path(project_dir, params$head_thorax_counts_dir)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+
+current_outliers <- c("1007", "1036", "1037", "1039")
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+treatment_colors <- c("Control" = "#7B8794", "Infected" = "#C85A54")
+phase_colors <- c("Gregarious-up" = "#B23A48",
+                  "Solitarious-up" = "#2166AC")
+set_colors <- c(
+  "DEG tissues" = "#4C78A8",
+  "DEG phase changes" = "#C51B7D",
+  "DEG Diet (controls)" = "#D7832F",
+  "DEG infection x diet" = "#C85A54"
+)
+category_colors <- c(
+  "DEG tissues" = "#4C78A8",
+  "DEG phase changes" = "#C51B7D",
+  "DEG Diet (controls)" = "#D7832F",
+  "DEG infection x diet" = "#C85A54",
+  "Other DEG" = "#6B7280"
+)
+```
+
+## Helper functions
+
+```{r helper-functions}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+safe_neglog10 <- function(x) {
+  x <- ifelse(is.na(x), NA_real_, x)
+  -log10(pmax(x, .Machine$double.xmin))
+}
+
+read_metadata <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  tab <- tab[, !is.na(names(tab)) & nzchar(names(tab)), drop = FALSE]
+  tab$label <- as.character(tab$label)
+  tab$Diet <- factor(tab$Diet, levels = c("33", "50", "83"))
+  tab$Treatment <- factor(tab$Treatment, levels = c("Infected", "Control"))
+  tab
+}
+
+read_phase_table <- function(path, tissue) {
+  tab <- read.csv(path, check.names = FALSE)
+  bad_names <- is.na(names(tab)) | names(tab) == ""
+  names(tab)[bad_names] <- paste0("row_id", seq_len(sum(bad_names)))
+  if (!"GeneID" %in% names(tab)) {
+    tab$GeneID <- tab[[1]]
+  }
+  tab |>
+    dplyr::transmute(
+      gene_id = as.character(GeneID),
+      tissue = tissue,
+      baseMean = baseMean,
+      log2FoldChange = log2FoldChange,
+      pvalue = pvalue,
+      padj = padj,
+      significant = !is.na(padj) &
+        padj < params$phase_alpha &
+        abs(log2FoldChange) >= params$phase_lfc_threshold,
+      direction = dplyr::case_when(
+        !significant ~ "Not DEG",
+        log2FoldChange > 0 ~ "Gregarious-up",
+        log2FoldChange < 0 ~ "Solitarious-up",
+        TRUE ~ "Not DEG"
+      )
+    )
+}
+
+read_featurecounts_gene_counts <- function(path, sample_id) {
+  tab <- read.delim(path, comment.char = "#", check.names = FALSE)
+  if ("Geneid" %in% names(tab)) {
+    count_col <- names(tab)[ncol(tab)]
+    out <- tibble::tibble(
+      gene_id = as.character(tab[["Geneid"]]),
+      count = as.integer(tab[[count_col]])
+    )
+  } else {
+    tab <- read.delim(path, comment.char = "#", header = FALSE,
+                      check.names = FALSE)
+    out <- tibble::tibble(
+      gene_id = as.character(tab[[1]]),
+      count = as.integer(tab[[ncol(tab)]])
+    )
+  }
+  out <- out |>
+    dplyr::filter(!is.na(gene_id), nzchar(gene_id)) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(count = sum(count, na.rm = TRUE), .groups = "drop")
+  names(out)[2] <- sample_id
+  out
+}
+
+parse_head_thorax_reference_metadata <- function(reference_dir) {
+  files <- list.files(
+    reference_dir,
+    pattern = "^SGRE-(HEAD|THOX)-(CRD|ISO)-[0-9]+_MERGE_featurecounts[.]txt$",
+    full.names = TRUE
+  )
+  parsed <- stringr::str_match(
+    basename(files),
+    "^SGRE-(HEAD|THOX)-(CRD|ISO)-([0-9]+)_MERGE_featurecounts[.]txt$"
+  )
+  tibble::tibble(
+    sample_id = stringr::str_remove(basename(files), "_featurecounts[.]txt$"),
+    count_file = files,
+    tissue_code = parsed[, 2],
+    rearing_code = parsed[, 3],
+    replicate = as.integer(parsed[, 4])
+  ) |>
+    dplyr::filter(!is.na(tissue_code), !is.na(rearing_code)) |>
+    dplyr::mutate(
+      tissue = dplyr::case_when(
+        tissue_code == "HEAD" ~ "Head",
+        tissue_code == "THOX" ~ "Thorax",
+        TRUE ~ tissue_code
+      ),
+      phase = dplyr::case_when(
+        rearing_code == "CRD" ~ "Gregarious",
+        rearing_code == "ISO" ~ "Solitarious",
+        TRUE ~ rearing_code
+      ),
+      rearing_condition = dplyr::case_when(
+        rearing_code == "CRD" ~ "Crowded",
+        rearing_code == "ISO" ~ "Isolated",
+        TRUE ~ rearing_code
+      ),
+      sample_label = paste0(tissue, "_", rearing_condition, "_", replicate),
+      sample_block = paste(tissue, "phase reference")
+    ) |>
+    dplyr::arrange(tissue, phase, replicate)
+}
+
+parse_fatbody_reference_metadata <- function(metadata_path, count_dir) {
+  tab <- read.csv(metadata_path, check.names = FALSE) |>
+    dplyr::filter(tissue == "FAT")
+
+  tab |>
+    dplyr::mutate(
+      count_file = file.path(count_dir, file_name),
+      tissue = "Fat body",
+      source = "Time-course fat body phase reference",
+      display_group = dplyr::case_when(
+        phase == "Gregarious" ~ "Reference fat body: crowded/gregarious",
+        phase == "Solitarious" ~ "Reference fat body: isolated/solitarious",
+        TRUE ~ "Reference fat body"
+      ),
+      sample_label = dplyr::case_when(
+        phase == "Gregarious" ~ "FAT-G-control",
+        phase == "Solitarious" ~ "FAT-S-control",
+        TRUE ~ sample_id
+      ),
+      sample_block = "Reference fat body"
+    ) |>
+    dplyr::select(
+      sample_id, count_file, tissue, phase, rearing_condition, replicate,
+      source, display_group, reference_role, sample_label, sample_block
+    ) |>
+    dplyr::arrange(tissue, phase, replicate)
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+make_set_membership <- function(gene_sets) {
+  set_names <- names(gene_sets)
+  membership <- tibble::tibble(gene_id = Reduce(union, gene_sets))
+  for (nm in set_names) {
+    membership[[nm]] <- membership$gene_id %in% gene_sets[[nm]]
+  }
+  membership |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      membership_label = paste(set_names[dplyr::c_across(dplyr::all_of(set_names))],
+                               collapse = " + ")
+    ) |>
+    dplyr::ungroup()
+}
+
+write_upset_png <- function(gene_sets, file, width = 3000, height = 2200) {
+  png(file, width = width, height = height, res = 300)
+  print(
+    UpSetR::upset(
+      UpSetR::fromList(gene_sets),
+      nsets = length(gene_sets),
+      nintersects = NA,
+      order.by = "freq",
+      keep.order = TRUE,
+      mainbar.y.label = "Intersection size",
+      sets.x.label = "Set size",
+      text.scale = c(1.4, 1.4, 1.2, 1.2, 1.4, 1.2)
+    )
+  )
+  dev.off()
+}
+
+plot_deg_sets_venn <- function(gene_sets, title, subtitle) {
+  ggVennDiagram::ggVennDiagram(
+    gene_sets,
+    category.names = names(gene_sets),
+    label = "count",
+    label_alpha = 0,
+    set_size = 4.2,
+    edge_size = 0.7
+	  ) +
+	    scale_fill_gradient(low = "#F7F3E8", high = "#4C78A8") +
+	    coord_equal(clip = "off") +
+    labs(
+      title = title,
+      subtitle = subtitle
+    ) +
+	    theme_void(base_size = 13) +
+	    theme(
+	      plot.title = element_text(face = "bold"),
+	      plot.subtitle = element_text(hjust = 0.5),
+	      plot.background = element_rect(fill = "white", color = NA),
+	      panel.background = element_rect(fill = "white", color = NA),
+	      legend.background = element_rect(fill = "white", color = NA),
+	      plot.margin = ggplot2::margin(30, 130, 30, 130)
+	    )
+}
+
+run_pairwise_tissue_deseq <- function(count_mat, sample_metadata) {
+  sample_metadata <- sample_metadata |>
+    dplyr::mutate(
+      phase = factor(phase, levels = c("Gregarious", "Solitarious")),
+      tissue = factor(tissue, levels = c("Fat body", "Head", "Thorax"))
+    )
+  rownames(sample_metadata) <- sample_metadata$sample_id
+
+	  keep <- rowSums(count_mat) >= 10
+	  dds <- DESeq2::DESeqDataSetFromMatrix(
+	    countData = count_mat[keep, rownames(sample_metadata), drop = FALSE],
+	    colData = sample_metadata,
+	    design = ~ tissue
+	  )
+  dds <- DESeq2::DESeq(dds, quiet = TRUE)
+
+  contrasts <- tibble::tribble(
+    ~comparison, ~numerator, ~denominator,
+    "Fat body vs Head", "Fat body", "Head",
+    "Fat body vs Thorax", "Fat body", "Thorax",
+    "Head vs Thorax", "Head", "Thorax"
+  )
+
+  dplyr::bind_rows(lapply(seq_len(nrow(contrasts)), function(i) {
+    res <- DESeq2::results(
+      dds,
+      contrast = c("tissue", contrasts$numerator[i], contrasts$denominator[i])
+    )
+    as.data.frame(res) |>
+      tibble::rownames_to_column("gene_id") |>
+      dplyr::mutate(
+        comparison = contrasts$comparison[i],
+	        numerator = contrasts$numerator[i],
+	        denominator = contrasts$denominator[i],
+	        comparison_type = "Tissue contrast",
+	        model_formula = "~ tissue",
+        significant = !is.na(padj) &
+          padj < params$tissue_alpha &
+          abs(log2FoldChange) >= params$tissue_lfc_threshold,
+        direction = dplyr::case_when(
+          !significant ~ "Not DEG",
+          log2FoldChange > 0 ~ paste("Higher in", contrasts$numerator[i]),
+          log2FoldChange < 0 ~ paste("Higher in", contrasts$denominator[i]),
+          TRUE ~ "Not DEG"
+        )
+      )
+  }))
+}
+
+run_pooled_infection_deseq <- function(count_mat, sample_metadata,
+                                       scenario_label) {
+  sample_metadata <- sample_metadata |>
+    dplyr::mutate(
+      Diet = factor(Diet, levels = c("33", "50", "83")),
+      Treatment = factor(Treatment, levels = c("Control", "Infected"))
+    )
+  rownames(sample_metadata) <- sample_metadata$label
+
+  keep <- rowSums(count_mat) >= 10
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = count_mat[keep, rownames(sample_metadata), drop = FALSE],
+    colData = sample_metadata,
+    design = ~ Diet + Treatment
+  )
+  dds <- DESeq2::DESeq(dds, quiet = TRUE)
+  res <- DESeq2::results(dds, contrast = c("Treatment", "Infected", "Control"))
+
+  as.data.frame(res) |>
+    tibble::rownames_to_column("gene_id") |>
+    dplyr::mutate(
+      scenario = scenario_label,
+      comparison_type = "Pooled infection across diets",
+      comparison = "All diets: infected vs control",
+      numerator = "Infected",
+      denominator = "Control",
+      diet = "All",
+      significant = !is.na(padj) &
+        padj < params$alpha &
+        abs(log2FoldChange) >= params$lfc_threshold,
+      direction = dplyr::case_when(
+        !significant ~ "Not DEG",
+        log2FoldChange > 0 ~ "Upregulated",
+        log2FoldChange < 0 ~ "Downregulated",
+        TRUE ~ "Not DEG"
+      ),
+      comparison_family = "Pooled infection across diets"
+    )
+}
+
+plot_sample_matrix <- function(sample_metadata, title, output_file = NULL,
+                               width = 10, height = 6) {
+  sample_counts <- sample_metadata |>
+    dplyr::count(sample_block, tissue, phase, rearing_condition,
+                 name = "n_samples") |>
+    dplyr::mutate(
+      sample_group = paste(tissue, phase, sep = "\n"),
+      sample_group = factor(sample_group, levels = unique(sample_group))
+    )
+
+  p <- ggplot(
+    sample_counts,
+    aes(x = sample_group, y = n_samples, fill = tissue)
+  ) +
+    geom_col(width = 0.68, color = "grey25", linewidth = 0.25) +
+    geom_text(aes(label = n_samples), vjust = -0.35, size = 4) +
+    scale_fill_manual(
+      values = c("Fat body" = "#4C78A8", "Head" = "#009E9A",
+                 "Thorax" = "#C51B7D"),
+      guide = "none"
+    ) +
+    scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.15))) +
+    labs(title = title, x = NULL, y = "Number of samples") +
+    theme_classic(base_size = 13) +
+    theme(
+      axis.text.x = element_text(size = 11),
+      plot.title = element_text(face = "bold")
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+plot_fatbody_design_matrix <- function(metadata_exp, title, output_file = NULL,
+                                       width = 8, height = 5.5) {
+  design_counts <- metadata_exp |>
+    dplyr::mutate(
+      outlier_flag = label %in% current_outliers,
+      Diet = factor(as.character(Diet), levels = c("33", "50", "83")),
+      Treatment = factor(as.character(Treatment), levels = c("Infected", "Control"))
+    ) |>
+    dplyr::group_by(Treatment, Diet) |>
+    dplyr::summarise(
+      n_samples = dplyr::n(),
+      n_current_outliers = sum(outlier_flag),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(
+      label = dplyr::if_else(
+        n_current_outliers > 0,
+        paste0(n_samples, "\n", n_current_outliers, " flagged"),
+        as.character(n_samples)
+      )
+    )
+
+  p <- ggplot(design_counts, aes(x = Diet, y = Treatment, fill = Diet)) +
+    geom_tile(color = "white", linewidth = 1.1) +
+    geom_text(aes(label = label), size = 4.3, lineheight = 0.9) +
+    scale_fill_manual(values = diet_colors, guide = "none") +
+    labs(title = title, x = "Diet", y = NULL) +
+    coord_equal() +
+    theme_classic(base_size = 13) +
+    theme(
+      axis.text = element_text(size = 12),
+      plot.title = element_text(face = "bold")
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+plot_experiment_pca <- function(vst_mat, sample_metadata, title, subtitle,
+                                output_file = NULL, width = 10, height = 7) {
+  pca <- prcomp(t(vst_mat), center = TRUE, scale. = FALSE)
+  pct <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+  pca_scores <- as.data.frame(pca$x[, 1:4, drop = FALSE]) |>
+    tibble::rownames_to_column("sample_id") |>
+    dplyr::left_join(sample_metadata, by = "sample_id") |>
+    dplyr::mutate(
+      condition = paste(Treatment, "diet", Diet),
+      outlier_flag = stringr::str_remove(sample_label, "[*]$") %in%
+        current_outliers
+    )
+
+  ellipse_scores <- pca_scores |>
+    dplyr::group_by(condition) |>
+    dplyr::filter(dplyr::n() >= 3) |>
+    dplyr::ungroup()
+
+  p <- ggplot(
+    pca_scores,
+    aes(x = PC1, y = PC2, color = Diet, shape = Treatment)
+  ) +
+    stat_ellipse(
+      data = ellipse_scores,
+      aes(group = condition, color = Diet),
+      linewidth = 0.45,
+      linetype = "dashed",
+      show.legend = FALSE
+    ) +
+    geom_point(aes(size = outlier_flag), alpha = 0.9) +
+    geom_text(aes(label = sample_label), vjust = -0.9, size = 3,
+              show.legend = FALSE) +
+    scale_color_manual(values = diet_colors, drop = FALSE) +
+    scale_shape_manual(values = c("Infected" = 16, "Control" = 17),
+                       drop = FALSE) +
+    scale_size_manual(values = c(`FALSE` = 2.8, `TRUE` = 4.2),
+                      guide = "none") +
+    labs(
+      title = title,
+      subtitle = subtitle,
+      x = paste0("PC1 (", pct[1], "%)"),
+      y = paste0("PC2 (", pct[2], "%)"),
+      color = "Diet",
+      shape = "Treatment"
+    ) +
+    coord_cartesian(clip = "off") +
+    theme_classic(base_size = 13) +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold"),
+      plot.margin = ggplot2::margin(10, 40, 10, 10)
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+plot_combined_sample_pca <- function(vst_mat, sample_metadata, title, subtitle,
+                                     output_file = NULL, width = 12, height = 8) {
+  pca <- prcomp(t(vst_mat), center = TRUE, scale. = FALSE)
+  pct <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+  pca_scores <- as.data.frame(pca$x[, 1:4, drop = FALSE]) |>
+    tibble::rownames_to_column("sample_id") |>
+    dplyr::left_join(sample_metadata, by = "sample_id") |>
+    dplyr::mutate(
+      sample_block = factor(
+        sample_block,
+        levels = c(
+          "Experiment fat body",
+          "Reference fat body",
+          "Head reference",
+          "Thorax reference"
+        )
+      ),
+      outlier_flag = stringr::str_remove(sample_label, "[*]$") %in%
+        current_outliers
+    )
+
+  ellipse_scores <- pca_scores |>
+    dplyr::group_by(sample_block) |>
+    dplyr::filter(dplyr::n() >= 3) |>
+    dplyr::ungroup()
+  centroid_scores <- pca_scores |>
+    dplyr::group_by(sample_block) |>
+    dplyr::summarise(
+      PC1 = mean(PC1, na.rm = TRUE),
+      PC2 = mean(PC2, na.rm = TRUE),
+      .groups = "drop"
+    )
+  point_labels <- pca_scores |>
+    dplyr::filter(outlier_flag)
+
+  p <- ggplot(
+    pca_scores,
+    aes(x = PC1, y = PC2, color = sample_block, shape = sample_block)
+  ) +
+    stat_ellipse(
+      data = ellipse_scores,
+      aes(group = sample_block, color = sample_block),
+      linewidth = 0.5,
+      linetype = "dashed",
+      show.legend = FALSE
+    ) +
+    geom_point(aes(size = outlier_flag), alpha = 0.88) +
+    geom_text(
+      data = point_labels,
+      aes(label = sample_label),
+      vjust = -0.9,
+      size = 3.3,
+      show.legend = FALSE
+    ) +
+    geom_label(
+      data = centroid_scores,
+      aes(label = sample_block, fill = sample_block),
+      color = "#111827",
+      label.size = 0.15,
+      alpha = 0.88,
+      size = 3.6,
+      show.legend = FALSE
+    ) +
+    scale_color_manual(
+      values = c(
+        "Experiment fat body" = "#C85A54",
+        "Reference fat body" = "#4C78A8",
+        "Head reference" = "#009E9A",
+        "Thorax reference" = "#C51B7D"
+      ),
+      drop = FALSE
+    ) +
+    scale_shape_manual(
+      values = c(
+        "Experiment fat body" = 16,
+        "Reference fat body" = 17,
+        "Head reference" = 15,
+        "Thorax reference" = 18
+      ),
+      drop = FALSE
+    ) +
+    scale_fill_manual(
+      values = c(
+        "Experiment fat body" = "#F4C7B8",
+        "Reference fat body" = "#C7D7F2",
+        "Head reference" = "#BEE8E6",
+        "Thorax reference" = "#F1C3DA"
+      ),
+      drop = FALSE
+    ) +
+    scale_size_manual(values = c(`FALSE` = 3.0, `TRUE` = 4.4),
+                      guide = "none") +
+    labs(
+      title = title,
+      subtitle = subtitle,
+      x = paste0("PC1 (", pct[1], "%)"),
+      y = paste0("PC2 (", pct[2], "%)"),
+      color = "Sample block",
+      shape = "Sample block"
+    ) +
+    coord_cartesian(clip = "off") +
+    theme_classic(base_size = 13) +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold"),
+      plot.margin = ggplot2::margin(10, 50, 10, 10)
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+plot_pca_from_vst <- function(vst_mat, sample_metadata, title, subtitle,
+                              output_file = NULL, width = 10, height = 7) {
+  pca <- prcomp(t(vst_mat), center = TRUE, scale. = FALSE)
+  pct <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+  pca_scores <- as.data.frame(pca$x[, 1:4, drop = FALSE]) |>
+    tibble::rownames_to_column("sample_id") |>
+    dplyr::left_join(sample_metadata, by = "sample_id")
+  ellipse_scores <- pca_scores |>
+    dplyr::group_by(tissue) |>
+    dplyr::filter(dplyr::n() >= 3) |>
+    dplyr::ungroup()
+
+  p <- ggplot(
+    pca_scores,
+    aes(x = PC1, y = PC2, color = tissue, shape = phase)
+  ) +
+    geom_point(size = 3.6, alpha = 0.9) +
+    geom_text(
+      aes(label = sample_label),
+      vjust = -0.9,
+      size = 3,
+      show.legend = FALSE
+    ) +
+    stat_ellipse(data = ellipse_scores,
+                 aes(group = tissue, color = tissue),
+                 linewidth = 0.45, linetype = "dashed", show.legend = FALSE) +
+    scale_color_manual(
+      values = c("Fat body" = "#4C78A8", "Head" = "#009E9A",
+                 "Thorax" = "#C51B7D"),
+      drop = FALSE
+    ) +
+    labs(
+      title = title,
+      subtitle = subtitle,
+      x = paste0("PC1 (", pct[1], "%)"),
+      y = paste0("PC2 (", pct[2], "%)"),
+      color = "Tissue",
+      shape = "Phase"
+    ) +
+    coord_cartesian(clip = "off") +
+    theme_classic(base_size = 13) +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold"),
+      plot.margin = ggplot2::margin(10, 40, 10, 10)
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+make_vst_heatmap_long <- function(vst_mat, gene_table, sample_metadata,
+                                  gene_order, sample_order) {
+  zmat <- t(scale(t(vst_mat[gene_order, sample_order, drop = FALSE])))
+  zmat[is.na(zmat)] <- 0
+  as.data.frame(zmat) |>
+    tibble::rownames_to_column("gene_id") |>
+    tidyr::pivot_longer(-gene_id, names_to = "sample_id",
+                        values_to = "z_vst") |>
+    dplyr::left_join(gene_table, by = "gene_id") |>
+    dplyr::left_join(sample_metadata, by = "sample_id") |>
+    dplyr::mutate(
+      sample_label = factor(sample_label,
+                            levels = sample_metadata$sample_label[
+                              match(sample_order, sample_metadata$sample_id)
+                            ]),
+      gene_label = factor(gene_label, levels = rev(gene_table$gene_label))
+    )
+}
+
+plot_annotated_heatmap <- function(vst_mat, gene_table, sample_metadata,
+                                   title, subtitle, output_file = NULL,
+                                   width = 18, height = 14) {
+  gene_order <- gene_table$gene_id[gene_table$gene_id %in% rownames(vst_mat)]
+  sample_order <- sample_metadata$sample_id[
+    sample_metadata$sample_id %in% colnames(vst_mat)
+  ]
+  gene_table <- gene_table |>
+    dplyr::filter(gene_id %in% gene_order)
+  if (length(gene_order) < 2 || length(sample_order) < 2) {
+    return(NULL)
+  }
+
+  heatmap_long <- make_vst_heatmap_long(
+    vst_mat,
+    gene_table,
+    sample_metadata,
+    gene_order,
+    sample_order
+  ) |>
+    dplyr::mutate(
+      z_vst = pmax(pmin(z_vst, 3), -3),
+      column_group = factor(column_group, levels = unique(sample_metadata$column_group))
+    )
+
+  p <- ggplot(
+    heatmap_long,
+    aes(x = sample_label, y = gene_label, fill = z_vst)
+  ) +
+    geom_tile(color = "white", linewidth = 0.035) +
+    facet_grid(. ~ column_group, scales = "free_x", space = "free_x") +
+    scale_fill_gradient2(
+      low = "#237C8E", mid = "#F7F3E8", high = "#C85A54",
+      midpoint = 0, limits = c(-3, 3),
+      oob = scales::squish, name = "Row-z VST"
+    ) +
+    labs(
+      title = title,
+      subtitle = subtitle,
+      x = NULL,
+      y = NULL
+    ) +
+    theme_classic(base_size = 12) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5,
+                                 hjust = 1, size = 7),
+      axis.text.y = element_text(size = 6.5),
+      legend.position = "bottom",
+      strip.text.x = element_text(face = "bold", size = 11),
+      panel.spacing.x = grid::unit(0.3, "lines"),
+      plot.title = element_text(face = "bold", size = 15),
+      plot.subtitle = element_text(size = 12)
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+
+add_overlap_evidence_annotations <- function(gene_table) {
+  gene_table |>
+    dplyr::mutate(
+      tissue_reference_deg = dplyr::coalesce(tissue_reference_deg, FALSE),
+      head_phase_deg = dplyr::coalesce(head_phase_deg, FALSE),
+      thorax_phase_deg = dplyr::coalesce(thorax_phase_deg, FALSE),
+      phase_reference_deg = dplyr::coalesce(
+        phase_reference_deg,
+        head_phase_deg | thorax_phase_deg
+      ),
+	      diet_control_deg = dplyr::coalesce(diet_control_deg, FALSE),
+	      diet_infected_deg = dplyr::coalesce(diet_infected_deg, FALSE),
+	      fatbody_experiment_deg = dplyr::coalesce(fatbody_experiment_deg, FALSE),
+	      any_phase_change = phase_reference_deg,
+	      fatbody_diet_deg = diet_control_deg |
+	        stringr::str_detect(dplyr::coalesce(experiment_families, ""),
+	                            "Diet contrasts: controls"),
+	      fatbody_infection_deg = dplyr::coalesce(fatbody_infection_deg, FALSE) |
+	        stringr::str_detect(dplyr::coalesce(experiment_families, ""),
+	                            "Infection within diet"),
+	      has_tissue_overlay = tissue_reference_deg,
+	      has_phase_overlay = any_phase_change,
+	      primary_annotation_group = dplyr::case_when(
+	        tissue_reference_deg ~ "DEG tissues",
+	        phase_reference_deg ~ "DEG phase changes",
+	        diet_control_deg ~ "DEG Diet (controls)",
+	        fatbody_infection_deg ~ "DEG infection x diet",
+	        TRUE ~ "Other DEG"
+	      ),
+      primary_annotation_group = factor(
+	        primary_annotation_group,
+	        levels = c(
+	          "DEG tissues",
+	          "DEG phase changes",
+	          "DEG Diet (controls)",
+	          "DEG infection x diet",
+	          "Other DEG"
+	        )
+	      )
+    )
+}
+
+plot_final_overlap_annotated_heatmap <- function(vst_mat, gene_table,
+                                                 sample_metadata, title,
+                                                 subtitle,
+                                                 output_file = NULL,
+                                                 width = 34,
+                                                 height = 30) {
+  display_group <- NULL
+  display_group_levels <- NULL
+  if ("primary_annotation_group" %in% names(gene_table)) {
+    display_group <- as.character(gene_table$primary_annotation_group)
+    display_group_levels <- levels(gene_table$primary_annotation_group)
+    if (is.null(display_group_levels)) {
+      display_group_levels <- unique(display_group)
+    }
+  }
+  gene_table <- add_overlap_evidence_annotations(gene_table)
+  if (!is.null(display_group)) {
+    gene_table <- gene_table |>
+      dplyr::mutate(
+        primary_annotation_group = factor(display_group,
+                                          levels = display_group_levels),
+        logical_category = display_group
+      )
+  }
+  gene_order <- gene_table$gene_id[gene_table$gene_id %in% rownames(vst_mat)]
+  sample_order <- sample_metadata$sample_id[
+    sample_metadata$sample_id %in% colnames(vst_mat)
+  ]
+  gene_table <- gene_table |>
+    dplyr::filter(gene_id %in% gene_order)
+  if (length(gene_order) < 2 || length(sample_order) < 2) {
+    return(NULL)
+  }
+
+  column_levels <- c(
+    "Row evidence",
+    unique(as.character(sample_metadata$column_group))
+  )
+
+  heatmap_long <- make_vst_heatmap_long(
+    vst_mat,
+    gene_table,
+    sample_metadata,
+    gene_order,
+    sample_order
+  ) |>
+    dplyr::mutate(
+      z_vst = pmax(pmin(z_vst, 3), -3),
+      column_group = factor(column_group, levels = column_levels),
+      primary_annotation_group = factor(
+        primary_annotation_group,
+        levels = levels(gene_table$primary_annotation_group)
+      )
+    )
+
+  evidence_levels <- c(
+    "DEG tissues", "DEG phase changes",
+    "DEG Diet (controls)", "DEG infection x diet"
+  )
+  evidence_colors <- c(
+    "DEG tissues" = "#4C78A8",
+    "DEG phase changes" = "#C51B7D",
+    "DEG Diet (controls)" = "#D7832F",
+    "DEG infection x diet" = "#C85A54"
+  )
+
+  annotation_background <- tidyr::expand_grid(
+    gene_id = gene_order,
+    evidence = factor(evidence_levels, levels = evidence_levels)
+  ) |>
+    dplyr::left_join(
+	      gene_table |>
+	        dplyr::select(
+	          gene_id, gene_label, primary_annotation_group,
+	          tissue_reference_deg, phase_reference_deg,
+	          diet_control_deg, fatbody_infection_deg
+	        ),
+      by = "gene_id"
+    ) |>
+    dplyr::mutate(
+	      gene_label = factor(gene_label, levels = rev(gene_table$gene_label)),
+	      column_group = factor("Row evidence", levels = column_levels),
+	      present = dplyr::case_when(
+	        evidence == "DEG tissues" ~ tissue_reference_deg,
+	        evidence == "DEG phase changes" ~ phase_reference_deg,
+	        evidence == "DEG Diet (controls)" ~ diet_control_deg,
+	        evidence == "DEG infection x diet" ~ fatbody_infection_deg,
+	        TRUE ~ FALSE
+	      )
+	    )
+
+  annotation_present <- annotation_background |>
+    dplyr::filter(present)
+
+  p <- ggplot() +
+    geom_point(
+      data = annotation_background,
+      aes(x = evidence, y = gene_label),
+      shape = 15,
+      size = 3.2,
+      color = "#E5E7EB"
+    ) +
+    geom_point(
+      data = annotation_present,
+      aes(x = evidence, y = gene_label, color = evidence),
+      shape = 15,
+      size = 3.4
+    ) +
+    geom_tile(
+      data = heatmap_long,
+      aes(x = sample_label, y = gene_label, fill = z_vst),
+      color = "white",
+      linewidth = 0.035
+    ) +
+    facet_grid(
+      primary_annotation_group ~ column_group,
+      scales = "free",
+      space = "free"
+    ) +
+    scale_color_manual(values = evidence_colors, name = "Row evidence") +
+    scale_fill_gradient2(
+      low = "#237C8E", mid = "#F7F3E8", high = "#C85A54",
+      midpoint = 0, limits = c(-3, 3),
+      oob = scales::squish, name = "Row-z VST"
+    ) +
+    labs(title = title, subtitle = subtitle, x = NULL, y = NULL) +
+    theme_classic(base_size = 12) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5,
+                                 hjust = 1, size = 7),
+      axis.text.y = element_text(size = 6.5),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      strip.text.x = element_text(face = "bold", size = 11),
+      strip.text.y = element_text(face = "bold", size = 9.5, angle = 0),
+      panel.spacing.x = grid::unit(0.35, "lines"),
+      panel.spacing.y = grid::unit(0.35, "lines"),
+      plot.title = element_text(face = "bold", size = 15),
+      plot.subtitle = element_text(size = 12)
+    )
+
+  if (!is.null(output_file)) {
+    ggsave(output_file, p, width = width, height = height, dpi = 300)
+  }
+  p
+}
+```
+
+## Input files
+
+```{r input-files}
+scenario_dir <- latest_dir("^deg-sample-filter-scenarios_")
+if (is.na(scenario_dir)) {
+  stop("Render 12-deg-sample-filter-scenarios.Rmd before this page.")
+}
+
+fat_results_file <- file.path(scenario_dir, "all_deseq2_results.csv")
+head_phase_file <- file.path(
+  phase_dir,
+  "DESeq2_results_sva_Head_gregaria_togregaria.csv"
+)
+thorax_phase_file <- file.path(
+  phase_dir,
+  "DESeq2_results_sva_Thorax_gregaria_togregaria.csv"
+)
+
+input_files <- tibble::tibble(
+  input = c("Fat body scenario DESeq2 results",
+            "Head phase DESeq2 results",
+            "Thorax phase DESeq2 results",
+            "Fat body reference metadata",
+            "Fat body reference count folder",
+            "Fat body no-rRNA count matrix",
+            "Fat body metadata",
+            "Head/thorax featureCounts folder"),
+  path = c(fat_results_file, head_phase_file, thorax_phase_file,
+           fatbody_reference_metadata, fatbody_reference_dir,
+           counts_file, metadata_file, head_thorax_counts_dir),
+  present = c(file.exists(fat_results_file), file.exists(head_phase_file),
+              file.exists(thorax_phase_file),
+              file.exists(fatbody_reference_metadata),
+              dir.exists(fatbody_reference_dir), file.exists(counts_file),
+              file.exists(metadata_file), dir.exists(head_thorax_counts_dir))
+)
+
+knitr::kable(input_files, caption = "Files used to build the logical DEG sets")
+```
+
+```{r load-annotations}
+if (file.exists(eggnog_file) && file.exists(gff_file)) {
+  eggnog <- read_emapper(eggnog_file)
+  protein_gene_bridge <- parse_cds_gene_bridge(gff_file)
+  annotation <- protein_gene_bridge |>
+    dplyr::left_join(eggnog, by = "protein_id") |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      Preferred_name = dplyr::first(Preferred_name[!is.na(Preferred_name) &
+                                                    Preferred_name != "-"]),
+      Description = dplyr::first(Description[!is.na(Description) &
+                                             Description != "-"]),
+      .groups = "drop"
+    )
+} else {
+  annotation <- tibble::tibble(
+    gene_id = character(),
+    Preferred_name = character(),
+    Description = character()
+  )
+}
+```
+
+## Deduction workflow
+
+The figure below is the logical overview for the main all-samples analysis. Each
+DEG question is computed as its own set first. The overlap is then interpreted
+afterward, rather than forcing reference genes to pass through a fat body DEG
+filter.
+
+For this page, `DEG Diet (controls)` means diet contrasts among control fat
+body samples, and `DEG infection x diet` means infected-versus-control contrasts
+computed within each diet. `DEG tissues` means a cautious exploratory tissue
+contrast computed from the copied fat body, head, and thorax reference count
+files using the model `~ tissue`, with phase ignored for this tissue-only
+question. `DEG phase changes` is the union of head and thorax phase DEGs.
+
+```{r top-deg-set-definitions, include=FALSE}
+fat_results <- read.csv(fat_results_file, check.names = FALSE) |>
+  dplyr::mutate(
+    diet = as.character(diet),
+    numerator = as.character(numerator),
+    denominator = as.character(denominator),
+    significant = !is.na(padj) &
+      padj < params$alpha &
+      abs(log2FoldChange) >= params$lfc_threshold,
+    direction = dplyr::case_when(
+      !significant ~ "Not DEG",
+      log2FoldChange > 0 ~ "Upregulated",
+      log2FoldChange < 0 ~ "Downregulated",
+      TRUE ~ "Not DEG"
+    ),
+    comparison_family = dplyr::case_when(
+      comparison_type == "Infection within diet" ~ "Infection within diet",
+      comparison_type == "Diet contrasts among control" ~
+        "Diet contrasts: controls",
+      comparison_type == "Diet contrasts among infected" ~
+        "Diet contrasts: infected",
+      TRUE ~ comparison_type
+    )
+  )
+
+metadata_all_base <- read_metadata(metadata_file)
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_all <- as.matrix(counts_raw[, -1, drop = FALSE])
+rownames(counts_all) <- counts_raw[[1]]
+storage.mode(counts_all) <- "integer"
+colnames(counts_all) <- sub("_MERGE$", "", sub("^mehreen_", "",
+                                                colnames(counts_all)))
+
+make_pooled_infection_results_for_scenario <- function(scenario_label,
+                                                       exclude_outliers) {
+  metadata_exp <- metadata_all_base
+  if (exclude_outliers) {
+    metadata_exp <- metadata_exp |>
+      dplyr::filter(!label %in% current_outliers)
+  }
+  metadata_exp <- metadata_exp |>
+    dplyr::arrange(Treatment, Diet, label)
+  experiment_counts <- counts_all[, metadata_exp$label, drop = FALSE]
+  run_pooled_infection_deseq(
+    experiment_counts,
+    metadata_exp,
+    scenario_label
+  )
+}
+
+pooled_infection_results <- dplyr::bind_rows(
+  make_pooled_infection_results_for_scenario("All samples", FALSE),
+  make_pooled_infection_results_for_scenario("Current outliers removed", TRUE)
+)
+
+fat_results_all <- dplyr::bind_rows(
+  fat_results,
+  pooled_infection_results
+)
+
+fatbody_reference_meta_top <- parse_fatbody_reference_metadata(
+  fatbody_reference_metadata,
+  fatbody_reference_dir
+)
+head_thorax_reference_meta_top <- parse_head_thorax_reference_metadata(
+  head_thorax_counts_dir
+)
+reference_meta_top <- dplyr::bind_rows(
+  fatbody_reference_meta_top,
+  head_thorax_reference_meta_top
+) |>
+  dplyr::mutate(
+    tissue = factor(tissue, levels = c("Fat body", "Head", "Thorax")),
+    phase = factor(phase, levels = c("Gregarious", "Solitarious"))
+  ) |>
+  dplyr::arrange(tissue, phase, replicate)
+
+reference_count_tables_top <- Map(
+  read_featurecounts_gene_counts,
+  reference_meta_top$count_file,
+  reference_meta_top$sample_id
+)
+reference_counts_df_top <- Reduce(
+  function(x, y) dplyr::full_join(x, y, by = "gene_id"),
+  reference_count_tables_top
+)
+reference_counts_all_top <- as.matrix(reference_counts_df_top[, -1, drop = FALSE])
+rownames(reference_counts_all_top) <- reference_counts_df_top$gene_id
+reference_counts_all_top[is.na(reference_counts_all_top)] <- 0L
+storage.mode(reference_counts_all_top) <- "integer"
+
+tissue_results <- run_pairwise_tissue_deseq(
+  reference_counts_all_top,
+  as.data.frame(reference_meta_top)
+)
+tissue_sig <- tissue_results |>
+  dplyr::filter(significant)
+tissue_genes <- unique(tissue_sig$gene_id)
+
+head_phase <- read_phase_table(head_phase_file, "Head")
+head_sig <- head_phase |>
+  dplyr::filter(significant)
+head_genes <- unique(head_sig$gene_id)
+
+thorax_phase <- read_phase_table(thorax_phase_file, "Thorax")
+thorax_sig <- thorax_phase |>
+  dplyr::filter(significant)
+thorax_genes <- unique(thorax_sig$gene_id)
+phase_genes <- union(head_genes, thorax_genes)
+
+make_experiment_gene_sets_for_scenario <- function(scenario_label) {
+  scenario_sig <- fat_results_all |>
+    dplyr::filter(scenario == scenario_label, significant)
+
+	  list(
+	    "DEG Diet (controls)" = unique(scenario_sig$gene_id[
+	      scenario_sig$comparison_family == "Diet contrasts: controls"
+	    ]),
+	    "DEG infection x diet" = unique(scenario_sig$gene_id[
+	      scenario_sig$comparison_family == "Infection within diet"
+	    ])
+	  )
+}
+
+make_independent_gene_sets_for_scenario <- function(scenario_label) {
+  c(
+    list(
+      "DEG tissues" = tissue_genes,
+      "DEG phase changes" = phase_genes
+    ),
+    make_experiment_gene_sets_for_scenario(scenario_label)
+  )
+}
+
+make_independent_set_counts_for_scenario <- function(scenario_label) {
+  gene_sets <- make_independent_gene_sets_for_scenario(scenario_label)
+  tibble::tibble(
+    scenario = scenario_label,
+    logical_set = names(gene_sets),
+    n_genes = vapply(gene_sets, length, integer(1))
+  )
+}
+
+workflow_scenarios <- c("All samples", "Current outliers removed")
+workflow_category_counts <- dplyr::bind_rows(lapply(
+  workflow_scenarios,
+  make_independent_set_counts_for_scenario
+))
+
+scenario_set_counts <- tibble::tibble(
+  scenario = workflow_scenarios,
+  tissue_reference_deg_n = length(tissue_genes),
+  head_phase_deg_n = length(head_genes),
+  thorax_phase_deg_n = length(thorax_genes),
+  phase_reference_deg_n = length(phase_genes),
+  infection_within_diet_deg_n = vapply(
+    workflow_scenarios,
+    function(x) length(make_experiment_gene_sets_for_scenario(x)[[
+      "DEG infection x diet"
+    ]]),
+    integer(1)
+  ),
+	  diet_control_deg_n = vapply(
+	    workflow_scenarios,
+	    function(x) length(make_experiment_gene_sets_for_scenario(x)[[
+	      "DEG Diet (controls)"
+	    ]]),
+	    integer(1)
+	  )
+)
+
+main_workflow_counts <- scenario_set_counts |>
+  dplyr::filter(scenario == "All samples")
+
+workflow_nodes <- tibble::tibble(
+  node = c("Fat body QC", "Fat body experiment sets", "Reference tissue set",
+           "Phase reference set", "Four-set overlap", "Sensitivity"),
+  node_type = c("QC", "Experiment", "Reference", "Reference", "Output",
+                "Sensitivity"),
+  x = c(1, 3.35, 5.7, 8.05, 10.4, 12.75),
+  y = c(1, 1, 1, 1, 1, 1),
+  label = c(
+    paste0("Step 1\nFat body experiment QC\n",
+           "sample matrix + PCA\n",
+           "outliers retained and marked"),
+	    paste0("Step 2\nFat body DEGs\n",
+	           "control diet n = ", scales::comma(main_workflow_counts$diet_control_deg_n),
+	           "\ninfection within diet n = ",
+	           scales::comma(main_workflow_counts$infection_within_diet_deg_n)),
+    paste0("Step 3\nDEG tissues\n",
+           "model ~ tissue\n",
+           "n = ", scales::comma(main_workflow_counts$tissue_reference_deg_n)),
+	    paste0("Step 4\nDEG phase changes\n",
+	           "head or thorax\n",
+	           "n = ", scales::comma(main_workflow_counts$phase_reference_deg_n)),
+	    paste0("Step 5\nFour-set overlap\n",
+	           "Venn / UpSet\n",
+	           "category heatmaps"),
+    paste0("Step 6\nSensitivity\n",
+           "same logic\n",
+           "without current outliers")
+  )
+)
+
+workflow_edges <- tibble::tibble(
+  x = workflow_nodes$x[-nrow(workflow_nodes)] + 0.75,
+  y = workflow_nodes$y[-nrow(workflow_nodes)],
+  xend = workflow_nodes$x[-1] - 0.75,
+  yend = workflow_nodes$y[-1]
+)
+```
+
+```{r deduction-workflow-summary, fig.width=26, fig.height=6.5}
+workflow_plot <- ggplot() +
+  geom_segment(
+    data = workflow_edges,
+    aes(x = x, y = y, xend = xend, yend = yend),
+    arrow = grid::arrow(length = grid::unit(0.14, "inches")),
+    linewidth = 0.45,
+    color = "#4B5563"
+  ) +
+  geom_label(
+    data = workflow_nodes,
+    aes(x = x, y = y, label = label, fill = node_type),
+    label.size = 0.25,
+    color = "#111827",
+    size = 4.7,
+    lineheight = 0.94,
+    label.padding = grid::unit(0.2, "lines")
+  ) +
+  scale_fill_manual(
+    values = c(
+      "QC" = "#E5E7EB",
+      "Experiment" = "#F4C7B8",
+      "Reference" = "#C7D7F2",
+      "Output" = "#F7F3E8",
+      "Sensitivity" = "#DDD6FE"
+    ),
+    guide = "none"
+  ) +
+  coord_cartesian(xlim = c(0.1, 13.7), ylim = c(0.25, 1.75),
+                  clip = "off") +
+  labs(
+    title = "Independent DEG set construction workflow",
+    subtitle = "Compute tissue, phase, infection, and diet DEG sets independently; compare them only after each set is defined",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5, size = 13),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.margin = ggplot2::margin(10, 20, 10, 20)
+  )
+
+workflow_plot
+  ggsave(
+  file.path(out_dir, "step0_deduction_workflow_all_samples_with_outliers.png"),
+  workflow_plot,
+  width = 26,
+  height = 6.5,
+  dpi = 300
+)
+write.csv(
+  workflow_category_counts,
+  file.path(out_dir, "step0_deduction_workflow_category_counts_by_scenario.csv"),
+  row.names = FALSE
+)
+```
+
+## Stepwise computations and visual checks
+
+The figures below show each independently computed set before the overlap
+summary. Sample labels with `*` are the current outlier-flagged fat body samples.
+The column strips above each heatmap are the sample annotations: diet and
+infection status for the fat body experiment, and tissue plus
+gregarious/solitarious phase for the reference samples.
+
+```{r scenario-annotated-heatmap-prep, include=FALSE}
+make_vst_matrix <- function(count_mat, coldata, design_formula = ~ 1) {
+  keep <- rowSums(count_mat) >= 10
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = count_mat[keep, , drop = FALSE],
+    colData = coldata,
+    design = design_formula
+  )
+  vst <- DESeq2::vst(dds, blind = TRUE)
+  SummarizedExperiment::assay(vst)
+}
+
+tissue_reference_coldata_top <- as.data.frame(reference_meta_top) |>
+  dplyr::select(sample_id, tissue, phase, rearing_condition, replicate)
+rownames(tissue_reference_coldata_top) <- tissue_reference_coldata_top$sample_id
+
+vst_tissue_reference_top <- make_vst_matrix(
+  reference_counts_all_top,
+  tissue_reference_coldata_top,
+  ~ tissue
+)
+
+tissue_sample_matrix_plot <- plot_sample_matrix(
+  reference_meta_top,
+  "Reference model: tissue sample matrix",
+  file.path(out_dir, "step2_tissue_reference_sample_matrix.png"),
+  width = 10,
+  height = 6
+)
+
+tissue_pca_plot <- plot_pca_from_vst(
+  vst_tissue_reference_top,
+  as.data.frame(reference_meta_top),
+  "Reference overlay: PCA of fat body, head, and thorax reference samples",
+  "VST PCA of copied reference count files used for the tissue DEG model",
+  file.path(out_dir, "step2_tissue_reference_pca.png"),
+  width = 11,
+  height = 7
+)
+
+make_reference_vst <- function(tissue_name) {
+  tissue_meta <- reference_meta_top |>
+    dplyr::filter(tissue == tissue_name) |>
+    dplyr::arrange(phase, replicate)
+  tissue_counts <- reference_counts_all_top[
+    ,
+    tissue_meta$sample_id,
+    drop = FALSE
+  ]
+  tissue_coldata <- tissue_meta |>
+    dplyr::select(sample_id, phase, rearing_condition, replicate) |>
+    dplyr::mutate(
+      phase = factor(phase, levels = c("Gregarious", "Solitarious"))
+    )
+  rownames(tissue_coldata) <- tissue_coldata$sample_id
+  make_vst_matrix(tissue_counts, tissue_coldata, ~ phase)
+}
+
+vst_head_top <- make_reference_vst("Head")
+vst_thorax_top <- make_reference_vst("Thorax")
+
+reference_sample_metadata_top <- reference_meta_top |>
+  dplyr::transmute(
+    sample_id,
+    sample_label,
+    sample_block = dplyr::case_when(
+      as.character(tissue) == "Fat body" ~ "Reference fat body",
+      TRUE ~ paste(as.character(tissue), "reference")
+    ),
+    tissue,
+    phase,
+    Treatment = "Reference",
+    Diet = "Reference",
+    column_group = paste(tissue, phase)
+  )
+
+tissue_gene_summary_top <- tissue_sig |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    n_tissue_contrasts = dplyr::n_distinct(comparison),
+    tissue_comparisons = paste(sort(unique(comparison)), collapse = "; "),
+    tissue_directions = paste(sort(unique(direction)), collapse = "; "),
+    tissue_max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+    tissue_min_padj = min(padj, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+head_gene_summary_top <- head_sig |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    head_log2FC = log2FoldChange[which.min(padj)][1],
+    head_padj = min(padj, na.rm = TRUE),
+    head_direction = direction[which.min(padj)][1],
+    .groups = "drop"
+  )
+
+thorax_gene_summary_top <- thorax_sig |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    thorax_log2FC = log2FoldChange[which.min(padj)][1],
+    thorax_padj = min(padj, na.rm = TRUE),
+    thorax_direction = direction[which.min(padj)][1],
+    .groups = "drop"
+  )
+
+make_tissue_heatmap_genes <- function(tissue_summary, vst_mat) {
+  tissue_summary |>
+    dplyr::filter(gene_id %in% rownames(vst_mat)) |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      priority_score = n_tissue_contrasts * 10 +
+        tissue_max_abs_log2FC +
+        dplyr::coalesce(safe_neglog10(tissue_min_padj), 0),
+      gene_label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 42)
+      )
+    ) |>
+    dplyr::arrange(dplyr::desc(n_tissue_contrasts),
+                   tissue_min_padj,
+                   dplyr::desc(tissue_max_abs_log2FC)) |>
+    dplyr::slice_head(n = params$tissue_heatmap_gene_n)
+}
+
+make_phase_heatmap_genes <- function(sig_table, vst_mat, label_prefix) {
+  sig_table |>
+    dplyr::filter(gene_id %in% rownames(vst_mat)) |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      gene_label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 42)
+      )
+    ) |>
+    dplyr::arrange(padj, dplyr::desc(abs(log2FoldChange))) |>
+    dplyr::slice_head(n = params$phase_heatmap_gene_n) |>
+    dplyr::mutate(source_set = label_prefix)
+}
+
+tissue_heatmap_genes_top <- make_tissue_heatmap_genes(
+  tissue_gene_summary_top,
+  vst_tissue_reference_top
+)
+head_heatmap_genes_top <- make_phase_heatmap_genes(
+  head_sig,
+  vst_head_top,
+  "Head phase DEG"
+)
+thorax_heatmap_genes_top <- make_phase_heatmap_genes(
+  thorax_sig,
+  vst_thorax_top,
+  "Thorax phase DEG"
+)
+
+make_experiment_sample_metadata <- function(metadata_exp) {
+  metadata_exp |>
+    dplyr::transmute(
+      sample_id = label,
+      sample_label = dplyr::if_else(
+        label %in% current_outliers,
+        paste0(label, "*"),
+        label
+      ),
+      sample_block = "Experiment fat body",
+      tissue = "Fat body",
+      phase = "Experiment",
+      Treatment = as.character(Treatment),
+      Diet = as.character(Diet),
+      column_group = paste(Treatment, "diet", Diet)
+    )
+}
+
+make_experiment_gene_summary_for_scenario <- function(scenario_label) {
+  fat_results_all |>
+    dplyr::filter(scenario == scenario_label, significant) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      experiment_deg = TRUE,
+      n_experiment_contrasts = dplyr::n_distinct(comparison),
+      experiment_families = paste(sort(unique(comparison_family)), collapse = "; "),
+      experiment_comparisons = paste(sort(unique(comparison)), collapse = "; "),
+      experiment_directions = paste(sort(unique(direction)), collapse = "; "),
+      experiment_max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+      experiment_min_padj = min(padj, na.rm = TRUE),
+      .groups = "drop"
+    )
+}
+
+make_experiment_heatmap_genes <- function(experiment_summary, vst_mat) {
+  experiment_summary |>
+    dplyr::filter(gene_id %in% rownames(vst_mat)) |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      priority_score = n_experiment_contrasts * 10 +
+        experiment_max_abs_log2FC +
+        dplyr::coalesce(safe_neglog10(experiment_min_padj), 0),
+      gene_label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 42)
+      )
+    ) |>
+    dplyr::arrange(dplyr::desc(n_experiment_contrasts),
+                   experiment_min_padj,
+                   dplyr::desc(experiment_max_abs_log2FC)) |>
+    dplyr::slice_head(n = params$experiment_heatmap_gene_n)
+}
+
+make_independent_membership_for_scenario <- function(scenario_label,
+                                                     experiment_summary) {
+  independent_sets <- make_independent_gene_sets_for_scenario(scenario_label)
+
+  make_set_membership(independent_sets) |>
+    dplyr::rename(
+      tissue_reference_deg = `DEG tissues`,
+      phase_reference_deg = `DEG phase changes`,
+      diet_control_deg = `DEG Diet (controls)`,
+      fatbody_infection_deg = `DEG infection x diet`
+    ) |>
+    dplyr::mutate(
+      diet_infected_deg = FALSE,
+      head_phase_deg = gene_id %in% head_genes,
+      thorax_phase_deg = gene_id %in% thorax_genes,
+      phase_reference_source = dplyr::case_when(
+        head_phase_deg & thorax_phase_deg ~ "Head + thorax",
+        head_phase_deg ~ "Head",
+        thorax_phase_deg ~ "Thorax",
+        TRUE ~ "Not phase"
+      ),
+      fatbody_experiment_deg = fatbody_infection_deg | diet_control_deg
+    ) |>
+    dplyr::left_join(tissue_gene_summary_top, by = "gene_id") |>
+    dplyr::left_join(experiment_summary, by = "gene_id") |>
+    dplyr::left_join(head_gene_summary_top, by = "gene_id") |>
+    dplyr::left_join(thorax_gene_summary_top, by = "gene_id") |>
+    dplyr::left_join(annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::coalesce(Description, "no description"),
+      combined_priority_score =
+        dplyr::coalesce(n_tissue_contrasts, 0) * 8 +
+        dplyr::coalesce(n_experiment_contrasts, 0) * 10 +
+        dplyr::coalesce(tissue_max_abs_log2FC, 0) +
+        dplyr::coalesce(experiment_max_abs_log2FC, 0) +
+        dplyr::coalesce(abs(head_log2FC), 0) +
+        dplyr::coalesce(abs(thorax_log2FC), 0) +
+        dplyr::coalesce(safe_neglog10(tissue_min_padj), 0) +
+        dplyr::coalesce(safe_neglog10(experiment_min_padj), 0) +
+        dplyr::coalesce(safe_neglog10(head_padj), 0) +
+        dplyr::coalesce(safe_neglog10(thorax_padj), 0)
+    ) |>
+    add_overlap_evidence_annotations() |>
+    dplyr::mutate(logical_category = as.character(primary_annotation_group))
+}
+
+make_category_heatmap_genes <- function(independent_membership_scenario,
+                                        vst_mat) {
+  display_levels <- c(
+    "DEG tissues only",
+    "DEG phase changes, no fat body DEG",
+    "DEG Diet (controls), no phase",
+    "DEG infection x diet, no phase",
+    "DEG Diet (controls) + infection x diet, no phase",
+    "DEG phase changes + Diet (controls)",
+    "DEG phase changes + infection x diet",
+    "DEG phase changes + Diet (controls) + infection x diet"
+  )
+
+  annotated <- independent_membership_scenario |>
+    add_overlap_evidence_annotations() |>
+    dplyr::filter(gene_id %in% rownames(vst_mat)) |>
+    dplyr::mutate(
+      heatmap_category = dplyr::case_when(
+        tissue_reference_deg & !phase_reference_deg &
+          !diet_control_deg & !fatbody_infection_deg ~ "DEG tissues only",
+        phase_reference_deg &
+          !diet_control_deg & !fatbody_infection_deg ~
+          "DEG phase changes, no fat body DEG",
+
+        !fatbody_infection_deg & diet_control_deg &
+          !phase_reference_deg ~
+          "DEG Diet (controls), no phase",
+        !fatbody_infection_deg & diet_control_deg &
+          phase_reference_deg ~
+          "DEG phase changes + Diet (controls)",
+
+        fatbody_infection_deg & !diet_control_deg &
+          !phase_reference_deg ~
+          "DEG infection x diet, no phase",
+        fatbody_infection_deg & !diet_control_deg &
+          phase_reference_deg ~
+          "DEG phase changes + infection x diet",
+
+        fatbody_infection_deg & diet_control_deg &
+          !phase_reference_deg ~
+          "DEG Diet (controls) + infection x diet, no phase",
+        fatbody_infection_deg & diet_control_deg &
+          phase_reference_deg ~
+          "DEG phase changes + Diet (controls) + infection x diet",
+        TRUE ~ NA_character_
+      ),
+      heatmap_category = factor(heatmap_category, levels = display_levels)
+    ) |>
+    dplyr::filter(!is.na(heatmap_category))
+
+  annotated |>
+    dplyr::group_by(heatmap_category) |>
+    dplyr::arrange(dplyr::desc(combined_priority_score), .by_group = TRUE) |>
+    dplyr::slice_head(n = params$category_heatmap_genes_per_class) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      primary_annotation_group = heatmap_category,
+      logical_category = as.character(heatmap_category),
+      gene_label = paste0(
+        gene_id, " | ", Preferred_name, " | ",
+        stringr::str_trunc(Description, 38)
+      )
+    ) |>
+    dplyr::arrange(
+      primary_annotation_group,
+      dplyr::desc(combined_priority_score)
+    )
+}
+
+make_scenario_bundle <- function(scenario_label, exclude_outliers) {
+  metadata_exp <- metadata_all_base
+  if (exclude_outliers) {
+    metadata_exp <- metadata_exp |>
+      dplyr::filter(!label %in% current_outliers)
+  }
+  metadata_exp <- metadata_exp |>
+    dplyr::arrange(Treatment, Diet, label)
+
+  experiment_counts_scenario <- counts_all[, metadata_exp$label, drop = FALSE]
+  rownames(metadata_exp) <- metadata_exp$label
+
+  experiment_sample_metadata_scenario <- make_experiment_sample_metadata(
+    metadata_exp
+  )
+  rownames(experiment_sample_metadata_scenario) <-
+    experiment_sample_metadata_scenario$sample_id
+
+  vst_experiment_scenario <- make_vst_matrix(
+    experiment_counts_scenario,
+    metadata_exp,
+    ~ Diet + Treatment
+  )
+
+  shared_genes <- intersect(
+    rownames(experiment_counts_scenario),
+    rownames(reference_counts_all_top)
+  )
+  combined_counts_scenario <- cbind(
+    experiment_counts_scenario[shared_genes, , drop = FALSE],
+    reference_counts_all_top[
+      shared_genes,
+      reference_meta_top$sample_id,
+      drop = FALSE
+    ]
+  )
+  combined_sample_metadata_scenario <- dplyr::bind_rows(
+    experiment_sample_metadata_scenario,
+    reference_sample_metadata_top
+  )
+  combined_sample_metadata_scenario <-
+    combined_sample_metadata_scenario[
+      match(colnames(combined_counts_scenario),
+            combined_sample_metadata_scenario$sample_id),
+    ]
+  rownames(combined_sample_metadata_scenario) <-
+    combined_sample_metadata_scenario$sample_id
+
+  vst_combined_scenario <- make_vst_matrix(
+    combined_counts_scenario,
+    combined_sample_metadata_scenario,
+    ~ 1
+  )
+
+  experiment_summary_scenario <-
+    make_experiment_gene_summary_for_scenario(scenario_label)
+  experiment_heatmap_genes_scenario <- make_experiment_heatmap_genes(
+    experiment_summary_scenario,
+    vst_experiment_scenario
+  )
+  independent_sets_scenario <- make_independent_gene_sets_for_scenario(
+    scenario_label
+  )
+  independent_membership_scenario <- make_independent_membership_for_scenario(
+    scenario_label,
+	    experiment_summary_scenario
+	  )
+	  category_heatmap_genes_scenario <- make_category_heatmap_genes(
+	    independent_membership_scenario,
+	    vst_combined_scenario
+	  )
+
+  scenario_slug <- dplyr::case_when(
+    scenario_label == "All samples" ~ "all_samples",
+    scenario_label == "Current outliers removed" ~ "outliers_removed",
+    TRUE ~ stringr::str_replace_all(tolower(scenario_label), "[^a-z0-9]+", "_")
+  )
+  scenario_subtitle <- paste0("Scenario: ", scenario_label)
+
+  list(
+    scenario = scenario_label,
+	    slug = scenario_slug,
+	    experiment_summary = experiment_summary_scenario,
+	    independent_sets = independent_sets_scenario,
+	    independent_membership = independent_membership_scenario,
+	    category_heatmap_genes = category_heatmap_genes_scenario,
+    plots = list(
+      tissue_reference_samples = plot_annotated_heatmap(
+	        vst_tissue_reference_top,
+	        tissue_heatmap_genes_top,
+	        reference_sample_metadata_top,
+	        "Reference model: DEG tissues in fat body, head, and thorax references",
+	        "Rows are genes significant in at least one pairwise tissue contrast from the DESeq2 model ~ tissue",
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step1_tissue_reference_degs_heatmap.png")),
+        width = 20,
+        height = 18
+      ),
+      fatbody_sample_matrix = plot_fatbody_design_matrix(
+        metadata_exp,
+        paste0("Fat body experiment: sample matrix - ", scenario_label),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step2_fatbody_sample_matrix.png")),
+        width = 8,
+        height = 5.5
+      ),
+      fatbody_pca = plot_experiment_pca(
+        vst_experiment_scenario,
+        experiment_sample_metadata_scenario,
+        paste0("Fat body experiment: PCA - ", scenario_label),
+        "VST PCA of the fat body experiment count matrix",
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step2_fatbody_experiment_pca.png")),
+        width = 10,
+        height = 7
+      ),
+      combined_pca = plot_combined_sample_pca(
+        vst_combined_scenario,
+        combined_sample_metadata_scenario,
+        paste0("Reference overlay: experiment fat body plus reference samples - ",
+               scenario_label),
+        "VST PCA of fat body experiment samples together with fat body, head, and thorax references",
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step2_experiment_fatbody_plus_reference_tissues_pca.png")),
+        width = 12,
+        height = 8
+      ),
+      experiment_samples_only = plot_annotated_heatmap(
+        vst_experiment_scenario,
+        experiment_heatmap_genes_scenario,
+        experiment_sample_metadata_scenario,
+        "Fat body experiment DEGs in fat body samples",
+        paste0(scenario_subtitle, "; column strips show infection status and diet"),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step5_experiment_degs_fatbody_samples_heatmap.png")),
+        width = 22,
+        height = 20
+      ),
+      experiment_all_samples = plot_annotated_heatmap(
+        vst_combined_scenario,
+        experiment_heatmap_genes_scenario,
+        combined_sample_metadata_scenario,
+        "Fat body experiment DEGs projected across all sample types",
+        paste0(scenario_subtitle, "; fat body experiment, head, and thorax columns shown together"),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step5_experiment_degs_all_samples_heatmap.png")),
+        width = 30,
+        height = 22
+      ),
+      head_samples_only = plot_annotated_heatmap(
+        vst_head_top,
+        head_heatmap_genes_top,
+        reference_sample_metadata_top |>
+          dplyr::filter(tissue == "Head"),
+        "Reference overlay: DEG phase changes in head samples",
+        "Column strips show gregarious versus solitarious head references",
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step4_head_degs_head_samples_heatmap.png")),
+        width = 14,
+        height = 16
+      ),
+      head_all_samples = plot_annotated_heatmap(
+        vst_combined_scenario,
+        head_heatmap_genes_top,
+        combined_sample_metadata_scenario,
+        "Reference overlay: DEG phase changes from head across all sample types",
+        paste0(scenario_subtitle, "; fat body experiment, head, and thorax columns shown together"),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step4_head_degs_all_samples_heatmap.png")),
+        width = 28,
+        height = 16
+      ),
+      thorax_samples_only = plot_annotated_heatmap(
+        vst_thorax_top,
+        thorax_heatmap_genes_top,
+        reference_sample_metadata_top |>
+          dplyr::filter(tissue == "Thorax"),
+        "Reference overlay: DEG phase changes in thorax samples",
+        "Column strips show gregarious versus solitarious thorax references",
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step4_thorax_degs_thorax_samples_heatmap.png")),
+        width = 14,
+        height = 16
+      ),
+      thorax_all_samples = plot_annotated_heatmap(
+        vst_combined_scenario,
+        thorax_heatmap_genes_top,
+        combined_sample_metadata_scenario,
+        "Reference overlay: DEG phase changes from thorax across all sample types",
+        paste0(scenario_subtitle, "; fat body experiment, head, and thorax columns shown together"),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_step4_thorax_degs_all_samples_heatmap.png")),
+        width = 28,
+        height = 16
+      ),
+      category_all_samples = plot_annotated_heatmap(
+	        vst_combined_scenario,
+	        category_heatmap_genes_scenario,
+	        combined_sample_metadata_scenario,
+	        "Final: phase-centered DEG categories across all sample types",
+	        paste0(
+	          scenario_subtitle,
+	          "; row blocks emphasize phase overlap with diet and infection while tissue remains an evidence track"
+	        ),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_final_logical_category_all_samples_heatmap.png")),
+        width = 30,
+        height = 28
+      ),
+      category_annotated_all_samples = plot_final_overlap_annotated_heatmap(
+	        vst_combined_scenario,
+	        category_heatmap_genes_scenario,
+	        combined_sample_metadata_scenario,
+	        "Final: annotated independent DEG overlap heatmap",
+	        paste0(
+	          scenario_subtitle,
+	          "; phase-centered row blocks and evidence squares mark all set memberships"
+	        ),
+        file.path(out_dir, paste0(scenario_slug,
+                                  "_final_annotated_overlap_heatmap.png")),
+        width = 34,
+        height = 30
+      )
+    )
+  )
+}
+
+scenario_bundles <- list(
+  "All samples" = make_scenario_bundle("All samples", exclude_outliers = FALSE),
+  "Current outliers removed" = make_scenario_bundle(
+    "Current outliers removed",
+    exclude_outliers = TRUE
+  )
+)
+
+write.csv(
+  tissue_results,
+  file.path(out_dir, "step3_tissue_deseq2_pairwise_results.csv"),
+  row.names = FALSE
+)
+write.csv(
+  tissue_gene_summary_top,
+  file.path(out_dir, "step3_tissue_deg_gene_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  head_sig,
+  file.path(out_dir, "step3_head_phase_degs.csv"),
+  row.names = FALSE
+)
+write.csv(
+  thorax_sig,
+  file.path(out_dir, "step4_thorax_phase_degs.csv"),
+  row.names = FALSE
+)
+write.csv(
+  pooled_infection_results,
+  file.path(out_dir, "step5_pooled_infection_across_diets_deseq2_results.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["All samples"]]$experiment_summary,
+  file.path(out_dir, "all_samples_step5_experiment_deg_gene_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["Current outliers removed"]]$experiment_summary,
+  file.path(out_dir,
+            "outliers_removed_step5_experiment_deg_gene_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["All samples"]]$independent_membership,
+  file.path(out_dir, "all_samples_independent_set_membership.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["All samples"]]$category_heatmap_genes,
+  file.path(out_dir, "all_samples_final_annotated_overlap_heatmap_genes.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["Current outliers removed"]]$independent_membership,
+  file.path(out_dir, "outliers_removed_independent_set_membership.csv"),
+  row.names = FALSE
+)
+write.csv(
+  scenario_bundles[["Current outliers removed"]]$category_heatmap_genes,
+  file.path(out_dir,
+            "outliers_removed_final_annotated_overlap_heatmap_genes.csv"),
+  row.names = FALSE
+)
+```
+
+## Main analysis: all samples with outliers retained
+
+This section keeps all fat body experiment samples. The current outlier-flagged
+samples are retained and marked with `*` in the fat body figures. The order is
+intentionally stepwise: first inspect the fat body experiment, then compute the
+reference tissue and phase sets independently, then compare all sets.
+
+### Step 1: fat body experiment sample structure
+
+These figures describe only the diet-infection fat body experiment. They are
+placed first because the fat body experiment is the primary analysis; the
+reference samples are interpretive overlays used later.
+
+```{r all-samples-step2-fatbody-sample-matrix, fig.width=8, fig.height=5.5}
+scenario_bundles[["All samples"]]$plots$fatbody_sample_matrix
+```
+
+```{r all-samples-step2-fatbody-pca, fig.width=10, fig.height=7}
+scenario_bundles[["All samples"]]$plots$fatbody_pca
+```
+
+### Step 2: fat body diet/infection DEGs {.tabset}
+
+#### DEG counts by contrast
+
+```{r all-samples-step5-counts}
+all_samples_fatbody_contrast_counts <- fat_results_all |>
+  dplyr::filter(scenario == "All samples", significant) |>
+  dplyr::count(comparison_family, comparison, direction,
+               name = "n_deg_rows") |>
+  dplyr::arrange(comparison_family, comparison, direction)
+
+knitr::kable(
+  all_samples_fatbody_contrast_counts,
+  caption = "Fat body DEG counts, including the pooled infection contrast"
+)
+```
+
+#### Fat body samples only
+
+```{r all-samples-step5-fatbody-only, fig.width=22, fig.height=20}
+scenario_bundles[["All samples"]]$plots$experiment_samples_only
+```
+
+### Step 3: independent tissue and phase reference sets {.tabset}
+
+These signatures are computed independently from copied reference files. They
+are not used to call fat body experiment DEGs. Instead, they define reference
+tissue and phase DEG sets. The simplified final overlap uses `DEG tissues` and
+`DEG phase changes`; the phase set is the union of head phase DEGs and thorax
+phase DEGs.
+
+The tissue DEG model is fitted only on the copied reference count files:
+reference fat body, head, and thorax. Its design is `~ tissue`; phase is ignored
+for this first tissue-only question. The reported contrasts are Fat body vs
+Head, Fat body vs Thorax, and Head vs Thorax. The head and thorax phase DEG
+tables are also exported separately, so genes in `DEG phase changes` can still
+be traced back to head, thorax, or both.
+
+#### Reference sample matrix
+
+```{r all-samples-step2-reference-sample-matrix, fig.width=10, fig.height=6}
+tissue_sample_matrix_plot
+```
+
+#### Reference PCA
+
+```{r all-samples-step2-reference-pca, fig.width=11, fig.height=7}
+tissue_pca_plot
+```
+
+#### Experiment plus references PCA
+
+```{r all-samples-step2-combined-pca, fig.width=12, fig.height=8}
+scenario_bundles[["All samples"]]$plots$combined_pca
+```
+
+#### DEG tissues counts
+
+```{r all-samples-step1-tissue-counts}
+tissue_contrast_counts <- tissue_sig |>
+  dplyr::count(comparison, direction, name = "n_deg_rows") |>
+  dplyr::arrange(comparison, direction)
+
+knitr::kable(
+  tissue_contrast_counts,
+  caption = "DEG tissues counts by pairwise tissue contrast from the DESeq2 model ~ tissue"
+)
+```
+
+#### DEG tissues heatmap
+
+```{r all-samples-step1-tissue-heatmap, fig.width=20, fig.height=18}
+scenario_bundles[["All samples"]]$plots$tissue_reference_samples
+```
+
+#### DEG phase changes: head
+
+```{r all-samples-step4-head-only, fig.width=14, fig.height=16}
+scenario_bundles[["All samples"]]$plots$head_samples_only
+```
+
+#### DEG phase changes: thorax
+
+```{r all-samples-step4-thorax-only, fig.width=14, fig.height=16}
+scenario_bundles[["All samples"]]$plots$thorax_samples_only
+```
+
+### Step 4: independent DEG set overlap {.tabset}
+
+The Venn and UpSet plots in this section use four independent sets directly:
+`DEG tissues`, `DEG phase changes`, `DEG Diet (controls)`, and
+`DEG infection x diet`. These are not filtered through a fat body DEG list
+before overlap is computed. In this page, `DEG infection x diet` means
+infected-vs-control DEGs computed separately within each diet.
+
+For the final heatmaps, row blocks are phase-centered because the main
+biological concern is that solitarization or phase change may share many genes
+with the fat body experiment. `DEG tissues` is kept as a separate evidence
+track instead of being merged into the row names. This lets the rows highlight
+`DEG phase changes + Diet (controls)`, `DEG phase changes + infection x diet`,
+and `DEG phase changes + Diet (controls) + infection x diet`, while the blue
+evidence square still shows whether the same gene is also a tissue DEG.
+
+#### Independent set sizes
+
+```{r all-samples-final-independent-set-counts}
+all_samples_independent_set_counts <- workflow_category_counts |>
+  dplyr::filter(scenario == "All samples") |>
+  dplyr::arrange(logical_set)
+
+knitr::kable(
+  all_samples_independent_set_counts,
+  caption = "All-samples independent DEG set sizes before overlap"
+)
+```
+
+#### Heatmap display categories
+
+```{r all-samples-final-display-category-counts}
+all_samples_display_category_counts <-
+  scenario_bundles[["All samples"]]$category_heatmap_genes |>
+  dplyr::count(primary_annotation_group, name = "n_genes") |>
+  dplyr::arrange(primary_annotation_group)
+
+knitr::kable(
+  all_samples_display_category_counts,
+  caption = "Phase-centered display groups used to order the final heatmaps"
+)
+```
+
+#### Fat body experiment DEGs across all sample types
+
+```{r all-samples-step5-all-samples, fig.width=30, fig.height=22}
+scenario_bundles[["All samples"]]$plots$experiment_all_samples
+```
+
+#### Venn diagram
+
+```{r all-samples-final-venn, fig.width=11, fig.height=8}
+all_samples_independent_sets <-
+  scenario_bundles[["All samples"]]$independent_sets
+all_samples_final_venn <- plot_deg_sets_venn(
+  all_samples_independent_sets,
+  "All samples: independent DEG set overlap",
+  "Sets are computed independently before this overlap is drawn"
+)
+all_samples_final_venn
+ggsave(
+  file.path(out_dir, "all_samples_final_logical_sets_venn.png"),
+  all_samples_final_venn,
+  width = 11,
+  height = 8,
+  dpi = 300
+)
+```
+
+#### UpSetR plot
+
+```{r all-samples-final-upset, fig.width=11, fig.height=7}
+write_upset_png(
+  all_samples_independent_sets,
+  file.path(out_dir, "all_samples_final_logical_sets_upset.png")
+)
+UpSetR::upset(
+  UpSetR::fromList(all_samples_independent_sets),
+  nsets = length(all_samples_independent_sets),
+  nintersects = NA,
+  order.by = "freq",
+  keep.order = TRUE,
+  mainbar.y.label = "Intersection size",
+  sets.x.label = "Set size",
+  text.scale = c(1.4, 1.4, 1.2, 1.2, 1.4, 1.2)
+)
+```
+
+#### Category heatmap
+
+```{r all-samples-final-category-heatmap, fig.width=30, fig.height=28}
+scenario_bundles[["All samples"]]$plots$category_all_samples
+```
+
+#### Annotated category heatmap
+
+Colored squares on the left mark which independent DEG sets contain each gene:
+`DEG tissues`, `DEG phase changes`, `DEG Diet (controls)`, and
+`DEG infection x diet`.
+
+Rows are grouped by mutually exclusive interpretation classes. For example,
+`DEG phase changes + infection x diet` means a gene is phase-related in the
+head/thorax reference data and is also a fat body infected-vs-control DEG
+within at least one diet. The `DEG tissues` evidence square is independent, so
+the same row can still show whether that gene is also tissue-associated.
+
+```{r all-samples-final-annotated-category-heatmap, fig.width=34, fig.height=30}
+scenario_bundles[["All samples"]]$plots$category_annotated_all_samples
+```
+
+## Outlier-removed sensitivity
+
+This section repeats the fat body and overlap parts after removing the current
+outlier set (`1007`, `1036`, `1037`, and `1039`). The tissue and phase-change
+reference sets are unchanged; only the diet-control and infection-within-diet
+fat body sets and the combined cross-sample heatmaps change.
+
+### Step 1: filtered fat body sample structure
+
+```{r outliers-removed-step2-fatbody-sample-matrix, fig.width=8, fig.height=5.5}
+scenario_bundles[["Current outliers removed"]]$plots$fatbody_sample_matrix
+```
+
+```{r outliers-removed-step2-fatbody-pca, fig.width=10, fig.height=7}
+scenario_bundles[["Current outliers removed"]]$plots$fatbody_pca
+```
+
+### Step 2: filtered fat body diet/infection DEGs {.tabset}
+
+This repeats the fat body DEG definition after removing the current outlier
+set. The reference overlays are held constant so the sensitivity question is
+focused on how the fat body experiment DEG set changes.
+
+#### DEG counts by contrast
+
+```{r outliers-removed-step5-counts}
+outliers_removed_fatbody_contrast_counts <- fat_results_all |>
+  dplyr::filter(scenario == "Current outliers removed", significant) |>
+  dplyr::count(comparison_family, comparison, direction,
+               name = "n_deg_rows") |>
+  dplyr::arrange(comparison_family, comparison, direction)
+
+knitr::kable(
+  outliers_removed_fatbody_contrast_counts,
+  caption = "Filtered fat body DEG counts, including the pooled infection contrast"
+)
+```
+
+#### Fat body samples only
+
+```{r outliers-removed-step5-fatbody-only, fig.width=22, fig.height=20}
+scenario_bundles[["Current outliers removed"]]$plots$experiment_samples_only
+```
+
+### Step 3: filtered independent DEG set overlap {.tabset}
+
+As above, the Venn and UpSet plots compare four independent DEG sets:
+`DEG tissues`, `DEG phase changes`, `DEG Diet (controls)`, and
+`DEG infection x diet`. The two reference sets are held constant;
+diet-control and infection-within-diet fat body sets are recomputed after
+removing the current outliers.
+
+#### Experiment plus references PCA
+
+```{r outliers-removed-step2-combined-pca, fig.width=12, fig.height=8}
+scenario_bundles[["Current outliers removed"]]$plots$combined_pca
+```
+
+#### Fat body experiment DEGs across all sample types
+
+```{r outliers-removed-step5-all-samples, fig.width=30, fig.height=22}
+scenario_bundles[["Current outliers removed"]]$plots$experiment_all_samples
+```
+
+#### Independent set sizes
+
+```{r outliers-removed-final-independent-set-counts}
+outliers_removed_independent_set_counts <- workflow_category_counts |>
+  dplyr::filter(scenario == "Current outliers removed") |>
+  dplyr::arrange(logical_set)
+
+knitr::kable(
+  outliers_removed_independent_set_counts,
+  caption = "Outlier-removed independent DEG set sizes before overlap"
+)
+```
+
+#### Heatmap display categories
+
+```{r outliers-removed-final-display-category-counts}
+outliers_removed_display_category_counts <-
+  scenario_bundles[["Current outliers removed"]]$category_heatmap_genes |>
+  dplyr::count(primary_annotation_group, name = "n_genes") |>
+  dplyr::arrange(primary_annotation_group)
+
+knitr::kable(
+  outliers_removed_display_category_counts,
+  caption = "Phase-centered display groups used to order the outlier-removed heatmaps"
+)
+```
+
+#### Venn diagram
+
+```{r outliers-removed-final-venn, fig.width=11, fig.height=8}
+outliers_removed_independent_sets <-
+  scenario_bundles[["Current outliers removed"]]$independent_sets
+outliers_removed_final_venn <- plot_deg_sets_venn(
+  outliers_removed_independent_sets,
+  "Current outliers removed: independent DEG set overlap",
+  "Reference sets are fixed; fat body sets are recomputed after outlier removal"
+)
+outliers_removed_final_venn
+ggsave(
+  file.path(out_dir, "outliers_removed_final_logical_sets_venn.png"),
+  outliers_removed_final_venn,
+  width = 11,
+  height = 8,
+  dpi = 300
+)
+```
+
+#### UpSetR plot
+
+```{r outliers-removed-final-upset, fig.width=11, fig.height=7}
+write_upset_png(
+  outliers_removed_independent_sets,
+  file.path(out_dir, "outliers_removed_final_logical_sets_upset.png")
+)
+UpSetR::upset(
+  UpSetR::fromList(outliers_removed_independent_sets),
+  nsets = length(outliers_removed_independent_sets),
+  nintersects = NA,
+  order.by = "freq",
+  keep.order = TRUE,
+  mainbar.y.label = "Intersection size",
+  sets.x.label = "Set size",
+  text.scale = c(1.4, 1.4, 1.2, 1.2, 1.4, 1.2)
+)
+```
+
+#### Category heatmap
+
+```{r outliers-removed-final-category-heatmap, fig.width=30, fig.height=28}
+scenario_bundles[["Current outliers removed"]]$plots$category_all_samples
+```
+
+#### Annotated category heatmap
+
+Colored squares on the left mark which independent DEG sets contain each gene:
+`DEG tissues`, `DEG phase changes`, `DEG Diet (controls)`, and
+`DEG infection x diet`.
+
+Rows are grouped by mutually exclusive interpretation classes. For example,
+`DEG phase changes + infection x diet` means a gene is phase-related in the
+head/thorax reference data and is also a fat body infected-vs-control DEG
+within at least one diet. The `DEG tissues` evidence square is independent, so
+the same row can still show whether that gene is also tissue-associated.
+
+```{r outliers-removed-final-annotated-category-heatmap, fig.width=34, fig.height=30}
+scenario_bundles[["Current outliers removed"]]$plots$category_annotated_all_samples
+```
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(
+  tibble::tibble(file = exports),
+  caption = paste("Files written to", out_dir)
+)
+```

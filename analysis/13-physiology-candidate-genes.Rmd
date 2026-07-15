@@ -1,0 +1,330 @@
+---
+title: "Physiology candidate genes"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "physiology-candidate-genes"
+---
+
+## Purpose
+
+This page tests the co-author hypothesis in a targeted way. Instead of starting
+from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
+genes plausibly involved in three insect-relevant processes:
+
+1. Protein and amino-acid availability that could affect fungal growth.
+2. Energy stores and starvation resistance in the locust fat body.
+3. Immune and stress responses during infection.
+
+This is a candidate-gene screen, not a formal enrichment test. It is designed to
+produce an interpretable gene list that can be checked manually and refined as
+we agree on more insect-specific marker genes.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("dplyr", "tidyr", "stringr", "ggplot2", "forcats", "DT")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+results_root <- file.path(project_dir, params$latest_results_root)
+
+theme_colors <- c(
+  "Protein and amino-acid availability" = "#6F4AA8",
+  "Energy stores and starvation resistance" = "#2C7FB8",
+  "Immune and stress response" = "#C23B22"
+)
+direction_colors <- c("Upregulated" = "#E41A1C",
+                      "Downregulated" = "#1E88E5")
+```
+
+## Candidate terms
+
+These keyword groups deliberately favor insect physiology terms and fat-body
+functions over broad pathway labels. The matched word is retained for each gene
+so the screen remains auditable.
+
+```{r candidate-keywords}
+candidate_terms <- tibble::tribble(
+  ~theme, ~term_group, ~pattern,
+  "Protein and amino-acid availability", "Storage proteins", "storage protein|hexamerin|arylphorin|vitellogenin|yolk protein",
+  "Protein and amino-acid availability", "Proteolysis", "protease|peptidase|trypsin|cathepsin|carboxypeptidase|metalloprotease|serine protease",
+  "Protein and amino-acid availability", "Amino-acid transport/metabolism", "amino acid|amino-acid|peptide transport|solute carrier|transaminase|aminotransferase",
+  "Energy stores and starvation resistance", "Lipid transport/storage", "lipophorin|apolipophorin|lipid|fatty acid|triacylglycerol|triglyceride|acyl-coa|beta-oxidation|lipase",
+  "Energy stores and starvation resistance", "Carbohydrate stores", "glycogen|trehalose|trehalase|glucose|glycolysis|gluconeogenesis|pentose phosphate|citrate cycle|tca cycle",
+  "Energy stores and starvation resistance", "Endocrine nutrition", "insulin|insulin-like|adipokinetic|juvenile hormone|tor signaling|target of rapamycin",
+  "Immune and stress response", "Pattern recognition", "peptidoglycan recognition|pgrp|gram-negative binding|gnbp|beta-1,3-glucan|lectin|fibrinogen|scavenger receptor",
+  "Immune and stress response", "Toll/IMD/JAK-STAT", "toll|imd|relish|cactus|jak|stat|dorsal|myd88|tube|pell[e]?",
+  "Immune and stress response", "Effector and melanization", "defensin|cecropin|attacin|gloverin|lysozyme|antimicrobial|phenoloxidase|prophenoloxidase|melanization|serpin|clip-domain",
+  "Immune and stress response", "Stress/detoxification", "heat shock|glutathione|peroxidase|cytochrome p450|detoxification|oxidative stress|reactive oxygen|autophagy|thioester"
+)
+
+knitr::kable(candidate_terms, caption = "Candidate keyword rules")
+```
+
+## Annotation table
+
+eggNOG is protein-centered, while the count matrix uses `LOC...` gene IDs. The
+GFF file bridges protein IDs to gene IDs.
+
+```{r annotation}
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+gene_universe <- unique(counts_raw[[1]])
+eggnog <- read_emapper(eggnog_file)
+protein_to_gene <- parse_cds_gene_bridge(gff_file)
+
+annotation <- eggnog |>
+  dplyr::left_join(protein_to_gene, by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE) |>
+  dplyr::mutate(
+    annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
+                            KEGG_Pathway, PFAMs, sep = " | ")
+  )
+```
+
+```{r candidate-screen}
+candidate_hits <- dplyr::bind_rows(lapply(seq_len(nrow(candidate_terms)), function(i) {
+  term <- candidate_terms[i, ]
+  hit <- stringr::str_detect(annotation$annotation_text,
+                             stringr::regex(term$pattern, ignore_case = TRUE))
+  if (!any(hit)) return(NULL)
+  annotation[hit, ] |>
+    dplyr::transmute(
+      gene_id, Preferred_name, Description, PFAMs,
+      theme = term$theme,
+      term_group = term$term_group,
+      matched_pattern = term$pattern
+    )
+})) |>
+  dplyr::distinct()
+
+candidate_gene_summary <- candidate_hits |>
+  dplyr::group_by(gene_id, Preferred_name, Description) |>
+  dplyr::summarise(
+    themes = paste(sort(unique(theme)), collapse = "; "),
+    term_groups = paste(sort(unique(term_group)), collapse = "; "),
+    matched_patterns = paste(sort(unique(matched_pattern)), collapse = "; "),
+    .groups = "drop"
+  )
+
+write.csv(candidate_hits, file.path(out_dir, "candidate_keyword_hits_long.csv"),
+          row.names = FALSE)
+write.csv(candidate_gene_summary,
+          file.path(out_dir, "candidate_gene_annotation_summary.csv"),
+          row.names = FALSE)
+
+knitr::kable(
+  candidate_hits |>
+    dplyr::count(theme, term_group, name = "n_candidate_genes"),
+  caption = "Candidate genes detected by keyword group"
+)
+```
+
+## DEG source
+
+The page first looks for the newest sample-filter scenario results. If those
+have not been rendered yet, it falls back to the latest infection-within-diet
+DEG tables already present on disk.
+
+```{r load-deg-results}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+scenario_dir <- latest_dir("^deg-sample-filter-scenarios_")
+infection_dir <- latest_dir("^infection-within-diet-deg_")
+
+if (!is.na(scenario_dir)) {
+  deg_source <- file.path(scenario_dir, "all_deseq2_results.csv")
+  deg_results <- read.csv(deg_source, check.names = FALSE)
+  deg_results <- deg_results |>
+    dplyr::mutate(
+      significant = !is.na(padj) &
+        padj < params$alpha &
+        abs(log2FoldChange) >= params$lfc_threshold,
+      direction = dplyr::case_when(
+        !significant ~ "Not DEG",
+        log2FoldChange > 0 ~ "Upregulated",
+        log2FoldChange < 0 ~ "Downregulated",
+        TRUE ~ "Not DEG"
+      )
+    )
+} else if (!is.na(infection_dir)) {
+  files <- list.files(infection_dir,
+                      pattern = "^DESeq2_infected_vs_control_diet_.*[.]csv$",
+                      full.names = TRUE)
+  if (length(files) == 0) stop("No infection DEG result files found.")
+  deg_results <- dplyr::bind_rows(lapply(files, function(path) {
+    diet <- stringr::str_match(basename(path), "diet_([0-9]+)[.]csv$")[, 2]
+    tab <- read.csv(path, check.names = FALSE)
+    tab$gene_id <- if ("gene_id" %in% names(tab)) tab$gene_id else tab[[1]]
+    tab$scenario <- "Current DEG page"
+    tab$comparison_type <- "Infection within diet"
+    tab$comparison <- paste0("Diet ", diet, ": infected vs control")
+    tab
+  })) |>
+    dplyr::mutate(
+      significant = !is.na(padj) &
+        padj < params$alpha &
+        abs(log2FoldChange) >= params$lfc_threshold,
+      direction = dplyr::case_when(
+        !significant ~ "Not DEG",
+        log2FoldChange > 0 ~ "Upregulated",
+        log2FoldChange < 0 ~ "Downregulated",
+        TRUE ~ "Not DEG"
+      )
+    )
+  deg_source <- infection_dir
+} else {
+  stop("No DEG source found under ", results_root)
+}
+
+data.frame(DEG_source = deg_source) |>
+  knitr::kable(caption = "DEG table source")
+```
+
+## Candidate genes that are DEGs
+
+```{r candidate-degs}
+candidate_degs <- deg_results |>
+  dplyr::filter(significant, gene_id %in% candidate_gene_summary$gene_id) |>
+  dplyr::left_join(candidate_gene_summary, by = "gene_id") |>
+  dplyr::arrange(comparison_type, comparison, direction, padj)
+
+candidate_deg_summary <- candidate_degs |>
+  tidyr::separate_rows(themes, sep = "; ") |>
+  dplyr::count(scenario, comparison_type, comparison, themes, direction,
+               name = "n_candidate_degs")
+
+write.csv(candidate_degs, file.path(out_dir, "candidate_degs.csv"),
+          row.names = FALSE)
+write.csv(candidate_deg_summary,
+          file.path(out_dir, "candidate_deg_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r candidate-deg-barplot, fig.height=6.8, fig.width=12}
+plot_df <- candidate_deg_summary |>
+  dplyr::filter(n_candidate_degs > 0) |>
+  dplyr::mutate(themes = factor(themes, levels = names(theme_colors)))
+
+p_candidate <- ggplot2::ggplot(
+  plot_df,
+  ggplot2::aes(x = comparison, y = n_candidate_degs, fill = direction)
+) +
+  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.72),
+                    width = 0.65) +
+  ggplot2::facet_grid(themes ~ scenario, scales = "free_y", space = "free_y") +
+  ggplot2::scale_fill_manual(values = direction_colors) +
+  ggplot2::labs(
+    title = "Candidate physiology DEGs",
+    x = NULL,
+    y = "Number of candidate DEGs",
+    fill = "Direction"
+  ) +
+  ggplot2::theme_bw(base_size = 12) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+    strip.background = ggplot2::element_rect(fill = "#EEF2F4", color = "#9CA3AF"),
+    strip.text = ggplot2::element_text(face = "bold"),
+    panel.grid.minor = ggplot2::element_blank(),
+    legend.position = "bottom"
+  )
+
+p_candidate
+ggplot2::ggsave(file.path(out_dir, "candidate_physiology_deg_barplot.png"),
+                p_candidate, width = 12, height = 6.8, dpi = 300)
+```
+
+## Candidate DEG table
+
+```{r candidate-deg-table}
+display_cols <- intersect(
+  c("scenario", "comparison_type", "comparison", "gene_id", "direction",
+    "log2FoldChange", "padj", "themes", "term_groups", "Preferred_name",
+    "Description"),
+  names(candidate_degs)
+)
+
+DT::datatable(
+  candidate_degs[, display_cols, drop = FALSE],
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = "Candidate physiology genes that are DEGs"
+)
+```
+
+## Full candidate gene table
+
+```{r full-candidate-table}
+DT::datatable(
+  candidate_gene_summary,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = "All genes matching candidate physiology keyword rules"
+)
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()), file.path(out_dir, "sessionInfo.txt"))
+```

@@ -179,6 +179,10 @@ table {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.compact-grid .analysis-tile {
+  min-height: 145px;
+}
+
 .analysis-tile {
   min-height: 165px;
   padding: 18px;
@@ -209,6 +213,27 @@ table {
 .analysis-tile p {
   color: #52606d;
   line-height: 1.45;
+  margin: 0;
+}
+
+.featured-tile {
+  border-color: #0f766e;
+  box-shadow: 0 12px 30px rgba(15, 118, 110, 0.18);
+}
+
+.note-panel {
+  background: #ffffff;
+  border-left: 6px solid #0f766e;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(31, 41, 51, 0.08);
+  margin: 16px 0 24px;
+  padding: 18px 20px;
+}
+
+.note-panel p {
+  color: #364152;
+  font-size: 17px;
+  line-height: 1.6;
   margin: 0;
 }
 

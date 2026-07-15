@@ -1,0 +1,14 @@
+### =================================================================
+### EGGNOG-MAPPER ANNOTATION ONLY
+### =================================================================
+###
+### Use this Snakefile when you want to annotate the reference protein set with
+### eggNOG-mapper. It deliberately does not include fastp, STAR, Salmon,
+### featureCounts, DESeq2, or RNA-seq variant calling rules.
+
+include: "config.smk"
+include: "rules/05_eggnog_annotation.smk"
+
+rule all:
+    input:
+        eggnog_annotation_outputs()

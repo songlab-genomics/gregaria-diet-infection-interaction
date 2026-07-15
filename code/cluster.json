@@ -1,0 +1,287 @@
+{
+  "__default__": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 8,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "80G",
+    "time": "0-04:00:00",
+    "export": "NONE"
+  },
+
+  "trimming_fastp": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "STAR_index": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 20,
+    "partition": "public",
+    "qos": "public",
+    "mem": "180G",
+    "time": "2-00:00:00",
+    "export": "NONE"
+  },
+
+  "STAR_align": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "140G",
+    "time": "2-00:00:00",
+    "export": "NONE"
+  },
+
+  "featurecounts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_variant_reference": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "20G",
+    "time": "0-02:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_mark_duplicates": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_split_ncigar": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_haplotypecaller_gvcf": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 6,
+    "partition": "public",
+    "qos": "public",
+    "mem": "80G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_combine_gvcfs_by_tissue": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "100G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_genotype_gvcfs_by_tissue": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "100G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "rnaseq_filter_pass_snps_by_tissue": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "eggnog_download_database": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 8,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "eggnog_preflight": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "NONE"
+  },
+
+  "eggnog_run_emapper": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "120G",
+    "time": "2-00:00:00",
+    "export": "NONE"
+  },
+
+  "eggnog_parse_annotations": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "NONE"
+  },
+
+  "eggnog_build_desertlocustr_universe": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_sample_manifest": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:30:00",
+    "export": "NONE"
+  },
+
+  "metatx_samtools_qc": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-02:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_markdup_metrics": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_export_host_unmapped_fastq": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "30G",
+    "time": "0-06:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_kraken2_classify": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "120G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_kaiju_classify": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "120G",
+    "time": "1-00:00:00",
+    "export": "NONE"
+  },
+
+  "metatx_summarize_all": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "NONE"
+  },
+
+  "salmon_index": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "public",
+    "qos": "public",
+    "mem": "80G",
+    "time": "0-08:00:00",
+    "export": "NONE"
+  },
+
+  "salmon_quant": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "2-00:00:00",
+    "export": "NONE"
+  }
+}

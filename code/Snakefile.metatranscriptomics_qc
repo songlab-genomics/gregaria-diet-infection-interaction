@@ -1,0 +1,20 @@
+### =================================================================
+### METATRANSCRIPTOMICS + CROSS-SAMPLE RNA-SEQ QC ONLY
+### =================================================================
+###
+### This wrapper runs only the branch that reuses existing STAR BAMs to:
+###   1. summarize host RNA-seq QC,
+###   2. export host-unmapped paired reads,
+###   3. classify non-host reads with Kraken2 and optional Kaiju,
+###   4. write all-species/tissue/sample tables.
+###
+### It does not include trimming, STAR mapping, featureCounts, DESeq2, or
+### RNA-seq variant-calling rules, so it is a safer entry point for HPC runs.
+
+include: "config.smk"
+include: "rules/06_metatranscriptomics_qc.smk"
+
+
+rule all:
+    input:
+        metatx_final_outputs()

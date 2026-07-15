@@ -1,7 +1,0 @@
-"treatment_subset","contrast","n_significant_genes","n_higher_first_diet","n_higher_second_diet"
-"Control","33_vs_50",3,3,0
-"Control","33_vs_83",67,23,44
-"Control","50_vs_83",38,3,35
-"Infected","33_vs_50",1955,11,1944
-"Infected","33_vs_83",29,11,18
-"Infected","50_vs_83",1,0,1

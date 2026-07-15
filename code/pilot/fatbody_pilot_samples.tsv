@@ -1,0 +1,7 @@
+sample_id	raw_prefix	tissue	treatment	diet	note
+1003	mehreen_1003	fatbody	Control	33	control diet 33
+1004	mehreen_1004	fatbody	Control	50	control diet 50
+1002	mehreen_1002	fatbody	Control	83	control diet 83
+1015	mehreen_1015	fatbody	Infected	33	infected diet 33
+1016	mehreen_1016	fatbody	Infected	50	infected diet 50
+1014	mehreen_1014	fatbody	Infected	83	infected diet 83

@@ -1,0 +1,432 @@
+---
+title: "DEG sample-filter scenarios"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  min_total_count: 10
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "deg-sample-filter-scenarios"
+---
+
+## Purpose
+
+This page compares three sample-filter definitions for the same rRNA-filtered
+count matrix. The goal is to make the outlier choice visible before interpreting
+infection, diet, and diet-by-infection expression patterns.
+
+The three biological questions are kept constant across scenarios:
+
+1. Does infection change fat body expression within each diet?
+2. Do diets differ among control animals?
+3. Do diets differ among infected animals?
+
+Genes are called differentially expressed when `padj < alpha` and
+`abs(log2FoldChange) >= lfc_threshold`.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "ggplot2", "dplyr", "tidyr", "ggrepel",
+              "SummarizedExperiment", "DT")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata_file <- file.path(project_dir, params$metadata_file)
+counts_file <- file.path(project_dir, params$counts_file)
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+treatment_colors <- c("Control" = "#7B8794", "Infected" = "#C85A54")
+direction_colors <- c("Upregulated" = "#E41A1C",
+                      "Downregulated" = "#1E88E5")
+scenario_colors <- c(
+  "All samples" = "#374151",
+  "Current outliers removed" = "#2F8F5B",
+  "Expanded outlier set" = "#7B4FA3"
+)
+```
+
+## Scenario definitions
+
+The current outlier-removal scenario uses the four samples that are absent from
+`mehreen_metadata_no_outliers.txt`: 1007, 1036, 1037, and 1039. The expanded
+scenario is intentionally defined in one vector at the top of the analysis so
+additional sample IDs can be added without changing the statistical code.
+
+```{r scenario-definitions}
+current_outliers <- c("1007", "1036", "1037", "1039")
+expanded_outliers <- current_outliers
+
+scenario_tbl <- tibble::tibble(
+  scenario_id = c("all_samples",
+                  "current_outliers_removed",
+                  "expanded_outlier_set"),
+  scenario = c("All samples",
+               "Current outliers removed",
+               "Expanded outlier set"),
+  excluded_samples = I(list(character(0), current_outliers, expanded_outliers)),
+  rationale = c(
+    "No samples removed.",
+    "Removes the current four-sample outlier set.",
+    "Uses the editable expanded_outliers vector."
+  )
+)
+
+scenario_display <- scenario_tbl |>
+  dplyr::mutate(
+    excluded_samples = vapply(excluded_samples, function(x) {
+      if (length(x) == 0) "None" else paste(x, collapse = ", ")
+    }, character(1))
+  )
+
+knitr::kable(scenario_display, caption = "Sample-filter scenarios")
+write.csv(scenario_display, file.path(out_dir, "sample_filter_scenarios.csv"),
+          row.names = FALSE)
+```
+
+## Data loading
+
+```{r data-loading}
+read_metadata <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  tab <- tab[, !is.na(names(tab)) & nzchar(names(tab)), drop = FALSE]
+  tab$label <- as.character(tab$label)
+  tab$Diet <- factor(tab$Diet, levels = c("33", "50", "83"))
+  tab$Treatment <- relevel(factor(tab$Treatment), ref = "Control")
+  tab
+}
+
+metadata_full <- read_metadata(metadata_file)
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_all <- as.matrix(counts_raw[, -1])
+rownames(counts_all) <- counts_raw[[1]]
+storage.mode(counts_all) <- "integer"
+colnames(counts_all) <- sub("_MERGE$", "", sub("^mehreen_", "",
+                                                colnames(counts_all)))
+
+missing_metadata <- setdiff(colnames(counts_all), metadata_full$label)
+if (length(missing_metadata) > 0) {
+  stop("Count columns missing from metadata: ",
+       paste(missing_metadata, collapse = ", "))
+}
+```
+
+## Analysis functions
+
+```{r functions}
+scenario_metadata <- function(excluded_samples) {
+  meta <- metadata_full |>
+    dplyr::filter(!label %in% excluded_samples)
+  meta <- meta[match(colnames(counts_all)[colnames(counts_all) %in% meta$label],
+                     meta$label), ]
+  rownames(meta) <- meta$label
+  meta
+}
+
+scenario_counts <- function(metadata) {
+  counts_all[, metadata$label, drop = FALSE]
+}
+
+prepare_vst <- function(counts, metadata) {
+  keep <- rowSums(counts) >= params$min_total_count
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts[keep, ],
+    colData = metadata,
+    design = ~ Diet + Treatment
+  )
+  DESeq2::vst(dds, blind = TRUE)
+}
+
+run_infection_within_diet <- function(counts, metadata, scenario_label) {
+  out <- list()
+  for (diet_level in levels(droplevels(metadata$Diet))) {
+    sample_keep <- metadata$Diet == diet_level
+    meta_sub <- droplevels(metadata[sample_keep, ])
+    counts_sub <- counts[, sample_keep, drop = FALSE]
+    keep <- rowSums(counts_sub) >= params$min_total_count
+
+    dds <- DESeq2::DESeqDataSetFromMatrix(
+      countData = counts_sub[keep, ],
+      colData = meta_sub,
+      design = ~ Treatment
+    )
+    dds <- DESeq2::DESeq(dds)
+    res <- DESeq2::results(dds, contrast = c("Treatment", "Infected", "Control"))
+    tab <- as.data.frame(res)
+    tab$gene_id <- rownames(tab)
+    tab$scenario <- scenario_label
+    tab$comparison_type <- "Infection within diet"
+    tab$comparison <- paste0("Diet ", diet_level, ": infected vs control")
+    tab$numerator <- "Infected"
+    tab$denominator <- "Control"
+    tab$diet <- diet_level
+    out[[diet_level]] <- tab
+  }
+  dplyr::bind_rows(out)
+}
+
+run_diet_pairwise <- function(counts, metadata, treatment_level, scenario_label) {
+  sample_keep <- metadata$Treatment == treatment_level
+  meta_sub <- droplevels(metadata[sample_keep, ])
+  counts_sub <- counts[, sample_keep, drop = FALSE]
+  keep <- rowSums(counts_sub) >= params$min_total_count
+
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_sub[keep, ],
+    colData = meta_sub,
+    design = ~ Diet
+  )
+  dds <- DESeq2::DESeq(dds)
+
+  contrasts <- list(
+    "50 vs 33" = c("Diet", "50", "33"),
+    "83 vs 33" = c("Diet", "83", "33"),
+    "83 vs 50" = c("Diet", "83", "50")
+  )
+
+  dplyr::bind_rows(lapply(names(contrasts), function(label) {
+    contrast <- contrasts[[label]]
+    res <- DESeq2::results(dds, contrast = contrast)
+    tab <- as.data.frame(res)
+    tab$gene_id <- rownames(tab)
+    tab$scenario <- scenario_label
+    tab$comparison_type <- paste("Diet contrasts among", tolower(treatment_level))
+    tab$comparison <- paste(treatment_level, label)
+    tab$numerator <- contrast[2]
+    tab$denominator <- contrast[3]
+    tab$diet <- NA_character_
+    tab
+  }))
+}
+
+classify_degs <- function(tab) {
+  tab |>
+    dplyr::mutate(
+      significant = !is.na(padj) &
+        padj < params$alpha &
+        abs(log2FoldChange) >= params$lfc_threshold,
+      direction = dplyr::case_when(
+        !significant ~ "Not DEG",
+        log2FoldChange > 0 ~ "Upregulated",
+        log2FoldChange < 0 ~ "Downregulated",
+        TRUE ~ "Not DEG"
+      )
+    )
+}
+
+run_scenario <- function(row_index) {
+  row <- scenario_tbl[row_index, ]
+  metadata <- scenario_metadata(row$excluded_samples[[1]])
+  counts <- scenario_counts(metadata)
+  vsd <- prepare_vst(counts, metadata)
+
+  infection <- run_infection_within_diet(counts, metadata, row$scenario)
+  diet_control <- run_diet_pairwise(counts, metadata, "Control", row$scenario)
+  diet_infected <- run_diet_pairwise(counts, metadata, "Infected", row$scenario)
+
+  list(
+    scenario = row$scenario,
+    metadata = metadata,
+    counts = counts,
+    vsd = vsd,
+    results = classify_degs(dplyr::bind_rows(infection, diet_control,
+                                             diet_infected))
+  )
+}
+```
+
+## Run DESeq2 scenarios
+
+```{r run-scenarios}
+scenario_results <- lapply(seq_len(nrow(scenario_tbl)), run_scenario)
+names(scenario_results) <- scenario_tbl$scenario
+
+all_results <- dplyr::bind_rows(lapply(scenario_results, `[[`, "results"))
+
+sample_counts <- dplyr::bind_rows(lapply(scenario_results, function(x) {
+  x$metadata |>
+    dplyr::count(Diet, Treatment, name = "n_samples") |>
+    dplyr::mutate(scenario = x$scenario)
+}))
+
+all_contrasts <- all_results |>
+  dplyr::distinct(scenario, comparison_type, comparison)
+
+deg_summary_observed <- all_results |>
+  dplyr::filter(significant) |>
+  dplyr::count(scenario, comparison_type, comparison, direction,
+               name = "n_degs")
+
+deg_summary <- tidyr::expand_grid(
+  all_contrasts,
+  direction = c("Upregulated", "Downregulated")
+) |>
+  dplyr::left_join(
+    deg_summary_observed,
+    by = c("scenario", "comparison_type", "comparison", "direction")
+  ) |>
+  dplyr::mutate(n_degs = tidyr::replace_na(n_degs, 0L))
+
+write.csv(sample_counts, file.path(out_dir, "sample_counts_by_scenario.csv"),
+          row.names = FALSE)
+write.csv(all_results, file.path(out_dir, "all_deseq2_results.csv"),
+          row.names = FALSE)
+write.csv(deg_summary, file.path(out_dir, "deg_summary_by_scenario.csv"),
+          row.names = FALSE)
+
+knitr::kable(sample_counts, caption = "Sample counts by scenario")
+```
+
+## PCA by scenario
+
+```{r scenario-pca, fig.height=5.6, fig.width=11}
+pca_scores <- dplyr::bind_rows(lapply(scenario_results, function(x) {
+  vst_mat <- SummarizedExperiment::assay(x$vsd)
+  keep <- apply(vst_mat, 1, var) > 0
+  pca <- prcomp(t(vst_mat[keep, , drop = FALSE]), scale. = FALSE)
+  percent_var <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+  data.frame(
+    scenario = x$scenario,
+    label = rownames(pca$x),
+    PC1 = pca$x[, "PC1"],
+    PC2 = pca$x[, "PC2"],
+    Diet = x$metadata$Diet,
+    Treatment = x$metadata$Treatment,
+    percent_PC1 = percent_var[1],
+    percent_PC2 = percent_var[2],
+    stringsAsFactors = FALSE
+  )
+}))
+
+p_pca <- ggplot2::ggplot(
+  pca_scores,
+  ggplot2::aes(PC1, PC2, color = Diet, shape = Treatment)
+) +
+  ggplot2::geom_point(size = 2.7, alpha = 0.86) +
+  ggplot2::facet_wrap(~ scenario, scales = "free") +
+  ggplot2::scale_color_manual(values = diet_colors) +
+  ggplot2::scale_shape_manual(values = c("Control" = 16, "Infected" = 17)) +
+  ggplot2::labs(
+    title = "VST PCA by sample-filter scenario",
+    x = "PC1",
+    y = "PC2"
+  ) +
+  ggplot2::theme_bw(base_size = 12) +
+  ggplot2::theme(
+    strip.background = ggplot2::element_rect(fill = "#EEF2F4", color = "#9CA3AF"),
+    strip.text = ggplot2::element_text(face = "bold"),
+    panel.grid.minor = ggplot2::element_blank()
+  )
+
+p_pca
+ggplot2::ggsave(file.path(out_dir, "pca_by_sample_filter_scenario.png"),
+                p_pca, width = 11, height = 5.6, dpi = 300)
+write.csv(pca_scores, file.path(out_dir, "pca_scores_by_scenario.csv"),
+          row.names = FALSE)
+```
+
+## DEG burden across scenarios
+
+```{r deg-burden, fig.height=8.2, fig.width=12}
+deg_summary$direction <- factor(deg_summary$direction,
+                                levels = c("Upregulated", "Downregulated"))
+
+p_deg_burden <- ggplot2::ggplot(
+  deg_summary,
+  ggplot2::aes(x = comparison, y = n_degs, fill = direction)
+) +
+  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.72),
+                    width = 0.65) +
+  ggplot2::facet_grid(comparison_type ~ scenario,
+                      scales = "free_y", space = "free_y") +
+  ggplot2::scale_fill_manual(values = direction_colors) +
+  ggplot2::labs(
+    title = "DEG burden by contrast and sample-filter scenario",
+    x = NULL,
+    y = "Number of DEGs",
+    fill = "Direction"
+  ) +
+  ggplot2::theme_bw(base_size = 12) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+    strip.background = ggplot2::element_rect(fill = "#EEF2F4", color = "#9CA3AF"),
+    strip.text = ggplot2::element_text(face = "bold"),
+    panel.grid.minor = ggplot2::element_blank(),
+    legend.position = "bottom"
+  )
+
+p_deg_burden
+ggplot2::ggsave(file.path(out_dir, "deg_burden_by_sample_filter_scenario.png"),
+                p_deg_burden, width = 12, height = 8.2, dpi = 300)
+```
+
+## DEG summary table
+
+```{r deg-summary-table}
+DT::datatable(
+  deg_summary |>
+    dplyr::arrange(comparison_type, comparison, scenario, direction),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = "DEG counts by sample-filter scenario"
+)
+```
+
+## Scenario overlap table
+
+This table records which genes are significant in each sample-filter scenario
+for each contrast. It is designed to show whether a gene-level signal is stable
+or appears only under one sample-filter choice.
+
+```{r scenario-overlap}
+scenario_presence <- all_results |>
+  dplyr::filter(significant) |>
+  dplyr::transmute(comparison_type, comparison, gene_id, scenario,
+                   direction, log2FoldChange, padj) |>
+  dplyr::group_by(comparison_type, comparison, gene_id) |>
+  dplyr::summarise(
+    scenarios_detected = paste(sort(unique(scenario)), collapse = "; "),
+    n_scenarios = dplyr::n_distinct(scenario),
+    directions = paste(sort(unique(direction)), collapse = "; "),
+    min_padj = min(padj, na.rm = TRUE),
+    max_abs_lfc = max(abs(log2FoldChange), na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(comparison_type, comparison, dplyr::desc(n_scenarios),
+                 min_padj)
+
+write.csv(scenario_presence,
+          file.path(out_dir, "deg_presence_across_sample_filter_scenarios.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  scenario_presence,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = "Significant genes detected across sample-filter scenarios"
+)
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()), file.path(out_dir, "sessionInfo.txt"))
+```

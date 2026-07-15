@@ -1,0 +1,58 @@
+### =================================================================
+### RNASEQ & VARIANT CALLING SNAKEMAKE PIPELINE (v. MARCH 2025)
+### Project: Locust Comparative Genomics and Transcriptomics 
+### Maeva A. Techer, <maeva.angelique.techer@gmail.com>
+### =================================================================
+
+### LOAD CONFIGURATION
+include: "config.smk"
+
+# Load samples + rule-level globals (LOCUSTS dict, etc.)
+include: "rules/00_samples.smk"
+
+
+### =================================================================
+### NAMED TARGETS
+### =================================================================
+
+def featurecount_targets():
+    return [
+        WORKDIR + f"/03-{tissue}-DESeq2/{locust}_featurecounts.txt"
+        for tissue, locusts in LOCUSTS.items()
+        for locust in locusts
+    ]
+
+
+rule expression_all:
+    input:
+        lambda wildcards: featurecount_targets()
+
+
+rule full_methods_index:
+    input:
+        # This target lists every currently implemented analysis family. Use
+        # specific targets below for routine runs to avoid launching everything.
+        lambda wildcards: (
+            featurecount_targets()
+            + rnaseq_variant_tissue_outputs()
+            + eggnog_annotation_outputs()
+            + metatx_final_outputs()
+        )
+
+
+rule all:
+    input:
+        # Expression outputs stay the default because these are the historical
+        # RNA-seq preprocessing/count outputs. Use explicit target names for
+        # variants or eggNOG annotations.
+        lambda wildcards: featurecount_targets()
+
+
+# Processing blocks
+include: "rules/01_trimming_fastp.smk"
+include: "rules/02_mapping_star.smk"
+include: "rules/02_mapping_salmon.smk"
+include: "rules/03_featurecounts.smk"
+include: "rules/04_variant_calling_rnaseq.smk"
+include: "rules/05_eggnog_annotation.smk"
+include: "rules/06_metatranscriptomics_qc.smk"
