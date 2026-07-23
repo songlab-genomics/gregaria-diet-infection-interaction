@@ -1,0 +1,470 @@
+---
+title: "Outlier expression signatures"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  min_total_count: 10
+  outlier_abs_delta_threshold: 1
+  outlier_abs_robust_z_threshold: 2
+  top_genes_per_outlier: 30
+  output_tag: "outlier-expression-signatures"
+---
+
+## Purpose
+
+All fat body samples are retained for the primary analyses. This page therefore
+does not remove or relabel the flagged samples. Instead, it asks a narrower
+question: which genes make each flagged sample unusual compared with the other
+samples from the same diet and infection-status group?
+
+This is an exploratory VST-deviation screen, not a formal differential
+expression test. Each flagged sample is compared with non-flagged peers from
+the same `Diet x Treatment` condition.
+
+Gene descriptions are taken from eggNOG when available and otherwise fall back
+to the RefSeq/GFF gene description from the same *S. gregaria* assembly.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "SummarizedExperiment", "dplyr", "tidyr", "stringr",
+              "ggplot2", "DT", "knitr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata_file <- file.path(project_dir, params$metadata_file)
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+
+current_outliers <- c("1007", "1036", "1037", "1039")
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+direction_colors <- c(
+  "Higher than peers" = "#E41A1C",
+  "Lower than peers" = "#1E88E5"
+)
+```
+
+## Data and annotation
+
+```{r data-loading}
+read_metadata <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  tab <- tab[, !is.na(names(tab)) & nzchar(names(tab)), drop = FALSE]
+  tab$label <- as.character(tab$label)
+  tab$Diet <- factor(tab$Diet, levels = c("33", "50", "83"))
+  tab$Treatment <- factor(tab$Treatment, levels = c("Control", "Infected"))
+  tab
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+parse_gff_gene_annotation <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      gff_description = stringr::str_match(attributes, "description=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::mutate(
+      gff_description = dplyr::if_else(
+        is.na(gff_description), NA_character_, utils::URLdecode(gff_description)
+      )
+    ) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+first_nonempty <- function(x, fallback = "unannotated") {
+  x <- x[!is.na(x) & x != "" & x != "-"]
+  if (length(x) == 0) fallback else x[1]
+}
+
+metadata <- read_metadata(metadata_file)
+
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_all <- as.matrix(counts_raw[, -1, drop = FALSE])
+rownames(counts_all) <- counts_raw[[1]]
+storage.mode(counts_all) <- "integer"
+colnames(counts_all) <- sub("_MERGE$", "", sub("^mehreen_", "",
+                                                colnames(counts_all)))
+
+metadata <- metadata[match(colnames(counts_all), metadata$label), ]
+stopifnot(identical(metadata$label, colnames(counts_all)))
+rownames(metadata) <- metadata$label
+
+if (file.exists(eggnog_file) && file.exists(gff_file)) {
+  gff_annotation <- parse_gff_gene_annotation(gff_file)
+
+  eggnog_annotation <- read_emapper(eggnog_file) |>
+    dplyr::left_join(parse_cds_gene_bridge(gff_file), by = "protein_id") |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      Preferred_name = first_nonempty(Preferred_name),
+      Description = first_nonempty(Description, "no description"),
+      GOs = first_nonempty(GOs, ""),
+      KEGG_Pathway = first_nonempty(KEGG_Pathway, ""),
+      PFAMs = first_nonempty(PFAMs, ""),
+      .groups = "drop"
+    )
+
+  annotation <- data.frame(gene_id = rownames(counts_all)) |>
+    dplyr::left_join(gff_annotation, by = "gene_id") |>
+    dplyr::left_join(eggnog_annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+      Description = dplyr::case_when(
+        !is.na(Description) & Description != "" & Description != "no description" ~
+          Description,
+        !is.na(gff_description) & gff_description != "" ~ gff_description,
+        TRUE ~ "no description"
+      )
+    ) |>
+    dplyr::select(gene_id, Preferred_name, Description, GOs, KEGG_Pathway, PFAMs)
+} else {
+  annotation <- data.frame(
+    gene_id = character(),
+    Preferred_name = character(),
+    Description = character(),
+    GOs = character(),
+    KEGG_Pathway = character(),
+    PFAMs = character()
+  )
+}
+
+outlier_metadata <- metadata |>
+  dplyr::filter(label %in% current_outliers) |>
+  dplyr::select(label, Diet, Treatment, Sex, Hour_Group_Post_Innoculation)
+
+knitr::kable(outlier_metadata, caption = "Flagged samples retained in the main analysis")
+write.csv(outlier_metadata, file.path(out_dir, "outlier_sample_metadata.csv"),
+          row.names = FALSE)
+```
+
+## VST deviation from same-condition peers
+
+For each flagged sample, the reference profile is the median VST value of
+non-flagged samples from the same `Diet x Treatment` group. The robust z-score
+uses the median absolute deviation among those peers. A gene is flagged as an
+outlier-driving candidate when it has both `abs(delta VST) >=
+outlier_abs_delta_threshold` and `abs(robust z) >= outlier_abs_robust_z_threshold`.
+
+```{r vst-deviations}
+keep <- rowSums(counts_all) >= params$min_total_count
+dds <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts_all[keep, , drop = FALSE],
+  colData = metadata,
+  design = ~ Diet + Treatment
+)
+vsd <- DESeq2::vst(dds, blind = TRUE)
+vst_mat <- SummarizedExperiment::assay(vsd)
+
+outlier_signature <- function(sample_id) {
+  sample_meta <- metadata[sample_id, ]
+  peer_ids <- metadata |>
+    dplyr::filter(
+      Diet == sample_meta$Diet,
+      Treatment == sample_meta$Treatment,
+      !label %in% current_outliers,
+      label != sample_id
+    ) |>
+    dplyr::pull(label)
+
+  if (length(peer_ids) < 2) {
+    stop("Not enough non-flagged peers for sample ", sample_id)
+  }
+
+  peer_mat <- vst_mat[, peer_ids, drop = FALSE]
+  peer_median <- apply(peer_mat, 1, median, na.rm = TRUE)
+  peer_mad <- apply(peer_mat, 1, stats::mad, na.rm = TRUE)
+  peer_mad <- pmax(peer_mad, 0.15)
+  delta <- vst_mat[, sample_id] - peer_median
+
+  tibble::tibble(
+    outlier_sample = sample_id,
+    Diet = as.character(sample_meta$Diet),
+    Treatment = as.character(sample_meta$Treatment),
+    peer_group = paste(sample_meta$Treatment, "diet", sample_meta$Diet),
+    n_peer_samples = length(peer_ids),
+    peer_samples = paste(peer_ids, collapse = ", "),
+    gene_id = rownames(vst_mat),
+    outlier_vst = as.numeric(vst_mat[, sample_id]),
+    peer_median_vst = as.numeric(peer_median),
+    delta_vst = as.numeric(delta),
+    robust_z_vs_peers = as.numeric(delta / peer_mad),
+    outlier_direction = dplyr::case_when(
+      delta_vst > 0 ~ "Higher than peers",
+      delta_vst < 0 ~ "Lower than peers",
+      TRUE ~ "No difference"
+    ),
+    outlier_candidate = abs(delta_vst) >= params$outlier_abs_delta_threshold &
+      abs(robust_z_vs_peers) >= params$outlier_abs_robust_z_threshold
+  )
+}
+
+outlier_deviations <- dplyr::bind_rows(lapply(current_outliers, outlier_signature)) |>
+  dplyr::left_join(annotation, by = "gene_id") |>
+  dplyr::mutate(
+    Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+    Description = dplyr::coalesce(Description, "no description"),
+    abs_delta_vst = abs(delta_vst),
+    abs_robust_z = abs(robust_z_vs_peers)
+  ) |>
+  dplyr::arrange(outlier_sample, dplyr::desc(abs_robust_z),
+                 dplyr::desc(abs_delta_vst))
+
+outlier_deviations <- outlier_deviations |>
+  dplyr::group_by(outlier_sample) |>
+  dplyr::mutate(outlier_rank = dplyr::row_number()) |>
+  dplyr::ungroup()
+
+write.csv(outlier_deviations,
+          file.path(out_dir, "outlier_gene_vst_deviations_all_genes.csv"),
+          row.names = FALSE)
+```
+
+```{r outlier-summary}
+outlier_summary <- outlier_deviations |>
+  dplyr::filter(outlier_candidate) |>
+  dplyr::count(outlier_sample, Diet, Treatment, outlier_direction,
+               name = "n_candidate_genes") |>
+  tidyr::complete(outlier_sample, outlier_direction = names(direction_colors),
+                  fill = list(n_candidate_genes = 0)) |>
+  dplyr::left_join(outlier_metadata |> dplyr::select(label, Diet, Treatment),
+                   by = c("outlier_sample" = "label")) |>
+  dplyr::mutate(
+    Diet = dplyr::coalesce(as.character(Diet.x), as.character(Diet.y)),
+    Treatment = dplyr::coalesce(as.character(Treatment.x),
+                                as.character(Treatment.y))
+  ) |>
+  dplyr::select(outlier_sample, Diet, Treatment, outlier_direction,
+                n_candidate_genes)
+
+knitr::kable(
+  outlier_summary,
+  caption = "Candidate genes with strong VST deviation from same-condition peers"
+)
+write.csv(outlier_summary, file.path(out_dir, "outlier_candidate_gene_counts.csv"),
+          row.names = FALSE)
+
+p_outlier_counts <- ggplot2::ggplot(
+  outlier_summary,
+  ggplot2::aes(x = outlier_sample, y = n_candidate_genes,
+               fill = outlier_direction)
+) +
+  ggplot2::geom_col(position = "dodge", width = 0.75) +
+  ggplot2::scale_fill_manual(values = direction_colors) +
+  ggplot2::labs(
+    title = "Genes with strong outlier-specific VST deviation",
+    subtitle = "Each flagged sample is compared with non-flagged peers from the same Diet x Treatment group",
+    x = "Flagged sample",
+    y = "Number of candidate genes",
+    fill = NULL
+  ) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+ggplot2::ggsave(file.path(out_dir, "outlier_candidate_gene_counts.png"),
+                p_outlier_counts, width = 8, height = 5, dpi = 300)
+p_outlier_counts
+```
+
+## Searchable outlier-driving gene table
+
+This table is intentionally allowed to include uncharacterized genes. Those can
+still be useful as markers of why a sample separates from its peers.
+
+```{r outlier-table}
+candidate_table <- outlier_deviations |>
+  dplyr::filter(outlier_candidate) |>
+  dplyr::select(
+    outlier_sample, Diet, Treatment, peer_group, n_peer_samples,
+    gene_id, Preferred_name, Description, outlier_direction,
+    delta_vst, robust_z_vs_peers, abs_delta_vst, abs_robust_z,
+    outlier_rank, peer_samples
+  )
+
+write.csv(candidate_table,
+          file.path(out_dir, "outlier_candidate_gene_table.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  candidate_table |>
+    dplyr::mutate(
+      delta_vst = round(delta_vst, 3),
+      robust_z_vs_peers = round(robust_z_vs_peers, 3),
+      abs_delta_vst = round(abs_delta_vst, 3),
+      abs_robust_z = round(abs_robust_z, 3)
+    ),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE)
+) |>
+  DT::formatStyle(
+    "delta_vst",
+    color = DT::styleInterval(0, c("#1E88E5", "#E41A1C")),
+    fontWeight = "bold"
+  )
+```
+
+## Heatmap of top outlier-driving genes
+
+Rows are the highest-deviation genes per flagged sample. Columns are control
+samples from diets 33 and 50 because all four flagged samples are controls from
+those diets.
+
+```{r outlier-heatmap, fig.width=15, fig.height=14}
+top_gene_ids <- outlier_deviations |>
+  dplyr::group_by(outlier_sample) |>
+  dplyr::slice_max(abs_robust_z, n = params$top_genes_per_outlier,
+                   with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::pull(gene_id) |>
+  unique()
+
+heatmap_samples <- metadata |>
+  dplyr::filter(Treatment == "Control", Diet %in% c("33", "50")) |>
+  dplyr::mutate(
+    outlier_status = ifelse(label %in% current_outliers, "Flagged", "Peer"),
+    sample_label = ifelse(label %in% current_outliers, paste0(label, "*"), label),
+    column_group = paste("Control diet", Diet)
+  ) |>
+  dplyr::arrange(Diet, outlier_status, label)
+
+heatmap_annotation <- outlier_deviations |>
+  dplyr::filter(gene_id %in% top_gene_ids) |>
+  dplyr::group_by(gene_id, Preferred_name, Description) |>
+  dplyr::summarise(
+    strongest_outlier = outlier_sample[which.max(abs_robust_z)][1],
+    strongest_direction = outlier_direction[which.max(abs_robust_z)][1],
+    max_abs_robust_z = max(abs_robust_z, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(strongest_outlier, dplyr::desc(max_abs_robust_z)) |>
+  dplyr::mutate(
+    gene_label = paste0(gene_id, " | ", Preferred_name, " | ",
+                        stringr::str_trunc(Description, 42))
+  )
+
+zmat <- t(scale(t(vst_mat[heatmap_annotation$gene_id,
+                          heatmap_samples$label, drop = FALSE])))
+zmat[is.na(zmat)] <- 0
+
+heatmap_long <- as.data.frame(zmat) |>
+  tibble::rownames_to_column("gene_id") |>
+  tidyr::pivot_longer(-gene_id, names_to = "label", values_to = "z_vst") |>
+  dplyr::left_join(heatmap_annotation, by = "gene_id") |>
+  dplyr::left_join(heatmap_samples, by = "label") |>
+  dplyr::mutate(
+    sample_label = factor(sample_label, levels = heatmap_samples$sample_label),
+    gene_label = factor(gene_label, levels = rev(heatmap_annotation$gene_label)),
+    z_vst = pmax(pmin(z_vst, 3), -3)
+  )
+
+p_outlier_heatmap <- ggplot2::ggplot(
+  heatmap_long,
+  ggplot2::aes(x = sample_label, y = gene_label, fill = z_vst)
+) +
+  ggplot2::geom_tile(color = "white", linewidth = 0.08) +
+  ggplot2::facet_grid(strongest_outlier ~ column_group,
+                      scales = "free", space = "free") +
+  ggplot2::scale_fill_gradient2(
+    low = "#237C8E", mid = "#F7F3E8", high = "#C85A54",
+    midpoint = 0, limits = c(-3, 3), oob = scales::squish,
+    name = "Row-z VST"
+  ) +
+  ggplot2::labs(
+    title = "Top genes separating flagged samples from same-condition peers",
+    subtitle = "Asterisk marks flagged samples; rows are z-scored within selected control samples",
+    x = NULL,
+    y = NULL
+  ) +
+  ggplot2::theme_classic(base_size = 11) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5,
+                                        size = 8),
+    axis.text.y = ggplot2::element_text(size = 6.2),
+    strip.text = ggplot2::element_text(face = "bold"),
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+ggplot2::ggsave(file.path(out_dir, "outlier_top_gene_vst_heatmap.png"),
+                p_outlier_heatmap, width = 15, height = 14, dpi = 300)
+p_outlier_heatmap
+```
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(tibble::tibble(file = exports),
+             caption = paste("Files written to", out_dir))
+```
+
+## Session information
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

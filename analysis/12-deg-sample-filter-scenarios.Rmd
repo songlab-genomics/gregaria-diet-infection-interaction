@@ -197,7 +197,7 @@ run_diet_pairwise <- function(counts, metadata, treatment_level, scenario_label)
   dds <- DESeq2::DESeq(dds)
 
   contrasts <- list(
-    "50 vs 33" = c("Diet", "50", "33"),
+    "33 vs 50" = c("Diet", "33", "50"),
     "83 vs 33" = c("Diet", "83", "33"),
     "83 vs 50" = c("Diet", "83", "50")
   )

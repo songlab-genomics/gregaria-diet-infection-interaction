@@ -25,6 +25,10 @@ navbar:
             href: 15-all-samples-diet-pairwise-deg.html
           - text: "Infection within diet DEGs"
             href: 16-all-samples-infection-within-diet-deg.html
+          - text: "Outlier expression signatures"
+            href: 23-outlier-expression-signatures.html
+          - text: "Searchable DEG catalogue"
+            href: 24-all-deg-catalogue.html
       - text: "Current outliers removed"
         menu:
           - text: "Diet x infection interaction"
@@ -47,6 +51,10 @@ navbar:
         href: 13-physiology-candidate-genes.html
       - text: "GO / KEGG enrichment"
         href: 10-go-term-enrichment.html
+      - text: "GO / KEGG term-gene index"
+        href: 25-enrichment-term-gene-index.html
+      - text: "Circled cluster enrichment"
+        href: 26-circled-cluster-enrichment.html
       - text: "Publication figure exports"
         href: 08-publication-figures.html
   - text: "Reference Context"

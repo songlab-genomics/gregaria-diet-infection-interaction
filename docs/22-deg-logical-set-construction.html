@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-07-15" />
+<meta name="date" content="2026-07-22" />
 
 <title>Logical DEG set construction</title>
 
@@ -380,6 +380,12 @@ div.tocify {
         <li>
           <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
+        <li>
+          <a href="23-outlier-expression-signatures.html">Outlier expression signatures</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
@@ -424,6 +430,9 @@ div.tocify {
     </li>
     <li>
       <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+    </li>
+    <li>
+      <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
     </li>
     <li>
       <a href="08-publication-figures.html">Publication figure exports</a>
@@ -520,7 +529,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Logical DEG set construction</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-07-15</h4>
+<h4 class="date">2026-07-22</h4>
 
 </div>
 
@@ -528,7 +537,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -539,8 +548,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -549,13 +558,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-07-22
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -579,21 +588,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -684,15 +690,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1b24ec222bfdfc865840eae1189c8e184a7387cdtargetblank1b24ec2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1b24ec222bfdfc865840eae1189c8e184a7387cd" target="_blank">1b24ec2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1b24ec222bfdfc865840eae1189c8e184a7387cdtargetblank1b24ec2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -702,7 +708,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1b24ec222bfdfc865840eae1189c8e184a7387cd" target="_blank">1b24ec2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -720,19 +726,34 @@ Ignored files:
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
     Ignored:    data/raw_read_counts/.DS_Store
+    Ignored:    data/raw_read_counts/03-FAT-DESeq2/.DS_Store
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-172231/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-180603/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-180825/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-181555/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-181643/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260722-230802/
     Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
     Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
     Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/
     Ignored:    output/rmd_runs/count-qc-exploration_20260715-130115/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-172616/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-173413/
     Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
     Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-132007/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
     Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
     Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260722-172243/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260722-172457/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260722-180621/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260722-180842/
     Ignored:    output/rmd_runs/go-term-enrichment_20260715-160045/
     Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-172216/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180541/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
     Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
     Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
     Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
@@ -748,212 +769,17 @@ Ignored files:
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  analysis/12-deg-sample-filter-scenarios.Rmd
-    Untracked:  analysis/13-physiology-candidate-genes.Rmd
-    Untracked:  analysis/14-all-samples-deseq2-interaction-model.Rmd
-    Untracked:  analysis/15-all-samples-diet-pairwise-deg.Rmd
-    Untracked:  analysis/16-all-samples-infection-within-diet-deg.Rmd
-    Untracked:  analysis/17-outliers-removed-deseq2-interaction-model.Rmd
-    Untracked:  analysis/18-outliers-removed-diet-pairwise-deg.Rmd
-    Untracked:  analysis/19-outliers-removed-infection-within-diet-deg.Rmd
-    Untracked:  analysis/20-phase-signature-overlap.Rmd
-    Untracked:  analysis/21-phase-signature-overlap-no-outliers.Rmd
-    Untracked:  analysis/22-deg-logical-set-construction.Rmd
-    Untracked:  code/README.timecourse-snakemake-source.md
-    Untracked:  code/Snakefile
-    Untracked:  code/Snakefile.eggnog_annotations
-    Untracked:  code/Snakefile.metatranscriptomics_qc
-    Untracked:  code/Snakefile.rnaseq_variants
-    Untracked:  code/__pycache__/
-    Untracked:  code/cluster.json
-    Untracked:  code/config.smk
-    Untracked:  code/pilot/
-    Untracked:  code/rules/
-    Untracked:  code/run_eggnog_desertlocustr.sh
-    Untracked:  code/scripts/
-    Untracked:  code/snakemake.eggnog.slurm
-    Untracked:  code/snakemake.fatbody_pilot.slurm
-    Untracked:  code/snakemake.metatx.slurm
-    Untracked:  code/snakemake.slurm
-    Untracked:  data/external/
-    Untracked:  data/raw_read_counts/03-FAT-DESeq2/
-    Untracked:  data/raw_read_counts/03-gregaria-DESeq2/
+    Untracked:  analysis/23-outlier-expression-signatures.Rmd
+    Untracked:  analysis/24-all-deg-catalogue.Rmd
+    Untracked:  analysis/25-enrichment-term-gene-index.Rmd
 
 Unstaged changes:
     Modified:   .DS_Store
-    Modified:   analysis/.DS_Store
-    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/12-deg-sample-filter-scenarios.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
-    Modified:   analysis/site-style.css
-    Modified:   code/README.md
-    Modified:   data/.DS_Store
     Modified:   output/.DS_Store
     Modified:   output/rmd_runs/.DS_Store
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/filter_summary.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/library_size.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/pca_vst.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/condition_specific_diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_presence_absence_matrix.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/genes_seen_in_two_or_more_sets.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_infected.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/all_model_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/deseq2_coefficients.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_deg_count_barplot.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_direction_counts.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_pca.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/sessionInfo.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/significant_gene_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_50.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_50_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/all_diet_pairwise_results.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_deg_count_barplot.png
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_direction_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/sessionInfo.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_50.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_83.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_50_vs_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_33.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_50.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_83.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/all_infection_within_diet_results.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_gene_list.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_heatmap_genes.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_deg_count_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_direction_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/sessionInfo.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_33.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_50.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_sample_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_top_variable_gene_heatmap.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_scores_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/removed_samples.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sample_counts_by_group.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sessionInfo.txt
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/within_diet_results_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2NAME.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/all_enrichment_results.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_source_manifest.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_barplot.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_counts.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2NAME.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_by_ontology.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_with_ontology.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_KEGG_pathway_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_term_overlap_heatmap.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_terms_seen_in_multiple_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_deg_set_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_dotplot_by_set.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/lncRNA_deg_table.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/removed_outlier_samples.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/sessionInfo.txt
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_figure_inventory.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/10_diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/11_diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/12_diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/13_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/14_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/15_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/16_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/17_diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/18_diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/19_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/1_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/20_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/21_venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/22_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/23_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/24_venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/25_25_25_25_25_25_Volcano_33_vs_50.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/26_26_26_26_26_26_Volcano_33_vs_50.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/27_27_27_27_27_27_Volcano_33_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/28_28_28_28_28_28_Volcano_33_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/29_29_29_29_29_29_Volcano_50_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/2_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/30_30_30_30_30_30_Volcano_50_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/3_curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/4_curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/5_diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/6_diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/7_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/8_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/9_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/copied_candidate_panels.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/sessionInfo.txt
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/library_size_by_sample.csv
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/sessionInfo.txt
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/hpc_to_workflowr_workflow.png
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/package_status.csv
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/sessionInfo.txt
 
 </code></pre>
 <p>
@@ -969,9 +795,73 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/22-deg-logical-set-construction.Rmd</code>) and HTML
+(<code>docs/22-deg-logical-set-construction.html</code>) files. If
+you’ve configured a remote Git repository (see
+<code>?wflow_git_remote</code>), click on the hyperlinks in the table
+below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/analysis/22-deg-logical-set-construction.Rmd" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+<td>
+adding phase related changes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/22-deg-logical-set-construction.html" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+<td>
+adding phase related changes
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -2118,7 +2008,7 @@ knitr::kable(input_files, caption = &quot;Files used to build the logical DEG se
 <tr class="odd">
 <td align="left">Fat body scenario DESeq2 results</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-sample-filter-scenarios_20260715-132007/all_deseq2_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/all_deseq2_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
@@ -2246,6 +2136,43 @@ head and thorax phase DEGs.</p>
 
 workflow_plot</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/deduction-workflow-summary-1.png" alt="" width="2496" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-deduction-workflow-summary-1">
+Past versions of deduction-workflow-summary-1.png
+</button>
+</p>
+<div id="fig-deduction-workflow-summary-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/deduction-workflow-summary-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>  ggsave(
   file.path(out_dir, &quot;step0_deduction_workflow_all_samples_with_outliers.png&quot;),
   workflow_plot,
@@ -2286,8 +2213,83 @@ analysis; the reference samples are interpretive overlays used
 later.</p>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$fatbody_sample_matrix</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step2-fatbody-sample-matrix-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step2-fatbody-sample-matrix-1">
+Past versions of all-samples-step2-fatbody-sample-matrix-1.png
+</button>
+</p>
+<div id="fig-all-samples-step2-fatbody-sample-matrix-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step2-fatbody-sample-matrix-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$fatbody_pca</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step2-fatbody-pca-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step2-fatbody-pca-1">
+Past versions of all-samples-step2-fatbody-pca-1.png
+</button>
+</p>
+<div id="fig-all-samples-step2-fatbody-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step2-fatbody-pca-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="step-2-fat-body-dietinfection-degs"
 class="section level3 tabset">
@@ -2324,8 +2326,8 @@ contrast</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Diet contrasts: controls</td>
-<td align="left">Control 50 vs 33</td>
-<td align="left">Downregulated</td>
+<td align="left">Control 33 vs 50</td>
+<td align="left">Upregulated</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
@@ -2354,15 +2356,15 @@ contrast</caption>
 </tr>
 <tr class="even">
 <td align="left">Diet contrasts: infected</td>
-<td align="left">Infected 50 vs 33</td>
+<td align="left">Infected 33 vs 50</td>
 <td align="left">Downregulated</td>
-<td align="right">10</td>
+<td align="right">1921</td>
 </tr>
 <tr class="odd">
 <td align="left">Diet contrasts: infected</td>
-<td align="left">Infected 50 vs 33</td>
+<td align="left">Infected 33 vs 50</td>
 <td align="left">Upregulated</td>
-<td align="right">1921</td>
+<td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">Diet contrasts: infected</td>
@@ -2437,6 +2439,43 @@ contrast</caption>
 <h4>Fat body samples only</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$experiment_samples_only</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step5-fatbody-only-1.png" alt="" width="2112" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step5-fatbody-only-1">
+Past versions of all-samples-step5-fatbody-only-1.png
+</button>
+</p>
+<div id="fig-all-samples-step5-fatbody-only-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step5-fatbody-only-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="step-3-independent-tissue-and-phase-reference-sets"
@@ -2459,16 +2498,128 @@ still be traced back to head, thorax, or both.</p>
 <h4>Reference sample matrix</h4>
 <pre class="r"><code>tissue_sample_matrix_plot</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step2-reference-sample-matrix-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step2-reference-sample-matrix-1">
+Past versions of all-samples-step2-reference-sample-matrix-1.png
+</button>
+</p>
+<div id="fig-all-samples-step2-reference-sample-matrix-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step2-reference-sample-matrix-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="reference-pca" class="section level4">
 <h4>Reference PCA</h4>
 <pre class="r"><code>tissue_pca_plot</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step2-reference-pca-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step2-reference-pca-1">
+Past versions of all-samples-step2-reference-pca-1.png
+</button>
+</p>
+<div id="fig-all-samples-step2-reference-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step2-reference-pca-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="experiment-plus-references-pca" class="section level4">
 <h4>Experiment plus references PCA</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$combined_pca</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step2-combined-pca-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step2-combined-pca-1">
+Past versions of all-samples-step2-combined-pca-1.png
+</button>
+</p>
+<div id="fig-all-samples-step2-combined-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step2-combined-pca-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="deg-tissues-counts" class="section level4">
 <h4>DEG tissues counts</h4>
@@ -2528,16 +2679,127 @@ model ~ tissue</caption>
 <h4>DEG tissues heatmap</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$tissue_reference_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step1-tissue-heatmap-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step1-tissue-heatmap-1">
+Past versions of all-samples-step1-tissue-heatmap-1.png
+</button>
+</p>
+<div id="fig-all-samples-step1-tissue-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step1-tissue-heatmap-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="deg-phase-changes-head" class="section level4">
 <h4>DEG phase changes: head</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$head_samples_only</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step4-head-only-1.png" alt="" width="1344" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step4-head-only-1">
+Past versions of all-samples-step4-head-only-1.png
+</button>
+</p>
+<div id="fig-all-samples-step4-head-only-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step4-head-only-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="deg-phase-changes-thorax" class="section level4">
 <h4>DEG phase changes: thorax</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$thorax_samples_only</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step4-thorax-only-1.png" alt="" width="1344" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step4-thorax-only-1">
+Past versions of all-samples-step4-thorax-only-1.png
+</button>
+</p>
+<div id="fig-all-samples-step4-thorax-only-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step4-thorax-only-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="step-4-independent-deg-set-overlap"
@@ -2664,6 +2926,43 @@ class="section level4">
 <h4>Fat body experiment DEGs across all sample types</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$experiment_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-step5-all-samples-1.png" alt="" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-step5-all-samples-1">
+Past versions of all-samples-step5-all-samples-1.png
+</button>
+</p>
+<div id="fig-all-samples-step5-all-samples-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-step5-all-samples-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="venn-diagram" class="section level4">
 <h4>Venn diagram</h4>
@@ -2676,6 +2975,43 @@ all_samples_final_venn &lt;- plot_deg_sets_venn(
 )
 all_samples_final_venn</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-venn-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-final-venn-1">
+Past versions of all-samples-final-venn-1.png
+</button>
+</p>
+<div id="fig-all-samples-final-venn-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-final-venn-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(
   file.path(out_dir, &quot;all_samples_final_logical_sets_venn.png&quot;),
   all_samples_final_venn,
@@ -2703,11 +3039,85 @@ all_samples_final_venn</code></pre>
   text.scale = c(1.4, 1.4, 1.2, 1.2, 1.4, 1.2)
 )</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-upset-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-final-upset-1">
+Past versions of all-samples-final-upset-1.png
+</button>
+</p>
+<div id="fig-all-samples-final-upset-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-final-upset-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="category-heatmap" class="section level4">
 <h4>Category heatmap</h4>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$category_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-category-heatmap-1.png" alt="" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-final-category-heatmap-1">
+Past versions of all-samples-final-category-heatmap-1.png
+</button>
+</p>
+<div id="fig-all-samples-final-category-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-final-category-heatmap-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="annotated-category-heatmap" class="section level4">
 <h4>Annotated category heatmap</h4>
@@ -2723,6 +3133,44 @@ body infected-vs-control DEG within at least one diet. The
 can still show whether that gene is also tissue-associated.</p>
 <pre class="r"><code>scenario_bundles[[&quot;All samples&quot;]]$plots$category_annotated_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-annotated-category-heatmap-1.png" alt="" width="3264" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all-samples-final-annotated-category-heatmap-1">
+Past versions of all-samples-final-annotated-category-heatmap-1.png
+</button>
+</p>
+<div id="fig-all-samples-final-annotated-category-heatmap-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/all-samples-final-annotated-category-heatmap-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2739,8 +3187,83 @@ class="section level3">
 <h3>Step 1: filtered fat body sample structure</h3>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$fatbody_sample_matrix</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-fatbody-sample-matrix-1.png" alt="" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-step2-fatbody-sample-matrix-1">
+Past versions of outliers-removed-step2-fatbody-sample-matrix-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-step2-fatbody-sample-matrix-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-fatbody-sample-matrix-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$fatbody_pca</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-fatbody-pca-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-step2-fatbody-pca-1">
+Past versions of outliers-removed-step2-fatbody-pca-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-step2-fatbody-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-fatbody-pca-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="step-2-filtered-fat-body-dietinfection-degs"
 class="section level3 tabset">
@@ -2780,8 +3303,8 @@ contrast</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Diet contrasts: controls</td>
-<td align="left">Control 50 vs 33</td>
-<td align="left">Downregulated</td>
+<td align="left">Control 33 vs 50</td>
+<td align="left">Upregulated</td>
 <td align="right">6</td>
 </tr>
 <tr class="even">
@@ -2810,15 +3333,15 @@ contrast</caption>
 </tr>
 <tr class="even">
 <td align="left">Diet contrasts: infected</td>
-<td align="left">Infected 50 vs 33</td>
+<td align="left">Infected 33 vs 50</td>
 <td align="left">Downregulated</td>
-<td align="right">10</td>
+<td align="right">1921</td>
 </tr>
 <tr class="odd">
 <td align="left">Diet contrasts: infected</td>
-<td align="left">Infected 50 vs 33</td>
+<td align="left">Infected 33 vs 50</td>
 <td align="left">Upregulated</td>
-<td align="right">1921</td>
+<td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">Diet contrasts: infected</td>
@@ -2893,6 +3416,43 @@ contrast</caption>
 <h4>Fat body samples only</h4>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$experiment_samples_only</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-step5-fatbody-only-1.png" alt="" width="2112" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-step5-fatbody-only-1">
+Past versions of outliers-removed-step5-fatbody-only-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-step5-fatbody-only-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-step5-fatbody-only-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="step-3-filtered-independent-deg-set-overlap"
@@ -2908,12 +3468,86 @@ current outliers.</p>
 <h4>Experiment plus references PCA</h4>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$combined_pca</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-combined-pca-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-step2-combined-pca-1">
+Past versions of outliers-removed-step2-combined-pca-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-step2-combined-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-step2-combined-pca-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="fat-body-experiment-degs-across-all-sample-types-1"
 class="section level4">
 <h4>Fat body experiment DEGs across all sample types</h4>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$experiment_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-step5-all-samples-1.png" alt="" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-step5-all-samples-1">
+Past versions of outliers-removed-step5-all-samples-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-step5-all-samples-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-step5-all-samples-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="independent-set-sizes-1" class="section level4">
 <h4>Independent set sizes</h4>
@@ -3027,6 +3661,43 @@ outliers_removed_final_venn &lt;- plot_deg_sets_venn(
 )
 outliers_removed_final_venn</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-venn-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-final-venn-1">
+Past versions of outliers-removed-final-venn-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-final-venn-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-venn-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(
   file.path(out_dir, &quot;outliers_removed_final_logical_sets_venn.png&quot;),
   outliers_removed_final_venn,
@@ -3054,11 +3725,86 @@ outliers_removed_final_venn</code></pre>
   text.scale = c(1.4, 1.4, 1.2, 1.2, 1.4, 1.2)
 )</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-upset-1.png" alt="" width="1056" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-final-upset-1">
+Past versions of outliers-removed-final-upset-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-final-upset-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-upset-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="category-heatmap-1" class="section level4">
 <h4>Category heatmap</h4>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$category_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-category-heatmap-1.png" alt="" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-final-category-heatmap-1">
+Past versions of outliers-removed-final-category-heatmap-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-final-category-heatmap-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-category-heatmap-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="annotated-category-heatmap-1" class="section level4">
 <h4>Annotated category heatmap</h4>
@@ -3074,6 +3820,44 @@ body infected-vs-control DEG within at least one diet. The
 can still show whether that gene is also tissue-associated.</p>
 <pre class="r"><code>scenario_bundles[[&quot;Current outliers removed&quot;]]$plots$category_annotated_all_samples</code></pre>
 <p><img src="figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-annotated-category-heatmap-1.png" alt="" width="3264" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-outliers-removed-final-annotated-category-heatmap-1">
+Past versions of outliers-removed-final-annotated-category-heatmap-1.png
+</button>
+</p>
+<div id="fig-outliers-removed-final-annotated-category-heatmap-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/22-deg-logical-set-construction.Rmd/outliers-removed-final-annotated-category-heatmap-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -3086,7 +3870,7 @@ knitr::kable(
 )</code></pre>
 <table>
 <caption>Files written to
-/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-logical-set-construction_20260715-173413</caption>
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-logical-set-construction_20260722-230917</caption>
 <colgroup>
 <col width="100%" />
 </colgroup>
@@ -3263,7 +4047,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 

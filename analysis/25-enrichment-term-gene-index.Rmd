@@ -1,0 +1,419 @@
+---
+title: "GO and KEGG enriched term gene index"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  output_tag: "enrichment-term-gene-index"
+---
+
+## Purpose
+
+This page reverses the GO/KEGG enrichment output. Instead of starting from a
+gene and asking which annotations it has, it starts from each enriched GO term
+or KEGG pathway and lists the DEG IDs that contributed to that enrichment.
+
+The gene lists come directly from the `geneID` column written by
+`clusterProfiler::enricher()` on the GO/KEGG enrichment page. Those are the
+foreground genes that overlap each enriched term.
+
+Gene descriptions are taken from eggNOG when available and otherwise fall back
+to the RefSeq/GFF gene description from the same *S. gregaria* assembly.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("dplyr", "tidyr", "stringr", "DT", "knitr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+results_root <- file.path(project_dir, params$latest_results_root)
+```
+
+## Helper functions
+
+```{r helpers}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) {
+    stop("No output folder matched pattern: ", pattern)
+  }
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+read_optional_csv <- function(path) {
+  if (!file.exists(path)) {
+    return(data.frame())
+  }
+  read.csv(path, check.names = FALSE)
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+parse_gff_gene_annotation <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      gff_description = stringr::str_match(attributes, "description=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::mutate(
+      gff_description = dplyr::if_else(
+        is.na(gff_description), NA_character_, utils::URLdecode(gff_description)
+      )
+    ) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+first_nonempty <- function(x, fallback = "unannotated") {
+  x <- x[!is.na(x) & x != "" & x != "-"]
+  if (length(x) == 0) fallback else x[1]
+}
+
+expand_enrichment_genes <- function(tab, enrichment_context) {
+  if (nrow(tab) == 0 || !"geneID" %in% names(tab)) {
+    return(data.frame())
+  }
+
+  # Non-directional and direction-aware enrichment tables carry different
+  # metadata columns; add missing columns so the same code can read both.
+  optional_cols <- c("family", "comparison", "direction", "plot_label",
+                     "pathway_theme", "pathway_scope")
+  for (nm in optional_cols) {
+    if (!nm %in% names(tab)) {
+      tab[[nm]] <- NA_character_
+    }
+  }
+
+  tab |>
+    dplyr::mutate(
+      enrichment_context = enrichment_context,
+      geneID = as.character(geneID)
+    ) |>
+    tidyr::separate_rows(geneID, sep = "/") |>
+    dplyr::rename(gene_id = geneID) |>
+    dplyr::filter(!is.na(gene_id), gene_id != "") |>
+    dplyr::transmute(
+      enrichment_context,
+      database,
+      DEG_set = set,
+      family = as.character(family),
+      comparison = as.character(comparison),
+      direction = as.character(direction),
+      plot_label = as.character(plot_label),
+      term_id = ID,
+      term_description = Description,
+      gene_id,
+      GeneRatio,
+      BgRatio,
+      FoldEnrichment,
+      pvalue,
+      p.adjust,
+      qvalue,
+      Count,
+      pathway_theme = as.character(pathway_theme),
+      pathway_scope = as.character(pathway_scope)
+    )
+}
+```
+
+## Input files
+
+```{r input-files}
+go_dir <- latest_dir("^go-term-enrichment_")
+
+input_files <- data.frame(
+  input = c(
+    "GO/KEGG enrichment output folder",
+    "Non-directional enrichment results",
+    "Direction-aware enrichment results",
+    "GO term names",
+    "KEGG pathway names",
+    "eggNOG annotation",
+    "GFF bridge and gene descriptions"
+  ),
+  path = c(
+    go_dir,
+    file.path(go_dir, "all_enrichment_results.csv"),
+    file.path(go_dir, "requested_directional_all_enrichment.csv"),
+    file.path(go_dir, "eggNOG_GO_TERM2NAME.csv"),
+    file.path(go_dir, "eggNOG_KEGG_pathway_TERM2NAME.csv"),
+    eggnog_file,
+    gff_file
+  ),
+  present = c(
+    dir.exists(go_dir),
+    file.exists(file.path(go_dir, "all_enrichment_results.csv")),
+    file.exists(file.path(go_dir, "requested_directional_all_enrichment.csv")),
+    file.exists(file.path(go_dir, "eggNOG_GO_TERM2NAME.csv")),
+    file.exists(file.path(go_dir, "eggNOG_KEGG_pathway_TERM2NAME.csv")),
+    file.exists(eggnog_file),
+    file.exists(gff_file)
+  )
+)
+
+knitr::kable(input_files, caption = "Files used for the enriched term gene index")
+if (!all(input_files$present)) {
+  stop("One or more required inputs are missing. Build page 10 first.")
+}
+```
+
+## Build term-to-gene index
+
+```{r build-index}
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+gene_universe <- unique(counts_raw[[1]])
+
+gff_annotation <- parse_gff_gene_annotation(gff_file) |>
+  dplyr::filter(gene_id %in% gene_universe)
+
+eggnog_annotation <- read_emapper(eggnog_file) |>
+  dplyr::left_join(parse_cds_gene_bridge(gff_file), by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    Preferred_name = first_nonempty(Preferred_name),
+    gene_description = first_nonempty(Description, "no description"),
+    GOs = first_nonempty(GOs, ""),
+    KEGG_ko = first_nonempty(KEGG_ko, ""),
+    KEGG_Pathway = first_nonempty(KEGG_Pathway, ""),
+    PFAMs = first_nonempty(PFAMs, ""),
+    .groups = "drop"
+  )
+
+annotation <- data.frame(gene_id = gene_universe) |>
+  dplyr::left_join(gff_annotation, by = "gene_id") |>
+  dplyr::left_join(eggnog_annotation, by = "gene_id") |>
+  dplyr::mutate(
+    Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+    gene_description = dplyr::case_when(
+      !is.na(gene_description) & gene_description != "" &
+        gene_description != "no description" ~ gene_description,
+      !is.na(gff_description) & gff_description != "" ~ gff_description,
+      TRUE ~ "no description"
+    ),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+  ) |>
+  dplyr::select(
+    gene_id, Preferred_name, gene_description, gene_biotype,
+    GOs, KEGG_ko, KEGG_Pathway, PFAMs
+  )
+
+go_term_names <- read.csv(file.path(go_dir, "eggNOG_GO_TERM2NAME.csv"),
+                          check.names = FALSE) |>
+  dplyr::rename(term_id = term, GO_name = name, GO_ontology = ontology)
+
+kegg_term_names <- read.csv(file.path(go_dir, "eggNOG_KEGG_pathway_TERM2NAME.csv"),
+                            check.names = FALSE) |>
+  dplyr::rename(
+    term_id = term,
+    KEGG_name = name,
+    KEGG_theme = pathway_theme,
+    KEGG_scope = pathway_scope
+  )
+
+non_directional <- read_optional_csv(file.path(go_dir, "all_enrichment_results.csv"))
+directional <- read_optional_csv(file.path(go_dir, "requested_directional_all_enrichment.csv"))
+
+term_gene_long <- dplyr::bind_rows(
+  expand_enrichment_genes(non_directional, "Non-directional enrichment"),
+  expand_enrichment_genes(directional, "Direction-aware enrichment")
+) |>
+  dplyr::left_join(go_term_names, by = "term_id") |>
+  dplyr::left_join(kegg_term_names, by = "term_id") |>
+  dplyr::mutate(
+    term_name = dplyr::coalesce(GO_name, KEGG_name, term_description),
+    ontology_or_theme = dplyr::coalesce(GO_ontology, KEGG_theme, pathway_theme),
+    pathway_scope = dplyr::coalesce(KEGG_scope, pathway_scope)
+  ) |>
+  dplyr::left_join(annotation, by = "gene_id") |>
+  dplyr::mutate(
+    Preferred_name = dplyr::coalesce(Preferred_name, "unannotated"),
+    gene_description = dplyr::coalesce(gene_description, "no description"),
+    family = dplyr::coalesce(family, DEG_set),
+    comparison = dplyr::coalesce(comparison, DEG_set),
+    direction = dplyr::coalesce(direction, "Not split by direction"),
+    plot_label = dplyr::coalesce(plot_label, DEG_set)
+  ) |>
+  dplyr::select(
+    enrichment_context, database, family, comparison, direction, plot_label,
+    DEG_set, term_id, term_name, term_description, ontology_or_theme,
+    pathway_scope, GeneRatio, BgRatio, FoldEnrichment, p.adjust, qvalue,
+    Count, gene_id, Preferred_name, gene_description, GOs, KEGG_ko,
+    gene_biotype,
+    KEGG_Pathway, PFAMs
+  ) |>
+  dplyr::arrange(database, family, comparison, direction, p.adjust, term_id,
+                 gene_id)
+
+term_gene_compact <- term_gene_long |>
+  dplyr::group_by(
+    enrichment_context, database, family, comparison, direction, plot_label,
+    DEG_set, term_id, term_name, term_description, ontology_or_theme,
+    pathway_scope, GeneRatio, BgRatio, FoldEnrichment, p.adjust, qvalue, Count
+  ) |>
+  dplyr::summarise(
+    n_listed_genes = dplyr::n_distinct(gene_id),
+    DEG_gene_IDs = paste(sort(unique(gene_id)), collapse = "; "),
+    DEG_gene_names = paste(sort(unique(Preferred_name)), collapse = "; "),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(database, family, comparison, direction, p.adjust, term_id)
+
+write.csv(term_gene_long,
+          file.path(out_dir, "enriched_term_gene_reverse_index_long.csv"),
+          row.names = FALSE)
+write.csv(term_gene_compact,
+          file.path(out_dir, "enriched_term_gene_reverse_index_compact.csv"),
+          row.names = FALSE)
+
+summary_by_context <- term_gene_compact |>
+  dplyr::count(enrichment_context, database, family,
+               name = "n_enriched_terms") |>
+  dplyr::arrange(enrichment_context, database, family)
+
+knitr::kable(summary_by_context,
+             caption = "Number of enriched terms represented in the reverse index")
+write.csv(summary_by_context,
+          file.path(out_dir, "enriched_term_gene_index_summary.csv"),
+          row.names = FALSE)
+```
+
+## Compact term-to-gene list
+
+This table has one row per enriched term per DEG set. The `DEG_gene_IDs` column
+is the reverse list requested by collaborators.
+
+```{r compact-table}
+compact_display <- term_gene_compact |>
+  dplyr::mutate(
+    p.adjust = signif(p.adjust, 3),
+    qvalue = signif(qvalue, 3),
+    FoldEnrichment = round(FoldEnrichment, 2)
+  ) |>
+  dplyr::select(
+    enrichment_context, database, family, comparison, direction, term_id,
+    term_name, ontology_or_theme, pathway_scope, p.adjust, FoldEnrichment,
+    Count, n_listed_genes, DEG_gene_IDs
+  )
+
+DT::datatable(
+  compact_display,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 15,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+)
+```
+
+## Expanded term-gene table
+
+This table has one row per enriched term per contributing DEG. It is easier for
+gene-level filtering because gene IDs and descriptions are not collapsed.
+
+```{r expanded-table}
+long_display <- term_gene_long |>
+  dplyr::mutate(
+    p.adjust = signif(p.adjust, 3),
+    qvalue = signif(qvalue, 3),
+    FoldEnrichment = round(FoldEnrichment, 2)
+  ) |>
+  dplyr::select(
+    enrichment_context, database, family, comparison, direction, term_id,
+    term_name, ontology_or_theme, pathway_scope, p.adjust, FoldEnrichment,
+    gene_id, Preferred_name, gene_description
+  )
+
+DT::datatable(
+  long_display,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 25,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+)
+```
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(tibble::tibble(file = exports),
+             caption = paste("Files written to", out_dir))
+```
+
+## Session information
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

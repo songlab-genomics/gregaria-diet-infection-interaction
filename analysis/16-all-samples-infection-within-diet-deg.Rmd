@@ -1190,6 +1190,181 @@ cat(paste0(
 ))
 ```
 
+## Full non-curated infection DEG heatmap
+
+This diagnostic heatmap uses every significant infected-control DEG detected
+within any diet on this page. It is meant for pattern checking rather than for a
+publication panel: rows are clustered so unusual gene blocks can emerge, while
+sample columns remain ordered by infection status and diet.
+
+Because the full DEG set is large, gene labels are hidden on the image. The table
+below keeps the clustered heatmap row order, gene description, the diets where
+each gene is a DEG, and the sample with the strongest row-z-score deviation.
+
+```{r full-infection-deg-diagnostic-heatmap}
+full_infection_deg_table <- sig_for_heatmap |>
+  dplyr::filter(gene_id %in% rownames(vst_mat)) |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    n_infection_diets = dplyr::n_distinct(diet),
+    infection_diets = paste(sort(unique(as.character(diet))), collapse = "; "),
+    directions = paste(sort(unique(direction)), collapse = "; "),
+    comparisons = paste0(
+      "Diet ", paste(sort(unique(as.character(diet))), collapse = "; Diet "),
+      ": infected vs control"
+    ),
+    max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+    min_padj = min(padj, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::left_join(gene_annotation |> dplyr::select(gene_id, Description),
+                   by = "gene_id") |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no description"),
+    DEG_scope = dplyr::case_when(
+      n_infection_diets >= 3 ~ "DEG in 3 diets",
+      n_infection_diets == 2 ~ "DEG in 2 diets",
+      TRUE ~ "DEG in 1 diet"
+    ),
+    DEG_scope = factor(DEG_scope,
+                       levels = c("DEG in 3 diets", "DEG in 2 diets",
+                                  "DEG in 1 diet"))
+  ) |>
+  dplyr::arrange(DEG_scope, min_padj, dplyr::desc(max_abs_log2FC))
+
+full_infection_deg_ids <- full_infection_deg_table$gene_id
+
+if (length(full_infection_deg_ids) > 1) {
+  full_infection_gene_annotation <- full_infection_deg_table |>
+    dplyr::transmute(DEG_scope = as.character(DEG_scope))
+  full_infection_gene_annotation <- as.data.frame(
+    full_infection_gene_annotation,
+    stringsAsFactors = FALSE
+  )
+  rownames(full_infection_gene_annotation) <- full_infection_deg_ids
+
+  full_infection_mat <- vst_mat[
+    full_infection_deg_ids,
+    sample_order,
+    drop = FALSE
+  ]
+  full_infection_zmat <- t(scale(t(full_infection_mat)))
+  full_infection_zmat[is.na(full_infection_zmat)] <- 0
+  storage.mode(full_infection_zmat) <- "double"
+  max_deviation_index <- max.col(abs(full_infection_zmat),
+                                 ties.method = "first")
+  max_deviation_value <- full_infection_zmat[
+    cbind(seq_len(nrow(full_infection_zmat)), max_deviation_index)
+  ]
+  full_infection_zmat_plot <- pmax(pmin(full_infection_zmat, 3), -3)
+  full_infection_zmat_plot <- as.matrix(full_infection_zmat_plot)
+  storage.mode(full_infection_zmat_plot) <- "double"
+
+  full_infection_annotation_colors <- annotation_colors
+  full_infection_annotation_colors$DEG_scope <- c(
+    "DEG in 3 diets" = "#111827",
+    "DEG in 2 diets" = "#6B7280",
+    "DEG in 1 diet" = "#D1D5DB"
+  )
+
+  full_infection_heatmap <- pheatmap::pheatmap(
+    full_infection_zmat_plot,
+    color = heatmap_expression_colors,
+    breaks = heatmap_expression_breaks,
+    cluster_rows = TRUE,
+    cluster_cols = FALSE,
+    gaps_col = sample_gaps,
+    show_rownames = FALSE,
+    show_colnames = TRUE,
+    fontsize_col = 6,
+    annotation_row = full_infection_gene_annotation,
+    annotation_col = sample_annotation,
+    annotation_colors = full_infection_annotation_colors,
+    main = "Full infection-within-diet DEG heatmap",
+    filename = file.path(out_dir, "full_infection_deg_diagnostic_heatmap.png"),
+    width = 16,
+    height = 22,
+    silent = TRUE
+  )
+
+  full_infection_row_order <- if (!is.null(full_infection_heatmap$tree_row)) {
+    rownames(full_infection_zmat_plot)[full_infection_heatmap$tree_row$order]
+  } else {
+    rownames(full_infection_zmat_plot)
+  }
+
+  full_infection_gene_table_ordered <- full_infection_deg_table |>
+    dplyr::mutate(
+      max_abs_sample_z = abs(max_deviation_value[
+        match(gene_id, rownames(full_infection_zmat))
+      ]),
+      sample_with_max_abs_z = sample_order[
+        max_deviation_index[match(gene_id, rownames(full_infection_zmat))]
+      ],
+      sample_deviation_direction = dplyr::if_else(
+        max_deviation_value[match(gene_id, rownames(full_infection_zmat))] > 0,
+        "Higher than gene average",
+        "Lower than gene average"
+      )
+    ) |>
+    dplyr::slice(match(full_infection_row_order, gene_id)) |>
+    dplyr::mutate(heatmap_row_order = dplyr::row_number()) |>
+    dplyr::select(heatmap_row_order, gene_id, Description, DEG_scope,
+                  n_infection_diets, infection_diets, directions, comparisons,
+                  max_abs_log2FC, min_padj, max_abs_sample_z,
+                  sample_with_max_abs_z, sample_deviation_direction)
+
+  write.csv(
+    full_infection_gene_table_ordered,
+    file.path(out_dir, "full_infection_deg_diagnostic_heatmap_gene_order.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    tibble::rownames_to_column(as.data.frame(full_infection_zmat), "gene_id"),
+    gzfile(file.path(out_dir, "full_infection_deg_diagnostic_z_vst_matrix.csv.gz")),
+    row.names = FALSE
+  )
+
+  full_infection_display_png <- file.path(
+    display_dir,
+    "full-infection-deg-diagnostic-heatmap-display.png"
+  )
+  file.copy(
+    file.path(out_dir, "full_infection_deg_diagnostic_heatmap.png"),
+    full_infection_display_png,
+    overwrite = TRUE
+  )
+  full_infection_heatmap_src <- file.path(
+    "figure", basename(display_dir),
+    "full-infection-deg-diagnostic-heatmap-display.png"
+  )
+} else {
+  message("Not enough infection-within-diet DEGs for the full diagnostic heatmap.")
+}
+```
+
+```{r full-infection-deg-diagnostic-heatmap-display, echo=FALSE, results='asis'}
+if (exists("full_infection_heatmap_src")) {
+  cat(paste0(
+    '<p><img src="', full_infection_heatmap_src,
+    '" alt="Full non-curated infection DEG diagnostic heatmap" ',
+    'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
+  ))
+}
+```
+
+```{r full-infection-deg-diagnostic-table}
+if (exists("full_infection_gene_table_ordered")) {
+  DT::datatable(
+    full_infection_gene_table_ordered,
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Full infection DEG heatmap gene order and strongest single-sample deviations"
+  )
+}
+```
+
 ## Curated immune and nutrition DEG summary
 
 This compact figure uses the same curated gene table as the heatmap, but

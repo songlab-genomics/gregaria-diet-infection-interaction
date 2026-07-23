@@ -1,0 +1,610 @@
+---
+title: "All-samples DEG catalogue"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "all-deg-catalogue"
+---
+
+## Purpose
+
+This page is a searchable catalogue of all significant DEGs from the primary
+all-samples retained analysis. It uses the all-samples scenario from
+`12-deg-sample-filter-scenarios.Rmd`, so the current outlier-flagged samples
+are retained.
+
+The table shows the gene ID, RefSeq/GFF description, contrast, log2 fold
+change, and which side of the contrast has higher expression. Positive log2
+fold change is colored red; negative log2 fold change is colored blue.
+
+The `Description` column is taken directly from the gene-level `description=`
+attribute in the RefSeq/GFF annotation from the same *S. gregaria* assembly.
+eggNOG is still used only for the GO, KEGG, and PFAM annotation columns.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("dplyr", "tidyr", "stringr", "DT", "knitr", "ggplot2",
+              "scales")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+counts_file <- file.path(project_dir, params$counts_file)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+results_root <- file.path(project_dir, params$latest_results_root)
+
+direction_colors <- c("Upregulated" = "#E41A1C",
+                      "Downregulated" = "#1E88E5")
+cluster_colors <- c("DEG cluster 1" = "#315C8A",
+                    "DEG cluster 2" = "#C85A54",
+                    "DEG cluster 3+4" = "#2F8F5B")
+```
+
+## Helper functions
+
+```{r helpers}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) {
+    stop("No output folder matched pattern: ", pattern)
+  }
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "eggNOG_Description", "eggNOG_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+parse_gff_gene_annotation <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      gff_description = stringr::str_match(attributes, "description=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+first_nonempty <- function(x, fallback = "unannotated") {
+  x <- x[!is.na(x) & x != "" & x != "-"]
+  if (length(x) == 0) fallback else x[1]
+}
+
+make_condition_label <- function(comparison_type, numerator, denominator, diet,
+                                 side = c("numerator", "denominator")) {
+  side <- match.arg(side)
+  value <- if (side == "numerator") numerator else denominator
+  dplyr::case_when(
+    comparison_type == "Infection within diet" ~
+      paste(value, "diet", diet),
+    grepl("control", comparison_type, ignore.case = TRUE) ~
+      paste("Control diet", value),
+    grepl("infected", comparison_type, ignore.case = TRUE) ~
+      paste("Infected diet", value),
+    TRUE ~ value
+  )
+}
+
+save_png_svg <- function(plot, file_base, width, height, dpi = 300) {
+  png_path <- file.path(out_dir, paste0(file_base, ".png"))
+  svg_path <- file.path(out_dir, paste0(file_base, ".svg"))
+
+  ggplot2::ggsave(png_path, plot, width = width, height = height,
+                  dpi = dpi, limitsize = FALSE)
+
+  grDevices::svg(svg_path, width = width, height = height, onefile = FALSE)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  print(plot)
+
+  invisible(c(png = png_path, svg = svg_path))
+}
+
+slugify <- function(x) {
+  x |>
+    stringr::str_to_lower() |>
+    stringr::str_replace_all("[^a-z0-9]+", "_") |>
+    stringr::str_replace_all("^_|_$", "")
+}
+```
+
+## Input files
+
+```{r input-files}
+scenario_dir <- latest_dir("^deg-sample-filter-scenarios_")
+scenario_results_file <- file.path(scenario_dir, "all_deseq2_results.csv")
+
+input_files <- data.frame(
+  input = c("All-scenario DESeq2 table", "eggNOG functional annotation",
+            "GFF gene descriptions"),
+  path = c(scenario_results_file, eggnog_file, gff_file),
+  present = c(file.exists(scenario_results_file),
+              file.exists(eggnog_file), file.exists(gff_file))
+)
+
+knitr::kable(input_files, caption = "Input files used for the DEG catalogue")
+if (!all(input_files$present)) {
+  stop("One or more required inputs are missing.")
+}
+```
+
+## Annotation and DEG catalogue
+
+```{r build-catalogue}
+counts_raw <- read.csv(counts_file, check.names = FALSE)
+gene_universe <- unique(counts_raw[[1]])
+
+gff_annotation <- parse_gff_gene_annotation(gff_file) |>
+  dplyr::filter(gene_id %in% gene_universe)
+
+eggnog_annotation <- read_emapper(eggnog_file) |>
+  dplyr::left_join(parse_cds_gene_bridge(gff_file), by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    GOs = first_nonempty(GOs, ""),
+    KEGG_ko = first_nonempty(KEGG_ko, ""),
+    KEGG_Pathway = first_nonempty(KEGG_Pathway, ""),
+    PFAMs = first_nonempty(PFAMs, ""),
+    .groups = "drop"
+  )
+
+annotation <- data.frame(gene_id = gene_universe) |>
+  dplyr::left_join(gff_annotation, by = "gene_id") |>
+  dplyr::left_join(eggnog_annotation, by = "gene_id") |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(gff_description, "no GFF description"),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+  ) |>
+  dplyr::select(
+    gene_id, Description, gene_biotype,
+    GOs, KEGG_ko, KEGG_Pathway, PFAMs
+  )
+
+deg_raw <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    scenario == "All samples",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < params$alpha,
+    abs(log2FoldChange) >= params$lfc_threshold
+  )
+
+deg_catalogue <- deg_raw |>
+  dplyr::mutate(
+    numerator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, "numerator"
+    ),
+    denominator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, "denominator"
+    ),
+    higher_in = dplyr::if_else(log2FoldChange > 0,
+                               numerator_condition, denominator_condition),
+    lower_in = dplyr::if_else(log2FoldChange > 0,
+                              denominator_condition, numerator_condition),
+    signed_direction = dplyr::if_else(log2FoldChange > 0,
+                                      "Upregulated", "Downregulated")
+  ) |>
+  dplyr::left_join(annotation, by = "gene_id") |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no GFF description")
+  ) |>
+  dplyr::select(
+    gene_id, Description,
+    gene_biotype,
+    comparison_type, comparison, numerator_condition, denominator_condition,
+    higher_in, lower_in, signed_direction, log2FoldChange, lfcSE, baseMean,
+    stat, pvalue, padj, GOs, KEGG_ko, KEGG_Pathway, PFAMs
+  ) |>
+  dplyr::arrange(comparison_type, comparison, padj,
+                 dplyr::desc(abs(log2FoldChange)))
+
+write.csv(deg_catalogue, file.path(out_dir, "all_samples_deg_catalogue.csv"),
+          row.names = FALSE)
+
+catalogue_summary <- deg_catalogue |>
+  dplyr::count(comparison_type, comparison, signed_direction,
+               name = "n_DEGs") |>
+  dplyr::arrange(comparison_type, comparison, signed_direction)
+
+comparison_type_order <- c("Diet contrasts among control",
+                           "Diet contrasts among infected",
+                           "Infection within diet")
+comparison_order <- catalogue_summary |>
+  dplyr::distinct(comparison_type, comparison) |>
+  dplyr::arrange(factor(comparison_type, levels = comparison_type_order),
+                 comparison) |>
+  dplyr::pull(comparison)
+
+catalogue_summary <- catalogue_summary |>
+  dplyr::mutate(
+    comparison_type = factor(comparison_type,
+                             levels = comparison_type_order),
+    comparison = factor(comparison, levels = comparison_order),
+    signed_direction = factor(signed_direction,
+                              levels = c("Downregulated", "Upregulated"))
+  )
+
+write.csv(catalogue_summary,
+          file.path(out_dir, "all_samples_deg_catalogue_summary.csv"),
+          row.names = FALSE)
+
+knitr::kable(
+  catalogue_summary,
+  caption = "Significant DEG counts in the all-samples retained catalogue"
+)
+```
+
+```{r deg-summary-plot, fig.width=12, fig.height=7}
+p_summary <- ggplot2::ggplot(
+  catalogue_summary,
+  ggplot2::aes(x = comparison, y = n_DEGs, fill = signed_direction)
+) +
+  ggplot2::geom_col(position = "dodge", width = 0.75) +
+  ggplot2::facet_wrap(~ comparison_type, scales = "free_x") +
+  ggplot2::scale_fill_manual(values = direction_colors) +
+  ggplot2::labs(
+    title = "All-samples retained DEG catalogue",
+    subtitle = "Counts use padj < alpha and absolute log2FC >= lfc_threshold",
+    x = NULL,
+    y = "Number of significant DEGs",
+    fill = NULL
+  ) +
+  ggplot2::theme_classic(base_size = 12) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+save_png_svg(p_summary, "all_samples_deg_catalogue_summary",
+             width = 12, height = 7, dpi = 300)
+p_summary
+```
+
+## DEG context zooms and expression-cluster proportions
+
+The full DEG catalogue plot is useful for comparing all contrasts at once, but
+the large infected-diet contrast compresses the smaller contexts. The exported
+zoom panels below repeat the same counts one context at a time, with an
+independent y-axis. The proportion plots then ask which expression cluster
+contains the genes from each DEG contrast.
+
+```{r deg-summary-context-exports, fig.width=13, fig.height=8}
+make_context_count_plot <- function(context_label) {
+  context_df <- catalogue_summary |>
+    dplyr::filter(comparison_type == context_label)
+
+  ggplot2::ggplot(
+    context_df,
+    ggplot2::aes(x = comparison, y = n_DEGs, fill = signed_direction)
+  ) +
+    ggplot2::geom_col(position = "dodge", width = 0.75) +
+    ggplot2::geom_text(
+      ggplot2::aes(label = n_DEGs),
+      position = ggplot2::position_dodge(width = 0.75),
+      vjust = -0.3,
+      size = 3.8,
+      fontface = "bold"
+    ) +
+    ggplot2::scale_fill_manual(values = direction_colors, drop = FALSE) +
+    ggplot2::scale_y_continuous(
+      expand = ggplot2::expansion(mult = c(0, 0.12))
+    ) +
+    ggplot2::labs(
+      title = "All-samples retained DEG catalogue",
+      subtitle = paste0(as.character(context_label),
+                        " - independent y-axis zoom"),
+      x = NULL,
+      y = "Number of significant DEGs",
+      fill = NULL
+    ) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+}
+
+context_count_plots <- lapply(levels(catalogue_summary$comparison_type),
+                              make_context_count_plot)
+names(context_count_plots) <- levels(catalogue_summary$comparison_type)
+
+for (context_label in names(context_count_plots)) {
+  n_comparisons <- dplyr::n_distinct(
+    catalogue_summary$comparison[catalogue_summary$comparison_type == context_label]
+  )
+  save_png_svg(
+    context_count_plots[[context_label]],
+    paste0("all_samples_deg_catalogue_summary_zoom_",
+           slugify(context_label)),
+    width = max(6.5, 2.3 * n_comparisons),
+    height = 5.2,
+    dpi = 300
+  )
+}
+
+cluster_assignment_dir <- latest_dir("^circled-cluster-enrichment_")
+cluster_assignment_file <- if (is.na(cluster_assignment_dir)) {
+  NA_character_
+} else {
+  file.path(cluster_assignment_dir, "full_heatmap_expression_cluster_assignments.csv")
+}
+
+cluster_export_note <- data.frame(
+  input = "Expression-cluster assignments",
+  path = cluster_assignment_file,
+  present = file.exists(cluster_assignment_file)
+)
+knitr::kable(cluster_export_note,
+             caption = "Cluster assignment file used for proportion plots")
+
+if (file.exists(cluster_assignment_file)) {
+  cluster_levels <- names(cluster_colors)
+  cluster_assignments <- read.csv(cluster_assignment_file,
+                                  check.names = FALSE) |>
+    dplyr::transmute(
+      gene_id,
+      expression_cluster = factor(expression_cluster,
+                                  levels = cluster_levels)
+    ) |>
+    dplyr::filter(!is.na(expression_cluster)) |>
+    dplyr::distinct()
+
+  deg_cluster_counts <- deg_catalogue |>
+    dplyr::inner_join(cluster_assignments, by = "gene_id") |>
+    dplyr::mutate(
+      comparison_type = factor(comparison_type,
+                               levels = comparison_type_order),
+      comparison = factor(comparison, levels = comparison_order),
+      signed_direction = factor(signed_direction,
+                                levels = c("Downregulated", "Upregulated"))
+    ) |>
+    dplyr::distinct(comparison_type, comparison, signed_direction,
+                    gene_id, expression_cluster) |>
+    dplyr::count(comparison_type, comparison, signed_direction,
+                 expression_cluster, name = "n_genes") |>
+    dplyr::group_by(comparison_type, comparison, signed_direction) |>
+    tidyr::complete(
+      expression_cluster = factor(cluster_levels, levels = cluster_levels),
+      fill = list(n_genes = 0)
+    ) |>
+    dplyr::mutate(
+      total_DEGs = sum(n_genes),
+      proportion = dplyr::if_else(total_DEGs > 0, n_genes / total_DEGs, 0)
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(comparison_type, comparison, signed_direction,
+                   expression_cluster)
+
+  write.csv(
+    deg_cluster_counts,
+    file.path(out_dir, "all_samples_deg_catalogue_cluster_proportions.csv"),
+    row.names = FALSE
+  )
+
+  p_cluster_proportion <- ggplot2::ggplot(
+    deg_cluster_counts,
+    ggplot2::aes(x = comparison, y = proportion, fill = expression_cluster)
+  ) +
+    ggplot2::geom_col(width = 0.78, color = "white", linewidth = 0.4) +
+    ggplot2::facet_grid(
+      signed_direction ~ comparison_type,
+      scales = "free_x",
+      space = "free_x"
+    ) +
+    ggplot2::scale_fill_manual(values = cluster_colors, drop = FALSE) +
+    ggplot2::scale_y_continuous(
+      labels = scales::percent_format(accuracy = 1),
+      limits = c(0, 1),
+      expand = c(0, 0)
+    ) +
+    ggplot2::labs(
+      title = "All-samples DEG catalogue by expression cluster",
+      subtitle = "Each bar sums to 100% of significant DEGs for one contrast and direction",
+      x = NULL,
+      y = "Proportion of significant DEGs",
+      fill = "Expression cluster"
+    ) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+      strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#111827"),
+      strip.text = ggplot2::element_text(face = "bold"),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+
+  save_png_svg(
+    p_cluster_proportion,
+    "all_samples_deg_catalogue_cluster_proportions",
+    width = 13,
+    height = 8,
+    dpi = 300
+  )
+
+  make_context_cluster_plot <- function(context_label) {
+    context_df <- deg_cluster_counts |>
+      dplyr::filter(comparison_type == context_label)
+
+    ggplot2::ggplot(
+      context_df,
+      ggplot2::aes(x = comparison, y = proportion, fill = expression_cluster)
+    ) +
+      ggplot2::geom_col(width = 0.78, color = "white", linewidth = 0.4) +
+      ggplot2::facet_wrap(~ signed_direction, nrow = 1) +
+      ggplot2::scale_fill_manual(values = cluster_colors, drop = FALSE) +
+      ggplot2::scale_y_continuous(
+        labels = scales::percent_format(accuracy = 1),
+        limits = c(0, 1),
+        expand = c(0, 0)
+      ) +
+      ggplot2::labs(
+        title = "Expression-cluster proportions by DEG context",
+        subtitle = paste0(as.character(context_label),
+                          " - independent context zoom"),
+        x = NULL,
+        y = "Proportion of significant DEGs",
+        fill = "Expression cluster"
+      ) +
+      ggplot2::theme_classic(base_size = 13) +
+      ggplot2::theme(
+        axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+        strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                                 color = "#111827"),
+        strip.text = ggplot2::element_text(face = "bold"),
+        legend.position = "bottom",
+        plot.title = ggplot2::element_text(face = "bold")
+      )
+  }
+
+  context_cluster_plots <- lapply(levels(catalogue_summary$comparison_type),
+                                  make_context_cluster_plot)
+  names(context_cluster_plots) <- levels(catalogue_summary$comparison_type)
+
+  for (context_label in names(context_cluster_plots)) {
+    n_comparisons <- dplyr::n_distinct(
+      catalogue_summary$comparison[catalogue_summary$comparison_type == context_label]
+    )
+    save_png_svg(
+      context_cluster_plots[[context_label]],
+      paste0("all_samples_deg_catalogue_cluster_proportions_zoom_",
+             slugify(context_label)),
+      width = max(7, 2.5 * n_comparisons),
+      height = 5.4,
+      dpi = 300
+    )
+  }
+
+  knitr::kable(
+    deg_cluster_counts,
+    caption = "Significant DEG proportions assigned to expression clusters"
+  )
+  p_cluster_proportion
+} else {
+  message("Cluster proportion plots skipped because the cluster assignment file was not found.")
+}
+```
+
+## Searchable DEG catalogue
+
+Use the search boxes to find a gene ID, annotation term, contrast, or condition.
+The `higher_in` column is the plain-language interpretation of the log2 fold
+change sign.
+
+```{r searchable-deg-table}
+display_table <- deg_catalogue |>
+  dplyr::mutate(
+    log2FoldChange = round(log2FoldChange, 3),
+    lfcSE = round(lfcSE, 3),
+    baseMean = round(baseMean, 2),
+    stat = round(stat, 3),
+    pvalue = signif(pvalue, 3),
+    padj = signif(padj, 3)
+  ) |>
+  dplyr::select(
+    gene_id, Description, gene_biotype, comparison_type, comparison,
+    higher_in, lower_in, signed_direction, log2FoldChange, padj, baseMean,
+    numerator_condition, denominator_condition, GOs, KEGG_ko, KEGG_Pathway,
+    PFAMs
+  )
+
+DT::datatable(
+  display_table,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 25,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+) |>
+  DT::formatStyle(
+    "log2FoldChange",
+    color = DT::styleInterval(0, c("#1E88E5", "#E41A1C")),
+    fontWeight = "bold"
+  ) |>
+  DT::formatStyle(
+    "signed_direction",
+    color = DT::styleEqual(names(direction_colors), direction_colors),
+    fontWeight = "bold"
+  )
+```
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(tibble::tibble(file = exports),
+             caption = paste("Files written to", out_dir))
+```
+
+## Session information
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

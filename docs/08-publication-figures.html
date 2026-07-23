@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-07-15" />
+<meta name="date" content="2026-07-24" />
 
 <title>Publication figure exports</title>
 
@@ -380,6 +380,12 @@ div.tocify {
         <li>
           <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
+        <li>
+          <a href="23-outlier-expression-signatures.html">Outlier expression signatures</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
@@ -424,6 +430,12 @@ div.tocify {
     </li>
     <li>
       <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+    </li>
+    <li>
+      <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html">Circled cluster enrichment</a>
     </li>
     <li>
       <a href="08-publication-figures.html">Publication figure exports</a>
@@ -520,7 +532,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Publication figure exports</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-07-15</h4>
+<h4 class="date">2026-07-24</h4>
 
 </div>
 
@@ -528,7 +540,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -539,8 +551,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -549,13 +561,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-07-24
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -579,18 +591,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -681,15 +696,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1b24ec222bfdfc865840eae1189c8e184a7387cdtargetblank1b24ec2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1b24ec222bfdfc865840eae1189c8e184a7387cd" target="_blank">1b24ec2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1b24ec222bfdfc865840eae1189c8e184a7387cdtargetblank1b24ec2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -699,7 +714,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1b24ec222bfdfc865840eae1189c8e184a7387cd" target="_blank">1b24ec2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -716,256 +731,65 @@ were generated:
 Ignored files:
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
-    Ignored:    data/raw_read_counts/.DS_Store
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
     Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-123921/
     Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260715-123853/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
+    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
     Ignored:    output/rmd_runs/count-qc-exploration_20260715-130115/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-124354/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-124947/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-124135/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-130357/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-124821/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-124842/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-124306/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130705/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130848/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-124901/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-124646/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-130514/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-124722/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-130550/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-124024/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
+    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
+    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260722-180842/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260715-160045/
+    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
     Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-124040/
     Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-124056/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-130318/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-124605/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-124523/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-124250/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
     Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/publication-figures_20260715-124350/
-    Ignored:    output/rmd_runs/study-design-data_20260715-123844/
+    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
+    Ignored:    output/rmd_runs/publication-figures_20260724-020451/
     Ignored:    output/rmd_runs/study-design-data_20260715-130107/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-123846/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
     Ignored:    output/rmd_runs/workflow-reproducibility_20260715-130109/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  analysis/12-deg-sample-filter-scenarios.Rmd
-    Untracked:  analysis/13-physiology-candidate-genes.Rmd
-    Untracked:  analysis/14-all-samples-deseq2-interaction-model.Rmd
-    Untracked:  analysis/15-all-samples-diet-pairwise-deg.Rmd
-    Untracked:  analysis/16-all-samples-infection-within-diet-deg.Rmd
-    Untracked:  analysis/17-outliers-removed-deseq2-interaction-model.Rmd
-    Untracked:  analysis/18-outliers-removed-diet-pairwise-deg.Rmd
-    Untracked:  analysis/19-outliers-removed-infection-within-diet-deg.Rmd
-    Untracked:  analysis/20-phase-signature-overlap.Rmd
-    Untracked:  analysis/21-phase-signature-overlap-no-outliers.Rmd
-    Untracked:  analysis/22-deg-logical-set-construction.Rmd
-    Untracked:  code/README.timecourse-snakemake-source.md
-    Untracked:  code/Snakefile
-    Untracked:  code/Snakefile.eggnog_annotations
-    Untracked:  code/Snakefile.metatranscriptomics_qc
-    Untracked:  code/Snakefile.rnaseq_variants
-    Untracked:  code/__pycache__/
-    Untracked:  code/cluster.json
-    Untracked:  code/config.smk
-    Untracked:  code/pilot/
-    Untracked:  code/rules/
-    Untracked:  code/run_eggnog_desertlocustr.sh
-    Untracked:  code/scripts/
-    Untracked:  code/snakemake.eggnog.slurm
-    Untracked:  code/snakemake.fatbody_pilot.slurm
-    Untracked:  code/snakemake.metatx.slurm
-    Untracked:  code/snakemake.slurm
-    Untracked:  data/external/
-    Untracked:  data/raw_read_counts/03-FAT-DESeq2/
-    Untracked:  data/raw_read_counts/03-gregaria-DESeq2/
+    Untracked:  analysis/23-outlier-expression-signatures.Rmd
+    Untracked:  analysis/24-all-deg-catalogue.Rmd
+    Untracked:  analysis/25-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/26-circled-cluster-enrichment.Rmd
+    Untracked:  analysis/27-fatbody-wgcna-diet-infection.Rmd
+    Untracked:  scripts/make_labeled_infection_deg_pca.R
+    Untracked:  scripts/make_unplaced_scaffold_origin_workflow.R
 
 Unstaged changes:
-    Modified:   .DS_Store
-    Modified:   analysis/.DS_Store
-    Modified:   analysis/10-go-term-enrichment.Rmd
+    Deleted:    .DS_Store
+    Deleted:    analysis/.DS_Store
+    Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/12-deg-sample-filter-scenarios.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/19-outliers-removed-infection-within-diet-deg.Rmd
+    Modified:   analysis/20-phase-signature-overlap.Rmd
+    Modified:   analysis/21-phase-signature-overlap-no-outliers.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
-    Modified:   analysis/site-style.css
-    Modified:   code/README.md
-    Modified:   data/.DS_Store
-    Modified:   output/.DS_Store
-    Modified:   output/rmd_runs/.DS_Store
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/filter_summary.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/library_size.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/pca_vst.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/condition_specific_diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_presence_absence_matrix.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/genes_seen_in_two_or_more_sets.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_infected.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/all_model_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/deseq2_coefficients.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_deg_count_barplot.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_direction_counts.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_pca.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/sessionInfo.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/significant_gene_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_50.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_50_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/all_diet_pairwise_results.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_deg_count_barplot.png
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_direction_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/sessionInfo.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_50.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_83.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_50_vs_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_33.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_50.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_83.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/all_infection_within_diet_results.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_gene_list.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_heatmap_genes.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_deg_count_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_direction_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/sessionInfo.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_33.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_50.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_sample_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_top_variable_gene_heatmap.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_scores_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/removed_samples.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sample_counts_by_group.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sessionInfo.txt
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/within_diet_results_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2NAME.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/all_enrichment_results.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_source_manifest.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_barplot.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_counts.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2NAME.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_by_ontology.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_with_ontology.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_KEGG_pathway_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_term_overlap_heatmap.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_terms_seen_in_multiple_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_deg_set_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_dotplot_by_set.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/lncRNA_deg_table.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/removed_outlier_samples.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/sessionInfo.txt
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_figure_inventory.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/10_diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/11_diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/12_diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/13_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/14_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/15_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/16_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/17_diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/18_diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/19_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/1_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/20_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/21_venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/22_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/23_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/24_venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/25_25_25_25_25_25_Volcano_33_vs_50.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/26_26_26_26_26_26_Volcano_33_vs_50.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/27_27_27_27_27_27_Volcano_33_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/28_28_28_28_28_28_Volcano_33_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/29_29_29_29_29_29_Volcano_50_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/2_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/30_30_30_30_30_30_Volcano_50_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/3_curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/4_curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/5_diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/6_diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/7_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/8_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/9_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/copied_candidate_panels.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/sessionInfo.txt
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/library_size_by_sample.csv
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/sessionInfo.txt
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/hpc_to_workflowr_workflow.png
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/package_status.csv
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/sessionInfo.txt
+    Deleted:    data/.DS_Store
+    Deleted:    data/GO_Annotations/.DS_Store
+    Deleted:    data/GO_Annotations/DesertLocustR/.DS_Store
+    Deleted:    data/excluded_loci/.DS_Store
+    Deleted:    output/.DS_Store
+    Deleted:    output/rmd_runs/.DS_Store
 
 </code></pre>
 <p>
@@ -1011,6 +835,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/08-publication-figures.html" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+<td>
+adding phase related changes
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1105,18 +946,27 @@ Upgrading analysis and figures DEGs
 </div>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
-<p>This page gathers rendered analysis panels for review. It does not
-overwrite older figures; every knit creates a new export folder.</p>
+<p>This page assembles manuscript-facing panels from the all-samples
+retained analysis. It does not rerun the raw read-processing pipeline.
+It rebuilds plots from the rRNA-filtered count matrix, metadata, GFF
+biotypes, and the current all-samples DESeq2 result table.</p>
+<p>Every knit writes to a new folder under <code>output/rmd_runs</code>,
+so previous figure drafts remain available for comparison.</p>
 </div>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required &lt;- c(&quot;ggplot2&quot;, &quot;png&quot;, &quot;grid&quot;)
+required &lt;- c(&quot;DESeq2&quot;, &quot;SummarizedExperiment&quot;, &quot;dplyr&quot;, &quot;tidyr&quot;, &quot;stringr&quot;,
+              &quot;ggplot2&quot;, &quot;ggrepel&quot;, &quot;patchwork&quot;, &quot;scales&quot;,
+              &quot;ggVennDiagram&quot;, &quot;png&quot;, &quot;grid&quot;)
 missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) &gt; 0) {
   stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
 }
+
+library(ggplot2)
+library(patchwork)
 
 project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
 run_stamp &lt;- format(Sys.time(), &quot;%Y%m%d-%H%M%S&quot;)
@@ -1124,516 +974,2129 @@ out_dir &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
                      paste(params$output_tag, run_stamp, sep = &quot;_&quot;))
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
-candidate_roots &lt;- c(file.path(project_dir, params$results_root),
-                     file.path(project_dir, params$legacy_assets_root))</code></pre>
-</div>
-<div id="candidate-figure-inventory" class="section level2">
-<h2>Candidate figure inventory</h2>
-<pre class="r"><code>figure_files &lt;- unlist(lapply(candidate_roots, function(root) {
-  if (!dir.exists(root)) return(character())
-  list.files(root, pattern = &quot;\\.(png|pdf)$&quot;, recursive = TRUE, full.names = TRUE)
-}))
+results_root &lt;- file.path(project_dir, params$latest_results_root)
+metadata_file &lt;- file.path(project_dir, params$metadata_file)
+counts_file &lt;- file.path(project_dir, params$counts_file)
+gff_file &lt;- file.path(project_dir, params$gff_file)
+eggnog_file &lt;- file.path(project_dir, params$eggnog_file)
 
-figure_inventory &lt;- data.frame(
-  source = figure_files,
-  file = basename(figure_files),
-  role = dplyr::case_when(
-    grepl(&quot;PCA&quot;, basename(figure_files), ignore.case = TRUE) ~ &quot;ordination&quot;,
-    grepl(&quot;Volcano&quot;, basename(figure_files), ignore.case = TRUE) ~ &quot;volcano&quot;,
-    grepl(&quot;Heatmap&quot;, basename(figure_files), ignore.case = TRUE) ~ &quot;heatmap&quot;,
-    grepl(&quot;MA&quot;, basename(figure_files), ignore.case = TRUE) ~ &quot;MA plot&quot;,
-    grepl(&quot;overlap|venn|upset&quot;, basename(figure_files), ignore.case = TRUE) ~ &quot;overlap&quot;,
-    TRUE ~ &quot;other&quot;
-  )
+diet_colors &lt;- c(&quot;33&quot; = &quot;#E6862E&quot;, &quot;50&quot; = &quot;#2F8F5B&quot;, &quot;83&quot; = &quot;#7B4FA3&quot;)
+treatment_colors &lt;- c(&quot;Control&quot; = &quot;#FAEBD7&quot;, &quot;Infected&quot; = &quot;#8B0000&quot;)
+condition_colors &lt;- c(
+  &quot;33 Control&quot; = &quot;#F7D6A6&quot;,
+  &quot;33 Infected&quot; = &quot;#C75C1B&quot;,
+  &quot;50 Control&quot; = &quot;#CDE8D5&quot;,
+  &quot;50 Infected&quot; = &quot;#1F6F43&quot;,
+  &quot;83 Control&quot; = &quot;#D8C7E8&quot;,
+  &quot;83 Infected&quot; = &quot;#5B2E83&quot;
 )
 
-knitr::kable(head(figure_inventory, 30))</code></pre>
+direction_biotype_colors &lt;- c(
+  &quot;Upregulated - Coding genes&quot; = &quot;#B91C1C&quot;,
+  &quot;Upregulated - Long non-coding RNA&quot; = &quot;#F87171&quot;,
+  &quot;Upregulated - Other / unknown&quot; = &quot;#FCA5A5&quot;,
+  &quot;Downregulated - Coding genes&quot; = &quot;#1D4ED8&quot;,
+  &quot;Downregulated - Long non-coding RNA&quot; = &quot;#60A5FA&quot;,
+  &quot;Downregulated - Other / unknown&quot; = &quot;#BFDBFE&quot;
+)
+
+physiology_theme_colors &lt;- c(
+  &quot;Phase-related changes&quot; = &quot;#C51B7D&quot;,
+  &quot;Antimicrobial peptides&quot; = &quot;#D7191C&quot;,
+  &quot;Immune-related&quot; = &quot;#F58220&quot;,
+  &quot;Glycogen synthesis / storage&quot; = &quot;#FFD92F&quot;,
+  &quot;Lipid synthesis / metabolism&quot; = &quot;#1B9E77&quot;,
+  &quot;Protein synthesis / storage&quot; = &quot;#377EB8&quot;,
+  &quot;Detoxification / stress&quot; = &quot;#984EA3&quot;,
+  &quot;Other / unannotated genes&quot; = &quot;#BDBDBD&quot;
+)
+
+theme_pub &lt;- function(base_size = 12) {
+  ggplot2::theme_classic(base_size = base_size) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(face = &quot;bold&quot;),
+      strip.background = ggplot2::element_rect(fill = &quot;#F3F4F6&quot;,
+                                               color = &quot;#111827&quot;),
+      strip.text = ggplot2::element_text(face = &quot;bold&quot;),
+      legend.position = &quot;bottom&quot;,
+      legend.title = ggplot2::element_text(face = &quot;bold&quot;)
+    )
+}</code></pre>
+</div>
+<div id="helper-functions" class="section level2">
+<h2>Helper functions</h2>
+<pre class="r"><code>latest_dir &lt;- function(pattern) {
+  dirs &lt;- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs &lt;- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+save_png_svg &lt;- function(plot, file_base, width, height, dpi = 300) {
+  png_path &lt;- file.path(out_dir, paste0(file_base, &quot;.png&quot;))
+  svg_path &lt;- file.path(out_dir, paste0(file_base, &quot;.svg&quot;))
+
+  ggplot2::ggsave(png_path, plot, width = width, height = height,
+                  dpi = dpi, limitsize = FALSE)
+
+  grDevices::svg(svg_path, width = width, height = height, onefile = FALSE)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  print(plot)
+
+  invisible(c(png = png_path, svg = svg_path))
+}
+
+parse_gff_gene_annotation &lt;- function(path) {
+  gff &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, stringsAsFactors = FALSE)
+  names(gff)[1:9] &lt;- c(&quot;seqid&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;, &quot;score&quot;,
+                       &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)
+
+  gff |&gt;
+    dplyr::filter(type == &quot;gene&quot;) |&gt;
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, &quot;gene=([^;]+)&quot;)[, 2],
+        stringr::str_match(attributes, &quot;Name=([^;]+)&quot;)[, 2]
+      ),
+      Description = stringr::str_match(attributes, &quot;description=([^;]+)&quot;)[, 2],
+      gene_biotype = stringr::str_match(attributes, &quot;gene_biotype=([^;]+)&quot;)[, 2]
+    ) |&gt;
+    dplyr::filter(!is.na(gene_id)) |&gt;
+    dplyr::mutate(
+      Description = dplyr::if_else(
+        is.na(Description) | Description == &quot;&quot;,
+        &quot;no GFF description&quot;,
+        utils::URLdecode(Description)
+      ),
+      gene_biotype = dplyr::coalesce(gene_biotype, &quot;unknown&quot;)
+    ) |&gt;
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+parse_gff_gene_coordinates &lt;- function(path) {
+  gff &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, stringsAsFactors = FALSE)
+  names(gff)[1:9] &lt;- c(&quot;seqid&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;, &quot;score&quot;,
+                       &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)
+
+  sequence_regions &lt;- gff |&gt;
+    dplyr::filter(type == &quot;region&quot;) |&gt;
+    dplyr::transmute(
+      seqid,
+      seq_start = start,
+      seq_end = end,
+      chromosome = stringr::str_match(attributes, &quot;chromosome=([^;]+)&quot;)[, 2],
+      region_name = stringr::str_match(attributes, &quot;Name=([^;]+)&quot;)[, 2],
+      genome = stringr::str_match(attributes, &quot;genome=([^;]+)&quot;)[, 2]
+    ) |&gt;
+    dplyr::mutate(
+      chromosome = dplyr::coalesce(chromosome, region_name, seqid),
+      chromosome = utils::URLdecode(chromosome),
+      chromosome_class = dplyr::if_else(
+        chromosome %in% c(as.character(1:11), &quot;X&quot;),
+        &quot;Named chromosome&quot;,
+        &quot;Unplaced scaffold&quot;
+      )
+    ) |&gt;
+    dplyr::distinct(seqid, .keep_all = TRUE)
+
+  gene_ranges &lt;- gff |&gt;
+    dplyr::filter(type == &quot;gene&quot;) |&gt;
+    dplyr::transmute(
+      seqid,
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, &quot;gene=([^;]+)&quot;)[, 2],
+        stringr::str_match(attributes, &quot;Name=([^;]+)&quot;)[, 2]
+      ),
+      start,
+      end,
+      midpoint = (start + end) / 2,
+      strand
+    ) |&gt;
+    dplyr::filter(!is.na(gene_id)) |&gt;
+    dplyr::distinct(gene_id, .keep_all = TRUE) |&gt;
+    dplyr::left_join(sequence_regions, by = &quot;seqid&quot;)
+
+  list(gene_ranges = gene_ranges, sequence_regions = sequence_regions)
+}
+
+first_nonempty &lt;- function(x, fallback = &quot;&quot;) {
+  x &lt;- x[!is.na(x) &amp; x != &quot;&quot; &amp; x != &quot;-&quot;]
+  if (length(x) == 0) fallback else x[1]
+}
+
+read_emapper &lt;- function(path) {
+  cols &lt;- c(
+    &quot;query&quot;, &quot;seed_ortholog&quot;, &quot;evalue&quot;, &quot;score&quot;, &quot;eggNOG_OGs&quot;,
+    &quot;max_annot_lvl&quot;, &quot;COG_category&quot;, &quot;eggNOG_Description&quot;,
+    &quot;eggNOG_name&quot;, &quot;GOs&quot;, &quot;EC&quot;, &quot;KEGG_ko&quot;, &quot;KEGG_Pathway&quot;,
+    &quot;KEGG_Module&quot;, &quot;KEGG_Reaction&quot;, &quot;KEGG_rclass&quot;, &quot;BRITE&quot;,
+    &quot;KEGG_TC&quot;, &quot;CAZy&quot;, &quot;BiGG_Reaction&quot;, &quot;PFAMs&quot;
+  )
+  tab &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, fill = TRUE)
+  names(tab) &lt;- cols[seq_len(ncol(tab))]
+  tab |&gt;
+    dplyr::mutate(protein_id = stringr::str_extract(query, &quot;XP_[0-9]+[.][0-9]+&quot;))
+}
+
+parse_cds_gene_bridge &lt;- function(path) {
+  gff &lt;- read.delim(path, comment.char = &quot;#&quot;, header = FALSE, sep = &quot;\t&quot;,
+                    quote = &quot;&quot;, stringsAsFactors = FALSE)
+  names(gff)[1:9] &lt;- c(&quot;seqid&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;, &quot;score&quot;,
+                       &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)
+  gff |&gt;
+    dplyr::filter(type == &quot;CDS&quot;) |&gt;
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, &quot;protein_id=([^;]+)&quot;)[, 2],
+      gene_id = stringr::str_match(attributes, &quot;gene=([^;]+)&quot;)[, 2]
+    ) |&gt;
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |&gt;
+    dplyr::distinct()
+}
+
+build_gene_annotation &lt;- function(gff_path, eggnog_path) {
+  gff_annotation &lt;- parse_gff_gene_annotation(gff_path)
+
+  eggnog_annotation &lt;- read_emapper(eggnog_path) |&gt;
+    dplyr::left_join(parse_cds_gene_bridge(gff_path), by = &quot;protein_id&quot;) |&gt;
+    dplyr::filter(!is.na(gene_id)) |&gt;
+    dplyr::group_by(gene_id) |&gt;
+    dplyr::summarise(
+      eggNOG_Description = first_nonempty(eggNOG_Description),
+      eggNOG_name = first_nonempty(eggNOG_name),
+      GOs = first_nonempty(GOs),
+      KEGG_ko = first_nonempty(KEGG_ko),
+      KEGG_Pathway = first_nonempty(KEGG_Pathway),
+      PFAMs = first_nonempty(PFAMs),
+      .groups = &quot;drop&quot;
+    )
+
+  gff_annotation |&gt;
+    dplyr::full_join(eggnog_annotation, by = &quot;gene_id&quot;) |&gt;
+    dplyr::mutate(
+      Description = dplyr::coalesce(Description, &quot;no GFF description&quot;),
+      gene_biotype = dplyr::coalesce(gene_biotype, &quot;unknown&quot;),
+      annotation_text = stringr::str_squish(paste(
+        Description, eggNOG_Description, eggNOG_name, PFAMs,
+        KEGG_Pathway, sep = &quot; | &quot;
+      ))
+    )
+}
+
+classify_physiology_theme &lt;- function(annotation_text) {
+  text &lt;- stringr::str_to_lower(dplyr::coalesce(annotation_text, &quot;&quot;))
+  dplyr::case_when(
+    stringr::str_detect(
+      text,
+      &quot;antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|metchnikowin|thaumatin|termicin|lysozyme&quot;
+    ) ~ &quot;Antimicrobial peptides&quot;,
+    stringr::str_detect(
+      text,
+      &quot;toll|imd|relish|myd88|cactus|dorsal|nf-kappa|nf kappa|jak|stat&quot;
+    ) ~ &quot;Immune-related&quot;,
+    stringr::str_detect(
+      text,
+      &quot;immune|peptidoglycan|pgrp|gram-negative|gram negative|beta-1,3-glucan|glucan binding|phenoloxidase|prophenoloxidase|melanization|lectin|hemocyanin|complement|serpin&quot;
+    ) ~ &quot;Immune-related&quot;,
+    stringr::str_detect(
+      text,
+      &quot;glycogen|glycogenin|branching enzyme|starch&quot;
+    ) ~ &quot;Glycogen synthesis / storage&quot;,
+    stringr::str_detect(
+      text,
+      &quot;lipid|fatty acid|fatty-acid|acyl-coa|acyl coa|acetyl-coa carboxylase|elongase|desaturase|glycerolipid|phospholipid|triacylglycerol|diacylglycerol|sterol|lipase&quot;
+    ) ~ &quot;Lipid synthesis / metabolism&quot;,
+    stringr::str_detect(
+      text,
+      &quot;protein synthesis|translation|ribosom|elongation factor|initiation factor|aminoacyl|trna synthetase|vitellogenin|hexamerin|arylphorin|storage protein&quot;
+    ) ~ &quot;Protein synthesis / storage&quot;,
+    stringr::str_detect(
+      text,
+      &quot;detox|cytochrome p450|\\bcyp[0-9a-z]|glutathione|gst|carboxylesterase|esterase|udp-glucuronosyltransferase|\\bugt\\b|abc transporter|oxidoreductase|peroxidase|catalase|superoxide|heat shock|stress&quot;
+    ) ~ &quot;Detoxification / stress&quot;,
+    stringr::str_detect(text, &quot;no gff description|^\\s*$&quot;) ~
+      &quot;Other / unannotated genes&quot;,
+    TRUE ~ &quot;Other / unannotated genes&quot;
+  )
+}
+
+classify_gene_class &lt;- function(gene_biotype) {
+  dplyr::case_when(
+    gene_biotype == &quot;protein_coding&quot; ~ &quot;Coding genes&quot;,
+    gene_biotype == &quot;lncRNA&quot; ~ &quot;Long non-coding RNA&quot;,
+    TRUE ~ &quot;Other / unknown&quot;
+  )
+}
+
+make_condition_label &lt;- function(comparison_type, numerator, denominator, diet,
+                                 side = c(&quot;numerator&quot;, &quot;denominator&quot;)) {
+  side &lt;- match.arg(side)
+  value &lt;- if (side == &quot;numerator&quot;) numerator else denominator
+
+  dplyr::case_when(
+    comparison_type == &quot;Infection within diet&quot; ~ paste(value, &quot;diet&quot;, diet),
+    grepl(&quot;control&quot;, comparison_type, ignore.case = TRUE) ~
+      paste(&quot;Control diet&quot;, value),
+    grepl(&quot;infected&quot;, comparison_type, ignore.case = TRUE) ~
+      paste(&quot;Infected diet&quot;, value),
+    TRUE ~ value
+  )
+}
+
+make_condition_hull &lt;- function(df) {
+  if (nrow(df) &lt; 3) return(df[0, ])
+  df[chull(df$PC1, df$PC2), ]
+}
+
+copy_publication_asset &lt;- function(source, file_base) {
+  if (!file.exists(source)) return(NA_character_)
+  target &lt;- file.path(out_dir, paste0(file_base, &quot;.&quot;, tools::file_ext(source)))
+  file.copy(source, target, overwrite = TRUE)
+  target
+}</code></pre>
+</div>
+<div id="input-data" class="section level2">
+<h2>Input data</h2>
+<pre class="r"><code>scenario_dir &lt;- latest_dir(&quot;^deg-sample-filter-scenarios_&quot;)
+scenario_results_file &lt;- file.path(scenario_dir, &quot;all_deseq2_results.csv&quot;)
+scenario_sample_counts_file &lt;- file.path(scenario_dir,
+                                         &quot;sample_counts_by_scenario.csv&quot;)
+model_dir &lt;- latest_dir(&quot;^all-samples-deseq2-interaction-model_&quot;)
+model_coefficients_file &lt;- file.path(model_dir, &quot;all_model_coefficients.csv&quot;)
+logical_dir &lt;- latest_dir(&quot;^deg-logical-set-construction_&quot;)
+head_phase_file &lt;- file.path(logical_dir, &quot;step3_head_phase_degs.csv&quot;)
+thorax_phase_file &lt;- file.path(logical_dir, &quot;step4_thorax_phase_degs.csv&quot;)
+circled_cluster_dir &lt;- latest_dir(&quot;^circled-cluster-enrichment_&quot;)
+figure3_composite_source &lt;- file.path(
+  circled_cluster_dir,
+  &quot;expression_cluster_gene_level_GO_KEGG_lollipop.png&quot;
+)
+figure3_reference_source &lt;- file.path(
+  circled_cluster_dir,
+  &quot;expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png&quot;
+)
+
+inputs &lt;- data.frame(
+  input = c(&quot;metadata&quot;, &quot;rRNA-filtered counts&quot;, &quot;GFF annotation&quot;,
+            &quot;eggNOG annotation&quot;, &quot;all-samples DESeq2 scenario table&quot;,
+            &quot;sample-filter scenario counts&quot;,
+            &quot;all-samples model coefficients&quot;, &quot;Head phase DEGs&quot;,
+            &quot;Thorax phase DEGs&quot;, &quot;Figure 3 composite source&quot;),
+  path = c(metadata_file, counts_file, gff_file, eggnog_file,
+           scenario_results_file, scenario_sample_counts_file,
+           model_coefficients_file,
+           head_phase_file, thorax_phase_file, figure3_composite_source),
+  present = c(file.exists(metadata_file), file.exists(counts_file),
+              file.exists(gff_file), file.exists(eggnog_file),
+              file.exists(scenario_results_file),
+              file.exists(scenario_sample_counts_file),
+              file.exists(model_coefficients_file),
+              file.exists(head_phase_file), file.exists(thorax_phase_file),
+              file.exists(figure3_composite_source))
+)
+
+knitr::kable(inputs, caption = &quot;Inputs used to assemble publication figures&quot;)</code></pre>
 <table>
+<caption>Inputs used to assemble publication figures</caption>
 <colgroup>
-<col width="75%" />
-<col width="20%" />
-<col width="4%" />
+<col width="15%" />
+<col width="81%" />
+<col width="3%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">input</th>
+<th align="left">path</th>
+<th align="left">present</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">metadata</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/metadata/mehreen_metadata_fixed.txt</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">rRNA-filtered counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/raw_read_counts/master_counts_no_rRNA.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GFF annotation</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">eggNOG annotation</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">all-samples DESeq2 scenario table</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/all_deseq2_results.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">sample-filter scenario counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/sample_counts_by_scenario.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">all-samples model coefficients</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/all_model_coefficients.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Head phase DEGs</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-logical-set-construction_20260722-230917/step3_head_phase_degs.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Thorax phase DEGs</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-logical-set-construction_20260722-230917/step4_thorax_phase_degs.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure 3 composite source</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/circled-cluster-enrichment_20260724-004440/expression_cluster_gene_level_GO_KEGG_lollipop.png</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>if (!all(inputs$present)) {
+  stop(&quot;One or more publication figure inputs are missing.&quot;)
+}</code></pre>
+</div>
+<div id="figure-1-design-fat-body-pca-and-infection-degs"
+class="section level2">
+<h2>Figure 1: design, fat body PCA, and infection DEGs</h2>
+<p>Figure 1 is a compact visual summary of the fat body experiment and
+the infection-response contrasts.</p>
+<ul>
+<li>Panel A shows the balanced diet-by-infection design and the number
+of fat body RNA-seq libraries in each group.</li>
+<li>Panel B shows the VST PCA from all expressed, rRNA-filtered genes.
+Pale hulls show the spread of each diet-by-treatment group, black
+crosses mark centroids, and arrows show the shift from control to
+infected samples within each diet.</li>
+<li>Panel C summarizes the full contrast-level DEG burden across
+infection within diets, diet differences among controls, diet
+differences among infected samples, and the global infected-control
+model term. Red bars mark genes higher in the first condition named in
+the contrast. Blue bars mark genes higher in the second condition.
+Lighter red or blue segments mark long non-coding RNAs.</li>
+</ul>
+<div id="panel-a" class="section level3">
+<h3>Panel A</h3>
+<pre class="r"><code>metadata &lt;- read.delim(metadata_file, check.names = FALSE)
+metadata &lt;- metadata[, !is.na(names(metadata)) &amp; nzchar(names(metadata)),
+                     drop = FALSE]
+metadata$label &lt;- as.character(metadata$label)
+metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
+metadata$Treatment &lt;- factor(metadata$Treatment,
+                             levels = c(&quot;Control&quot;, &quot;Infected&quot;))
+
+design_counts &lt;- metadata |&gt;
+  dplyr::count(Diet, Treatment, name = &quot;n_samples&quot;) |&gt;
+  tidyr::complete(Diet, Treatment, fill = list(n_samples = 0)) |&gt;
+  dplyr::mutate(
+    Condition = paste(Diet, Treatment),
+    label = paste0(&quot;Diet &quot;, Diet, &quot;\n&quot;, Treatment, &quot;\nn = &quot;, n_samples),
+    text_color = dplyr::if_else(Treatment == &quot;Infected&quot;, &quot;white&quot;, &quot;#111827&quot;)
+  )
+
+p_design &lt;- ggplot2::ggplot(
+  design_counts,
+  ggplot2::aes(x = Treatment, y = Diet, fill = Condition)
+) +
+  ggplot2::geom_tile(width = 0.84, height = 0.72, color = &quot;#111827&quot;,
+                     linewidth = 0.45) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = label, color = text_color),
+    lineheight = 0.88,
+    size = 3.6,
+    fontface = &quot;bold&quot;
+  ) +
+  ggplot2::annotate(
+    &quot;label&quot;,
+    x = 1.5, y = 4.18,
+    label = paste(
+      &quot;Female S. gregaria fat body RNA-seq&quot;,
+      &quot;96 h after control or Metarhizium challenge&quot;,
+      &quot;all samples retained; rRNA loci removed bioinformatically&quot;,
+      sep = &quot;\n&quot;
+    ),
+    label.size = 0.25,
+    fill = &quot;white&quot;,
+    color = &quot;#111827&quot;,
+    size = 3.5,
+    fontface = &quot;bold&quot;,
+    lineheight = 0.96
+  ) +
+  ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
+  ggplot2::scale_color_identity() +
+  ggplot2::scale_y_discrete(limits = rev(levels(metadata$Diet))) +
+  ggplot2::coord_cartesian(clip = &quot;off&quot;, ylim = c(0.55, 4.45)) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.title = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.y = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.ticks = ggplot2::element_blank(),
+    legend.position = &quot;none&quot;,
+    plot.margin = ggplot2::margin(8, 8, 8, 8)
+  ) +
+  ggplot2::labs(title = &quot;A. Experimental design&quot;)
+
+save_png_svg(p_design, &quot;figure1_panel_A_experimental_design&quot;,
+             width = 7.2, height = 4.6)
+p_design</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-1-panel-a-1.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+</div>
+<div id="panel-b" class="section level3">
+<h3>Panel B</h3>
+<pre class="r"><code>counts_raw &lt;- read.csv(counts_file, check.names = FALSE)
+counts &lt;- as.matrix(counts_raw[, -1, drop = FALSE])
+rownames(counts) &lt;- counts_raw[[1]]
+storage.mode(counts) &lt;- &quot;integer&quot;
+
+count_labels_all &lt;- sub(&quot;_MERGE$&quot;, &quot;&quot;, sub(&quot;^mehreen_&quot;, &quot;&quot;, colnames(counts)))
+keep_samples &lt;- count_labels_all %in% metadata$label
+counts &lt;- counts[, keep_samples, drop = FALSE]
+count_labels &lt;- count_labels_all[keep_samples]
+metadata_ordered &lt;- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata_ordered$label, count_labels))
+rownames(metadata_ordered) &lt;- metadata_ordered$label
+colnames(counts) &lt;- count_labels
+
+keep_vst &lt;- rowSums(counts) &gt;= params$min_total_count
+dds_vst &lt;- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_vst, , drop = FALSE],
+  colData = metadata_ordered,
+  design = ~ Diet + Treatment
+)
+vsd &lt;- DESeq2::vst(dds_vst, blind = TRUE)
+vst_mat &lt;- SummarizedExperiment::assay(vsd)
+nonzero_variance &lt;- apply(vst_mat, 1, var) &gt; 0
+pca &lt;- prcomp(t(vst_mat[nonzero_variance, , drop = FALSE]), scale. = FALSE)
+percent_var &lt;- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+
+pca_scores &lt;- data.frame(
+  label = rownames(pca$x),
+  PC1 = pca$x[, &quot;PC1&quot;],
+  PC2 = pca$x[, &quot;PC2&quot;],
+  Diet = metadata_ordered$Diet,
+  Treatment = metadata_ordered$Treatment,
+  check.names = FALSE
+)
+pca_scores$Condition &lt;- factor(
+  paste(pca_scores$Diet, pca_scores$Treatment),
+  levels = names(condition_colors)
+)
+
+pca_centroids &lt;- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
+                           pca_scores, mean)
+pca_hulls &lt;- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
+                                   make_condition_hull))
+centroid_shift &lt;- merge(
+  pca_centroids[pca_centroids$Treatment == &quot;Control&quot;,
+                c(&quot;Diet&quot;, &quot;PC1&quot;, &quot;PC2&quot;)],
+  pca_centroids[pca_centroids$Treatment == &quot;Infected&quot;,
+                c(&quot;Diet&quot;, &quot;PC1&quot;, &quot;PC2&quot;)],
+  by = &quot;Diet&quot;,
+  suffixes = c(&quot;_control&quot;, &quot;_infected&quot;)
+)
+
+p_pca &lt;- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.18,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, shape = Treatment),
+    color = &quot;#111827&quot;,
+    size = 3.3,
+    stroke = 0.35,
+    alpha = 0.92
+  ) +
+  ggplot2::geom_segment(
+    data = centroid_shift,
+    ggplot2::aes(x = PC1_control, y = PC2_control,
+                 xend = PC1_infected, yend = PC2_infected,
+                 color = Diet),
+    linewidth = 0.9,
+    arrow = grid::arrow(length = grid::unit(0.18, &quot;cm&quot;))
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = PC1, y = PC2),
+    shape = 4,
+    color = &quot;#111827&quot;,
+    stroke = 1.25,
+    size = 5.2
+  ) +
+  ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
+  ggplot2::scale_color_manual(values = diet_colors, drop = FALSE) +
+  ggplot2::scale_shape_manual(values = c(&quot;Control&quot; = 21, &quot;Infected&quot; = 24)) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    legend.box = &quot;vertical&quot;,
+    panel.grid.major = ggplot2::element_line(color = &quot;#E5E7EB&quot;,
+                                             linewidth = 0.25)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 2, title.position = &quot;top&quot;),
+    color = ggplot2::guide_legend(nrow = 1, title.position = &quot;top&quot;),
+    shape = ggplot2::guide_legend(nrow = 1, title.position = &quot;top&quot;)
+  ) +
+  ggplot2::labs(
+    title = &quot;B. Fat body VST PCA with centroid shifts&quot;,
+    x = paste0(&quot;PC1: &quot;, percent_var[1], &quot;% variance&quot;),
+    y = paste0(&quot;PC2: &quot;, percent_var[2], &quot;% variance&quot;),
+    fill = &quot;Diet and treatment&quot;,
+    color = &quot;Centroid shift&quot;,
+    shape = &quot;Treatment&quot;
+  )
+
+write.csv(pca_scores, file.path(out_dir, &quot;figure1_panel_B_pca_scores.csv&quot;),
+          row.names = FALSE)
+write.csv(pca_centroids, file.path(out_dir, &quot;figure1_panel_B_pca_centroids.csv&quot;),
+          row.names = FALSE)
+write.csv(centroid_shift, file.path(out_dir,
+                                    &quot;figure1_panel_B_pca_centroid_shifts.csv&quot;),
+          row.names = FALSE)
+save_png_svg(p_pca, &quot;figure1_panel_B_vst_pca_centroids&quot;,
+             width = 7.2, height = 5.2)
+p_pca</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-1-panel-b-1.png" alt="" width="691.2" style="display: block; margin: auto;" /></p>
+</div>
+<div id="panel-c" class="section level3">
+<h3>Panel C</h3>
+<pre class="r"><code>gene_biotypes &lt;- parse_gff_gene_annotation(gff_file)
+
+scenario_degs_for_barplot &lt;- read.csv(scenario_results_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    scenario == &quot;All samples&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+model_degs_for_barplot &lt;- read.csv(model_coefficients_file,
+                                   check.names = FALSE) |&gt;
+  dplyr::filter(
+    coefficient == &quot;Treatment_Infected_vs_Control&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+deg_raw &lt;- dplyr::bind_rows(
+  scenario_degs_for_barplot |&gt;
+    dplyr::transmute(
+      DEG_context = dplyr::case_when(
+        comparison_type == &quot;Infection within diet&quot; ~
+          &quot;Infection within diets&quot;,
+        comparison_type == &quot;Diet contrasts among control&quot; ~
+          &quot;Diet DEGs in controls&quot;,
+        comparison_type == &quot;Diet contrasts among infected&quot; ~
+          &quot;Diet DEGs in infected&quot;,
+        TRUE ~ comparison_type
+      ),
+      comparison_type,
+      comparison,
+      numerator,
+      denominator,
+      diet = as.character(diet),
+      gene_id,
+      log2FoldChange
+    ),
+  model_degs_for_barplot |&gt;
+    dplyr::transmute(
+      DEG_context = &quot;Infection vs control&quot;,
+      comparison_type = &quot;Infection vs control&quot;,
+      comparison = &quot;All diets: infected vs control&quot;,
+      numerator = &quot;Infected&quot;,
+      denominator = &quot;Control&quot;,
+      diet = NA_character_,
+      gene_id,
+      log2FoldChange
+    )
+)
+
+context_order &lt;- c(
+  &quot;Infection within diets&quot;,
+  &quot;Diet DEGs in controls&quot;,
+  &quot;Diet DEGs in infected&quot;,
+  &quot;Infection vs control&quot;
+)
+
+contrast_order &lt;- c(
+  &quot;All diets\ninfected vs control&quot;,
+  &quot;Diet 83\ninfected vs control&quot;,
+  &quot;Diet 50\ninfected vs control&quot;,
+  &quot;Diet 33\ninfected vs control&quot;,
+  &quot;Control\n83 vs 50&quot;,
+  &quot;Control\n83 vs 33&quot;,
+  &quot;Control\n33 vs 50&quot;,
+  &quot;Infected\n83 vs 50&quot;,
+  &quot;Infected\n83 vs 33&quot;,
+  &quot;Infected\n33 vs 50&quot;
+)
+
+deg_biotype_counts &lt;- deg_raw |&gt;
+  dplyr::mutate(
+    signed_direction = dplyr::if_else(log2FoldChange &gt; 0,
+                                      &quot;Upregulated&quot;, &quot;Downregulated&quot;),
+    numerator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, &quot;numerator&quot;
+    ),
+    denominator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, &quot;denominator&quot;
+    ),
+    higher_in = dplyr::if_else(log2FoldChange &gt; 0,
+                               numerator_condition, denominator_condition),
+    contrast_label = dplyr::case_when(
+      DEG_context == &quot;Infection within diets&quot; ~
+        paste0(&quot;Diet &quot;, diet, &quot;\ninfected vs control&quot;),
+      DEG_context == &quot;Diet DEGs in controls&quot; ~
+        paste0(&quot;Control\n&quot;, numerator, &quot; vs &quot;, denominator),
+      DEG_context == &quot;Diet DEGs in infected&quot; ~
+        paste0(&quot;Infected\n&quot;, numerator, &quot; vs &quot;, denominator),
+      DEG_context == &quot;Infection vs control&quot; ~
+        &quot;All diets\ninfected vs control&quot;,
+      TRUE ~ comparison
+    )
+  ) |&gt;
+  dplyr::left_join(gene_biotypes, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    Gene_class = classify_gene_class(gene_biotype),
+    DEG_context = factor(DEG_context, levels = context_order),
+    contrast_label = factor(contrast_label, levels = contrast_order),
+    signed_direction = factor(signed_direction,
+                              levels = c(&quot;Downregulated&quot;, &quot;Upregulated&quot;)),
+    direction_class = paste(signed_direction, Gene_class, sep = &quot; - &quot;)
+  ) |&gt;
+  dplyr::distinct(DEG_context, comparison, contrast_label, signed_direction,
+                  gene_id, Gene_class, .keep_all = TRUE) |&gt;
+  dplyr::count(DEG_context, comparison, contrast_label,
+               signed_direction, Gene_class,
+               direction_class, name = &quot;n_DEGs&quot;) |&gt;
+  dplyr::group_by(DEG_context, comparison, contrast_label, signed_direction) |&gt;
+  tidyr::complete(
+    Gene_class = c(&quot;Coding genes&quot;, &quot;Long non-coding RNA&quot;, &quot;Other / unknown&quot;),
+    fill = list(n_DEGs = 0)
+  ) |&gt;
+  dplyr::ungroup() |&gt;
+  dplyr::filter(!is.na(DEG_context), !is.na(contrast_label)) |&gt;
+  dplyr::mutate(
+    direction_class = paste(signed_direction, Gene_class, sep = &quot; - &quot;),
+    signed_n = dplyr::if_else(signed_direction == &quot;Upregulated&quot;,
+                              n_DEGs, -n_DEGs)
+  )
+
+deg_total_labels &lt;- deg_biotype_counts |&gt;
+  dplyr::group_by(DEG_context, comparison, contrast_label, signed_direction) |&gt;
+  dplyr::summarise(total_DEGs = sum(n_DEGs), .groups = &quot;drop&quot;) |&gt;
+  dplyr::mutate(
+    signed_total = dplyr::if_else(signed_direction == &quot;Upregulated&quot;,
+                                  total_DEGs, -total_DEGs)
+  )
+
+context_max &lt;- deg_total_labels |&gt;
+  dplyr::group_by(DEG_context) |&gt;
+  dplyr::summarise(max_total = max(abs(signed_total), 1),
+                   .groups = &quot;drop&quot;)
+
+deg_total_labels &lt;- deg_total_labels |&gt;
+  dplyr::left_join(context_max, by = &quot;DEG_context&quot;) |&gt;
+  dplyr::filter(total_DEGs &gt; 0) |&gt;
+  dplyr::mutate(
+    label_x = signed_total + dplyr::if_else(
+      signed_total &gt; 0,
+      max_total * 0.025,
+      -max_total * 0.025
+    ),
+    hjust = dplyr::if_else(signed_total &gt; 0, 0, 1)
+  )
+
+p_deg_biotype &lt;- ggplot2::ggplot(
+  deg_biotype_counts,
+  ggplot2::aes(x = signed_n, y = contrast_label, fill = direction_class)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = &quot;#111827&quot;) +
+  ggplot2::geom_col(width = 0.74, color = &quot;white&quot;, linewidth = 0.2) +
+  ggplot2::geom_text(
+    data = deg_total_labels,
+    ggplot2::aes(x = label_x, y = contrast_label, label = total_DEGs,
+                 hjust = hjust),
+    inherit.aes = FALSE,
+    size = 3.1,
+    fontface = &quot;bold&quot;
+  ) +
+  ggplot2::facet_wrap(~ DEG_context, ncol = 2, scales = &quot;free&quot;) +
+  ggplot2::scale_fill_manual(values = direction_biotype_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(
+    labels = abs,
+    expand = ggplot2::expansion(mult = c(0.22, 0.22))
+  ) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.title.y = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(size = 10.5, face = &quot;bold&quot;),
+    strip.text = ggplot2::element_text(size = 10.5, face = &quot;bold&quot;),
+    panel.spacing = grid::unit(0.55, &quot;lines&quot;),
+    legend.position = &quot;bottom&quot;,
+    legend.text = ggplot2::element_text(size = 8),
+    plot.margin = ggplot2::margin(6, 28, 6, 6)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 3, title.position = &quot;top&quot;,
+                                 byrow = TRUE)
+  ) +
+  ggplot2::labs(
+    title = &quot;C. Full DEG burden across experimental contrasts&quot;,
+    subtitle = &quot;Red: higher in first condition named; blue: higher in second condition&quot;,
+    x = &quot;Number of significant DEGs&quot;,
+    fill = &quot;Direction and gene class&quot;
+  )
+
+write.csv(deg_biotype_counts,
+          file.path(out_dir, &quot;figure1_panel_C_deg_biotype_counts.csv&quot;),
+          row.names = FALSE)
+write.csv(deg_raw,
+          file.path(out_dir, &quot;figure1_panel_C_exact_contrast_deg_gene_table.csv&quot;),
+          row.names = FALSE)
+save_png_svg(p_deg_biotype, &quot;figure1_panel_C_deg_biotype_burden&quot;,
+             width = 11.2, height = 8.4)
+p_deg_biotype</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-1-panel-c-1.png" alt="" width="1075.2" style="display: block; margin: auto;" /></p>
+</div>
+<div id="composite-figure-1" class="section level3">
+<h3>Composite Figure 1</h3>
+<pre class="r"><code>figure1 &lt;- p_design / (p_pca | p_deg_biotype) +
+  patchwork::plot_layout(heights = c(0.44, 0.56),
+                         widths = c(1.0, 1.08)) +
+  patchwork::plot_annotation(
+    title = &quot;Figure 1. Fat body design, transcriptome structure, and DEG burden&quot;,
+    subtitle = &quot;All samples retained; rRNA loci removed before expression analysis&quot;,
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure1, &quot;figure1_design_fatbody_pca_infection_deg&quot;,
+             width = 17.5, height = 12.6)
+figure1</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-1-composite-1.png" alt="" width="1488" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="figure-2-deg-family-overlap-and-candidate-composition"
+class="section level2">
+<h2>Figure 2: DEG-family overlap and candidate composition</h2>
+<p>Figure 2 asks whether the major DEG families are distinct or reusing
+the same genes. Panel A is a Venn diagram across four broad DEG
+contexts: infection within diet, diet differences among controls, diet
+differences among infected samples, and the global infected-control main
+effect. Panel B asks whether the infection-within-diet DEGs overlap
+phase-change DEGs detected in independent head and thorax
+solitarious-vs-gregarious references. Panel C asks what fraction of each
+broad DEG family falls into hand-curated physiology categories or the
+phase-related reference category.</p>
+<pre class="r"><code>scenario_degs &lt;- read.csv(scenario_results_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    scenario == &quot;All samples&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+model_degs &lt;- read.csv(model_coefficients_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    coefficient == &quot;Treatment_Infected_vs_Control&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+broad_deg_sets &lt;- list(
+  &quot;Infection within diets&quot; = scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Infection within diet&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Diet DEGs in controls&quot; = scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Diet contrasts among control&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Diet DEGs in infected&quot; = scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Diet contrasts among infected&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Infection vs control&quot; = unique(model_degs$gene_id)
+)
+broad_deg_sets &lt;- broad_deg_sets[lengths(broad_deg_sets) &gt; 0]
+
+all_overlap_genes &lt;- sort(unique(unlist(broad_deg_sets, use.names = FALSE)))
+overlap_membership &lt;- data.frame(gene_id = all_overlap_genes)
+for (set_name in names(broad_deg_sets)) {
+  overlap_membership[[set_name]] &lt;- overlap_membership$gene_id %in%
+    broad_deg_sets[[set_name]]
+}
+overlap_membership$intersection &lt;- apply(
+  overlap_membership[names(broad_deg_sets)],
+  1,
+  function(x) paste(names(broad_deg_sets)[x], collapse = &quot; + &quot;)
+)
+write.csv(overlap_membership,
+          file.path(out_dir, &quot;figure2_deg_family_overlap_membership.csv&quot;),
+          row.names = FALSE)
+
+overlap_summary &lt;- overlap_membership |&gt;
+  dplyr::count(intersection, name = &quot;n_genes&quot;) |&gt;
+  dplyr::arrange(dplyr::desc(n_genes), intersection)
+write.csv(overlap_summary,
+          file.path(out_dir, &quot;figure2_deg_family_overlap_summary.csv&quot;),
+          row.names = FALSE)
+
+head_phase_degs &lt;- read.csv(head_phase_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+thorax_phase_degs &lt;- read.csv(thorax_phase_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+head_phase_genes &lt;- unique(head_phase_degs$gene_id)
+thorax_phase_genes &lt;- unique(thorax_phase_degs$gene_id)
+phase_genes &lt;- intersect(head_phase_genes, thorax_phase_genes)
+
+phase_overlap_sets &lt;- list(
+  &quot;Infection within diets&quot; = broad_deg_sets[[&quot;Infection within diets&quot;]],
+  &quot;Head phase DEGs&quot; = head_phase_genes,
+  &quot;Thorax phase DEGs&quot; = thorax_phase_genes
+)
+
+phase_overlap_genes &lt;- sort(unique(unlist(phase_overlap_sets,
+                                          use.names = FALSE)))
+phase_overlap_membership &lt;- data.frame(gene_id = phase_overlap_genes)
+for (set_name in names(phase_overlap_sets)) {
+  phase_overlap_membership[[set_name]] &lt;-
+    phase_overlap_membership$gene_id %in% phase_overlap_sets[[set_name]]
+}
+phase_overlap_membership$intersection &lt;- apply(
+  phase_overlap_membership[names(phase_overlap_sets)],
+  1,
+  function(x) paste(names(phase_overlap_sets)[x], collapse = &quot; + &quot;)
+)
+write.csv(phase_overlap_membership,
+          file.path(out_dir, &quot;figure2_infection_phase_overlap_membership.csv&quot;),
+          row.names = FALSE)
+
+phase_overlap_summary &lt;- phase_overlap_membership |&gt;
+  dplyr::count(intersection, name = &quot;n_genes&quot;) |&gt;
+  dplyr::arrange(dplyr::desc(n_genes), intersection)
+write.csv(phase_overlap_summary,
+          file.path(out_dir, &quot;figure2_infection_phase_overlap_summary.csv&quot;),
+          row.names = FALSE)
+
+broad_deg_plot_sets &lt;- broad_deg_sets
+names(broad_deg_plot_sets) &lt;- c(
+  &quot;Infection\nwithin diet&quot;,
+  &quot;Diet\ncontrols&quot;,
+  &quot;Diet\ninfected&quot;,
+  &quot;Infect.\nvs ctrl&quot;
+)
+
+p_venn &lt;- ggVennDiagram::ggVennDiagram(
+  broad_deg_plot_sets,
+  label = &quot;count&quot;,
+  label_alpha = 0,
+  edge_size = 0.75,
+  set_size = 4.0
+) +
+  ggplot2::scale_fill_gradient(low = &quot;#FFF7D1&quot;, high = &quot;#D9A21B&quot;) +
+  ggplot2::theme_void(base_size = 12) +
+  ggplot2::theme(
+    legend.position = &quot;none&quot;,
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 16),
+    plot.subtitle = ggplot2::element_text(size = 11),
+    plot.background = ggplot2::element_rect(fill = &quot;white&quot;, color = NA),
+    panel.background = ggplot2::element_rect(fill = &quot;white&quot;, color = NA),
+    plot.margin = ggplot2::margin(8, 24, 8, 24)
+  ) +
+  ggplot2::labs(
+    title = &quot;A. Venn overlap among DEG contexts&quot;,
+    subtitle = &quot;Each circle is the union of significant genes in that context&quot;,
+    fill = &quot;Genes&quot;
+  )
+
+save_png_svg(p_venn, &quot;figure2_deg_family_overlap_venn&quot;,
+             width = 9.4, height = 8.2)
+
+phase_overlap_plot_sets &lt;- phase_overlap_sets
+names(phase_overlap_plot_sets) &lt;- c(
+  &quot;Infection\nwithin diets&quot;,
+  &quot;Head phase\nDEGs&quot;,
+  &quot;Thorax phase\nDEGs&quot;
+)
+
+p_phase_venn &lt;- ggVennDiagram::ggVennDiagram(
+  phase_overlap_plot_sets,
+  label = &quot;count&quot;,
+  label_alpha = 0,
+  edge_size = 0.75,
+  set_size = 4.0
+) +
+  ggplot2::scale_fill_gradient(low = &quot;#FFF7D1&quot;, high = &quot;#D9A21B&quot;) +
+  ggplot2::theme_void(base_size = 12) +
+  ggplot2::theme(
+    legend.position = &quot;none&quot;,
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 16),
+    plot.subtitle = ggplot2::element_text(size = 11),
+    plot.background = ggplot2::element_rect(fill = &quot;white&quot;, color = NA),
+    panel.background = ggplot2::element_rect(fill = &quot;white&quot;, color = NA),
+    plot.margin = ggplot2::margin(8, 24, 8, 24)
+  ) +
+  ggplot2::labs(
+    title = &quot;B. Infection DEGs overlapping phase-reference DEGs&quot;,
+    subtitle = &quot;Phase references are solitarious-vs-gregarious DEGs in head and thorax&quot;,
+    fill = &quot;Genes&quot;
+  )
+
+save_png_svg(p_phase_venn, &quot;figure2_infection_phase_overlap_venn&quot;,
+             width = 9.4, height = 8.2)
+
+gene_annotation &lt;- build_gene_annotation(gff_file, eggnog_file)
+deg_family_long &lt;- dplyr::bind_rows(lapply(names(broad_deg_sets), function(set_name) {
+  data.frame(
+    DEG_family = set_name,
+    gene_id = broad_deg_sets[[set_name]],
+    stringsAsFactors = FALSE
+  )
+}))
+deg_family_long$DEG_family &lt;- factor(
+  deg_family_long$DEG_family,
+  levels = names(broad_deg_sets)
+)
+
+candidate_theme_table &lt;- deg_family_long |&gt;
+  dplyr::left_join(gene_annotation, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    annotation_text = dplyr::coalesce(annotation_text, &quot;&quot;),
+    base_physiology_theme = classify_physiology_theme(annotation_text),
+    phase_related = gene_id %in% phase_genes,
+    phase_reference_source = dplyr::case_when(
+      gene_id %in% head_phase_genes &amp; gene_id %in% thorax_phase_genes ~
+        &quot;Head + thorax phase DEG&quot;,
+      gene_id %in% head_phase_genes ~ &quot;Head phase DEG&quot;,
+      gene_id %in% thorax_phase_genes ~ &quot;Thorax phase DEG&quot;,
+      TRUE ~ &quot;Not phase-related&quot;
+    ),
+    physiology_theme = dplyr::case_when(
+      base_physiology_theme != &quot;Other / unannotated genes&quot; ~
+        base_physiology_theme,
+      phase_related ~ &quot;Phase-related changes&quot;,
+      TRUE ~ base_physiology_theme
+    ),
+    physiology_theme = factor(physiology_theme,
+                              levels = names(physiology_theme_colors))
+  )
+
+write.csv(candidate_theme_table,
+          file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;),
+          row.names = FALSE)
+
+composition_counts &lt;- candidate_theme_table |&gt;
+  dplyr::distinct(DEG_family, gene_id, physiology_theme) |&gt;
+  dplyr::count(DEG_family, physiology_theme, name = &quot;n_genes&quot;) |&gt;
+  dplyr::group_by(DEG_family) |&gt;
+  tidyr::complete(
+    physiology_theme = factor(names(physiology_theme_colors),
+                              levels = names(physiology_theme_colors)),
+    fill = list(n_genes = 0)
+  ) |&gt;
+  dplyr::mutate(
+    total_genes = sum(n_genes),
+    proportion = dplyr::if_else(total_genes &gt; 0, n_genes / total_genes, 0)
+  ) |&gt;
+  dplyr::ungroup()
+
+write.csv(composition_counts,
+          file.path(out_dir, &quot;figure2_deg_family_candidate_theme_counts.csv&quot;),
+          row.names = FALSE)
+
+candidate_theme_levels &lt;- names(physiology_theme_colors)
+candidate_composition_counts &lt;- composition_counts |&gt;
+  dplyr::filter(physiology_theme %in% candidate_theme_levels) |&gt;
+  dplyr::group_by(DEG_family) |&gt;
+  dplyr::mutate(
+    candidate_genes = sum(n_genes),
+    candidate_proportion = dplyr::if_else(candidate_genes &gt; 0,
+                                          n_genes / candidate_genes, 0)
+  ) |&gt;
+  dplyr::ungroup()
+
+write.csv(candidate_composition_counts,
+          file.path(out_dir,
+                    &quot;figure2_deg_family_candidate_theme_counts_all_categories.csv&quot;),
+          row.names = FALSE)
+
+family_label_levels &lt;- candidate_composition_counts |&gt;
+  dplyr::distinct(DEG_family, total_genes, candidate_genes) |&gt;
+  dplyr::arrange(DEG_family) |&gt;
+  dplyr::mutate(
+    family_label = paste0(
+      DEG_family,
+      &quot;\nall DEG n = &quot;, total_genes
+    )
+  ) |&gt;
+  dplyr::pull(family_label)
+
+pie_counts &lt;- candidate_composition_counts |&gt;
+  dplyr::filter(n_genes &gt; 0) |&gt;
+  dplyr::mutate(
+    family_label = paste0(
+      DEG_family,
+      &quot;\nall DEG n = &quot;, total_genes
+    ),
+    family_label = factor(family_label, levels = family_label_levels)
+  )
+
+p_composition &lt;- ggplot2::ggplot(
+  pie_counts,
+  ggplot2::aes(x = &quot;&quot;, y = candidate_proportion,
+               fill = physiology_theme)
+) +
+  ggplot2::geom_col(width = 1, color = &quot;white&quot;, linewidth = 0.4) +
+  ggplot2::coord_polar(theta = &quot;y&quot;) +
+  ggplot2::facet_wrap(~ family_label, nrow = 1) +
+  ggplot2::scale_fill_manual(
+    values = physiology_theme_colors[candidate_theme_levels],
+    breaks = candidate_theme_levels,
+    drop = FALSE
+  ) +
+  ggplot2::theme_void(base_size = 13) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 16),
+    plot.subtitle = ggplot2::element_text(size = 11),
+    strip.background = ggplot2::element_rect(fill = &quot;#F3F4F6&quot;,
+                                             color = &quot;#111827&quot;),
+    strip.text = ggplot2::element_text(size = 10.5, face = &quot;bold&quot;,
+                                       lineheight = 0.95),
+    legend.position = &quot;bottom&quot;,
+    legend.text = ggplot2::element_text(size = 9),
+    legend.title = ggplot2::element_text(face = &quot;bold&quot;),
+    plot.margin = ggplot2::margin(4, 8, 8, 8)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 3, byrow = TRUE,
+                                 title.position = &quot;top&quot;)
+  ) +
+  ggplot2::labs(
+    title = &quot;C. DEG physiology, phase-reference, and annotation composition&quot;,
+    subtitle = &quot;Immune and physiology annotations are prioritized; phase-related marks remaining DEGs common to head+thorax phase references&quot;,
+    fill = &quot;Gene category&quot;
+  )
+
+save_png_svg(p_composition,
+             &quot;figure2_panel_C_candidate_physiology_phase_composition&quot;,
+             width = 12, height = 5.6)
+
+figure2 &lt;- (p_venn | p_phase_venn) / p_composition +
+  patchwork::plot_layout(heights = c(0.56, 0.44)) +
+  patchwork::plot_annotation(
+    title = &quot;Figure 2. Overlap and physiology composition of major DEG families&quot;,
+    subtitle = &quot;All samples retained; broad DEG overlap and phase-reference overlap are followed by composition pies&quot;,
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure2, &quot;figure2_deg_overlap_candidate_composition&quot;,
+             width = 17.5, height = 11.4)
+figure2</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-2-overlap-composition-1.png" alt="" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>figure2_exports &lt;- data.frame(
+  figure = c(&quot;Figure 2 composite PNG&quot;, &quot;Figure 2 composite SVG&quot;,
+             &quot;Figure 2 physiology composition PNG&quot;,
+             &quot;Figure 2 DEG context Venn PNG&quot;,
+             &quot;Figure 2 infection-phase Venn PNG&quot;,
+             &quot;Figure 2 gene membership table&quot;,
+             &quot;Figure 2 infection-phase membership table&quot;,
+             &quot;Figure 2 candidate category gene table&quot;),
+  path = c(
+    file.path(out_dir, &quot;figure2_deg_overlap_candidate_composition.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_overlap_candidate_composition.svg&quot;),
+    file.path(out_dir,
+              &quot;figure2_panel_C_candidate_physiology_phase_composition.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_overlap_venn.png&quot;),
+    file.path(out_dir, &quot;figure2_infection_phase_overlap_venn.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_overlap_membership.csv&quot;),
+    file.path(out_dir, &quot;figure2_infection_phase_overlap_membership.csv&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;)
+  ),
+  present = file.exists(c(
+    file.path(out_dir, &quot;figure2_deg_overlap_candidate_composition.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_overlap_candidate_composition.svg&quot;),
+    file.path(out_dir,
+              &quot;figure2_panel_C_candidate_physiology_phase_composition.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_overlap_venn.png&quot;),
+    file.path(out_dir, &quot;figure2_infection_phase_overlap_venn.png&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_overlap_membership.csv&quot;),
+    file.path(out_dir, &quot;figure2_infection_phase_overlap_membership.csv&quot;),
+    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;)
+  ))
+)
+knitr::kable(figure2_exports, caption = &quot;Figure 2 overlap and composition exports&quot;)</code></pre>
+<table>
+<caption>Figure 2 overlap and composition exports</caption>
+<colgroup>
+<col width="18%" />
+<col width="78%" />
+<col width="3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">figure</th>
+<th align="left">path</th>
+<th align="left">present</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Figure 2 composite PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_deg_overlap_candidate_composition.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure 2 composite SVG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_deg_overlap_candidate_composition.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure 2 physiology composition PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_panel_C_candidate_physiology_phase_composition.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure 2 DEG context Venn PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_deg_family_overlap_venn.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure 2 infection-phase Venn PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_infection_phase_overlap_venn.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure 2 gene membership table</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_deg_family_overlap_membership.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure 2 infection-phase membership table</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_infection_phase_overlap_membership.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure 2 candidate category gene table</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure2_deg_family_candidate_theme_gene_table.csv</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="figure-3-expression-clusters-and-enrichment"
+class="section level2">
+<h2>Figure 3: expression clusters and enrichment</h2>
+<p>Figure 3 keeps the expression-cluster composite from the
+circled-cluster page. The fat body DEGs are shown as the gene-level
+heatmap, with GO and KEGG enrichment summaries underneath.</p>
+<pre class="r"><code>figure3_png &lt;- copy_publication_asset(
+  figure3_composite_source,
+  &quot;figure3_expression_cluster_gene_level_GO_KEGG_lollipop&quot;
+)
+figure3_reference_png &lt;- copy_publication_asset(
+  figure3_reference_source,
+  &quot;figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references&quot;
+)
+
+figure3_exports &lt;- data.frame(
+  figure = c(&quot;Figure 3 composite&quot;, &quot;Figure 3 reference-context companion&quot;),
+  source = c(figure3_composite_source, figure3_reference_source),
+  copied_to = c(figure3_png, figure3_reference_png),
+  present = file.exists(c(figure3_png, figure3_reference_png))
+)
+knitr::kable(figure3_exports, caption = &quot;Figure 3 copied exports&quot;)</code></pre>
+<table>
+<caption>Figure 3 copied exports</caption>
+<colgroup>
+<col width="8%" />
+<col width="44%" />
+<col width="45%" />
+<col width="1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">figure</th>
 <th align="left">source</th>
-<th align="left">file</th>
-<th align="left">role</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/interaction_model_deg_count_barplot.png</td>
-<td align="left">interaction_model_deg_count_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/interaction_model_pca.png</td>
-<td align="left">interaction_model_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/interaction_model_deg_count_barplot.png</td>
-<td align="left">interaction_model_deg_count_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/interaction_model_pca.png</td>
-<td align="left">interaction_model_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-123921/diet_pairwise_deg_count_barplot.png</td>
-<td align="left">diet_pairwise_deg_count_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/diet_pairwise_deg_count_barplot.png</td>
-<td align="left">diet_pairwise_deg_count_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/curated_immune_nutrition_deg_barplot.png</td>
-<td align="left">curated_immune_nutrition_deg_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/curated_infection_deg_vst_heatmap_labeled.png</td>
-<td align="left">curated_infection_deg_vst_heatmap_labeled.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/curated_infection_deg_vst_heatmap.png</td>
-<td align="left">curated_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_33_infection_deg_pca.png</td>
-<td align="left">diet_33_infection_deg_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_33_infection_deg_vst_heatmap.png</td>
-<td align="left">diet_33_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_33_infection_ma_plot.png</td>
-<td align="left">diet_33_infection_ma_plot.png</td>
-<td align="left">MA plot</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_50_infection_deg_pca.png</td>
-<td align="left">diet_50_infection_deg_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_50_infection_deg_vst_heatmap.png</td>
-<td align="left">diet_50_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_50_infection_ma_plot.png</td>
-<td align="left">diet_50_infection_ma_plot.png</td>
-<td align="left">MA plot</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_83_infection_deg_pca.png</td>
-<td align="left">diet_83_infection_deg_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_83_infection_deg_vst_heatmap.png</td>
-<td align="left">diet_83_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/diet_83_infection_ma_plot.png</td>
-<td align="left">diet_83_infection_ma_plot.png</td>
-<td align="left">MA plot</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/infection_deg_burden_by_biotype_diverging_barplot.png</td>
-<td
-align="left">infection_deg_burden_by_biotype_diverging_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/infection_deg_burden_diverging_barplot.png</td>
-<td align="left">infection_deg_burden_diverging_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/infection_within_diet_deg_count_barplot.png</td>
-<td align="left">infection_within_diet_deg_count_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/pca_centroid_infection_arrows.png</td>
-<td align="left">pca_centroid_infection_arrows.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/vst_pca_condition_centroids.png</td>
-<td align="left">vst_pca_condition_centroids.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/vst_top_variable_gene_heatmap.png</td>
-<td align="left">vst_top_variable_gene_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/curated_immune_nutrition_deg_barplot.png</td>
-<td align="left">curated_immune_nutrition_deg_barplot.png</td>
-<td align="left">other</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/curated_infection_deg_vst_heatmap_labeled.png</td>
-<td align="left">curated_infection_deg_vst_heatmap_labeled.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/curated_infection_deg_vst_heatmap.png</td>
-<td align="left">curated_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/diet_33_infection_deg_pca.png</td>
-<td align="left">diet_33_infection_deg_pca.png</td>
-<td align="left">ordination</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/diet_33_infection_deg_vst_heatmap.png</td>
-<td align="left">diet_33_infection_deg_vst_heatmap.png</td>
-<td align="left">heatmap</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/diet_33_infection_ma_plot.png</td>
-<td align="left">diet_33_infection_ma_plot.png</td>
-<td align="left">MA plot</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>write.csv(figure_inventory, file.path(out_dir, &quot;candidate_figure_inventory.csv&quot;),
-          row.names = FALSE)</code></pre>
-</div>
-<div id="copy-candidate-panels" class="section level2">
-<h2>Copy candidate panels</h2>
-<pre class="r"><code>keep_roles &lt;- c(&quot;ordination&quot;, &quot;volcano&quot;, &quot;heatmap&quot;, &quot;overlap&quot;, &quot;MA plot&quot;)
-copy_inventory &lt;- figure_inventory[figure_inventory$role %in% keep_roles, ]
-
-# Keep the first few panels from each figure role for review.
-copy_inventory &lt;- do.call(rbind, lapply(split(copy_inventory, copy_inventory$role),
-                                        head, 6))
-
-panel_dir &lt;- file.path(out_dir, &quot;candidate_panels&quot;)
-dir.create(panel_dir, recursive = TRUE, showWarnings = FALSE)
-
-copied_to &lt;- file.path(panel_dir, paste(seq_len(nrow(copy_inventory)),
-                                        copy_inventory$file, sep = &quot;_&quot;))
-file.copy(copy_inventory$source, copied_to, overwrite = FALSE)</code></pre>
-<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
-<pre class="r"><code>copy_inventory$copied_to &lt;- copied_to
-
-knitr::kable(copy_inventory[, c(&quot;role&quot;, &quot;file&quot;, &quot;copied_to&quot;)])</code></pre>
-<table>
-<colgroup>
-<col width="5%" />
-<col width="4%" />
-<col width="17%" />
-<col width="72%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="left">role</th>
-<th align="left">file</th>
 <th align="left">copied_to</th>
+<th align="left">present</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">heatmap.8</td>
-<td align="left">heatmap</td>
-<td align="left">curated_infection_deg_vst_heatmap_labeled.png</td>
+<td align="left">Figure 3 composite</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/1_curated_infection_deg_vst_heatmap_labeled.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/circled-cluster-enrichment_20260724-004440/expression_cluster_gene_level_GO_KEGG_lollipop.png</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure3_expression_cluster_gene_level_GO_KEGG_lollipop.png</td>
+<td align="left">TRUE</td>
 </tr>
 <tr class="even">
-<td align="left">heatmap.9</td>
-<td align="left">heatmap</td>
-<td align="left">curated_infection_deg_vst_heatmap.png</td>
+<td align="left">Figure 3 reference-context companion</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/2_curated_infection_deg_vst_heatmap.png</td>
-</tr>
-<tr class="odd">
-<td align="left">heatmap.11</td>
-<td align="left">heatmap</td>
-<td align="left">diet_33_infection_deg_vst_heatmap.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/circled-cluster-enrichment_20260724-004440/expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/3_diet_33_infection_deg_vst_heatmap.png</td>
-</tr>
-<tr class="even">
-<td align="left">heatmap.14</td>
-<td align="left">heatmap</td>
-<td align="left">diet_50_infection_deg_vst_heatmap.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/4_diet_50_infection_deg_vst_heatmap.png</td>
-</tr>
-<tr class="odd">
-<td align="left">heatmap.17</td>
-<td align="left">heatmap</td>
-<td align="left">diet_83_infection_deg_vst_heatmap.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/5_diet_83_infection_deg_vst_heatmap.png</td>
-</tr>
-<tr class="even">
-<td align="left">heatmap.24</td>
-<td align="left">heatmap</td>
-<td align="left">vst_top_variable_gene_heatmap.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/6_vst_top_variable_gene_heatmap.png</td>
-</tr>
-<tr class="odd">
-<td align="left">MA plot.12</td>
-<td align="left">MA plot</td>
-<td align="left">diet_33_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/7_diet_33_infection_ma_plot.png</td>
-</tr>
-<tr class="even">
-<td align="left">MA plot.15</td>
-<td align="left">MA plot</td>
-<td align="left">diet_50_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/8_diet_50_infection_ma_plot.png</td>
-</tr>
-<tr class="odd">
-<td align="left">MA plot.18</td>
-<td align="left">MA plot</td>
-<td align="left">diet_83_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/9_diet_83_infection_ma_plot.png</td>
-</tr>
-<tr class="even">
-<td align="left">MA plot.30</td>
-<td align="left">MA plot</td>
-<td align="left">diet_33_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/10_diet_33_infection_ma_plot.png</td>
-</tr>
-<tr class="odd">
-<td align="left">MA plot.33</td>
-<td align="left">MA plot</td>
-<td align="left">diet_50_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/11_diet_50_infection_ma_plot.png</td>
-</tr>
-<tr class="even">
-<td align="left">MA plot.36</td>
-<td align="left">MA plot</td>
-<td align="left">diet_83_infection_ma_plot.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/12_diet_83_infection_ma_plot.png</td>
-</tr>
-<tr class="odd">
-<td align="left">ordination.2</td>
-<td align="left">ordination</td>
-<td align="left">interaction_model_pca.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/13_interaction_model_pca.png</td>
-</tr>
-<tr class="even">
-<td align="left">ordination.4</td>
-<td align="left">ordination</td>
-<td align="left">interaction_model_pca.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/14_interaction_model_pca.png</td>
-</tr>
-<tr class="odd">
-<td align="left">ordination.10</td>
-<td align="left">ordination</td>
-<td align="left">diet_33_infection_deg_pca.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/15_diet_33_infection_deg_pca.png</td>
-</tr>
-<tr class="even">
-<td align="left">ordination.13</td>
-<td align="left">ordination</td>
-<td align="left">diet_50_infection_deg_pca.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/16_diet_50_infection_deg_pca.png</td>
-</tr>
-<tr class="odd">
-<td align="left">ordination.16</td>
-<td align="left">ordination</td>
-<td align="left">diet_83_infection_deg_pca.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/17_diet_83_infection_deg_pca.png</td>
-</tr>
-<tr class="even">
-<td align="left">ordination.22</td>
-<td align="left">ordination</td>
-<td align="left">pca_centroid_infection_arrows.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/18_pca_centroid_infection_arrows.png</td>
-</tr>
-<tr class="odd">
-<td align="left">overlap.49</td>
-<td align="left">overlap</td>
-<td align="left">all_samples_final_logical_sets_upset.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/19_all_samples_final_logical_sets_upset.png</td>
-</tr>
-<tr class="even">
-<td align="left">overlap.50</td>
-<td align="left">overlap</td>
-<td align="left">all_samples_final_logical_sets_venn.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/20_all_samples_final_logical_sets_venn.png</td>
-</tr>
-<tr class="odd">
-<td align="left">overlap.63</td>
-<td align="left">overlap</td>
-<td align="left">outliers_removed_final_logical_sets_upset.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/21_outliers_removed_final_logical_sets_upset.png</td>
-</tr>
-<tr class="even">
-<td align="left">overlap.64</td>
-<td align="left">overlap</td>
-<td align="left">outliers_removed_final_logical_sets_venn.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/22_outliers_removed_final_logical_sets_venn.png</td>
-</tr>
-<tr class="odd">
-<td align="left">overlap.81</td>
-<td align="left">overlap</td>
-<td align="left">deg_upsetr_current_sets.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/23_deg_upsetr_current_sets.png</td>
-</tr>
-<tr class="even">
-<td align="left">overlap.82</td>
-<td align="left">overlap</td>
-<td align="left">venn_broad_deg_families.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/24_venn_broad_deg_families.png</td>
-</tr>
-<tr class="odd">
-<td align="left">volcano.236</td>
-<td align="left">volcano</td>
-<td align="left">25_25_25_25_25_25_25_Volcano_33_vs_50.pdf</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/25_25_25_25_25_25_25_25_Volcano_33_vs_50.pdf</td>
-</tr>
-<tr class="even">
-<td align="left">volcano.237</td>
-<td align="left">volcano</td>
-<td align="left">26_26_26_26_26_26_26_Volcano_33_vs_50.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/26_26_26_26_26_26_26_26_Volcano_33_vs_50.png</td>
-</tr>
-<tr class="odd">
-<td align="left">volcano.238</td>
-<td align="left">volcano</td>
-<td align="left">27_27_27_27_27_27_27_Volcano_33_vs_83.pdf</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/27_27_27_27_27_27_27_27_Volcano_33_vs_83.pdf</td>
-</tr>
-<tr class="even">
-<td align="left">volcano.239</td>
-<td align="left">volcano</td>
-<td align="left">28_28_28_28_28_28_28_Volcano_33_vs_83.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/28_28_28_28_28_28_28_28_Volcano_33_vs_83.png</td>
-</tr>
-<tr class="odd">
-<td align="left">volcano.240</td>
-<td align="left">volcano</td>
-<td align="left">29_29_29_29_29_29_29_Volcano_50_vs_83.pdf</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/29_29_29_29_29_29_29_29_Volcano_50_vs_83.pdf</td>
-</tr>
-<tr class="even">
-<td align="left">volcano.242</td>
-<td align="left">volcano</td>
-<td align="left">30_30_30_30_30_30_30_Volcano_50_vs_83.png</td>
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260715-130931/candidate_panels/30_30_30_30_30_30_30_30_Volcano_50_vs_83.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
+<td align="left">TRUE</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>write.csv(copy_inventory, file.path(out_dir, &quot;copied_candidate_panels.csv&quot;),
-          row.names = FALSE)</code></pre>
-</div>
-<div id="preview-png-panels" class="section level2">
-<h2>Preview PNG panels</h2>
-<pre class="r"><code>png_panels &lt;- copy_inventory$copied_to[grepl(&quot;\\.png$&quot;, copy_inventory$copied_to)]
-png_panels &lt;- head(png_panels, 8)
-
-if (length(png_panels) == 0) {
-  cat(&quot;No PNG panels found for preview. Check the inventory CSV in the output folder.&quot;)
-} else {
-  for (panel in png_panels) {
-    rel_panel &lt;- sub(paste0(&quot;^&quot;, project_dir, &quot;/&quot;), &quot;../&quot;, panel)
-    cat(&quot;![](&quot;, rel_panel, &quot;)\n\n&quot;, sep = &quot;&quot;)
-  }
+<pre class="r"><code>if (file.exists(figure3_png)) {
+  rel_figure3 &lt;- sub(paste0(&quot;^&quot;, project_dir, &quot;/&quot;), &quot;../&quot;, figure3_png)
+  cat(&quot;![](&quot;, rel_figure3, &quot;)\n\n&quot;, sep = &quot;&quot;)
 }</code></pre>
 <p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/1_curated_infection_deg_vst_heatmap_labeled.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/2_curated_infection_deg_vst_heatmap.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/3_diet_33_infection_deg_vst_heatmap.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/4_diet_50_infection_deg_vst_heatmap.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/5_diet_83_infection_deg_vst_heatmap.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/6_vst_top_variable_gene_heatmap.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/7_diet_33_infection_ma_plot.png" /></p>
-<p><img
-src="../output/rmd_runs/publication-figures_20260715-130931/candidate_panels/8_diet_50_infection_ma_plot.png" /></p>
+src="../output/rmd_runs/publication-figures_20260724-025103/figure3_expression_cluster_gene_level_GO_KEGG_lollipop.png" /></p>
+</div>
+<div id="figure-s1-outlier-removal-sensitivity" class="section level2">
+<h2>Figure S1: outlier-removal sensitivity</h2>
+<p>Figure S1 compares DEG calls across sample-filtering scenarios. It is
+a diagnostic companion to the main all-samples analysis: panel A shows
+how many samples remain in each diet-by-infection group, panel B shows
+how the number of DEGs changes across contrasts, and panel C shows
+whether genes are retained, lost, or gained after removing the current
+outlier set (<code>1007</code>, <code>1036</code>, <code>1037</code>,
+and <code>1039</code>).</p>
+<pre class="r"><code>s1_scenario_results &lt;- read.csv(scenario_results_file, check.names = FALSE)
+s1_sample_counts &lt;- read.csv(scenario_sample_counts_file, check.names = FALSE)
+
+s1_scenario_levels &lt;- c(&quot;All samples&quot;, &quot;Current outliers removed&quot;,
+                        &quot;Expanded outlier set&quot;)
+s1_scenario_levels &lt;- s1_scenario_levels[
+  s1_scenario_levels %in% unique(s1_scenario_results$scenario)
+]
+s1_direction_levels &lt;- c(&quot;Downregulated&quot;, &quot;Upregulated&quot;)
+s1_direction_colors &lt;- c(&quot;Downregulated&quot; = &quot;#1D4ED8&quot;,
+                         &quot;Upregulated&quot; = &quot;#B91C1C&quot;)
+s1_sensitivity_colors &lt;- c(
+  &quot;Retained after outlier removal&quot; = &quot;#B7791F&quot;,
+  &quot;Lost after outlier removal&quot; = &quot;#B91C1C&quot;,
+  &quot;Gained after outlier removal&quot; = &quot;#2563EB&quot;
+)
+
+format_comparison_label &lt;- function(x) {
+  dplyr::case_when(
+    x == &quot;Diet 33: infected vs control&quot; ~ &quot;Diet 33\ninfected vs control&quot;,
+    x == &quot;Diet 50: infected vs control&quot; ~ &quot;Diet 50\ninfected vs control&quot;,
+    x == &quot;Diet 83: infected vs control&quot; ~ &quot;Diet 83\ninfected vs control&quot;,
+    x == &quot;Control 33 vs 50&quot; ~ &quot;Control\n33 vs 50&quot;,
+    x == &quot;Control 83 vs 33&quot; ~ &quot;Control\n83 vs 33&quot;,
+    x == &quot;Control 83 vs 50&quot; ~ &quot;Control\n83 vs 50&quot;,
+    x == &quot;Infected 33 vs 50&quot; ~ &quot;Infected\n33 vs 50&quot;,
+    x == &quot;Infected 83 vs 33&quot; ~ &quot;Infected\n83 vs 33&quot;,
+    x == &quot;Infected 83 vs 50&quot; ~ &quot;Infected\n83 vs 50&quot;,
+    TRUE ~ x
+  )
+}
+
+s1_comparison_levels &lt;- c(
+  &quot;Diet 33: infected vs control&quot;,
+  &quot;Diet 50: infected vs control&quot;,
+  &quot;Diet 83: infected vs control&quot;,
+  &quot;Control 33 vs 50&quot;,
+  &quot;Control 83 vs 33&quot;,
+  &quot;Control 83 vs 50&quot;,
+  &quot;Infected 33 vs 50&quot;,
+  &quot;Infected 83 vs 33&quot;,
+  &quot;Infected 83 vs 50&quot;
+)
+s1_comparison_levels &lt;- s1_comparison_levels[
+  s1_comparison_levels %in% unique(s1_scenario_results$comparison)
+]
+
+s1_sample_counts &lt;- s1_sample_counts |&gt;
+  dplyr::mutate(
+    scenario = factor(scenario, levels = s1_scenario_levels),
+    Diet = factor(Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;)),
+    Treatment = factor(Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;))
+  )
+
+p_s1_samples &lt;- ggplot2::ggplot(
+  s1_sample_counts,
+  ggplot2::aes(x = Diet, y = n_samples, fill = Treatment)
+) +
+  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.75),
+                    width = 0.66, color = &quot;#111827&quot;, linewidth = 0.25) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = n_samples),
+    position = ggplot2::position_dodge(width = 0.75),
+    vjust = -0.25,
+    size = 3.6
+  ) +
+  ggplot2::facet_wrap(~ scenario, nrow = 1) +
+  ggplot2::scale_fill_manual(values = treatment_colors, drop = FALSE) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.15))) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    strip.text = ggplot2::element_text(size = 11, face = &quot;bold&quot;),
+    axis.text = ggplot2::element_text(color = &quot;#111827&quot;),
+    legend.position = &quot;bottom&quot;
+  ) +
+  ggplot2::labs(
+    title = &quot;A. Samples retained per scenario&quot;,
+    x = &quot;Diet&quot;,
+    y = &quot;Number of samples&quot;,
+    fill = &quot;Treatment&quot;
+  )
+
+s1_sig_results &lt;- s1_scenario_results |&gt;
+  dplyr::filter(
+    scenario %in% s1_scenario_levels,
+    comparison %in% s1_comparison_levels,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold,
+    direction %in% s1_direction_levels
+  ) |&gt;
+  dplyr::mutate(
+    scenario = factor(scenario, levels = s1_scenario_levels),
+    comparison = factor(comparison, levels = s1_comparison_levels),
+    comparison_label = factor(format_comparison_label(as.character(comparison)),
+                              levels = rev(format_comparison_label(s1_comparison_levels))),
+    direction = factor(direction, levels = s1_direction_levels)
+  )
+
+s1_deg_counts &lt;- s1_sig_results |&gt;
+  dplyr::count(scenario, comparison_type, comparison_label, direction,
+               name = &quot;n_genes&quot;) |&gt;
+  tidyr::complete(
+    scenario,
+    tidyr::nesting(comparison_type, comparison_label),
+    direction,
+    fill = list(n_genes = 0)
+  ) |&gt;
+  dplyr::mutate(
+    signed_n_genes = dplyr::if_else(direction == &quot;Downregulated&quot;,
+                                    -n_genes, n_genes)
+  )
+
+write.csv(s1_sample_counts,
+          file.path(out_dir, &quot;figureS1_sample_counts_by_scenario.csv&quot;),
+          row.names = FALSE)
+write.csv(s1_deg_counts,
+          file.path(out_dir, &quot;figureS1_deg_counts_by_scenario.csv&quot;),
+          row.names = FALSE)
+
+p_s1_burden &lt;- ggplot2::ggplot(
+  s1_deg_counts,
+  ggplot2::aes(x = signed_n_genes, y = comparison_label, fill = direction)
+) +
+  ggplot2::geom_vline(xintercept = 0, color = &quot;#111827&quot;, linewidth = 0.3) +
+  ggplot2::geom_col(width = 0.72, color = &quot;white&quot;, linewidth = 0.2) +
+  ggplot2::facet_wrap(~ scenario, nrow = 1) +
+  ggplot2::scale_fill_manual(values = s1_direction_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(labels = abs) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = &quot;#111827&quot;),
+    strip.text = ggplot2::element_text(size = 10.5, face = &quot;bold&quot;),
+    legend.position = &quot;bottom&quot;
+  ) +
+  ggplot2::labs(
+    title = &quot;B. Direction-aware DEG burden across filtering scenarios&quot;,
+    x = &quot;Number of significant DEGs&quot;,
+    y = NULL,
+    fill = &quot;Direction&quot;
+  )
+
+s1_compare_scenarios &lt;- c(&quot;All samples&quot;, &quot;Current outliers removed&quot;)
+if (all(s1_compare_scenarios %in% unique(s1_sig_results$scenario))) {
+  s1_retained_lost_gained &lt;- do.call(rbind, lapply(s1_comparison_levels,
+                                                   function(this_comparison) {
+    all_genes &lt;- unique(s1_sig_results$gene_id[
+      s1_sig_results$scenario == &quot;All samples&quot; &amp;
+        s1_sig_results$comparison == this_comparison
+    ])
+    no_outlier_genes &lt;- unique(s1_sig_results$gene_id[
+      s1_sig_results$scenario == &quot;Current outliers removed&quot; &amp;
+        s1_sig_results$comparison == this_comparison
+    ])
+    data.frame(
+      comparison = this_comparison,
+      sensitivity_class = c(&quot;Retained after outlier removal&quot;,
+                            &quot;Lost after outlier removal&quot;,
+                            &quot;Gained after outlier removal&quot;),
+      n_genes = c(
+        length(intersect(all_genes, no_outlier_genes)),
+        length(setdiff(all_genes, no_outlier_genes)),
+        length(setdiff(no_outlier_genes, all_genes))
+      ),
+      stringsAsFactors = FALSE
+    )
+  }))
+} else {
+  s1_retained_lost_gained &lt;- data.frame(
+    comparison = character(),
+    sensitivity_class = character(),
+    n_genes = integer()
+  )
+}
+
+s1_retained_lost_gained &lt;- s1_retained_lost_gained |&gt;
+  dplyr::mutate(
+    comparison = factor(comparison, levels = s1_comparison_levels),
+    comparison_label = factor(format_comparison_label(as.character(comparison)),
+                              levels = rev(format_comparison_label(s1_comparison_levels))),
+    sensitivity_class = factor(sensitivity_class,
+                               levels = names(s1_sensitivity_colors))
+  )
+
+write.csv(s1_retained_lost_gained,
+          file.path(out_dir, &quot;figureS1_retained_lost_gained_degs.csv&quot;),
+          row.names = FALSE)
+
+p_s1_retained &lt;- ggplot2::ggplot(
+  s1_retained_lost_gained,
+  ggplot2::aes(x = n_genes, y = comparison_label, fill = sensitivity_class)
+) +
+  ggplot2::geom_col(width = 0.72, color = &quot;white&quot;, linewidth = 0.2) +
+  ggplot2::scale_fill_manual(values = s1_sensitivity_colors, drop = FALSE) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = &quot;#111827&quot;),
+    legend.position = &quot;bottom&quot;
+  ) +
+  ggplot2::labs(
+    title = &quot;C. DEG calls retained, lost, or gained after current outlier removal&quot;,
+    x = &quot;Number of significant DEGs&quot;,
+    y = NULL,
+    fill = &quot;Sensitivity class&quot;
+  )
+
+figure_s1 &lt;- p_s1_samples / p_s1_burden / p_s1_retained +
+  patchwork::plot_layout(heights = c(0.22, 0.48, 0.30)) +
+  patchwork::plot_annotation(
+    title = &quot;Figure S1. Outlier-removal sensitivity analysis&quot;,
+    subtitle = &quot;All comparisons use the rRNA-filtered count matrix and the same DEG thresholds as the main figures&quot;,
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure_s1, &quot;figureS1_outlier_removal_sensitivity&quot;,
+             width = 17.5, height = 15)
+figure_s1</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-s1-outlier-sensitivity-1.png" alt="" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>figure_s1_exports &lt;- data.frame(
+  figure = c(&quot;Figure S1 composite PNG&quot;, &quot;Figure S1 composite SVG&quot;,
+             &quot;Figure S1 sample counts&quot;, &quot;Figure S1 DEG counts&quot;,
+             &quot;Figure S1 retained/lost/gained counts&quot;),
+  path = c(
+    file.path(out_dir, &quot;figureS1_outlier_removal_sensitivity.png&quot;),
+    file.path(out_dir, &quot;figureS1_outlier_removal_sensitivity.svg&quot;),
+    file.path(out_dir, &quot;figureS1_sample_counts_by_scenario.csv&quot;),
+    file.path(out_dir, &quot;figureS1_deg_counts_by_scenario.csv&quot;),
+    file.path(out_dir, &quot;figureS1_retained_lost_gained_degs.csv&quot;)
+  ),
+  present = file.exists(c(
+    file.path(out_dir, &quot;figureS1_outlier_removal_sensitivity.png&quot;),
+    file.path(out_dir, &quot;figureS1_outlier_removal_sensitivity.svg&quot;),
+    file.path(out_dir, &quot;figureS1_sample_counts_by_scenario.csv&quot;),
+    file.path(out_dir, &quot;figureS1_deg_counts_by_scenario.csv&quot;),
+    file.path(out_dir, &quot;figureS1_retained_lost_gained_degs.csv&quot;)
+  ))
+)
+knitr::kable(figure_s1_exports,
+             caption = &quot;Figure S1 outlier-sensitivity exports&quot;)</code></pre>
+<table>
+<caption>Figure S1 outlier-sensitivity exports</caption>
+<colgroup>
+<col width="18%" />
+<col width="78%" />
+<col width="3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">figure</th>
+<th align="left">path</th>
+<th align="left">present</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Figure S1 composite PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS1_outlier_removal_sensitivity.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure S1 composite SVG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS1_outlier_removal_sensitivity.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure S1 sample counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS1_sample_counts_by_scenario.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure S1 DEG counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS1_deg_counts_by_scenario.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure S1 retained/lost/gained counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS1_retained_lost_gained_degs.csv</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="figure-s2-deg-localization-on-chromosomes"
+class="section level2">
+<h2>Figure S2: DEG localization on chromosomes</h2>
+<p>Figure S2 maps significant DEGs from each broad context onto the
+chromosome coordinates in the RefSeq GFF. Genes on unplaced scaffolds
+are retained in the exported coordinate table, while the plotted
+chromosome tracks focus on chromosomes 1-11 and X.</p>
+<p>An ideal parallel validation would have quantified selected host loci
+and <em>Metarhizium</em> load by qPCR from matched fat body tissue. That
+wet-lab validation cannot be performed for this dataset because no
+remaining tissue is available, so the origin of the unplaced-scaffold
+signal must be evaluated bioinformatically with scaffold annotation,
+fungal similarity searches, and competitive host-pathogen remapping.</p>
+<pre class="r"><code>s2_scenario_degs &lt;- read.csv(scenario_results_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    scenario == &quot;All samples&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+s2_model_degs &lt;- read.csv(model_coefficients_file, check.names = FALSE) |&gt;
+  dplyr::filter(
+    coefficient == &quot;Treatment_Infected_vs_Control&quot;,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj &lt; params$alpha,
+    abs(log2FoldChange) &gt;= params$lfc_threshold
+  )
+
+s2_deg_sets &lt;- list(
+  &quot;Infection within diets&quot; = s2_scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Infection within diet&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Diet DEGs in controls&quot; = s2_scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Diet contrasts among control&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Diet DEGs in infected&quot; = s2_scenario_degs |&gt;
+    dplyr::filter(comparison_type == &quot;Diet contrasts among infected&quot;) |&gt;
+    dplyr::pull(gene_id) |&gt;
+    unique(),
+  &quot;Infection vs control&quot; = unique(s2_model_degs$gene_id)
+)
+s2_deg_sets &lt;- s2_deg_sets[lengths(s2_deg_sets) &gt; 0]
+s2_context_levels &lt;- names(s2_deg_sets)
+s2_context_colors &lt;- c(
+  &quot;Infection within diets&quot; = &quot;#C51B7D&quot;,
+  &quot;Diet DEGs in controls&quot; = &quot;#D9A21B&quot;,
+  &quot;Diet DEGs in infected&quot; = &quot;#1B9E77&quot;,
+  &quot;Infection vs control&quot; = &quot;#377EB8&quot;
+)
+
+s2_deg_long &lt;- dplyr::bind_rows(lapply(s2_context_levels, function(context) {
+  data.frame(
+    DEG_context = context,
+    gene_id = s2_deg_sets[[context]],
+    stringsAsFactors = FALSE
+  )
+})) |&gt;
+  dplyr::distinct(DEG_context, gene_id) |&gt;
+  dplyr::mutate(DEG_context = factor(DEG_context,
+                                     levels = s2_context_levels))
+
+gff_coordinates &lt;- parse_gff_gene_coordinates(gff_file)
+chromosome_order &lt;- c(as.character(1:11), &quot;X&quot;)
+
+chromosome_regions &lt;- gff_coordinates$sequence_regions |&gt;
+  dplyr::filter(chromosome %in% chromosome_order) |&gt;
+  dplyr::mutate(
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    length_mb = seq_end / 1e6
+  )
+
+annotated_gene_counts &lt;- gff_coordinates$gene_ranges |&gt;
+  dplyr::filter(chromosome %in% chromosome_order) |&gt;
+  dplyr::count(chromosome, name = &quot;annotated_genes&quot;)
+
+s2_deg_coordinates &lt;- s2_deg_long |&gt;
+  dplyr::left_join(gff_coordinates$gene_ranges, by = &quot;gene_id&quot;) |&gt;
+  dplyr::mutate(
+    chromosome = as.character(chromosome),
+    chromosome_class = dplyr::coalesce(chromosome_class, &quot;Missing from GFF&quot;),
+    position_mb = midpoint / 1e6
+  )
+
+write.csv(s2_deg_coordinates,
+          file.path(out_dir, &quot;figureS2_deg_coordinates_by_context.csv&quot;),
+          row.names = FALSE)
+
+s2_unplaced_summary &lt;- s2_deg_coordinates |&gt;
+  dplyr::filter(!(chromosome %in% chromosome_order)) |&gt;
+  dplyr::count(DEG_context, chromosome_class, name = &quot;n_degs&quot;) |&gt;
+  dplyr::arrange(DEG_context, chromosome_class)
+
+write.csv(s2_unplaced_summary,
+          file.path(out_dir, &quot;figureS2_unplaced_or_missing_deg_summary.csv&quot;),
+          row.names = FALSE)
+
+s2_coordinate_class_counts &lt;- s2_deg_coordinates |&gt;
+  dplyr::mutate(
+    coordinate_class = dplyr::if_else(
+      chromosome_class == &quot;Named chromosome&quot;,
+      &quot;Named chromosomes 1-11/X&quot;,
+      chromosome_class
+    )
+  ) |&gt;
+  dplyr::count(DEG_context, coordinate_class, name = &quot;n_degs&quot;) |&gt;
+  dplyr::group_by(DEG_context) |&gt;
+  dplyr::mutate(proportion = n_degs / sum(n_degs)) |&gt;
+  dplyr::ungroup()
+
+write.csv(s2_coordinate_class_counts,
+          file.path(out_dir, &quot;figureS2_coordinate_class_counts.csv&quot;),
+          row.names = FALSE)
+
+s2_chromosome_degs &lt;- s2_deg_coordinates |&gt;
+  dplyr::filter(chromosome %in% chromosome_order, !is.na(position_mb)) |&gt;
+  dplyr::mutate(
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    DEG_context = factor(DEG_context, levels = s2_context_levels)
+  )
+
+s2_chromosome_counts &lt;- s2_chromosome_degs |&gt;
+  dplyr::count(DEG_context, chromosome, name = &quot;deg_genes&quot;) |&gt;
+  tidyr::complete(
+    DEG_context,
+    chromosome = factor(chromosome_order, levels = rev(chromosome_order)),
+    fill = list(deg_genes = 0)
+  ) |&gt;
+  dplyr::mutate(chromosome = as.character(chromosome)) |&gt;
+  dplyr::left_join(annotated_gene_counts, by = &quot;chromosome&quot;) |&gt;
+  dplyr::mutate(
+    degs_per_1000_genes = 1000 * deg_genes / annotated_genes,
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    DEG_context = factor(DEG_context, levels = s2_context_levels)
+  )
+
+write.csv(s2_chromosome_counts,
+          file.path(out_dir, &quot;figureS2_chromosome_deg_density.csv&quot;),
+          row.names = FALSE)
+
+p_s2_locations &lt;- ggplot2::ggplot() +
+  ggplot2::geom_segment(
+    data = chromosome_regions,
+    ggplot2::aes(x = 0, xend = length_mb,
+                 y = chromosome, yend = chromosome),
+    linewidth = 4.8,
+    color = &quot;#E5E7EB&quot;,
+    lineend = &quot;round&quot;
+  ) +
+  ggplot2::geom_point(
+    data = s2_chromosome_degs,
+    ggplot2::aes(x = position_mb, y = chromosome, color = DEG_context),
+    size = 0.55,
+    alpha = 0.45,
+    position = ggplot2::position_jitter(width = 0, height = 0.15, seed = 17)
+  ) +
+  ggplot2::facet_wrap(~ DEG_context, ncol = 2) +
+  ggplot2::scale_color_manual(values = s2_context_colors, guide = &quot;none&quot;) +
+  ggplot2::scale_x_continuous(
+    expand = ggplot2::expansion(mult = c(0.01, 0.04))
+  ) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(size = 12, face = &quot;bold&quot;),
+    axis.text.y = ggplot2::element_text(size = 10, color = &quot;#111827&quot;),
+    legend.position = &quot;none&quot;
+  ) +
+  ggplot2::labs(
+    title = &quot;A. Chromosomal positions of DEGs by context&quot;,
+    subtitle = &quot;Each point is one DEG-context membership; genes shared by contexts appear in each relevant panel&quot;,
+    x = &quot;Genomic position (Mb)&quot;,
+    y = &quot;Chromosome&quot;
+  )
+
+p_s2_coordinate_class &lt;- ggplot2::ggplot(
+  s2_coordinate_class_counts,
+  ggplot2::aes(x = n_degs, y = DEG_context, fill = coordinate_class)
+) +
+  ggplot2::geom_col(width = 0.68, color = &quot;white&quot;, linewidth = 0.2) +
+  ggplot2::scale_fill_manual(
+    values = c(&quot;Named chromosomes 1-11/X&quot; = &quot;#4B5563&quot;,
+               &quot;Unplaced scaffold&quot; = &quot;#D9A21B&quot;,
+               &quot;Missing from GFF&quot; = &quot;#B91C1C&quot;),
+    drop = FALSE
+  ) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = &quot;#111827&quot;),
+    legend.position = &quot;bottom&quot;
+  ) +
+  ggplot2::labs(
+    title = &quot;C. DEG-context memberships with chromosome versus scaffold coordinates&quot;,
+    x = &quot;Number of DEG-context memberships&quot;,
+    y = NULL,
+    fill = &quot;Coordinate class&quot;
+  )
+
+figure_s2 &lt;- p_s2_locations / p_s2_coordinate_class +
+  patchwork::plot_layout(heights = c(0.78, 0.22)) +
+  patchwork::plot_annotation(
+    title = &quot;Figure S2. Chromosomal localization of DEG contexts&quot;,
+    subtitle = &quot;Chromosome tracks use the RefSeq GFF; genes on unplaced scaffolds are summarized below and exported separately&quot;,
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure_s2, &quot;figureS2_deg_chromosome_localization&quot;,
+             width = 16, height = 10.5)
+figure_s2</code></pre>
+<p><img src="figure/08-publication-figures.Rmd/figure-s2-deg-genome-localization-1.png" alt="" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>figure_s2_exports &lt;- data.frame(
+  figure = c(&quot;Figure S2 composite PNG&quot;, &quot;Figure S2 composite SVG&quot;,
+             &quot;Figure S2 DEG coordinates&quot;, &quot;Chromosome density table&quot;,
+             &quot;Figure S2 coordinate class counts&quot;,
+             &quot;Figure S2 unplaced/missing summary&quot;),
+  path = c(
+    file.path(out_dir, &quot;figureS2_deg_chromosome_localization.png&quot;),
+    file.path(out_dir, &quot;figureS2_deg_chromosome_localization.svg&quot;),
+    file.path(out_dir, &quot;figureS2_deg_coordinates_by_context.csv&quot;),
+    file.path(out_dir, &quot;figureS2_chromosome_deg_density.csv&quot;),
+    file.path(out_dir, &quot;figureS2_coordinate_class_counts.csv&quot;),
+    file.path(out_dir, &quot;figureS2_unplaced_or_missing_deg_summary.csv&quot;)
+  ),
+  present = file.exists(c(
+    file.path(out_dir, &quot;figureS2_deg_chromosome_localization.png&quot;),
+    file.path(out_dir, &quot;figureS2_deg_chromosome_localization.svg&quot;),
+    file.path(out_dir, &quot;figureS2_deg_coordinates_by_context.csv&quot;),
+    file.path(out_dir, &quot;figureS2_chromosome_deg_density.csv&quot;),
+    file.path(out_dir, &quot;figureS2_coordinate_class_counts.csv&quot;),
+    file.path(out_dir, &quot;figureS2_unplaced_or_missing_deg_summary.csv&quot;)
+  ))
+)
+knitr::kable(figure_s2_exports,
+             caption = &quot;Figure S2 chromosome-localization exports&quot;)</code></pre>
+<table>
+<caption>Figure S2 chromosome-localization exports</caption>
+<colgroup>
+<col width="16%" />
+<col width="79%" />
+<col width="3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">figure</th>
+<th align="left">path</th>
+<th align="left">present</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Figure S2 composite PNG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_deg_chromosome_localization.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure S2 composite SVG</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_deg_chromosome_localization.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure S2 DEG coordinates</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_deg_coordinates_by_context.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Chromosome density table</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_chromosome_deg_density.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure S2 coordinate class counts</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_coordinate_class_counts.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Figure S2 unplaced/missing summary</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_unplaced_or_missing_deg_summary.csv</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>knitr::kable(s2_unplaced_summary,
+             caption = &quot;DEG-context memberships on unplaced scaffolds or missing from the GFF&quot;)</code></pre>
+<table>
+<caption>DEG-context memberships on unplaced scaffolds or missing from
+the GFF</caption>
+<thead>
+<tr class="header">
+<th align="left">DEG_context</th>
+<th align="left">chromosome_class</th>
+<th align="right">n_degs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Infection within diets</td>
+<td align="left">Unplaced scaffold</td>
+<td align="right">63</td>
+</tr>
+<tr class="even">
+<td align="left">Diet DEGs in infected</td>
+<td align="left">Unplaced scaffold</td>
+<td align="right">1773</td>
+</tr>
+<tr class="odd">
+<td align="left">Infection vs control</td>
+<td align="left">Unplaced scaffold</td>
+<td align="right">21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exported-files" class="section level2">
+<h2>Exported files</h2>
+<pre class="r"><code>exports &lt;- list.files(out_dir, full.names = FALSE)
+knitr::kable(tibble::tibble(file = exports),
+             caption = paste(&quot;Files written to&quot;, out_dir))</code></pre>
+<table>
+<caption>Files written to
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103</caption>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">file</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">figure1_design_fatbody_pca_infection_deg.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_design_fatbody_pca_infection_deg.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_A_experimental_design.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_panel_A_experimental_design.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_B_pca_centroid_shifts.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_panel_B_pca_centroids.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_B_pca_scores.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_panel_B_vst_pca_centroids.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_B_vst_pca_centroids.svg</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_panel_C_deg_biotype_burden.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_C_deg_biotype_burden.svg</td>
+</tr>
+<tr class="even">
+<td align="left">figure1_panel_C_deg_biotype_counts.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure1_panel_C_exact_contrast_deg_gene_table.csv</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure2_deg_family_candidate_theme_counts_all_categories.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_deg_family_candidate_theme_counts.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_deg_family_candidate_theme_gene_table.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_deg_family_overlap_membership.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_deg_family_overlap_summary.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_deg_family_overlap_venn.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_deg_family_overlap_venn.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_deg_overlap_candidate_composition.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_deg_overlap_candidate_composition.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_infection_phase_overlap_membership.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_infection_phase_overlap_summary.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figure2_infection_phase_overlap_venn.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure2_infection_phase_overlap_venn.svg</td>
+</tr>
+<tr class="odd">
+<td
+align="left">figure2_panel_C_candidate_physiology_phase_composition.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure2_panel_C_candidate_physiology_phase_composition.svg</td>
+</tr>
+<tr class="odd">
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS1_deg_counts_by_scenario.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figureS1_outlier_removal_sensitivity.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS1_outlier_removal_sensitivity.svg</td>
+</tr>
+<tr class="even">
+<td align="left">figureS1_retained_lost_gained_degs.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS1_sample_counts_by_scenario.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figureS2_chromosome_deg_density.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS2_coordinate_class_counts.csv</td>
+</tr>
+<tr class="even">
+<td align="left">figureS2_deg_chromosome_localization.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS2_deg_chromosome_localization.svg</td>
+</tr>
+<tr class="even">
+<td align="left">figureS2_deg_coordinates_by_context.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">figureS2_unplaced_or_missing_deg_summary.csv</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
 <pre class="r"><code>writeLines(capture.output(sessionInfo()),
            file.path(out_dir, &quot;sessionInfo.txt&quot;))
 sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -1649,23 +3112,51 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] workflowr_1.7.2
+[1] patchwork_1.3.2 ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.6       jsonlite_2.0.0     dplyr_1.2.1        compiler_4.6.0    
- [5] promises_1.5.0     tidyselect_1.2.1   Rcpp_1.1.1-1.1     stringr_1.6.0     
- [9] git2r_0.36.2       dichromat_2.0-0.1  callr_3.7.6        later_1.4.8       
-[13] jquerylib_0.1.4    png_0.1-9          scales_1.4.0       yaml_2.3.12       
-[17] fastmap_1.2.0      ggplot2_4.0.3      R6_2.6.1           generics_0.1.4    
-[21] knitr_1.51         tibble_3.3.1       rprojroot_2.1.1    RColorBrewer_1.1-3
-[25] bslib_0.10.0       pillar_1.11.1      rlang_1.2.0        cachem_1.1.0      
-[29] stringi_1.8.7      httpuv_1.6.17      xfun_0.57          S7_0.2.2          
-[33] getPass_0.2-4      fs_2.1.0           sass_0.4.10        otel_0.2.0        
-[37] cli_3.6.6          magrittr_2.0.5     digest_0.6.39      grid_4.6.0        
-[41] processx_3.9.0     rstudioapi_0.18.0  lifecycle_1.0.5    vctrs_0.7.3       
-[45] evaluate_1.0.5     glue_1.8.1         farver_2.1.2       whisker_0.4.1     
-[49] rmarkdown_2.31     httr_1.4.8         tools_4.6.0        pkgconfig_2.0.3   
-[53] htmltools_0.5.9   </code></pre>
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
+ [3] xfun_0.57                   bslib_0.10.0               
+ [5] ggrepel_0.9.8               processx_3.9.0             
+ [7] Biobase_2.72.0              lattice_0.22-9             
+ [9] callr_3.7.6                 vctrs_0.7.3                
+[11] tools_4.6.0                 generics_0.1.4             
+[13] stats4_4.6.0                parallel_4.6.0             
+[15] tibble_3.3.1                pkgconfig_2.0.3            
+[17] Matrix_1.7-5                RColorBrewer_1.1-3         
+[19] S7_0.2.2                    S4Vectors_0.50.1           
+[21] lifecycle_1.0.5             compiler_4.6.0             
+[23] farver_2.1.2                stringr_1.6.0              
+[25] git2r_0.36.2                textshaping_1.0.5          
+[27] DESeq2_1.52.0               getPass_0.2-4              
+[29] Seqinfo_1.2.0               codetools_0.2-20           
+[31] httpuv_1.6.17               htmltools_0.5.9            
+[33] sass_0.4.10                 yaml_2.3.12                
+[35] tidyr_1.3.2                 later_1.4.8                
+[37] pillar_1.11.1               jquerylib_0.1.4            
+[39] whisker_0.4.1               BiocParallel_1.46.0        
+[41] cachem_1.1.0                DelayedArray_0.38.1        
+[43] abind_1.4-8                 locfit_1.5-9.12            
+[45] tidyselect_1.2.1            digest_0.6.39              
+[47] stringi_1.8.7               purrr_1.2.2                
+[49] dplyr_1.2.1                 labeling_0.4.3             
+[51] rprojroot_2.1.1             fastmap_1.2.0              
+[53] grid_4.6.0                  cli_3.6.6                  
+[55] SparseArray_1.12.2          magrittr_2.0.5             
+[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
+[59] withr_3.0.2                 scales_1.4.0               
+[61] promises_1.5.0              rmarkdown_2.31             
+[63] XVector_0.52.0              httr_1.4.8                 
+[65] matrixStats_1.5.0           otel_0.2.0                 
+[67] ragg_1.5.2                  png_0.1-9                  
+[69] evaluate_1.0.5              knitr_1.51                 
+[71] GenomicRanges_1.64.0        IRanges_2.46.0             
+[73] rlang_1.2.0                 Rcpp_1.1.1-1.1             
+[75] ggVennDiagram_1.5.7         glue_1.8.1                 
+[77] BiocGenerics_0.58.0         rstudioapi_0.18.0          
+[79] jsonlite_2.0.0              R6_2.6.1                   
+[81] systemfonts_1.3.2           MatrixGenerics_1.24.0      
+[83] fs_2.1.0                   </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1677,7 +3168,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -1693,23 +3184,51 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] workflowr_1.7.2
+[1] patchwork_1.3.2 ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.6       jsonlite_2.0.0     dplyr_1.2.1        compiler_4.6.0    
- [5] promises_1.5.0     tidyselect_1.2.1   Rcpp_1.1.1-1.1     stringr_1.6.0     
- [9] git2r_0.36.2       dichromat_2.0-0.1  callr_3.7.6        later_1.4.8       
-[13] jquerylib_0.1.4    png_0.1-9          scales_1.4.0       yaml_2.3.12       
-[17] fastmap_1.2.0      ggplot2_4.0.3      R6_2.6.1           generics_0.1.4    
-[21] knitr_1.51         tibble_3.3.1       rprojroot_2.1.1    RColorBrewer_1.1-3
-[25] bslib_0.10.0       pillar_1.11.1      rlang_1.2.0        cachem_1.1.0      
-[29] stringi_1.8.7      httpuv_1.6.17      xfun_0.57          S7_0.2.2          
-[33] getPass_0.2-4      fs_2.1.0           sass_0.4.10        otel_0.2.0        
-[37] cli_3.6.6          magrittr_2.0.5     digest_0.6.39      grid_4.6.0        
-[41] processx_3.9.0     rstudioapi_0.18.0  lifecycle_1.0.5    vctrs_0.7.3       
-[45] evaluate_1.0.5     glue_1.8.1         farver_2.1.2       whisker_0.4.1     
-[49] rmarkdown_2.31     httr_1.4.8         tools_4.6.0        pkgconfig_2.0.3   
-[53] htmltools_0.5.9   </code></pre>
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
+ [3] xfun_0.57                   bslib_0.10.0               
+ [5] ggrepel_0.9.8               processx_3.9.0             
+ [7] Biobase_2.72.0              lattice_0.22-9             
+ [9] callr_3.7.6                 vctrs_0.7.3                
+[11] tools_4.6.0                 generics_0.1.4             
+[13] stats4_4.6.0                parallel_4.6.0             
+[15] tibble_3.3.1                pkgconfig_2.0.3            
+[17] Matrix_1.7-5                RColorBrewer_1.1-3         
+[19] S7_0.2.2                    S4Vectors_0.50.1           
+[21] lifecycle_1.0.5             compiler_4.6.0             
+[23] farver_2.1.2                stringr_1.6.0              
+[25] git2r_0.36.2                textshaping_1.0.5          
+[27] DESeq2_1.52.0               getPass_0.2-4              
+[29] Seqinfo_1.2.0               codetools_0.2-20           
+[31] httpuv_1.6.17               htmltools_0.5.9            
+[33] sass_0.4.10                 yaml_2.3.12                
+[35] tidyr_1.3.2                 later_1.4.8                
+[37] pillar_1.11.1               jquerylib_0.1.4            
+[39] whisker_0.4.1               BiocParallel_1.46.0        
+[41] cachem_1.1.0                DelayedArray_0.38.1        
+[43] abind_1.4-8                 locfit_1.5-9.12            
+[45] tidyselect_1.2.1            digest_0.6.39              
+[47] stringi_1.8.7               purrr_1.2.2                
+[49] dplyr_1.2.1                 labeling_0.4.3             
+[51] rprojroot_2.1.1             fastmap_1.2.0              
+[53] grid_4.6.0                  cli_3.6.6                  
+[55] SparseArray_1.12.2          magrittr_2.0.5             
+[57] S4Arrays_1.12.0             dichromat_2.0-0.1          
+[59] withr_3.0.2                 scales_1.4.0               
+[61] promises_1.5.0              rmarkdown_2.31             
+[63] XVector_0.52.0              httr_1.4.8                 
+[65] matrixStats_1.5.0           otel_0.2.0                 
+[67] ragg_1.5.2                  png_0.1-9                  
+[69] evaluate_1.0.5              knitr_1.51                 
+[71] GenomicRanges_1.64.0        IRanges_2.46.0             
+[73] rlang_1.2.0                 Rcpp_1.1.1-1.1             
+[75] ggVennDiagram_1.5.7         glue_1.8.1                 
+[77] BiocGenerics_0.58.0         rstudioapi_0.18.0          
+[79] jsonlite_2.0.0              R6_2.6.1                   
+[81] systemfonts_1.3.2           MatrixGenerics_1.24.0      
+[83] fs_2.1.0                   </code></pre>
 </div>
 </div>
 </div>

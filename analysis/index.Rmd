@@ -119,13 +119,18 @@ through the analysis.
     <strong>GO and KEGG Enrichment</strong>
     <p>Review eggNOG-derived enrichment after understanding the DEG foregrounds.</p>
   </a>
-  <a class="analysis-tile" href="22-deg-logical-set-construction.html">
+  <a class="analysis-tile" href="25-enrichment-term-gene-index.html">
     <span>Step 9</span>
+    <strong>Term-to-Gene Index</strong>
+    <p>Search which DEG IDs contributed to each enriched GO term or KEGG pathway.</p>
+  </a>
+  <a class="analysis-tile" href="22-deg-logical-set-construction.html">
+    <span>Step 10</span>
     <strong>Reference Context</strong>
     <p>Ask whether fat body DEGs are shared with tissue-reference, head-phase, or thorax-phase signatures.</p>
   </a>
   <a class="analysis-tile" href="08-publication-figures.html">
-    <span>Step 10</span>
+    <span>Step 11</span>
     <strong>Publication Figure Exports</strong>
     <p>Find rendered panels that can be assembled or refined for manuscripts and collaborator slides.</p>
   </a>
@@ -148,6 +153,16 @@ through the analysis.
     <span>Scenarios</span>
     <strong>Sample Filters</strong>
     <p>Directly compare how DEG burden changes across inclusion choices.</p>
+  </a>
+  <a class="analysis-tile" href="23-outlier-expression-signatures.html">
+    <span>All samples</span>
+    <strong>Outlier Gene Signals</strong>
+    <p>Identify genes that make flagged samples differ from same-condition peers.</p>
+  </a>
+  <a class="analysis-tile" href="24-all-deg-catalogue.html">
+    <span>All samples</span>
+    <strong>Searchable DEG Catalogue</strong>
+    <p>Search every significant DEG, contrast, annotation, log2FC, and higher-expression side.</p>
   </a>
   <a class="analysis-tile" href="11-outlier-sensitivity.html">
     <span>Sensitivity</span>
@@ -173,6 +188,11 @@ through the analysis.
     <span>Enrichment</span>
     <strong>GO and KEGG</strong>
     <p>eggNOG-derived GO terms and KEGG pathway themes for DEG foregrounds.</p>
+  </a>
+  <a class="analysis-tile" href="25-enrichment-term-gene-index.html">
+    <span>Reverse lookup</span>
+    <strong>Enriched Term Genes</strong>
+    <p>List the LOC genes that drive each enriched GO term or KEGG pathway.</p>
   </a>
   <a class="analysis-tile" href="22-deg-logical-set-construction.html">
     <span>After DEGs</span>

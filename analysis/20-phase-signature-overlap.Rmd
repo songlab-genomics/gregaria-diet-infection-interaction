@@ -21,6 +21,7 @@ params:
   lfc_threshold: 1
   phase_alpha: 0.05
   phase_lfc_threshold: 1
+  min_total_count: 10
   heatmap_gene_n: 55
   timecourse_vst_delta_threshold: 1
   timecourse_top_gene_n: 500
@@ -996,6 +997,267 @@ if (nrow(heatmap_genes) > 1) {
             row.names = FALSE)
 } else {
   message("Not enough phase-linked infection DEGs for the heatmap.")
+}
+```
+
+## Full experiment DEG diagnostic heatmap
+
+This heatmap is deliberately not curated. It uses every significant fat body DEG
+from the selected scenario, across infection-within-diet and diet-contrast
+comparisons. Samples are kept in the experimental order used above: infected
+samples first, then controls, with diet substructure inside each treatment. Gene
+rows are clustered to help reveal unusual expression blocks or single-sample
+effects.
+
+Because the full DEG set contains thousands of genes, row names are hidden in the
+image. The searchable table below the figure keeps the heatmap row order,
+annotation, DEG context, and the sample with the strongest row-z-score deviation
+for each gene.
+
+```{r full-experiment-deg-diagnostic-heatmap, fig.width=18, fig.height=22}
+if (!exists("vst_mat") && exists("counts_heat") && exists("metadata_full")) {
+  keep <- rowSums(counts_heat) >= params$min_total_count
+  dds_heat <- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_heat[keep, ],
+    colData = metadata_full,
+    design = ~ Diet + Treatment
+  )
+  vst_heat <- DESeq2::vst(dds_heat, blind = TRUE)
+  vst_mat <- SummarizedExperiment::assay(vst_heat)
+}
+
+if (exists("vst_mat") && exists("metadata_full")) {
+  full_experiment_deg_gene_table <- phase_layered_sig |>
+    dplyr::filter(scenario == params$analysis_scenario) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      n_deg_contrasts = dplyr::n_distinct(comparison),
+      has_infection_deg = any(comparison_type == "Infection within diet"),
+      has_control_diet_deg = any(comparison_type == "Diet contrasts among control"),
+      has_infected_diet_deg = any(comparison_type == "Diet contrasts among infected"),
+      comparison_types = paste(sort(unique(comparison_type)), collapse = "; "),
+      comparisons = paste(sort(unique(comparison)), collapse = "; "),
+      directions = paste(sort(unique(direction)), collapse = "; "),
+      max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+      min_padj = min(padj, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::left_join(annotation |> dplyr::select(gene_id, Description),
+                     by = "gene_id") |>
+    dplyr::left_join(phase_gene_all |> dplyr::select(gene_id, phase_class),
+                     by = "gene_id") |>
+    dplyr::mutate(
+      Description = dplyr::coalesce(Description, "no description"),
+      DEG_context = dplyr::case_when(
+        has_infection_deg & (has_control_diet_deg | has_infected_diet_deg) ~
+          "Infection + diet",
+        has_infection_deg ~ "Infection within diet",
+        has_control_diet_deg & has_infected_diet_deg ~
+          "Diet in controls + infected",
+        has_control_diet_deg ~ "Diet in controls",
+        has_infected_diet_deg ~ "Diet in infected",
+        TRUE ~ "Other fat body DEG"
+      ),
+      DEG_context = factor(
+        DEG_context,
+        levels = c("Infection + diet", "Infection within diet",
+                   "Diet in controls", "Diet in infected",
+                   "Diet in controls + infected", "Other fat body DEG")
+      ),
+      phase_class = dplyr::coalesce(phase_class, "No phase DEG"),
+      phase_class = factor(
+        phase_class,
+        levels = c("Shared head/thorax phase DEG", "Head phase DEG only",
+                   "Thorax phase DEG only", "No phase DEG")
+      )
+    ) |>
+    dplyr::arrange(DEG_context, phase_class, min_padj,
+                   dplyr::desc(max_abs_log2FC))
+
+  full_experiment_deg_ids <- intersect(
+    full_experiment_deg_gene_table$gene_id,
+    rownames(vst_mat)
+  )
+
+  if (length(full_experiment_deg_ids) > 1) {
+    full_experiment_deg_gene_table <- full_experiment_deg_gene_table |>
+      dplyr::filter(gene_id %in% full_experiment_deg_ids)
+
+    full_experiment_sample_order <- metadata_full$label
+    full_experiment_sample_annotation <- metadata_full[full_experiment_sample_order, ] |>
+      dplyr::transmute(
+        Treatment = as.character(Treatment),
+        Diet = as.character(Diet)
+      )
+    full_experiment_sample_annotation <- as.data.frame(
+      full_experiment_sample_annotation,
+      stringsAsFactors = FALSE
+    )
+    rownames(full_experiment_sample_annotation) <- full_experiment_sample_order
+
+    full_experiment_gene_annotation <- full_experiment_deg_gene_table |>
+      dplyr::transmute(
+        DEG_context = as.character(DEG_context),
+        Phase_class = as.character(phase_class)
+      )
+    full_experiment_gene_annotation <- as.data.frame(
+      full_experiment_gene_annotation,
+      stringsAsFactors = FALSE
+    )
+    rownames(full_experiment_gene_annotation) <- full_experiment_deg_ids
+
+    full_experiment_sample_gaps <- find_gaps(paste(
+      full_experiment_sample_annotation$Treatment,
+      full_experiment_sample_annotation$Diet
+    ))
+
+    full_experiment_mat <- vst_mat[
+      full_experiment_deg_ids,
+      full_experiment_sample_order,
+      drop = FALSE
+    ]
+    full_experiment_zmat <- t(scale(t(full_experiment_mat)))
+    full_experiment_zmat[is.na(full_experiment_zmat)] <- 0
+    storage.mode(full_experiment_zmat) <- "double"
+    max_deviation_index <- max.col(abs(full_experiment_zmat),
+                                   ties.method = "first")
+    max_deviation_value <- full_experiment_zmat[
+      cbind(seq_len(nrow(full_experiment_zmat)), max_deviation_index)
+    ]
+    full_experiment_zmat_plot <- pmax(pmin(full_experiment_zmat, 3), -3)
+    full_experiment_zmat_plot <- as.matrix(full_experiment_zmat_plot)
+    storage.mode(full_experiment_zmat_plot) <- "double"
+
+    full_experiment_heatmap_colors <- grDevices::colorRampPalette(
+      c("#237C8E", "#F7F3E8", "#C85A54")
+    )(101)
+    full_experiment_heatmap_breaks <- seq(-3, 3, length.out = 102)
+
+    full_experiment_annotation_colors <- list(
+      Treatment = treatment_colors,
+      Diet = diet_colors,
+      DEG_context = c(
+        "Infection + diet" = "#111827",
+        "Infection within diet" = "#C85A54",
+        "Diet in controls" = "#2F8F5B",
+        "Diet in infected" = "#7B4FA3",
+        "Diet in controls + infected" = "#E6862E",
+        "Other fat body DEG" = "#9CA3AF"
+      ),
+      Phase_class = c(
+        "Shared head/thorax phase DEG" = "#3B1F6D",
+        "Head phase DEG only" = "#009E9A",
+        "Thorax phase DEG only" = "#C51B7D",
+        "No phase DEG" = "#D1D5DB"
+      )
+    )
+
+    full_experiment_heatmap <- pheatmap::pheatmap(
+      full_experiment_zmat_plot,
+      color = full_experiment_heatmap_colors,
+      breaks = full_experiment_heatmap_breaks,
+      cluster_rows = TRUE,
+      cluster_cols = FALSE,
+      gaps_col = full_experiment_sample_gaps,
+      show_rownames = FALSE,
+      show_colnames = TRUE,
+      fontsize_col = 6,
+      annotation_row = full_experiment_gene_annotation,
+      annotation_col = full_experiment_sample_annotation,
+      annotation_colors = full_experiment_annotation_colors,
+      main = paste0("Full fat body DEG heatmap - ",
+                    params$analysis_scenario),
+      filename = file.path(out_dir,
+                           "full_experiment_deg_diagnostic_heatmap.png"),
+      width = 18,
+      height = 22,
+      silent = TRUE
+    )
+
+    heatmap_row_order <- if (!is.null(full_experiment_heatmap$tree_row)) {
+      rownames(full_experiment_zmat_plot)[full_experiment_heatmap$tree_row$order]
+    } else {
+      rownames(full_experiment_zmat_plot)
+    }
+
+    full_experiment_gene_table_ordered <- full_experiment_deg_gene_table |>
+      dplyr::mutate(
+        max_abs_sample_z = abs(max_deviation_value[
+          match(gene_id, rownames(full_experiment_zmat))
+        ]),
+        sample_with_max_abs_z = full_experiment_sample_order[
+          max_deviation_index[match(gene_id, rownames(full_experiment_zmat))]
+        ],
+        sample_deviation_direction = dplyr::if_else(
+          max_deviation_value[match(gene_id, rownames(full_experiment_zmat))] > 0,
+          "Higher than gene average",
+          "Lower than gene average"
+        )
+      ) |>
+      dplyr::slice(match(heatmap_row_order, gene_id)) |>
+      dplyr::mutate(heatmap_row_order = dplyr::row_number()) |>
+      dplyr::select(heatmap_row_order, gene_id, Description, DEG_context,
+                    phase_class, n_deg_contrasts, comparisons, directions,
+                    max_abs_log2FC, min_padj, max_abs_sample_z,
+                    sample_with_max_abs_z, sample_deviation_direction)
+
+    write.csv(
+      full_experiment_gene_table_ordered,
+      file.path(out_dir,
+                "full_experiment_deg_diagnostic_heatmap_gene_order.csv"),
+      row.names = FALSE
+    )
+    utils::write.csv(
+      tibble::rownames_to_column(as.data.frame(full_experiment_zmat),
+                                 "gene_id"),
+      gzfile(file.path(out_dir,
+                       "full_experiment_deg_diagnostic_z_vst_matrix.csv.gz")),
+      row.names = FALSE
+    )
+
+    full_experiment_display_dir <- file.path(
+      project_dir, "docs", "figure", params$display_rmd_dir
+    )
+    dir.create(full_experiment_display_dir, recursive = TRUE,
+               showWarnings = FALSE)
+    full_experiment_display_png <- file.path(
+      full_experiment_display_dir,
+      "full-experiment-deg-diagnostic-heatmap-display.png"
+    )
+    file.copy(
+      file.path(out_dir, "full_experiment_deg_diagnostic_heatmap.png"),
+      full_experiment_display_png,
+      overwrite = TRUE
+    )
+    full_experiment_heatmap_src <- file.path(
+      "figure", params$display_rmd_dir,
+      "full-experiment-deg-diagnostic-heatmap-display.png"
+    )
+  } else {
+    message("Not enough fat body DEGs were available for a full diagnostic heatmap.")
+  }
+}
+```
+
+```{r full-experiment-deg-diagnostic-heatmap-display, echo=FALSE, results='asis'}
+if (exists("full_experiment_heatmap_src")) {
+  cat(paste0(
+    '<p><img src="', full_experiment_heatmap_src,
+    '" alt="Full non-curated fat body DEG diagnostic heatmap" ',
+    'style="display:block;margin:auto;max-width:100%;height:auto;" /></p>'
+  ))
+}
+```
+
+```{r full-experiment-deg-diagnostic-table}
+if (exists("full_experiment_gene_table_ordered")) {
+  DT::datatable(
+    full_experiment_gene_table_ordered,
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Full diagnostic heatmap gene order and strongest single-sample deviations"
+  )
 }
 ```
 
