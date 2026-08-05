@@ -774,15 +774,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree9779d0d625a9428f16278d5bca55302910581e40targetblank9779d0da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreea3b4aeb7aa07a8edc71059abb25e4773c0685ebctargetblanka3b4aeba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/9779d0d625a9428f16278d5bca55302910581e40" target="_blank">9779d0d</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/a3b4aeb7aa07a8edc71059abb25e4773c0685ebc" target="_blank">a3b4aeb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree9779d0d625a9428f16278d5bca55302910581e40targetblank9779d0da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreea3b4aeb7aa07a8edc71059abb25e4773c0685ebctargetblanka3b4aeba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -792,7 +792,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/9779d0d625a9428f16278d5bca55302910581e40" target="_blank">9779d0d</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/a3b4aeb7aa07a8edc71059abb25e4773c0685ebc" target="_blank">a3b4aeb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -819,13 +819,8 @@ Ignored files:
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
-Untracked files:
-    Untracked:  analysis/assets/downloads/
-    Untracked:  output/archive/rmd_runs_20260806/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/site_build_artifacts_20260806/28-placed-unplaced-scaffold-analysis_cache/html/run-deseq2_a47470e453bd1a12bb9fca9d052eda43.rdb
-    Untracked:  outputs/
-
 Unstaged changes:
+    Modified:   analysis/08-publication-figures.Rmd
     Modified:   analysis/30-curated-target-gene-figure.Rmd
 
 </code></pre>
@@ -872,6 +867,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8faef87a6de2275e0ac6b7f92089d61e85cd6051/analysis/30-curated-target-gene-figure.Rmd" target="_blank">8faef87</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+adding pages
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/8faef87a6de2275e0ac6b7f92089d61e85cd6051/docs/30-curated-target-gene-figure.html" target="_blank">8faef87</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+adding pages
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -951,10 +980,10 @@ changes analysis
 <h2>Purpose</h2>
 <p>This page follows a fixed set of immune and protein-anabolism genes
 through two matched views: genes on the main <em>Schistocerca
-gregaria</em> chromosomes and genes on unplaced scaffolds. The
-biological categories come from the supplied workbook, while every
-differential-expression status is recalculated from the current
-competitive-host DESeq2 results.</p>
+gregaria</em> chromosomes and the complete all-scaffold set used in the
+original curated figure. The biological categories come from the
+supplied workbook, while every differential-expression status is
+recalculated from the current competitive-host DESeq2 results.</p>
 <div class="walkthrough-grid">
 <div class="walkthrough-step">
 <p><strong>Step 1 - Match genes</strong></p>
@@ -967,7 +996,7 @@ placement.</p>
 </div>
 <div class="walkthrough-step">
 <p><strong>Step 3 - Compare scopes</strong></p>
-<p>Read the matched chromosome and unplaced-scaffold panels side by
+<p>Read the main-chromosome and complete all-scaffold panels side by
 side.</p>
 </div>
 </div>
@@ -2436,6 +2465,43 @@ figure_status_counts &lt;- figure_counts |&gt;
 write_csv_out(figure_status_counts, &quot;figure4_main_chromosome_status_counts.csv&quot;)
 write_csv_out(figure_tests, &quot;figure4_exploratory_chisquare_tests.csv&quot;)
 
+all_scaffold_counts &lt;- target_analysis |&gt;
+  dplyr::filter(.data$show_in_figure) |&gt;
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order, .data$status,
+    name = &quot;n_genes&quot;
+  ) |&gt;
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order
+  ) |&gt;
+  dplyr::mutate(percentage = 100 * .data$n_genes / sum(.data$n_genes)) |&gt;
+  dplyr::ungroup()
+
+all_scaffold_category_n &lt;- target_gene_summary |&gt;
+  dplyr::count(.data$source_sheet, .data$umbrella, name = &quot;n_targets&quot;)
+
+all_scaffold_tests &lt;- calculate_figure_tests(all_scaffold_counts)
+all_scaffold_status_counts &lt;- all_scaffold_counts |&gt;
+  dplyr::left_join(
+    all_scaffold_category_n,
+    by = c(&quot;source_sheet&quot;, &quot;umbrella&quot;)
+  ) |&gt;
+  dplyr::left_join(
+    all_scaffold_tests,
+    by = c(&quot;source_sheet&quot;, &quot;umbrella&quot;, &quot;figure_scope&quot;)
+  )
+
+write_csv_out(
+  all_scaffold_status_counts,
+  &quot;figure4_all_scaffolds_status_counts.csv&quot;
+)
+write_csv_out(
+  all_scaffold_tests,
+  &quot;figure4_all_scaffolds_exploratory_chisquare_tests.csv&quot;
+)
+
 unplaced_counts &lt;- target_analysis |&gt;
   dplyr::filter(
     .data$sequence_class == &quot;Unplaced scaffold&quot;,
@@ -2683,58 +2749,53 @@ figure4_main_chromosome &lt;- (
   )
 
 figure4_main_chromosome</code></pre>
-<p><img src="figure/30-curated-target-gene-figure.Rmd/build-revised-figure4-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-build-revised-figure4-1">
-Past versions of build-revised-figure4-1.png
-</button>
-</p>
-<div id="fig-build-revised-figure4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/30-curated-target-gene-figure.Rmd/build-revised-figure4-1.png" target="_blank">9779d0d</a>
-</td>
-<td>
-Maeva TECHER
-</td>
-<td>
-2026-08-06
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/30-curated-target-gene-figure.Rmd/build-revised-figure4-1.png" target="_blank">5ebe940</a>
-</td>
-<td>
-Maeva TECHER
-</td>
-<td>
-2026-08-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <pre class="r"><code>save_figure(
   figure4_main_chromosome,
   &quot;figure4_curated_targets_main_chromosomes&quot;,
+  15,
+  11.5
+)
+
+all_a &lt;- build_figure4_panel(
+  all_scaffold_status_counts, &quot;Immune&quot;, &quot;Within-diet infection response&quot;, &quot;A&quot;,
+  TRUE, FALSE
+)
+all_b &lt;- build_figure4_panel(
+  all_scaffold_status_counts, &quot;Immune&quot;, &quot;Diet comparison among infected&quot;, &quot;B&quot;,
+  FALSE
+)
+all_c &lt;- build_figure4_panel(
+  all_scaffold_status_counts, &quot;Protein-Anabolism&quot;,
+  &quot;Within-diet infection response&quot;, &quot;C&quot;, TRUE
+)
+all_d &lt;- build_figure4_panel(
+  all_scaffold_status_counts, &quot;Protein-Anabolism&quot;,
+  &quot;Diet comparison among infected&quot;, &quot;D&quot;, FALSE
+)
+
+figure4_all_scaffolds &lt;- (
+  (all_a | all_b) /
+  (all_c | all_d) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+  patchwork::plot_annotation(
+    title = &quot;Curated immune and protein-anabolism targets across all scaffolds&quot;,
+    subtitle = paste0(
+      &quot;Competitive-host DESeq2; &quot;, total_targets,
+      &quot; original curated targets; padj &lt; &quot;, alpha,
+      &quot; and |log2FC| &gt;= &quot;, lfc_threshold
+    ),
+    theme = theme(
+      plot.title = element_text(face = &quot;bold&quot;, size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+save_figure(
+  figure4_all_scaffolds,
+  &quot;figure4_curated_targets_all_scaffolds&quot;,
   15,
   11.5
 )
@@ -2776,58 +2837,32 @@ figure4_unplaced_scaffolds &lt;- (
     )
   )
 
-figure4_unplaced_scaffolds</code></pre>
-<p><img src="figure/30-curated-target-gene-figure.Rmd/build-revised-figure4-2.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-build-revised-figure4-2">
-Past versions of build-revised-figure4-2.png
-</button>
-</p>
-<div id="fig-build-revised-figure4-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/30-curated-target-gene-figure.Rmd/build-revised-figure4-2.png" target="_blank">9779d0d</a>
-</td>
-<td>
-Maeva TECHER
-</td>
-<td>
-2026-08-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>save_figure(
+save_figure(
   figure4_unplaced_scaffolds,
   &quot;figure4_curated_targets_unplaced_scaffolds&quot;,
   15,
   11.5
 )</code></pre>
+<div id="figure-4-views" class="section level3 tabset">
+<h3 class="tabset">Figure 4 views</h3>
+<div id="main-chromosomes" class="section level4">
+<h4>Main chromosomes</h4>
+<p><img src="figure/30-curated-target-gene-figure.Rmd/display-figure4-main-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+<div id="all-scaffolds" class="section level4">
+<h4>All scaffolds</h4>
+<p><img src="figure/30-curated-target-gene-figure.Rmd/display-figure4-all-scaffolds-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
 <p>The first composite is the conservative host-chromosome view used for
-the main paper interpretation. The second uses the same target
-categories, contrasts, thresholds, colors, and panel geometry for the
-unplaced-scaffold genes. The left panels summarize infection responses
-within each diet; the right panels compare infected locusts across
-diets. The exploratory chi-square labels summarize category composition
-and do not replace the gene-level DESeq2 tests.</p>
+the main paper interpretation. The second restores all 163 genes from
+the original curated workbook, including the 64 targets on unplaced
+scaffolds, so its target denominators are directly comparable with the
+earlier figure. Both use the same current DESeq2 model, contrasts,
+thresholds, colors, and panel geometry. The left panels summarize
+infection responses within each diet; the right panels compare infected
+locusts across diets. The exploratory chi-square labels summarize
+category composition and do not replace the gene-level DESeq2 tests.</p>
+</div>
+</div>
 </div>
 <div id="comparison-with-the-earlier-workbook" class="section level2">
 <h2>Comparison with the earlier workbook</h2>
@@ -3048,15 +3083,16 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="even">
 <td align="left">Output directory</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260806-012829</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260806-015510</td>
 </tr>
 </tbody>
 </table>
 <p>Each knit creates a new timestamped output folder. Matched composites
 are exported as <code>figure4_curated_targets_main_chromosomes</code>
-and <code>figure4_curated_targets_unplaced_scaffolds</code> in PNG, SVG,
-and PDF formats. The placement-impact figure and all gene-level audit
-tables are exported beside them.</p>
+and <code>figure4_curated_targets_all_scaffolds</code> in PNG, SVG, and
+PDF formats. The unplaced-only composite, placement-impact figure, and
+all gene-level audit tables are exported beside them for sensitivity
+review.</p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>

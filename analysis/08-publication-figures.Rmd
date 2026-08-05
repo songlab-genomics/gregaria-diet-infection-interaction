@@ -508,16 +508,16 @@ figure4_placement_source <- file.path(
   curated_target_dir,
   "curated_target_placement_impact.png"
 )
-figure4_unplaced_source <- file.path(
+figure4_all_scaffolds_source <- file.path(
   curated_target_dir,
-  "figure4_curated_targets_unplaced_scaffolds.png"
+  "figure4_curated_targets_all_scaffolds.png"
 )
 
 base_inputs <- c(
   metadata_file, counts_file, placement_file, rrna_file, gff_file, eggnog_file,
   primary_results_file, head_phase_file, thorax_phase_file,
   figure3_composite_source, figure3_lollipop_source, figure3_insect_source,
-  figure3_reference_source, figure4_curated_source, figure4_unplaced_source,
+  figure3_reference_source, figure4_curated_source, figure4_all_scaffolds_source,
   figure4_placement_source
 )
 if (!all(file.exists(base_inputs))) {
@@ -937,8 +937,9 @@ contrast. Panel B compares infection-response DEGs called independently in
 diets 33, 50, and 83, making shared and diet-specific responses directly
 visible. Venn membership ignores direction. Panel C compares the
 infection-within-diet DEG union with independent phase DEGs detected between
-solitarious and gregarious locusts in head and thorax. The broader four-context
-Venn is retained as a standalone alternative export.
+solitarious and gregarious locusts in head and thorax. Every set in these panels
+is restricted to genes on the official nuclear chromosomes. The broader
+four-context Venn is retained as a standalone alternative export.
 
 ### A. Directional DEG burden
 
@@ -1804,8 +1805,9 @@ Figure 4 preserves the curated biological categories and recalculates every
 DEG status from the current competitive-host analysis.
 The 99 retained target genes stay in the denominator for every contrast; a gene
 is shown as `N.S.` when it does not meet the current adjusted-P-value and fold-
-change thresholds. The 64 curated targets on unplaced scaffolds are excluded
-from the primary percentages and remain searchable on the
+change thresholds. A matched all-scaffold view restores all 163 original
+curated targets, including the 64 targets on unplaced scaffolds, for direct
+comparison with the earlier figure. Placement details remain searchable on the
 [curated target-gene analysis page](30-curated-target-gene-figure.html).
 
 ```{r figure-4-curated-targets, echo=FALSE, fig.width=15, fig.height=11.5}
@@ -1817,26 +1819,26 @@ figure4_placement_png <- copy_publication_asset(
   figure4_placement_source,
   "figure4_curated_target_placement_impact"
 )
-figure4_unplaced_png <- copy_publication_asset(
-  figure4_unplaced_source,
-  "figure4_curated_targets_unplaced_scaffolds"
+figure4_all_scaffolds_png <- copy_publication_asset(
+  figure4_all_scaffolds_source,
+  "figure4_curated_targets_all_scaffolds"
 )
 
 figure4_exports <- data.frame(
   figure = c(
     "Figure 4 main-chromosome curated targets",
-    "Figure 4 unplaced-scaffold curated targets",
+    "Figure 4 all-scaffold curated targets",
     "Figure 4 placement-impact audit"
   ),
   source = basename(c(
-    figure4_curated_source, figure4_unplaced_source,
+    figure4_curated_source, figure4_all_scaffolds_source,
     figure4_placement_source
   )),
   copied_to = basename(c(
-    figure4_png, figure4_unplaced_png, figure4_placement_png
+    figure4_png, figure4_all_scaffolds_png, figure4_placement_png
   )),
   present = file.exists(c(
-    figure4_png, figure4_unplaced_png, figure4_placement_png
+    figure4_png, figure4_all_scaffolds_png, figure4_placement_png
   ))
 )
 knitr::kable(figure4_exports, caption = "Figure 4 copied exports")
@@ -1844,7 +1846,7 @@ knitr::kable(figure4_exports, caption = "Figure 4 copied exports")
 
 ### Figure 4 views {.tabset}
 
-#### Revised composite
+#### Main chromosomes
 
 ```{r figure-4-main-display, echo=FALSE, fig.width=15, fig.height=11.5}
 if (file.exists(figure4_png)) {
@@ -1853,12 +1855,12 @@ if (file.exists(figure4_png)) {
 }
 ```
 
-#### Unplaced-scaffold comparison
+#### All scaffolds
 
-```{r figure-4-unplaced-display, echo=FALSE, fig.width=15, fig.height=11.5}
-if (file.exists(figure4_unplaced_png)) {
+```{r figure-4-all-scaffolds-display, echo=FALSE, fig.width=15, fig.height=11.5}
+if (file.exists(figure4_all_scaffolds_png)) {
   grid::grid.newpage()
-  grid::grid.raster(png::readPNG(figure4_unplaced_png))
+  grid::grid.raster(png::readPNG(figure4_all_scaffolds_png))
 }
 ```
 

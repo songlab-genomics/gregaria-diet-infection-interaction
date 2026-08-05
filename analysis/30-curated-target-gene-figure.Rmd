@@ -20,10 +20,10 @@ params:
 ## Purpose
 
 This page follows a fixed set of immune and protein-anabolism genes through two
-matched views: genes on the main *Schistocerca gregaria* chromosomes and genes
-on unplaced scaffolds. The biological categories come from the supplied
-workbook, while every differential-expression status is recalculated from the
-current competitive-host DESeq2 results.
+matched views: genes on the main *Schistocerca gregaria* chromosomes and the
+complete all-scaffold set used in the original curated figure. The biological
+categories come from the supplied workbook, while every differential-expression
+status is recalculated from the current competitive-host DESeq2 results.
 
 ::: {.walkthrough-grid}
 ::: {.walkthrough-step}
@@ -39,7 +39,7 @@ Apply the same DEG thresholds to every target and contrast.
 ::: {.walkthrough-step}
 **Step 3 - Compare scopes**
 
-Read the matched chromosome and unplaced-scaffold panels side by side.
+Read the main-chromosome and complete all-scaffold panels side by side.
 :::
 :::
 
@@ -693,7 +693,7 @@ save_figure(placement_impact_plot, "curated_target_placement_impact", 12, 7.5)
 
 ## Curated target figures {#Curated_target_figures}
 
-```{r build-revised-figure4, fig.width=15, fig.height=11.5}
+```{r build-revised-figure4, fig.width=15, fig.height=11.5, results='hide', fig.show='hide'}
 figure_contrasts <- contrast_map |>
   dplyr::filter(.data$show_in_figure)
 
@@ -788,6 +788,43 @@ figure_status_counts <- figure_counts |>
 
 write_csv_out(figure_status_counts, "figure4_main_chromosome_status_counts.csv")
 write_csv_out(figure_tests, "figure4_exploratory_chisquare_tests.csv")
+
+all_scaffold_counts <- target_analysis |>
+  dplyr::filter(.data$show_in_figure) |>
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order, .data$status,
+    name = "n_genes"
+  ) |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order
+  ) |>
+  dplyr::mutate(percentage = 100 * .data$n_genes / sum(.data$n_genes)) |>
+  dplyr::ungroup()
+
+all_scaffold_category_n <- target_gene_summary |>
+  dplyr::count(.data$source_sheet, .data$umbrella, name = "n_targets")
+
+all_scaffold_tests <- calculate_figure_tests(all_scaffold_counts)
+all_scaffold_status_counts <- all_scaffold_counts |>
+  dplyr::left_join(
+    all_scaffold_category_n,
+    by = c("source_sheet", "umbrella")
+  ) |>
+  dplyr::left_join(
+    all_scaffold_tests,
+    by = c("source_sheet", "umbrella", "figure_scope")
+  )
+
+write_csv_out(
+  all_scaffold_status_counts,
+  "figure4_all_scaffolds_status_counts.csv"
+)
+write_csv_out(
+  all_scaffold_tests,
+  "figure4_all_scaffolds_exploratory_chisquare_tests.csv"
+)
 
 unplaced_counts <- target_analysis |>
   dplyr::filter(
@@ -1043,6 +1080,50 @@ save_figure(
   11.5
 )
 
+all_a <- build_figure4_panel(
+  all_scaffold_status_counts, "Immune", "Within-diet infection response", "A",
+  TRUE, FALSE
+)
+all_b <- build_figure4_panel(
+  all_scaffold_status_counts, "Immune", "Diet comparison among infected", "B",
+  FALSE
+)
+all_c <- build_figure4_panel(
+  all_scaffold_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE
+)
+all_d <- build_figure4_panel(
+  all_scaffold_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE
+)
+
+figure4_all_scaffolds <- (
+  (all_a | all_b) /
+  (all_c | all_d) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+  patchwork::plot_annotation(
+    title = "Curated immune and protein-anabolism targets across all scaffolds",
+    subtitle = paste0(
+      "Competitive-host DESeq2; ", total_targets,
+      " original curated targets; padj < ", alpha,
+      " and |log2FC| >= ", lfc_threshold
+    ),
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+save_figure(
+  figure4_all_scaffolds,
+  "figure4_curated_targets_all_scaffolds",
+  15,
+  11.5
+)
+
 u_a <- build_figure4_panel(
   unplaced_status_counts, "Immune", "Within-diet infection response", "A",
   TRUE, FALSE
@@ -1080,7 +1161,6 @@ figure4_unplaced_scaffolds <- (
     )
   )
 
-figure4_unplaced_scaffolds
 save_figure(
   figure4_unplaced_scaffolds,
   "figure4_curated_targets_unplaced_scaffolds",
@@ -1089,9 +1169,25 @@ save_figure(
 )
 ```
 
+### Figure 4 views {.tabset}
+
+#### Main chromosomes
+
+```{r display-figure4-main, echo=FALSE, fig.width=15, fig.height=11.5}
+figure4_main_chromosome
+```
+
+#### All scaffolds
+
+```{r display-figure4-all-scaffolds, echo=FALSE, fig.width=15, fig.height=11.5}
+figure4_all_scaffolds
+```
+
 The first composite is the conservative host-chromosome view used for the main
-paper interpretation. The second uses the same target categories, contrasts,
-thresholds, colors, and panel geometry for the unplaced-scaffold genes. The
+paper interpretation. The second restores all 163 genes from the original
+curated workbook, including the 64 targets on unplaced scaffolds, so its target
+denominators are directly comparable with the earlier figure. Both use the same
+current DESeq2 model, contrasts, thresholds, colors, and panel geometry. The
 left panels summarize infection responses within each diet; the right panels
 compare infected locusts across diets. The exploratory chi-square labels
 summarize category composition and do not replace the gene-level DESeq2 tests.
@@ -1251,9 +1347,9 @@ knitr::kable(manifest, col.names = c("Item", "Path"), align = c("l", "l"))
 
 Each knit creates a new timestamped output folder. Matched composites are
 exported as `figure4_curated_targets_main_chromosomes` and
-`figure4_curated_targets_unplaced_scaffolds` in PNG, SVG, and PDF formats. The
-placement-impact figure and all gene-level audit tables are exported beside
-them.
+`figure4_curated_targets_all_scaffolds` in PNG, SVG, and PDF formats. The
+unplaced-only composite, placement-impact figure, and all gene-level audit
+tables are exported beside them for sensitivity review.
 
 ## Session information
 
