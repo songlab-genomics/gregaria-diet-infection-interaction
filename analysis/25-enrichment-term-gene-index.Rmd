@@ -1,5 +1,5 @@
 ---
-title: "GO and KEGG enriched term gene index"
+title: "Main-chromosome GO and KEGG term-gene index"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -24,6 +24,10 @@ or KEGG pathway and lists the DEG IDs that contributed to that enrichment.
 The gene lists come directly from the `geneID` column written by
 `clusterProfiler::enricher()` on the GO/KEGG enrichment page. Those are the
 foreground genes that overlap each enriched term.
+
+Because the source enrichment page now restricts both foregrounds and
+backgrounds to official nuclear-chromosome genes, every gene listed here follows
+the same primary paper inclusion rule.
 
 Gene descriptions are taken from eggNOG when available and otherwise fall back
 to the RefSeq/GFF gene description from the same *S. gregaria* assembly.

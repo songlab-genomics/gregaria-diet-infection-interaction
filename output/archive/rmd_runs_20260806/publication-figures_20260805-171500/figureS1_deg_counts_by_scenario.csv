@@ -1,0 +1,73 @@
+"scenario","comparison_type","comparison_label","direction","n_genes","signed_n_genes"
+"All samples","Diet contrasts among control","Control
+83 vs 50","Downregulated",5,-5
+"All samples","Diet contrasts among control","Control
+83 vs 50","Upregulated",18,18
+"All samples","Diet contrasts among control","Control
+83 vs 33","Downregulated",22,-22
+"All samples","Diet contrasts among control","Control
+83 vs 33","Upregulated",25,25
+"All samples","Diet contrasts among control","Control
+33 vs 50","Downregulated",0,0
+"All samples","Diet contrasts among control","Control
+33 vs 50","Upregulated",2,2
+"All samples","Diet contrasts among infected","Infected
+83 vs 50","Downregulated",4,-4
+"All samples","Diet contrasts among infected","Infected
+83 vs 50","Upregulated",11,11
+"All samples","Diet contrasts among infected","Infected
+83 vs 33","Downregulated",16,-16
+"All samples","Diet contrasts among infected","Infected
+83 vs 33","Upregulated",23,23
+"All samples","Diet contrasts among infected","Infected
+33 vs 50","Downregulated",99,-99
+"All samples","Diet contrasts among infected","Infected
+33 vs 50","Upregulated",5,5
+"All samples","Infection within diet","Diet 83
+infected vs control","Downregulated",269,-269
+"All samples","Infection within diet","Diet 83
+infected vs control","Upregulated",499,499
+"All samples","Infection within diet","Diet 50
+infected vs control","Downregulated",374,-374
+"All samples","Infection within diet","Diet 50
+infected vs control","Upregulated",742,742
+"All samples","Infection within diet","Diet 33
+infected vs control","Downregulated",396,-396
+"All samples","Infection within diet","Diet 33
+infected vs control","Upregulated",461,461
+"Current outliers removed","Diet contrasts among control","Control
+83 vs 50","Downregulated",2,-2
+"Current outliers removed","Diet contrasts among control","Control
+83 vs 50","Upregulated",11,11
+"Current outliers removed","Diet contrasts among control","Control
+83 vs 33","Downregulated",20,-20
+"Current outliers removed","Diet contrasts among control","Control
+83 vs 33","Upregulated",22,22
+"Current outliers removed","Diet contrasts among control","Control
+33 vs 50","Downregulated",0,0
+"Current outliers removed","Diet contrasts among control","Control
+33 vs 50","Upregulated",3,3
+"Current outliers removed","Diet contrasts among infected","Infected
+83 vs 50","Downregulated",5,-5
+"Current outliers removed","Diet contrasts among infected","Infected
+83 vs 50","Upregulated",10,10
+"Current outliers removed","Diet contrasts among infected","Infected
+83 vs 33","Downregulated",20,-20
+"Current outliers removed","Diet contrasts among infected","Infected
+83 vs 33","Upregulated",30,30
+"Current outliers removed","Diet contrasts among infected","Infected
+33 vs 50","Downregulated",130,-130
+"Current outliers removed","Diet contrasts among infected","Infected
+33 vs 50","Upregulated",5,5
+"Current outliers removed","Infection within diet","Diet 83
+infected vs control","Downregulated",256,-256
+"Current outliers removed","Infection within diet","Diet 83
+infected vs control","Upregulated",487,487
+"Current outliers removed","Infection within diet","Diet 50
+infected vs control","Downregulated",194,-194
+"Current outliers removed","Infection within diet","Diet 50
+infected vs control","Upregulated",619,619
+"Current outliers removed","Infection within diet","Diet 33
+infected vs control","Downregulated",295,-295
+"Current outliers removed","Infection within diet","Diet 33
+infected vs control","Upregulated",391,391

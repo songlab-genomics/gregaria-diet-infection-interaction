@@ -1,5 +1,5 @@
 ---
-title: "GO term and KEGG enrichment"
+title: "Main-chromosome GO term and KEGG enrichment"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -8,7 +8,6 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -20,14 +19,38 @@ params:
 
 ## Purpose
 
-This page keeps the eggNOG-based functional enrichment with the differential
-expression results. It uses the latest DESeq2 result tables on disk, lifts
+<style>
+.main-container table.table:not(.dataTable) {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed;
+  overflow-x: auto;
+}
+.main-container table.table:not(.dataTable) th,
+.main-container table.table:not(.dataTable) td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.main-container .dataTables_wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+</style>
+
+This page keeps the eggNOG-based functional enrichment with the conservative
+main-nuclear-chromosome differential-expression results. It uses the newest
+completed placed/unplaced analysis table on disk, retains only genes whose
+official assembly-derived class is `Nuclear chromosome`, and lifts
 eggNOG protein annotations onto the `LOC...` gene IDs in the count matrix, and
 tests infection DEG sets for enriched GO terms and KEGG pathways.
 
 The key point is that this is a custom enrichment workflow for this reference:
-the foregrounds are current DEG sets, the background is the annotated gene
-universe in this count matrix, and GO names/ontologies come from `GO.db`.
+the foregrounds are current main-chromosome DEG sets, the background is the
+expression-filtered main-chromosome gene universe tested by DESeq2, and GO
+names/ontologies come from `GO.db`. Unplaced-scaffold and mitochondrial genes
+are intentionally excluded from both foreground and background here and remain
+available on the placement-sensitivity page.
 
 The first enrichment section keeps the infection response non-directional,
 which asks what functions are over-represented among infection DEGs regardless
@@ -63,10 +86,31 @@ out_dir <- file.path(project_dir, "output", "rmd_runs",
                      paste(params$output_tag, run_stamp, sep = "_"))
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
-counts_file <- file.path(project_dir, params$counts_file)
 eggnog_file <- file.path(project_dir, params$eggnog_file)
 gff_file <- file.path(project_dir, params$gff_file)
 results_root <- file.path(project_dir, params$latest_results_root)
+
+placed_result_files <- list.files(
+  results_root,
+  pattern = "^placed_unplaced_all_deseq2_results[.]csv$",
+  recursive = TRUE,
+  full.names = TRUE
+)
+if (length(placed_result_files) == 0) {
+  stop("Build analysis/28-placed-unplaced-scaffold-analysis.Rmd before this page.")
+}
+primary_results_file <- placed_result_files[
+  which.max(file.info(placed_result_files)$mtime)
+]
+placed_results <- read.csv(primary_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    mapping_branch == "Competitive host",
+    analysis_scope == "Placed/host-assigned",
+    sequence_class == "Nuclear chromosome"
+  )
+if (nrow(placed_results) == 0) {
+  stop("The newest result file has no competitive main-chromosome rows.")
+}
 
 diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
 ontology_colors <- c(
@@ -105,10 +149,10 @@ direction_colors <- c(
 
 ## Build eggNOG annotation maps
 
-eggNOG reports annotations at the protein-query level, while the count matrix
+eggNOG reports annotations at the protein-query level, while DESeq2 reports
 uses `LOC...` gene IDs. The GFF provides the bridge from CDS protein IDs to gene
-IDs. Only genes present in the count matrix are kept in the enrichment
-background.
+IDs. Only expression-filtered genes tested in the competitive main-chromosome
+analysis are kept in the enrichment background.
 
 ```{r annotation-maps}
 read_emapper <- function(path) {
@@ -143,8 +187,7 @@ parse_cds_gene_bridge <- function(path) {
 
 eggnog <- read_emapper(eggnog_file)
 protein_to_gene <- parse_cds_gene_bridge(gff_file)
-counts_raw <- read.csv(counts_file, check.names = FALSE)
-gene_universe <- unique(counts_raw[[1]])
+gene_universe <- unique(as.character(placed_results$gene_id))
 
 annotation <- eggnog |>
   dplyr::left_join(protein_to_gene, by = "protein_id") |>
@@ -152,7 +195,7 @@ annotation <- eggnog |>
   dplyr::distinct(gene_id, .keep_all = TRUE)
 
 annotation_summary <- data.frame(
-  genes_in_count_matrix = length(gene_universe),
+  placed_host_genes_tested_by_deseq2 = length(gene_universe),
   annotated_genes_lifted_to_LOC = dplyr::n_distinct(annotation$gene_id),
   genes_with_GO = sum(annotation$GOs != "-" & annotation$GOs != ""),
   genes_with_KEGG_KO = sum(annotation$KEGG_ko != "-" & annotation$KEGG_ko != ""),
@@ -544,58 +587,29 @@ print(scope_theme_plot)
 
 ## Collect current infection DEG sets
 
-The enrichment foregrounds are built from infected-versus-control DEGs without
+The enrichment foregrounds are built from main-chromosome infected-versus-control
+DEGs without
 splitting genes by direction. This keeps the infection-response question simple:
 which functional categories are over-represented among infection-responsive
-genes in general and within each diet. The newest file for each within-diet
-infection result table is used so older workflowR runs do not duplicate a
-contrast.
+genes in general and within each diet. All sets come from the same newest
+competitive main-chromosome DESeq2 result file.
 
 ```{r deg-sets}
-latest_result_files <- function(pattern) {
-  files <- list.files(results_root, pattern = pattern, recursive = TRUE,
-                      full.names = TRUE)
-  if (length(files) == 0) {
-    return(data.frame(file = character(), short_name = character(),
-                      modified = as.POSIXct(character())))
-  }
-  info <- data.frame(
-    file = files,
-    short_name = basename(files),
-    modified = file.info(files)$mtime,
-    stringsAsFactors = FALSE
-  )
-  info <- info[order(info$short_name, -as.numeric(info$modified)), ]
-  info[!duplicated(info$short_name), ]
-}
-
-infection_file_info <- latest_result_files(
-  "^DESeq2_infected_vs_control_diet_[0-9]+[.]csv$"
+infection_contrasts <- c(
+  "Diet 33" = "infection_diet33",
+  "Diet 50" = "infection_diet50",
+  "Diet 83" = "infection_diet83"
 )
-infection_result_files <- infection_file_info$file
 
-read_infection_deg_set <- function(path) {
-  tab <- read.csv(path, check.names = FALSE)
-  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
-  if (is.na(gene_col) || !"padj" %in% names(tab) ||
-      !"log2FoldChange" %in% names(tab)) return(NULL)
-  sig <- !is.na(tab$padj) &
-    tab$padj < params$alpha &
-    abs(tab$log2FoldChange) >= params$lfc_threshold
-  unique(as.character(tab[[gene_col]][sig]))
-}
-
-infection_sets_by_diet <- lapply(infection_result_files, read_infection_deg_set)
-names(infection_sets_by_diet) <- sub(
-  "^DESeq2_infected_vs_control_diet_([0-9]+)[.]csv$",
-  "Diet \\1",
-  basename(infection_result_files)
-)
-infection_sets_by_diet <- infection_sets_by_diet[lengths(infection_sets_by_diet) > 0]
-infection_sets_by_diet <- infection_sets_by_diet[order(names(infection_sets_by_diet))]
+infection_sets_by_diet <- lapply(infection_contrasts, function(contrast_name) {
+  placed_results |>
+    dplyr::filter(.data$contrast_id == contrast_name, .data$significant) |>
+    dplyr::pull(.data$gene_id) |>
+    unique()
+})
 
 if (length(infection_sets_by_diet) == 0) {
-  stop("No within-diet infection DEG result files were found. Build page 06 first.")
+  stop("No main-chromosome within-diet infection DEG sets were found.")
 }
 
 all_infection_genes <- sort(unique(unlist(infection_sets_by_diet, use.names = FALSE)))
@@ -620,35 +634,19 @@ deg_set_summary <- deg_set_summary[order(factor(
 
 source_table <- data.frame(
   DEG_set = names(infection_sets_by_diet),
-  result_file = infection_result_files,
-  modified = file.info(infection_result_files)$mtime,
+  contrast_id = unname(infection_contrasts),
+  result_file = primary_results_file,
+  modified = file.info(primary_results_file)$mtime,
   stringsAsFactors = FALSE
 )
 
-read_infection_deg_table <- function(path) {
-  tab <- read.csv(path, check.names = FALSE)
-  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
-  if (is.na(gene_col) || !"padj" %in% names(tab) ||
-      !"log2FoldChange" %in% names(tab)) return(NULL)
-  diet <- sub("^DESeq2_infected_vs_control_diet_([0-9]+)[.]csv$",
-              "\\1", basename(path))
-  tab |>
-    dplyr::transmute(
-      gene_id = as.character(.data[[gene_col]]),
-      diet = diet,
-      DEG_set = paste("Diet", diet),
-      log2FoldChange = log2FoldChange,
-      padj = padj,
-      significant = !is.na(padj) &
-        padj < params$alpha &
-        abs(log2FoldChange) >= params$lfc_threshold
-    )
-}
-
-infection_deg_long <- dplyr::bind_rows(
-  lapply(infection_result_files, read_infection_deg_table)
-) |>
-  dplyr::filter(significant)
+infection_deg_long <- placed_results |>
+  dplyr::filter(.data$contrast_id %in% unname(infection_contrasts), .data$significant) |>
+  dplyr::mutate(
+    diet = stringr::str_remove(.data$contrast_id, "infection_diet"),
+    DEG_set = paste("Diet", .data$diet)
+  ) |>
+  dplyr::select("gene_id", "diet", "DEG_set", "log2FoldChange", "padj", "significant")
 
 DT::datatable(deg_set_summary, options = list(pageLength = 15))
 write.csv(deg_set_summary, file.path(out_dir, "go_enrichment_deg_set_summary.csv"),
@@ -669,45 +667,12 @@ contrasts, red means higher in the first diet named in the column and blue means
 higher in the second diet. For example, in a `33 vs 83` column, blue points are
 the genes higher in diet 83.
 
-The diet-only contrasts use the newest control-only and infected-only DESeq2
-tables generated on the DEG overlap page. They are kept separate from the
+The diet-only contrasts use the same competitive main-chromosome DESeq2 catalogue
+as the within-diet infection contrasts. They are kept separate from the
 non-directional infection overview above because they answer a different
 question: whether functional categories are enriched in one side of a contrast.
 
 ```{r directional-deg-sets}
-latest_files_by_name <- function(pattern) {
-  files <- list.files(results_root, pattern = pattern, recursive = TRUE,
-                      full.names = TRUE)
-  if (length(files) == 0) {
-    return(data.frame(file = character(), short_name = character(),
-                      modified = as.POSIXct(character())))
-  }
-  info <- data.frame(
-    file = files,
-    short_name = basename(files),
-    modified = file.info(files)$mtime,
-    stringsAsFactors = FALSE
-  )
-  info <- info[order(info$short_name, -as.numeric(info$modified)), ]
-  info[!duplicated(info$short_name), ]
-}
-
-read_deg_result_table <- function(path) {
-  tab <- read.csv(path, check.names = FALSE)
-  gene_col <- intersect(c("gene_id", "gene", "GeneID"), names(tab))[1]
-  if (is.na(gene_col) || !"padj" %in% names(tab) ||
-      !"log2FoldChange" %in% names(tab)) {
-    return(NULL)
-  }
-  tab |>
-    dplyr::mutate(
-      gene_id_for_set = as.character(.data[[gene_col]]),
-      significant_for_set = !is.na(padj) &
-        padj < params$alpha &
-        abs(log2FoldChange) >= params$lfc_threshold
-    )
-}
-
 make_directional_record <- function(set_id, family, comparison, direction,
                                     plot_label, genes, source_file) {
   data.frame(
@@ -725,17 +690,12 @@ make_directional_record <- function(set_id, family, comparison, direction,
 directional_sets <- list()
 directional_records <- list()
 
-add_directional_sets <- function(tab, source_file, set_prefix, family,
-                                 comparison, up_label, down_label,
-                                 up_plot_label, down_plot_label) {
-  if (is.null(tab)) return(NULL)
-
-  up_genes <- unique(tab$gene_id_for_set[
-    tab$significant_for_set & tab$log2FoldChange > 0
-  ])
-  down_genes <- unique(tab$gene_id_for_set[
-    tab$significant_for_set & tab$log2FoldChange < 0
-  ])
+add_directional_sets <- function(contrast_key, set_prefix, family,
+                                 comparison, plot_label) {
+  tab <- placed_results |>
+    dplyr::filter(.data$contrast_id == .env$contrast_key, .data$significant)
+  up_genes <- unique(tab$gene_id[tab$log2FoldChange > 0])
+  down_genes <- unique(tab$gene_id[tab$log2FoldChange < 0])
 
   list(
     sets = list(
@@ -746,65 +706,36 @@ add_directional_sets <- function(tab, source_file, set_prefix, family,
     records = list(
       make_directional_record(
         paste0(set_prefix, "_up"), family, comparison, "Upregulated",
-        up_plot_label, up_genes, source_file
+        plot_label, up_genes, primary_results_file
       ),
       make_directional_record(
         paste0(set_prefix, "_down"), family, comparison, "Downregulated",
-        down_plot_label, down_genes, source_file
+        plot_label, down_genes, primary_results_file
       )
     )
   )
 }
 
-infection_directional_files <- latest_files_by_name(
-  "^DESeq2_infected_vs_control_diet_[0-9]+[.]csv$"
+directional_contrasts <- tibble::tribble(
+  ~contrast_id, ~set_prefix, ~family, ~comparison, ~plot_label,
+  "infection_diet33", "infection_diet33", "Infected within diet", "Diet 33 infected vs control", "Diet 33",
+  "infection_diet50", "infection_diet50", "Infected within diet", "Diet 50 infected vs control", "Diet 50",
+  "infection_diet83", "infection_diet83", "Infected within diet", "Diet 83 infected vs control", "Diet 83",
+  "control_diet33_vs50", "control_diet33_vs_50", "Control animals only", "Control diet 33 vs 50", "33 vs 50",
+  "control_diet83_vs50", "control_diet83_vs_50", "Control animals only", "Control diet 83 vs 50", "83 vs 50",
+  "control_diet83_vs33", "control_diet83_vs_33", "Control animals only", "Control diet 83 vs 33", "83 vs 33",
+  "infected_diet33_vs50", "infected_diet33_vs_50", "Infected animals only", "Infected diet 33 vs 50", "33 vs 50",
+  "infected_diet83_vs50", "infected_diet83_vs_50", "Infected animals only", "Infected diet 83 vs 50", "83 vs 50",
+  "infected_diet83_vs33", "infected_diet83_vs_33", "Infected animals only", "Infected diet 83 vs 33", "83 vs 33"
 )
-for (i in seq_len(nrow(infection_directional_files))) {
-  path <- infection_directional_files$file[i]
-  diet <- stringr::str_match(
-    basename(path), "^DESeq2_infected_vs_control_diet_([0-9]+)[.]csv$"
-  )[, 2]
-  added <- add_directional_sets(
-    read_deg_result_table(path),
-    source_file = path,
-    set_prefix = paste0("infection_diet", diet),
-    family = "Infected within diet",
-    comparison = paste("Diet", diet, "infected vs control"),
-    up_label = paste("Diet", diet, "higher in infected"),
-    down_label = paste("Diet", diet, "higher in control"),
-    up_plot_label = paste0("Diet ", diet),
-    down_plot_label = paste0("Diet ", diet)
-  )
-  directional_sets <- c(directional_sets, added$sets)
-  directional_records <- c(directional_records, added$records)
-}
 
-condition_diet_files <- latest_files_by_name(
-  "^DESeq2_(Control|Infected)_diet_[0-9]+_vs_[0-9]+[.]csv$"
-)
-for (i in seq_len(nrow(condition_diet_files))) {
-  path <- condition_diet_files$file[i]
-  parsed <- stringr::str_match(
-    basename(path),
-    "^DESeq2_(Control|Infected)_diet_([0-9]+)_vs_([0-9]+)[.]csv$"
-  )
-  treatment <- parsed[, 2]
-  diet_a <- parsed[, 3]
-  diet_b <- parsed[, 4]
-  family <- ifelse(treatment == "Control",
-                   "Control animals only",
-                   "Infected animals only")
-  set_prefix <- paste0(tolower(treatment), "_diet", diet_a, "_vs_", diet_b)
+for (i in seq_len(nrow(directional_contrasts))) {
   added <- add_directional_sets(
-    read_deg_result_table(path),
-    source_file = path,
-    set_prefix = set_prefix,
-    family = family,
-    comparison = paste(treatment, "diet", diet_a, "vs", diet_b),
-    up_label = paste(treatment, "diet", diet_a, "higher than", diet_b),
-    down_label = paste(treatment, "diet", diet_b, "higher than", diet_a),
-    up_plot_label = paste0(diet_a, " vs ", diet_b),
-    down_plot_label = paste0(diet_a, " vs ", diet_b)
+    contrast_key = directional_contrasts$contrast_id[[i]],
+    set_prefix = directional_contrasts$set_prefix[[i]],
+    family = directional_contrasts$family[[i]],
+    comparison = directional_contrasts$comparison[[i]],
+    plot_label = directional_contrasts$plot_label[[i]]
   )
   directional_sets <- c(directional_sets, added$sets)
   directional_records <- c(directional_records, added$records)

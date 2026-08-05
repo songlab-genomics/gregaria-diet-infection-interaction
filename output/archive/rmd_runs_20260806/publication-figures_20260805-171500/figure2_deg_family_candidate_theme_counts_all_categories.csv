@@ -1,0 +1,33 @@
+"DEG_family","physiology_theme","n_genes","total_genes","proportion","candidate_genes","candidate_proportion"
+"Infection within diets","Phase-related changes",58,1633,0.035517452541335,1633,0.035517452541335
+"Infection within diets","Antimicrobial peptides",20,1633,0.0122473974280465,1633,0.0122473974280465
+"Infection within diets","Immune-related",58,1633,0.035517452541335,1633,0.035517452541335
+"Infection within diets","Glycogen synthesis / storage",1,1633,0.000612369871402327,1633,0.000612369871402327
+"Infection within diets","Lipid synthesis / metabolism",89,1633,0.0545009185548071,1633,0.0545009185548071
+"Infection within diets","Protein synthesis / storage",14,1633,0.00857317819963258,1633,0.00857317819963258
+"Infection within diets","Detoxification / stress",90,1633,0.0551132884262094,1633,0.0551132884262094
+"Infection within diets","Other / unannotated genes",1303,1633,0.797917942437232,1633,0.797917942437232
+"Diet DEGs in controls","Phase-related changes",6,56,0.107142857142857,56,0.107142857142857
+"Diet DEGs in controls","Antimicrobial peptides",1,56,0.0178571428571429,56,0.0178571428571429
+"Diet DEGs in controls","Immune-related",1,56,0.0178571428571429,56,0.0178571428571429
+"Diet DEGs in controls","Glycogen synthesis / storage",0,56,0,56,0
+"Diet DEGs in controls","Lipid synthesis / metabolism",2,56,0.0357142857142857,56,0.0357142857142857
+"Diet DEGs in controls","Protein synthesis / storage",0,56,0,56,0
+"Diet DEGs in controls","Detoxification / stress",1,56,0.0178571428571429,56,0.0178571428571429
+"Diet DEGs in controls","Other / unannotated genes",45,56,0.803571428571429,56,0.803571428571429
+"Diet DEGs in infected","Phase-related changes",7,147,0.0476190476190476,147,0.0476190476190476
+"Diet DEGs in infected","Antimicrobial peptides",1,147,0.00680272108843537,147,0.00680272108843537
+"Diet DEGs in infected","Immune-related",3,147,0.0204081632653061,147,0.0204081632653061
+"Diet DEGs in infected","Glycogen synthesis / storage",0,147,0,147,0
+"Diet DEGs in infected","Lipid synthesis / metabolism",11,147,0.0748299319727891,147,0.0748299319727891
+"Diet DEGs in infected","Protein synthesis / storage",0,147,0,147,0
+"Diet DEGs in infected","Detoxification / stress",13,147,0.0884353741496599,147,0.0884353741496599
+"Diet DEGs in infected","Other / unannotated genes",112,147,0.761904761904762,147,0.761904761904762
+"Infection vs control","Phase-related changes",71,1422,0.049929676511955,1422,0.049929676511955
+"Infection vs control","Antimicrobial peptides",21,1422,0.0147679324894515,1422,0.0147679324894515
+"Infection vs control","Immune-related",52,1422,0.0365682137834037,1422,0.0365682137834037
+"Infection vs control","Glycogen synthesis / storage",0,1422,0,1422,0
+"Infection vs control","Lipid synthesis / metabolism",73,1422,0.0513361462728551,1422,0.0513361462728551
+"Infection vs control","Protein synthesis / storage",12,1422,0.00843881856540084,1422,0.00843881856540084
+"Infection vs control","Detoxification / stress",77,1422,0.0541490857946554,1422,0.0541490857946554
+"Infection vs control","Other / unannotated genes",1116,1422,0.784810126582278,1422,0.784810126582278

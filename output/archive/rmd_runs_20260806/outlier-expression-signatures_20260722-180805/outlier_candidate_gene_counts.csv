@@ -1,0 +1,9 @@
+"outlier_sample","Diet","Treatment","outlier_direction","n_candidate_genes"
+"1007","50","Control","Higher than peers",2717
+"1007","50","Control","Lower than peers",41
+"1036","33","Control","Higher than peers",943
+"1036","33","Control","Lower than peers",49
+"1037","50","Control","Higher than peers",2922
+"1037","50","Control","Lower than peers",39
+"1039","33","Control","Higher than peers",1955
+"1039","33","Control","Lower than peers",273

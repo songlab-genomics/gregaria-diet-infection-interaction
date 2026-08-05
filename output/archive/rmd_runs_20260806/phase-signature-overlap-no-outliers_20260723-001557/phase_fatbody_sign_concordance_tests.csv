@@ -1,0 +1,47 @@
+"scenario","comparison_type","comparison","phase_tissue","n_overlap","n_same_direction","n_opposite_direction","p_value","p_adj"
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax",180,128,52,1.39620416009491e-08,6.42253913643658e-07
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax",133,97,36,1.19260743777479e-07,2.74299710688201e-06
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax",111,81,30,1.37386778237897e-06,1.57994794973581e-05
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax",111,81,30,1.37386778237897e-06,1.57994794973581e-05
+"All samples","Infection within diet","Diet 83: infected vs control","Thorax",70,53,17,1.91996924003214e-05,0.000126169407202112
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Thorax",70,53,17,1.91996924003214e-05,0.000126169407202112
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Thorax",70,53,17,1.91996924003214e-05,0.000126169407202112
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax",165,106,59,0.000314440996548507,0.00160714287124793
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax",165,106,59,0.000314440996548507,0.00160714287124793
+"All samples","Diet contrasts among control","Control 83 vs 33","Thorax",16,14,2,0.004180908203125,0.019232177734375
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Head",13,11,2,0.0224609375,0.0861002604166667
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Head",13,11,2,0.0224609375,0.0861002604166667
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Thorax",17,13,4,0.049041748046875,0.161137172154018
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Thorax",17,13,4,0.049041748046875,0.161137172154018
+"All samples","Infection within diet","Diet 50: infected vs control","Head",115,68,47,0.0617086082392241,0.189239731933621
+"All samples","Infection within diet","Diet 83: infected vs control","Head",48,30,18,0.111402891061019,0.261363636363636
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head",48,30,18,0.111402891061019,0.261363636363636
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head",48,30,18,0.111402891061019,0.261363636363636
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Head",4,0,4,0.125,0.261363636363636
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Thorax",4,0,4,0.125,0.261363636363636
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Head",4,0,4,0.125,0.261363636363636
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Thorax",4,0,4,0.125,0.261363636363636
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head",95,54,41,0.2180536818705,0.416875
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head",95,54,41,0.2180536818705,0.416875
+"All samples","Diet contrasts among control","Control 83 vs 33","Head",11,8,3,0.2265625,0.416875
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Head",16,6,10,0.454498291015625,0.746675763811384
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Head",16,6,10,0.454498291015625,0.746675763811384
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Head",16,6,10,0.454498291015625,0.746675763811384
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Thorax",11,4,7,0.548828125,0.814390120967742
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Thorax",11,4,7,0.548828125,0.814390120967742
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Thorax",11,4,7,0.548828125,0.814390120967742
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Head",4,3,1,0.625,0.871212121212121
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Head",4,3,1,0.625,0.871212121212121
+"All samples","Diet contrasts among control","Control 83 vs 50","Head",6,4,2,0.6875,0.930147058823529
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Head",71,37,34,0.812588649406166,1
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Head",71,37,34,0.812588649406166,1
+"All samples","Infection within diet","Diet 33: infected vs control","Head",81,42,39,0.824313215105208,1
+"All samples","Diet contrasts among control","Control 83 vs 50","Thorax",5,3,2,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Head",5,3,2,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Thorax",2,1,1,1,1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Thorax",5,2,3,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Head",5,3,2,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Thorax",2,1,1,1,1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Thorax",5,2,3,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Head",5,3,2,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Thorax",2,1,1,1,1

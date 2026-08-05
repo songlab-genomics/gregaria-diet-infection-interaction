@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='1008.00pt' height='518.40pt' viewBox='0 0 1008.00 518.40'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHwxMDA4LjAwfDAuMDB8NTE4LjQw'>
+    <rect x='0.00' y='0.00' width='1008.00' height='518.40' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwxMDA4LjAwfDAuMDB8NTE4LjQw)'>
+<rect x='0.00' y='0.00000000000011' width='1008.00' height='518.40' style='stroke-width: 1.36; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpMTIwLjE5fDEwMDEuMDN8NTAuNTd8MzkxLjU2'>
+    <rect x='120.19' y='50.57' width='880.84' height='340.99' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMTIwLjE5fDEwMDEuMDN8NTAuNTd8MzkxLjU2)'>
+<rect x='120.19' y='50.57' width='880.84' height='340.99' style='stroke-width: 1.36; stroke: none; fill: #FFFFFF;' />
+<rect x='542.77' y='76.15' width='418.22' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2C7A51;' />
+<rect x='160.23' y='76.15' width='369.90' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D9A21B;' />
+<rect x='530.12' y='76.15' width='12.65' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #A3A948;' />
+<rect x='160.23' y='289.26' width='9.03' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D9A21B;' />
+<rect x='169.26' y='289.26' width='0.45' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2C7A51;' />
+<rect x='160.23' y='182.70' width='16.71' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D9A21B;' />
+<rect x='177.39' y='182.70' width='11.29' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2C7A51;' />
+<rect x='176.94' y='182.70' width='0.45' height='76.72' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #A3A948;' />
+<text x='751.88' y='118.58' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='18.98px' lengthAdjust='spacingAndGlyphs'>926</text>
+<text x='345.17' y='118.58' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='18.98px' lengthAdjust='spacingAndGlyphs'>819</text>
+<text x='536.44' y='118.58' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='12.66px' lengthAdjust='spacingAndGlyphs'>28</text>
+<text x='164.74' y='331.69' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='12.66px' lengthAdjust='spacingAndGlyphs'>20</text>
+<text x='168.58' y='225.14' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='12.66px' lengthAdjust='spacingAndGlyphs'>37</text>
+<text x='183.03' y='225.14' text-anchor='middle' style='font-size: 11.38px; font-weight: bold;fill: #FFFFFF; font-family: "Arial";' textLength='12.66px' lengthAdjust='spacingAndGlyphs'>25</text>
+</g>
+<g clip-path='url(#cpMC4wMHwxMDA4LjAwfDAuMDB8NTE4LjQw)'>
+<polyline points='120.19,391.56 120.19,50.57 ' style='stroke-width: 1.36; stroke-linecap: square;' />
+<text x='113.91' y='331.63' text-anchor='end' style='font-size: 11.20px; font-family: "Arial";' textLength='93.25px' lengthAdjust='spacingAndGlyphs'>Infection vs control</text>
+<text x='113.91' y='225.07' text-anchor='end' style='font-size: 11.20px; font-family: "Arial";' textLength='100.72px' lengthAdjust='spacingAndGlyphs'>Infection within diets</text>
+<text x='113.91' y='118.51' text-anchor='end' style='font-size: 11.20px; font-family: "Arial";' textLength='106.94px' lengthAdjust='spacingAndGlyphs'>Diet DEGs in infected</text>
+<polyline points='116.70,327.62 120.19,327.62 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='116.70,221.06 120.19,221.06 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='116.70,114.51 120.19,114.51 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='120.19,391.56 1001.03,391.56 ' style='stroke-width: 1.36; stroke-linecap: square;' />
+<polyline points='160.23,395.04 160.23,391.56 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='386.05,395.04 386.05,391.56 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='611.87,395.04 611.87,391.56 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<polyline points='837.69,395.04 837.69,391.56 ' style='stroke-width: 1.36; stroke-linecap: butt;' />
+<text x='160.23' y='405.85' text-anchor='middle' style='font-size: 11.20px; font-family: "Arial";' textLength='6.22px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='386.05' y='405.85' text-anchor='middle' style='font-size: 11.20px; font-family: "Arial";' textLength='18.66px' lengthAdjust='spacingAndGlyphs'>500</text>
+<text x='611.87' y='405.85' text-anchor='middle' style='font-size: 11.20px; font-family: "Arial";' textLength='24.88px' lengthAdjust='spacingAndGlyphs'>1000</text>
+<text x='837.69' y='405.85' text-anchor='middle' style='font-size: 11.20px; font-family: "Arial";' textLength='24.88px' lengthAdjust='spacingAndGlyphs'>1500</text>
+<text x='560.61' y='421.71' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='261.16px' lengthAdjust='spacingAndGlyphs'>Distinct DEG genes on unplaced scaffolds</text>
+<rect x='334.41' y='438.60' width='452.40' height='55.48' style='stroke-width: 1.36; stroke: none; fill: #FFFFFF;' />
+<text x='341.38' y='471.35' style='font-size: 14.00px; font-weight: bold; font-family: "Arial";' textLength='61.45px' lengthAdjust='spacingAndGlyphs'>Evidence</text>
+<rect x='409.81' y='445.58' width='17.28' height='17.28' style='stroke-width: 1.36; stroke: none; fill: #FFFFFF;' />
+<rect x='410.16' y='445.93' width='16.57' height='16.57' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #2C7A51;' />
+<rect x='588.99' y='445.58' width='17.28' height='17.28' style='stroke-width: 1.36; stroke: none; fill: #FFFFFF;' />
+<rect x='589.34' y='445.93' width='16.57' height='16.57' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #A3A948;' />
+<rect x='409.81' y='469.83' width='17.28' height='17.28' style='stroke-width: 1.36; stroke: none; fill: #FFFFFF;' />
+<rect x='410.16' y='470.18' width='16.57' height='16.57' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D9A21B;' />
+<text x='434.06' y='458.22' style='font-size: 11.20px; font-family: "Arial";' textLength='134.92px' lengthAdjust='spacingAndGlyphs'>RefSeq annotated host-like</text>
+<text x='613.24' y='458.22' style='font-size: 11.20px; font-family: "Arial";' textLength='166.59px' lengthAdjust='spacingAndGlyphs'>Uncharacterized but has domains</text>
+<text x='434.06' y='482.48' style='font-size: 11.20px; font-family: "Arial";' textLength='147.95px' lengthAdjust='spacingAndGlyphs'>Low-information RefSeq gene</text>
+<text x='120.19' y='40.65' style='font-size: 14.00px; font-family: "Arial";' textLength='705.56px' lengthAdjust='spacingAndGlyphs'>Counts are distinct DEG genes per broad DEG context; no microbial/fungal or repeat keyword flags were detected</text>
+<text x='120.19' y='19.86' style='font-size: 18.00px; font-weight: bold; font-family: "Arial";' textLength='436.20px' lengthAdjust='spacingAndGlyphs'>Annotation screen for DEGs on unplaced scaffolds</text>
+<text x='1001.03' y='509.07' text-anchor='end' style='font-size: 11.20px;fill: #4B5563; font-family: "Arial";' textLength='529.66px' lengthAdjust='spacingAndGlyphs'>This is a triage screen based on RefSeq/GFF and existing eggNOG-style annotations, not taxonomic proof.</text>
+</g>
+</g>
+</svg>

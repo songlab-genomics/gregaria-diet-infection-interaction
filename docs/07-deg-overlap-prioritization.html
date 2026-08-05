@@ -11,9 +11,9 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-07-15" />
+<meta name="date" content="2026-08-05" />
 
-<title>DEG overlap and prioritization</title>
+<title>Main-chromosome DEG overlap and prioritization</title>
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -368,8 +368,31 @@ div.tocify {
     <li>
       <a href="03-count-qc-exploration.html">Experiment QC</a>
     </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples retained</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+        </li>
+        <li>
+          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+        <li>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + placed chromosomes</a>
       <ul class="dropdown-menu" role="menu">
         <li>
           <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
@@ -380,33 +403,11 @@ div.tocify {
         <li>
           <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Current outliers removed</a>
-      <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="17-outliers-removed-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
         </li>
         <li>
-          <a href="18-outliers-removed-diet-pairwise-deg.html">Diet pairwise DEGs</a>
-        </li>
-        <li>
-          <a href="19-outliers-removed-infection-within-diet-deg.html">Infection within diet DEGs</a>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sensitivity and filters</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenario table</a>
-        </li>
-        <li>
-          <a href="11-outlier-sensitivity.html">Outlier sensitivity</a>
-        </li>
-        <li>
-          <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
+          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
         </li>
       </ul>
     </li>
@@ -420,31 +421,83 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="13-physiology-candidate-genes.html">Physiology candidate genes</a>
+      <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
     </li>
-    <li>
-      <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Scaffold origin interpretation</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="08-publication-figures.html">Publication figure exports</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Placed chromosomes</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Reference Context
+    Figures
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="22-deg-logical-set-construction.html">Fat body DEGs vs tissue / phase</a>
+      <a href="08-publication-figures.html">Publication figure exports</a>
     </li>
     <li>
-      <a href="20-phase-signature-overlap.html">Phase signature - all samples</a>
+      <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
     </li>
     <li>
-      <a href="21-phase-signature-overlap-no-outliers.html">Phase signature - outliers removed</a>
+      <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+    </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sensitivity and Validation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+    </li>
+    <li>
+      <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+    </li>
+    <li>
+      <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+    </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
     </li>
   </ul>
 </li>
@@ -455,20 +508,38 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="archive.html">Archived analysis index</a>
+    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Earlier current-analysis pages</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Original interaction model</a>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Original diet pairwise DEGs</a>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Original infection-within-diet DEGs</a>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
         </li>
         <li>
-          <a href="07-deg-overlap-prioritization.html">Original DEG overlap and prioritization</a>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
+        </li>
+        <li>
+          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
+        </li>
+        <li>
+          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
+        </li>
+        <li>
+          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
+        </li>
+        <li>
+          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
+        </li>
+        <li>
+          <a href="overlap.html">Original DEG overlap and prioritization</a>
         </li>
       </ul>
     </li>
@@ -518,9 +589,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">DEG overlap and prioritization</h1>
+<h1 class="title toc-ignore">Main-chromosome DEG overlap and
+prioritization</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-07-15</h4>
+<h4 class="date">2026-08-05</h4>
 
 </div>
 
@@ -528,7 +600,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -539,8 +611,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -549,13 +621,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -579,18 +651,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -681,15 +756,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -699,7 +774,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -714,267 +789,180 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
-    Ignored:    data/raw_read_counts/.DS_Store
+    Ignored:    code/scripts/__pycache__/
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/
+    Ignored:    output/.DS_Store
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
     Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-123921/
     Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260715-123853/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260715-130115/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-124354/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-130936/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-124947/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-124135/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-130357/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-124821/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
+    Ignored:    output/rmd_runs/all-scaffolds-all-deg-catalogue_20260805-234450/
+    Ignored:    output/rmd_runs/all-scaffolds-deg-overlap-prioritization_20260805-234426/
+    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
+    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
+    Ignored:    output/rmd_runs/all-scaffolds-enrichment-term-gene-index_20260805-234619/
+    Ignored:    output/rmd_runs/all-scaffolds-go-term-enrichment_20260805-234526/
+    Ignored:    output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/
+    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
+    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
     Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-124842/
+    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
     Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-124306/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130705/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130848/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-131408/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-124901/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
     Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-124646/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-130514/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-124722/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-130550/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-124024/
+    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-234916/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-234815/
+    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260805-234829/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
     Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-124040/
     Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-124056/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-130318/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-124605/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-131532/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-124523/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131105/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131452/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-124250/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
     Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/publication-figures_20260715-124350/
-    Ignored:    output/rmd_runs/publication-figures_20260715-130931/
-    Ignored:    output/rmd_runs/study-design-data_20260715-123844/
-    Ignored:    output/rmd_runs/study-design-data_20260715-130107/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-123846/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-130109/
+    Ignored:    output/rmd_runs/physiology-candidate-genes_20260805-234651/
+    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
+    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260805-235135/
+    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
+    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
+    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
+    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
+    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
+    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
+    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
+    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
+    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
+    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
+    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
+    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
+    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
+    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
+    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
+    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
+    Ignored:    output/runs/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  analysis/12-deg-sample-filter-scenarios.Rmd
-    Untracked:  analysis/13-physiology-candidate-genes.Rmd
-    Untracked:  analysis/14-all-samples-deseq2-interaction-model.Rmd
-    Untracked:  analysis/15-all-samples-diet-pairwise-deg.Rmd
-    Untracked:  analysis/16-all-samples-infection-within-diet-deg.Rmd
-    Untracked:  analysis/17-outliers-removed-deseq2-interaction-model.Rmd
-    Untracked:  analysis/18-outliers-removed-diet-pairwise-deg.Rmd
-    Untracked:  analysis/19-outliers-removed-infection-within-diet-deg.Rmd
-    Untracked:  analysis/20-phase-signature-overlap.Rmd
-    Untracked:  analysis/21-phase-signature-overlap-no-outliers.Rmd
-    Untracked:  analysis/22-deg-logical-set-construction.Rmd
-    Untracked:  code/README.timecourse-snakemake-source.md
-    Untracked:  code/Snakefile
-    Untracked:  code/Snakefile.eggnog_annotations
-    Untracked:  code/Snakefile.metatranscriptomics_qc
-    Untracked:  code/Snakefile.rnaseq_variants
-    Untracked:  code/__pycache__/
-    Untracked:  code/cluster.json
-    Untracked:  code/config.smk
-    Untracked:  code/pilot/
-    Untracked:  code/rules/
-    Untracked:  code/run_eggnog_desertlocustr.sh
-    Untracked:  code/scripts/
-    Untracked:  code/snakemake.eggnog.slurm
-    Untracked:  code/snakemake.fatbody_pilot.slurm
-    Untracked:  code/snakemake.metatx.slurm
-    Untracked:  code/snakemake.slurm
-    Untracked:  data/external/
-    Untracked:  data/raw_read_counts/03-FAT-DESeq2/
-    Untracked:  data/raw_read_counts/03-gregaria-DESeq2/
+    Untracked:  Rplots.pdf
+    Untracked:  analysis/27-scaffold-origin-audit.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
+    Untracked:  analysis/29-metarhizium-read-burden.Rmd
+    Untracked:  analysis/30-curated-target-gene-figure.Rmd
+    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/archive.Rmd
+    Untracked:  analysis/assets/
+    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
+    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
+    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
+    Untracked:  code/Snakefile.scaffold_origin_audit
+    Untracked:  code/Snakefile.scaffold_origin_homology
+    Untracked:  code/config/
+    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
+    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
+    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
+    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
+    Untracked:  code/rules/08_scaffold_origin_audit.smk
+    Untracked:  code/rules/09_scaffold_origin_homology.smk
+    Untracked:  code/scripts/build_combined_reference.py
+    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
+    Untracked:  code/scripts/build_scaffold_origin_audit.py
+    Untracked:  code/scripts/compare_host_count_matrices.py
+    Untracked:  code/scripts/compare_host_deseq2_results.py
+    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
+    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
+    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
+    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
+    Untracked:  code/scripts/export_scaffold_origin_candidates.py
+    Untracked:  code/scripts/extract_unplaced_scaffolds.py
+    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
+    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
+    Untracked:  code/scripts/install_scaffold_homology_env.slurm
+    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
+    Untracked:  code/scripts/merge_featurecounts.py
+    Untracked:  code/scripts/merge_tsv_rows.py
+    Untracked:  code/scripts/plot_kraken_family_composition.R
+    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
+    Untracked:  code/scripts/run_fungal_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
+    Untracked:  code/scripts/select_scaffold_homology_targets.py
+    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
+    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
+    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
+    Untracked:  code/scripts/summarize_competitive_mapping.py
+    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
+    Untracked:  code/scripts/summarize_host_mapping_audit.py
+    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
+    Untracked:  code/scripts/summarize_scaffold_kraken.py
+    Untracked:  code/scripts/summarize_star_log.py
+    Untracked:  code/snakemake.host_pathogen_dual.slurm
+    Untracked:  code/snakemake.scaffold_origin_audit.slurm
+    Untracked:  code/snakemake.scaffold_origin_homology.slurm
+    Untracked:  data/external/curated_target_genes/
+    Untracked:  data/scaffold_origin/
+    Untracked:  scripts/make_diet_infection_physiology_response.R
+    Untracked:  scripts/reference/
+    Untracked:  scripts/screen_unplaced_scaffold_origin.R
 
 Unstaged changes:
-    Modified:   .DS_Store
-    Modified:   analysis/.DS_Store
+    Modified:   .gitignore
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/08-publication-figures.Rmd
     Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
     Modified:   analysis/site-style.css
     Modified:   code/README.md
-    Modified:   data/.DS_Store
-    Modified:   output/.DS_Store
-    Modified:   output/rmd_runs/.DS_Store
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/filter_summary.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/library_size.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/pca_vst.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/condition_specific_diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_presence_absence_matrix.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/genes_seen_in_two_or_more_sets.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_infected.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/all_model_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/deseq2_coefficients.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_deg_count_barplot.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_direction_counts.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_pca.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/sessionInfo.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/significant_gene_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_50.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_50_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/all_diet_pairwise_results.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_deg_count_barplot.png
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_direction_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/sessionInfo.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_50.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_83.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_50_vs_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_33.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_50.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_83.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/all_infection_within_diet_results.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_gene_list.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_heatmap_genes.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_deg_count_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_direction_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/sessionInfo.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_33.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_50.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_sample_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_top_variable_gene_heatmap.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_scores_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/removed_samples.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sample_counts_by_group.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sessionInfo.txt
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/within_diet_results_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2NAME.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/all_enrichment_results.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_source_manifest.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_barplot.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_counts.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2NAME.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_by_ontology.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_with_ontology.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_KEGG_pathway_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_term_overlap_heatmap.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_terms_seen_in_multiple_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_deg_set_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_dotplot_by_set.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/lncRNA_deg_table.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/removed_outlier_samples.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/sessionInfo.txt
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_figure_inventory.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/10_diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/11_diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/12_diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/13_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/14_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/15_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/16_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/17_diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/18_diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/19_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/1_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/20_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/21_venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/22_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/23_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/24_venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/25_25_25_25_25_25_Volcano_33_vs_50.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/26_26_26_26_26_26_Volcano_33_vs_50.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/27_27_27_27_27_27_Volcano_33_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/28_28_28_28_28_28_Volcano_33_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/29_29_29_29_29_29_Volcano_50_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/2_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/30_30_30_30_30_30_Volcano_50_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/3_curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/4_curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/5_diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/6_diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/7_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/8_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/9_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/copied_candidate_panels.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/sessionInfo.txt
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/library_size_by_sample.csv
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/sessionInfo.txt
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/hpc_to_workflowr_workflow.png
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/package_status.csv
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/sessionInfo.txt
+    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/cluster.json
+    Modified:   code/config.smk
 
 </code></pre>
 <p>
@@ -1020,6 +1008,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/07-deg-overlap-prioritization.html" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+<td>
+adding phase related changes
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1148,10 +1153,10 @@ Upgrading analysis and figures DEGs
 </div>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
-<p>This page compares significant DEG lists from the model pages. It
-also runs the small condition-specific diet contrasts needed for
-targeted Venn diagrams: diet-to-diet DEGs among control samples and
-diet-to-diet DEGs among infected samples.</p>
+<p>This page compares significant main-chromosome DEG lists from the
+all-samples model pages. It also runs the small condition-specific diet
+contrasts needed for targeted Venn diagrams: diet-to-diet DEGs among
+control samples and diet-to-diet DEGs among infected samples.</p>
 <p>The goal is to ask whether the same genes repeatedly appear across
 diet contrasts, infection contrasts, and model coefficients. Genes that
 recur across analyses can be useful candidates for follow-up because
@@ -1165,7 +1170,7 @@ while avoiding hidden helper scripts: the thresholds used to define a
 DEG remain visible in the YAML header.</p>
 <pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required &lt;- c(&quot;DESeq2&quot;, &quot;ggplot2&quot;, &quot;UpSetR&quot;, &quot;ggVennDiagram&quot;)
+required &lt;- c(&quot;DESeq2&quot;, &quot;ggplot2&quot;, &quot;UpSetR&quot;, &quot;ggVennDiagram&quot;, &quot;readr&quot;, &quot;dplyr&quot;)
 missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) &gt; 0) {
   stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
@@ -1182,17 +1187,35 @@ out_dir &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
                      paste(params$output_tag, run_stamp, sep = &quot;_&quot;))
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
-results_root &lt;- file.path(project_dir, params$results_root)</code></pre>
+results_root &lt;- file.path(project_dir, params$results_root)
+
+latest_dir &lt;- function(pattern) {
+  dirs &lt;- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs &lt;- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) stop(&quot;No run folder matched: &quot;, pattern)
+  dirs[which.max(file.info(dirs)$mtime)]
+}</code></pre>
 </div>
 <div id="find-result-files" class="section level2">
 <h2>Find result files</h2>
 <p>Only CSV files that look like DESeq2 result tables are selected. The
 table below is shown so the reader can see exactly which run outputs
 contributed to the overlap analysis.</p>
-<pre class="r"><code>all_result_files &lt;- list.files(results_root, pattern = &quot;\\.csv$&quot;, recursive = TRUE,
-                               full.names = TRUE)
-all_result_files &lt;- all_result_files[grepl(&quot;DESeq2_|all_.*results|coefficients&quot;,
-                                           basename(all_result_files))]
+<pre class="r"><code>current_run_dirs &lt;- c(
+  latest_dir(&quot;^main-chromosome-all-samples-deseq2-interaction-model_&quot;),
+  latest_dir(&quot;^main-chromosome-all-samples-diet-pairwise-deg_All_&quot;),
+  latest_dir(&quot;^main-chromosome-all-samples-infection-within-diet-deg_&quot;)
+)
+all_result_files &lt;- unlist(lapply(
+  current_run_dirs,
+  list.files,
+  pattern = &quot;\\.csv$&quot;,
+  full.names = TRUE
+))
+all_result_files &lt;- all_result_files[grepl(
+  &quot;DESeq2_|all_.*results|coefficients&quot;,
+  basename(all_result_files)
+)]
 
 file_info &lt;- data.frame(
   file = all_result_files,
@@ -1217,9 +1240,9 @@ file_table &lt;- data.frame(
 knitr::kable(file_table)</code></pre>
 <table>
 <colgroup>
-<col width="74%" />
-<col width="17%" />
-<col width="8%" />
+<col width="76%" />
+<col width="15%" />
+<col width="7%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1231,111 +1254,63 @@ knitr::kable(file_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-sample-filter-scenarios_20260715-130357/all_deseq2_results.csv</td>
-<td align="left">all_deseq2_results.csv</td>
-<td align="left">2026-07-15 13:05:08</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/diet-pairwise-deg_All_20260715-131631/all_diet_pairwise_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/all_diet_pairwise_results.csv</td>
 <td align="left">all_diet_pairwise_results.csv</td>
-<td align="left">2026-07-15 13:16:45</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/go-term-enrichment_20260715-131408/all_enrichment_results.csv</td>
-<td align="left">all_enrichment_results.csv</td>
-<td align="left">2026-07-15 13:14:38</td>
+<td align="left">2026-08-05 23:52:53</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/infection-within-diet-deg_20260715-131650/all_infection_within_diet_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/all_infection_within_diet_results.csv</td>
 <td align="left">all_infection_within_diet_results.csv</td>
-<td align="left">2026-07-15 13:17:07</td>
+<td align="left">2026-08-05 23:53:08</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deseq2-interaction-model_20260715-131611/all_model_coefficients.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/all_model_coefficients.csv</td>
 <td align="left">all_model_coefficients.csv</td>
-<td align="left">2026-07-15 13:16:26</td>
+<td align="left">2026-08-05 23:49:10</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/diet-pairwise-deg_All_20260715-131631/DESeq2_33_vs_50.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/DESeq2_33_vs_50.csv</td>
 <td align="left">DESeq2_33_vs_50.csv</td>
-<td align="left">2026-07-15 13:16:44</td>
+<td align="left">2026-08-05 23:52:51</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/diet-pairwise-deg_All_20260715-131631/DESeq2_33_vs_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/DESeq2_33_vs_83.csv</td>
 <td align="left">DESeq2_33_vs_83.csv</td>
-<td align="left">2026-07-15 13:16:44</td>
+<td align="left">2026-08-05 23:52:51</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/diet-pairwise-deg_All_20260715-131631/DESeq2_50_vs_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/DESeq2_50_vs_83.csv</td>
 <td align="left">DESeq2_50_vs_83.csv</td>
-<td align="left">2026-07-15 13:16:45</td>
+<td align="left">2026-08-05 23:52:52</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Control_diet_33_vs_50.csv</td>
-<td align="left">DESeq2_Control_diet_33_vs_50.csv</td>
-<td align="left">2026-07-15 12:50:01</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Control_diet_33_vs_83.csv</td>
-<td align="left">DESeq2_Control_diet_33_vs_83.csv</td>
-<td align="left">2026-07-15 12:50:01</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Control_diet_50_vs_83.csv</td>
-<td align="left">DESeq2_Control_diet_50_vs_83.csv</td>
-<td align="left">2026-07-15 12:50:02</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Infected_diet_33_vs_50.csv</td>
-<td align="left">DESeq2_Infected_diet_33_vs_50.csv</td>
-<td align="left">2026-07-15 12:50:07</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Infected_diet_33_vs_83.csv</td>
-<td align="left">DESeq2_Infected_diet_33_vs_83.csv</td>
-<td align="left">2026-07-15 12:50:07</td>
-</tr>
-<tr class="even">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deg-overlap-prioritization_20260715-124947/DESeq2_Infected_diet_50_vs_83.csv</td>
-<td align="left">DESeq2_Infected_diet_50_vs_83.csv</td>
-<td align="left">2026-07-15 12:50:07</td>
-</tr>
-<tr class="odd">
-<td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/infection-within-diet-deg_20260715-131650/DESeq2_infected_vs_control_diet_33.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/DESeq2_infected_vs_control_diet_33.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_33.csv</td>
-<td align="left">2026-07-15 13:16:56</td>
+<td align="left">2026-08-05 23:53:07</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/infection-within-diet-deg_20260715-131650/DESeq2_infected_vs_control_diet_50.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/DESeq2_infected_vs_control_diet_50.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_50.csv</td>
-<td align="left">2026-07-15 13:17:03</td>
+<td align="left">2026-08-05 23:53:07</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/infection-within-diet-deg_20260715-131650/DESeq2_infected_vs_control_diet_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/DESeq2_infected_vs_control_diet_83.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_83.csv</td>
-<td align="left">2026-07-15 13:17:07</td>
+<td align="left">2026-08-05 23:53:08</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/deseq2-interaction-model_20260715-131611/interaction_coefficients.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/interaction_coefficients.csv</td>
 <td align="left">interaction_coefficients.csv</td>
-<td align="left">2026-07-15 13:16:27</td>
+<td align="left">2026-08-05 23:49:10</td>
 </tr>
 </tbody>
 </table>
@@ -1394,89 +1369,54 @@ knitr::kable(set_summary)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">all_deseq2_results</td>
-<td align="left">all_deseq2_results</td>
-<td align="right">3968</td>
-</tr>
-<tr class="even">
-<td align="left">DESeq2_Infected_diet_33_vs_50</td>
-<td align="left">DESeq2_Infected_diet_33_vs_50</td>
-<td align="right">1955</td>
-</tr>
-<tr class="odd">
 <td align="left">all_infection_within_diet_results</td>
 <td align="left">all_infection_within_diet_results</td>
-<td align="right">1731</td>
+<td align="right">1633</td>
 </tr>
 <tr class="even">
-<td align="left">DESeq2_infected_vs_control_diet_50</td>
-<td align="left">DESeq2_infected_vs_control_diet_50</td>
-<td align="right">1312</td>
+<td align="left">all_model_coefficients</td>
+<td align="left">all_model_coefficients</td>
+<td align="right">1132</td>
 </tr>
 <tr class="odd">
-<td align="left">all_model_coefficients</td>
-<td align="left">all_model_coefficients</td>
-<td align="right">1134</td>
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="right">1116</td>
 </tr>
 <tr class="even">
 <td align="left">DESeq2_infected_vs_control_diet_33</td>
 <td align="left">DESeq2_infected_vs_control_diet_33</td>
-<td align="right">898</td>
+<td align="right">857</td>
 </tr>
 <tr class="odd">
 <td align="left">DESeq2_infected_vs_control_diet_83</td>
 <td align="left">DESeq2_infected_vs_control_diet_83</td>
-<td align="right">519</td>
+<td align="right">768</td>
 </tr>
 <tr class="even">
 <td align="left">all_diet_pairwise_results</td>
 <td align="left">all_diet_pairwise_results</td>
-<td align="right">135</td>
+<td align="right">145</td>
 </tr>
 <tr class="odd">
 <td align="left">DESeq2_33_vs_83</td>
 <td align="left">DESeq2_33_vs_83</td>
-<td align="right">78</td>
-</tr>
-<tr class="even">
-<td align="left">DESeq2_Control_diet_33_vs_83</td>
-<td align="left">DESeq2_Control_diet_33_vs_83</td>
-<td align="right">67</td>
-</tr>
-<tr class="odd">
-<td align="left">interaction_coefficients</td>
-<td align="left">interaction_coefficients</td>
-<td align="right">67</td>
+<td align="right">81</td>
 </tr>
 <tr class="even">
 <td align="left">DESeq2_33_vs_50</td>
 <td align="left">DESeq2_33_vs_50</td>
-<td align="right">58</td>
+<td align="right">64</td>
 </tr>
 <tr class="odd">
-<td align="left">DESeq2_Control_diet_50_vs_83</td>
-<td align="left">DESeq2_Control_diet_50_vs_83</td>
-<td align="right">38</td>
-</tr>
-<tr class="even">
 <td align="left">DESeq2_50_vs_83</td>
 <td align="left">DESeq2_50_vs_83</td>
-<td align="right">30</td>
-</tr>
-<tr class="odd">
-<td align="left">DESeq2_Infected_diet_33_vs_83</td>
-<td align="left">DESeq2_Infected_diet_33_vs_83</td>
-<td align="right">29</td>
+<td align="right">33</td>
 </tr>
 <tr class="even">
-<td align="left">DESeq2_Control_diet_33_vs_50</td>
-<td align="left">DESeq2_Control_diet_33_vs_50</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">DESeq2_Infected_diet_50_vs_83</td>
-<td align="left">DESeq2_Infected_diet_50_vs_83</td>
-<td align="right">1</td>
+<td align="left">interaction_coefficients</td>
+<td align="left">interaction_coefficients</td>
+<td align="right">5</td>
 </tr>
 </tbody>
 </table>
@@ -1525,6 +1465,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/07-deg-overlap-prioritization.Rmd/deg-set-size-plot-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/bceb79b9f508d5c4029f6c2f95d7535d42b27649/docs/figure/07-deg-overlap-prioritization.Rmd/deg-set-size-plot-1.png" target="_blank">bceb79b</a>
@@ -1596,10 +1547,10 @@ priority_genes &lt;- priority_genes[order(priority_genes$n_sets, decreasing = TR
 knitr::kable(head(priority_genes, 25))</code></pre>
 <table>
 <colgroup>
-<col width="4%" />
-<col width="4%" />
+<col width="5%" />
+<col width="5%" />
 <col width="2%" />
-<col width="89%" />
+<col width="87%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1611,240 +1562,224 @@ knitr::kable(head(priority_genes, 25))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">LOC126282167</td>
-<td align="left">LOC126282167</td>
-<td align="right">10</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83;
-DESeq2_Control_diet_50_vs_83; DESeq2_50_vs_83</td>
-</tr>
-<tr class="even">
 <td align="left">LOC126293368</td>
 <td align="left">LOC126293368</td>
-<td align="right">10</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+<td align="right">8</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126281299</td>
+<td align="left">LOC126281299</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126282167</td>
+<td align="left">LOC126282167</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83;
-DESeq2_Control_diet_50_vs_83; DESeq2_50_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126295405</td>
-<td align="left">LOC126295405</td>
-<td align="right">10</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
-DESeq2_50_vs_83; DESeq2_Infected_diet_33_vs_83</td>
+DESeq2_33_vs_83; DESeq2_50_vs_83</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126268018</td>
-<td align="left">LOC126268018</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_model_coefficients; all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
-DESeq2_50_vs_83; DESeq2_Infected_diet_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126272465</td>
-<td align="left">LOC126272465</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_model_coefficients; all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_33_vs_50;
-DESeq2_Infected_diet_33_vs_83; DESeq2_Control_diet_33_vs_50</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126277896</td>
-<td align="left">LOC126277896</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_infection_within_diet_results; DESeq2_infected_vs_control_diet_50;
-all_model_coefficients; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Infected_diet_33_vs_83</td>
+<td align="left">LOC126282181</td>
+<td align="left">LOC126282181</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
 </tr>
 <tr class="odd">
 <td align="left">LOC126324953</td>
 <td align="left">LOC126324953</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83</td>
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126325353</td>
-<td align="left">LOC126325353</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
+<td align="left">LOC126335309</td>
+<td align="left">LOC126335309</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126336537</td>
+<td align="left">LOC126336537</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83;
-DESeq2_Control_diet_50_vs_83; DESeq2_50_vs_83;
-DESeq2_Infected_diet_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126335309</td>
-<td align="left">LOC126335309</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Infected_diet_33_vs_83</td>
+DESeq2_33_vs_83; DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
 <td align="left">LOC126336538</td>
 <td align="left">LOC126336538</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83</td>
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
 </tr>
 <tr class="odd">
+<td align="left">LOC126336625</td>
+<td align="left">LOC126336625</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
 <td align="left">LOC126344004</td>
 <td align="left">LOC126344004</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_infection_within_diet_results; DESeq2_infected_vs_control_diet_50;
-all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126354934</td>
+<td align="left">LOC126354934</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83; DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126355485</td>
+<td align="left">LOC126355485</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126266862</td>
+<td align="left">LOC126266862</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126266984</td>
+<td align="left">LOC126266984</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126267114</td>
+<td align="left">LOC126267114</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+interaction_coefficients</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126267545</td>
+<td align="left">LOC126267545</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126277896</td>
+<td align="left">LOC126277896</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
 DESeq2_33_vs_83</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126354907</td>
-<td align="left">LOC126354907</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-all_model_coefficients; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
+<td align="left">LOC126278485</td>
+<td align="left">LOC126278485</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
 DESeq2_50_vs_83</td>
 </tr>
 <tr class="odd">
-<td align="left">LOC126354934</td>
-<td align="left">LOC126354934</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_infection_within_diet_results; DESeq2_infected_vs_control_diet_50;
-all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+<td align="left">LOC126281508</td>
+<td align="left">LOC126281508</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126355485</td>
-<td align="left">LOC126355485</td>
-<td align="right">9</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83;
-DESeq2_Control_diet_50_vs_83</td>
+<td align="left">LOC126285146</td>
+<td align="left">LOC126285146</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_33_vs_50</td>
 </tr>
 <tr class="odd">
-<td align="left">LOC126278052</td>
-<td align="left">LOC126278052</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_model_coefficients;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
-DESeq2_50_vs_83; DESeq2_Infected_diet_33_vs_83</td>
+<td align="left">LOC126292038</td>
+<td align="left">LOC126292038</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126278485</td>
-<td align="left">LOC126278485</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_infection_within_diet_results; DESeq2_infected_vs_control_diet_50;
-all_model_coefficients; DESeq2_infected_vs_control_diet_33;
-all_diet_pairwise_results; DESeq2_50_vs_83</td>
+<td align="left">LOC126295405</td>
+<td align="left">LOC126295405</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
 </tr>
 <tr class="odd">
-<td align="left">LOC126281265</td>
-<td align="left">LOC126281265</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_model_coefficients;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
-DESeq2_50_vs_83; DESeq2_Infected_diet_33_vs_83</td>
+<td align="left">LOC126297497</td>
+<td align="left">LOC126297497</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
-<td align="left">LOC126282181</td>
-<td align="left">LOC126282181</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
+<td align="left">LOC126298522</td>
+<td align="left">LOC126298522</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_33_vs_50</td>
 </tr>
 <tr class="odd">
 <td align="left">LOC126336532</td>
 <td align="left">LOC126336532</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336533</td>
-<td align="left">LOC126336533</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126336535</td>
-<td align="left">LOC126336535</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_Control_diet_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336541</td>
-<td align="left">LOC126336541</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126336866</td>
-<td align="left">LOC126336866</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126352958</td>
-<td align="left">LOC126352958</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; all_model_coefficients;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_Control_diet_50_vs_83;
-DESeq2_50_vs_83; DESeq2_Infected_diet_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126356047</td>
-<td align="left">LOC126356047</td>
-<td align="right">8</td>
-<td align="left">all_deseq2_results; DESeq2_Infected_diet_33_vs_50;
-all_diet_pairwise_results; DESeq2_33_vs_83;
-DESeq2_Control_diet_33_vs_83; DESeq2_33_vs_50;
-DESeq2_Infected_diet_33_vs_83; DESeq2_Control_diet_33_vs_50</td>
+DESeq2_33_vs_83</td>
 </tr>
 </tbody>
 </table>
@@ -1920,6 +1855,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/07-deg-overlap-prioritization.Rmd/intersection-size-plot-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/bceb79b9f508d5c4029f6c2f95d7535d42b27649/docs/figure/07-deg-overlap-prioritization.Rmd/intersection-size-plot-1.png" target="_blank">bceb79b</a>
 </td>
 <td>
@@ -1968,10 +1914,10 @@ knitr::kable(intersection_summary[, c(&quot;intersection_id&quot;, &quot;n_genes
 <caption>Intersection IDs used in the plot</caption>
 <colgroup>
 <col width="1%" />
-<col width="7%" />
+<col width="6%" />
 <col width="3%" />
-<col width="3%" />
-<col width="84%" />
+<col width="2%" />
+<col width="86%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1984,167 +1930,175 @@ knitr::kable(intersection_summary[, c(&quot;intersection_id&quot;, &quot;n_genes
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">83</td>
+<td align="left">8</td>
 <td align="left">I01</td>
-<td align="right">1789</td>
-<td align="right">2</td>
-<td align="left">all_deseq2_results + DESeq2_Infected_diet_33_vs_50</td>
+<td align="right">405</td>
+<td align="right">3</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50</td>
 </tr>
 <tr class="even">
-<td align="left">36</td>
+<td align="left">19</td>
 <td align="left">I02</td>
-<td align="right">345</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 + all_model_coefficients</td>
-</tr>
-<tr class="odd">
-<td align="left">1</td>
-<td align="left">I03</td>
-<td align="right">328</td>
-<td align="right">1</td>
-<td align="left">all_deseq2_results</td>
-</tr>
-<tr class="even">
-<td align="left">49</td>
-<td align="left">I04</td>
-<td align="right">265</td>
-<td align="right">6</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
+<td align="right">370</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
 DESeq2_infected_vs_control_diet_33 +
 DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="odd">
-<td align="left">41</td>
+<td align="left">33</td>
+<td align="left">I03</td>
+<td align="right">233</td>
+<td align="right">2</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="even">
+<td align="left">27</td>
+<td align="left">I04</td>
+<td align="right">213</td>
+<td align="right">2</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
 <td align="left">I05</td>
-<td align="right">246</td>
-<td align="right">5</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
+<td align="right">189</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
 DESeq2_infected_vs_control_diet_33</td>
 </tr>
 <tr class="even">
-<td align="left">31</td>
+<td align="left">23</td>
 <td align="left">I06</td>
-<td align="right">244</td>
-<td align="right">3</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50</td>
+<td align="right">95</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="odd">
-<td align="left">20</td>
+<td align="left">31</td>
 <td align="left">I07</td>
-<td align="right">198</td>
+<td align="right">49</td>
 <td align="right">3</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_33</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33 +
+DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="even">
-<td align="left">66</td>
+<td align="left">9</td>
 <td align="left">I08</td>
-<td align="right">116</td>
-<td align="right">3</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_83</td>
+<td align="right">23</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_50</td>
 </tr>
 <tr class="odd">
-<td align="left">60</td>
+<td align="left">1</td>
 <td align="left">I09</td>
-<td align="right">62</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 +
-DESeq2_infected_vs_control_diet_33</td>
-</tr>
-<tr class="even">
-<td align="left">57</td>
-<td align="left">I10</td>
-<td align="right">61</td>
-<td align="right">5</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="odd">
-<td align="left">116</td>
-<td align="left">I11</td>
-<td align="right">46</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + DESeq2_Infected_diet_33_vs_50 +
-all_model_coefficients + interaction_coefficients</td>
-</tr>
-<tr class="even">
-<td align="left">125</td>
-<td align="left">I12</td>
-<td align="right">41</td>
-<td align="right">1</td>
-<td align="left">all_model_coefficients</td>
-</tr>
-<tr class="odd">
-<td align="left">28</td>
-<td align="left">I13</td>
-<td align="right">28</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_33 +
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="even">
-<td align="left">91</td>
-<td align="left">I14</td>
-<td align="right">28</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + DESeq2_Infected_diet_33_vs_50 +
-all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_33</td>
-</tr>
-<tr class="odd">
-<td align="left">97</td>
-<td align="left">I15</td>
-<td align="right">17</td>
-<td align="right">5</td>
-<td align="left">all_deseq2_results + DESeq2_Infected_diet_33_vs_50 +
-all_infection_within_diet_results + DESeq2_infected_vs_control_diet_50 +
-all_model_coefficients</td>
-</tr>
-<tr class="even">
-<td align="left">131</td>
-<td align="left">I16</td>
-<td align="right">13</td>
-<td align="right">1</td>
-<td align="left">DESeq2_Infected_diet_33_vs_50</td>
-</tr>
-<tr class="odd">
-<td align="left">64</td>
-<td align="left">I17</td>
-<td align="right">12</td>
-<td align="right">4</td>
-<td align="left">all_deseq2_results + all_infection_within_diet_results
-+ DESeq2_infected_vs_control_diet_50 +
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="even">
-<td align="left">119</td>
-<td align="left">I18</td>
-<td align="right">12</td>
+<td align="right">21</td>
 <td align="right">2</td>
 <td align="left">all_diet_pairwise_results + DESeq2_33_vs_50</td>
 </tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">I10</td>
+<td align="right">21</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
 <tr class="odd">
-<td align="left">126</td>
-<td align="left">I19</td>
-<td align="right">10</td>
+<td align="left">20</td>
+<td align="left">I11</td>
+<td align="right">8</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83
++ all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">I12</td>
+<td align="right">8</td>
 <td align="right">3</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83 +
+DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">I13</td>
+<td align="right">7</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">I14</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">39</td>
+<td align="left">I15</td>
+<td align="right">6</td>
+<td align="right">4</td>
 <td align="left">all_model_coefficients + all_diet_pairwise_results +
+DESeq2_33_vs_83 + DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">I16</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">28</td>
+<td align="left">I17</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
 DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
-<td align="left">71</td>
+<td align="left">29</td>
+<td align="left">I18</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">I19</td>
+<td align="right">4</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
 <td align="left">I20</td>
-<td align="right">10</td>
-<td align="right">2</td>
-<td align="left">all_deseq2_results + all_model_coefficients</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_50 +
+DESeq2_50_vs_83</td>
 </tr>
 </tbody>
 </table>
@@ -2325,10 +2279,10 @@ metadata$label &lt;- as.character(metadata$label)
 metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
 metadata$Treatment &lt;- factor(metadata$Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;))
 
-counts_raw &lt;- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
-counts &lt;- as.matrix(counts_raw[, -1])
-rownames(counts) &lt;- counts_raw[[1]]
+counts_table &lt;- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+counts &lt;- as.matrix(counts_table[, setdiff(names(counts_table), &quot;gene_id&quot;)])
+rownames(counts) &lt;- counts_table$gene_id
 storage.mode(counts) &lt;- &quot;integer&quot;
 
 count_labels &lt;- sub(&quot;_MERGE$&quot;, &quot;&quot;, sub(&quot;^mehreen_&quot;, &quot;&quot;, colnames(counts)))
@@ -2337,18 +2291,29 @@ stopifnot(identical(metadata$label, count_labels))
 rownames(metadata) &lt;- metadata$label
 colnames(counts) &lt;- count_labels
 
+placement &lt;- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |&gt;
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids &lt;- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids &lt;- rrna_ids[nzchar(rrna_ids) &amp; !startsWith(rrna_ids, &quot;#&quot;)]
+main_chromosome_ids &lt;- placement$gene_id[
+  placement$sequence_class == &quot;Nuclear chromosome&quot; &amp;
+    !placement$gene_id %in% rrna_ids
+]
+counts &lt;- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
 run_treatment_diet_degs &lt;- function(treatment_label) {
   keep_samples &lt;- metadata$Treatment == treatment_label
   metadata_sub &lt;- droplevels(metadata[keep_samples, ])
   counts_sub &lt;- counts[, metadata_sub$label, drop = FALSE]
-  keep_genes &lt;- rowSums(counts_sub) &gt;= params$min_total_count
+  keep_genes &lt;- rowSums(counts_sub &gt;= params$min_count) &gt;= params$min_samples
 
   dds &lt;- DESeq2::DESeqDataSetFromMatrix(
     countData = counts_sub[keep_genes, ],
     colData = metadata_sub,
     design = ~ Diet
   )
-  dds &lt;- DESeq2::DESeq(dds)
+  dds &lt;- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
 
   diet_pairs &lt;- combn(levels(droplevels(metadata_sub$Diet)), 2,
                       simplify = FALSE)
@@ -2358,7 +2323,7 @@ run_treatment_diet_degs &lt;- function(treatment_label) {
   for (pair in diet_pairs) {
     contrast_label &lt;- paste(pair[1], &quot;vs&quot;, pair[2], sep = &quot;_&quot;)
     res &lt;- DESeq2::results(dds, contrast = c(&quot;Diet&quot;, pair[1], pair[2]),
-                           alpha = params$alpha)
+                           alpha = params$alpha, cooksCutoff = FALSE)
     res_df &lt;- as.data.frame(res)
     res_df$gene_id &lt;- rownames(res_df)
     res_df$treatment_subset &lt;- treatment_label
@@ -2437,49 +2402,49 @@ samples</caption>
 <td align="left">33_vs_50</td>
 <td align="left">Control</td>
 <td align="left">33_vs_50</td>
-<td align="right">3</td>
-<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">2</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">33_vs_83</td>
 <td align="left">Control</td>
 <td align="left">33_vs_83</td>
-<td align="right">67</td>
-<td align="right">23</td>
-<td align="right">44</td>
+<td align="right">79</td>
+<td align="right">29</td>
+<td align="right">50</td>
 </tr>
 <tr class="odd">
 <td align="left">50_vs_83</td>
 <td align="left">Control</td>
 <td align="left">50_vs_83</td>
-<td align="right">38</td>
-<td align="right">3</td>
-<td align="right">35</td>
+<td align="right">50</td>
+<td align="right">8</td>
+<td align="right">42</td>
 </tr>
 <tr class="even">
 <td align="left">33_vs_501</td>
 <td align="left">Infected</td>
 <td align="left">33_vs_50</td>
-<td align="right">1955</td>
-<td align="right">11</td>
-<td align="right">1944</td>
+<td align="right">72</td>
+<td align="right">4</td>
+<td align="right">68</td>
 </tr>
 <tr class="odd">
 <td align="left">33_vs_831</td>
 <td align="left">Infected</td>
 <td align="left">33_vs_83</td>
-<td align="right">29</td>
-<td align="right">11</td>
-<td align="right">18</td>
+<td align="right">33</td>
+<td align="right">13</td>
+<td align="right">20</td>
 </tr>
 <tr class="even">
 <td align="left">50_vs_831</td>
 <td align="left">Infected</td>
 <td align="left">50_vs_83</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">3</td>
+<td align="right">3</td>
 </tr>
 </tbody>
 </table>
@@ -2644,6 +2609,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/figure/07-deg-overlap-prioritization.Rmd/overlap-plot-1.png" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/bceb79b9f508d5c4029f6c2f95d7535d42b27649/docs/figure/07-deg-overlap-prioritization.Rmd/overlap-plot-1.png" target="_blank">bceb79b</a>
 </td>
 <td>
@@ -2681,12 +2657,29 @@ Maeva TECHER
 </div>
 <pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;deg_overlap_matrix.png&quot;),
                 p_overlap, width = 10, height = 8, dpi = 300)</code></pre>
+</div>
+<div id="Publication_figure" class="section level2">
+<h2>Publication figure</h2>
+<p>Figure 2 combines the exact placed-chromosome DEG burden with overlap
+among the diet, infection, and shared phase-reference contexts. Its
+underlying gene sets are built on this page and in the linked all-sample
+DEG catalogue.</p>
+<div class="float">
+<img src="assets/publication/figure2_deg_burden_context_phase_venns.png"
+alt="Figure 2. DEG burden and overlap among experimental and phase-reference contexts." />
+<div class="figcaption">Figure 2. DEG burden and overlap among
+experimental and phase-reference contexts.</div>
+</div>
+<p>The full-size PNG/SVG exports and the membership tables are collected
+on the <a
+href="08-publication-figures.html#Figure_2:_DEG_burden,_context_overlap,_and_phase-reference_overlap">publication
+figure page</a>.</p>
 <pre class="r"><code>writeLines(capture.output(sessionInfo()),
            file.path(out_dir, &quot;sessionInfo.txt&quot;))
 sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -2705,48 +2698,51 @@ other attached packages:
 [1] ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] processx_3.9.0              Biobase_2.72.0             
- [7] lattice_0.22-9              callr_3.7.6                
- [9] vctrs_0.7.3                 tools_4.6.0                
-[11] generics_0.1.4              stats4_4.6.0               
-[13] parallel_4.6.0              tibble_3.3.1               
-[15] pkgconfig_2.0.3             Matrix_1.7-5               
-[17] RColorBrewer_1.1-3          S7_0.2.2                   
-[19] S4Vectors_0.50.1            lifecycle_1.0.5            
-[21] compiler_4.6.0              farver_2.1.2               
-[23] stringr_1.6.0               git2r_0.36.2               
-[25] textshaping_1.0.5           DESeq2_1.52.0              
-[27] getPass_0.2-4               Seqinfo_1.2.0              
-[29] codetools_0.2-20            httpuv_1.6.17              
-[31] htmltools_0.5.9             sass_0.4.10                
-[33] yaml_2.3.12                 later_1.4.8                
-[35] pillar_1.11.1               jquerylib_0.1.4            
-[37] whisker_0.4.1               BiocParallel_1.46.0        
-[39] cachem_1.1.0                DelayedArray_0.38.1        
-[41] abind_1.4-8                 locfit_1.5-9.12            
-[43] tidyselect_1.2.1            digest_0.6.39              
-[45] stringi_1.8.7               dplyr_1.2.1                
-[47] labeling_0.4.3              rprojroot_2.1.1            
-[49] fastmap_1.2.0               grid_4.6.0                 
-[51] cli_3.6.6                   SparseArray_1.12.2         
-[53] magrittr_2.0.5              patchwork_1.3.2            
-[55] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[57] withr_3.0.2                 scales_1.4.0               
-[59] promises_1.5.0              rmarkdown_2.31             
-[61] XVector_0.52.0              httr_1.4.8                 
-[63] matrixStats_1.5.0           otel_0.2.0                 
-[65] gridExtra_2.3               ragg_1.5.2                 
-[67] evaluate_1.0.5              UpSetR_1.4.0               
-[69] knitr_1.51                  GenomicRanges_1.64.0       
-[71] IRanges_2.46.0              rlang_1.2.0                
-[73] Rcpp_1.1.1-1.1              ggVennDiagram_1.5.7        
-[75] glue_1.8.1                  BiocGenerics_0.58.0        
-[77] rstudioapi_0.18.0           jsonlite_2.0.0             
-[79] plyr_1.8.9                  R6_2.6.1                   
-[81] systemfonts_1.3.2           MatrixGenerics_1.24.0      
-[83] fs_2.1.0                   </code></pre>
+ [1] tidyselect_1.2.1            dplyr_1.2.1                
+ [3] farver_2.1.2                S7_0.2.2                   
+ [5] fastmap_1.2.0               promises_1.5.0             
+ [7] digest_0.6.39               lifecycle_1.0.5            
+ [9] processx_3.9.0              magrittr_2.0.5             
+[11] compiler_4.6.0              rlang_1.2.0                
+[13] sass_0.4.10                 tools_4.6.0                
+[15] yaml_2.3.12                 knitr_1.51                 
+[17] S4Arrays_1.12.0             labeling_0.4.3             
+[19] bit_4.6.0                   DelayedArray_0.38.1        
+[21] plyr_1.8.9                  RColorBrewer_1.1-3         
+[23] abind_1.4-8                 BiocParallel_1.46.0        
+[25] withr_3.0.2                 BiocGenerics_0.58.0        
+[27] grid_4.6.0                  stats4_4.6.0               
+[29] git2r_0.36.2                scales_1.4.0               
+[31] dichromat_2.0-0.1           SummarizedExperiment_1.42.0
+[33] cli_3.6.6                   crayon_1.5.3               
+[35] UpSetR_1.4.0                rmarkdown_2.31             
+[37] ragg_1.5.2                  generics_0.1.4             
+[39] otel_0.2.0                  rstudioapi_0.18.0          
+[41] httr_1.4.8                  tzdb_0.5.0                 
+[43] cachem_1.1.0                stringr_1.6.0              
+[45] parallel_4.6.0              XVector_0.52.0             
+[47] matrixStats_1.5.0           vctrs_0.7.3                
+[49] Matrix_1.7-5                jsonlite_2.0.0             
+[51] callr_3.7.6                 IRanges_2.46.0             
+[53] hms_1.1.4                   patchwork_1.3.2            
+[55] S4Vectors_0.50.1            bit64_4.8.0                
+[57] systemfonts_1.3.2           locfit_1.5-9.12            
+[59] jquerylib_0.1.4             glue_1.8.1                 
+[61] ggVennDiagram_1.5.7         codetools_0.2-20           
+[63] stringi_1.8.7               gtable_0.3.6               
+[65] later_1.4.8                 GenomicRanges_1.64.0       
+[67] tibble_3.3.1                pillar_1.11.1              
+[69] htmltools_0.5.9             Seqinfo_1.2.0              
+[71] R6_2.6.1                    textshaping_1.0.5          
+[73] rprojroot_2.1.1             vroom_1.7.1                
+[75] evaluate_1.0.5              lattice_0.22-9             
+[77] Biobase_2.72.0              readr_2.2.0                
+[79] httpuv_1.6.17               bslib_0.10.0               
+[81] Rcpp_1.1.1-1.1              gridExtra_2.3              
+[83] SparseArray_1.12.2          whisker_0.4.1              
+[85] DESeq2_1.52.0               xfun_0.57                  
+[87] fs_2.1.0                    MatrixGenerics_1.24.0      
+[89] getPass_0.2-4               pkgconfig_2.0.3            </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2758,7 +2754,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -2777,48 +2773,51 @@ other attached packages:
 [1] ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] processx_3.9.0              Biobase_2.72.0             
- [7] lattice_0.22-9              callr_3.7.6                
- [9] vctrs_0.7.3                 tools_4.6.0                
-[11] generics_0.1.4              stats4_4.6.0               
-[13] parallel_4.6.0              tibble_3.3.1               
-[15] pkgconfig_2.0.3             Matrix_1.7-5               
-[17] RColorBrewer_1.1-3          S7_0.2.2                   
-[19] S4Vectors_0.50.1            lifecycle_1.0.5            
-[21] compiler_4.6.0              farver_2.1.2               
-[23] stringr_1.6.0               git2r_0.36.2               
-[25] textshaping_1.0.5           DESeq2_1.52.0              
-[27] getPass_0.2-4               Seqinfo_1.2.0              
-[29] codetools_0.2-20            httpuv_1.6.17              
-[31] htmltools_0.5.9             sass_0.4.10                
-[33] yaml_2.3.12                 later_1.4.8                
-[35] pillar_1.11.1               jquerylib_0.1.4            
-[37] whisker_0.4.1               BiocParallel_1.46.0        
-[39] cachem_1.1.0                DelayedArray_0.38.1        
-[41] abind_1.4-8                 locfit_1.5-9.12            
-[43] tidyselect_1.2.1            digest_0.6.39              
-[45] stringi_1.8.7               dplyr_1.2.1                
-[47] labeling_0.4.3              rprojroot_2.1.1            
-[49] fastmap_1.2.0               grid_4.6.0                 
-[51] cli_3.6.6                   SparseArray_1.12.2         
-[53] magrittr_2.0.5              patchwork_1.3.2            
-[55] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[57] withr_3.0.2                 scales_1.4.0               
-[59] promises_1.5.0              rmarkdown_2.31             
-[61] XVector_0.52.0              httr_1.4.8                 
-[63] matrixStats_1.5.0           otel_0.2.0                 
-[65] gridExtra_2.3               ragg_1.5.2                 
-[67] evaluate_1.0.5              UpSetR_1.4.0               
-[69] knitr_1.51                  GenomicRanges_1.64.0       
-[71] IRanges_2.46.0              rlang_1.2.0                
-[73] Rcpp_1.1.1-1.1              ggVennDiagram_1.5.7        
-[75] glue_1.8.1                  BiocGenerics_0.58.0        
-[77] rstudioapi_0.18.0           jsonlite_2.0.0             
-[79] plyr_1.8.9                  R6_2.6.1                   
-[81] systemfonts_1.3.2           MatrixGenerics_1.24.0      
-[83] fs_2.1.0                   </code></pre>
+ [1] tidyselect_1.2.1            dplyr_1.2.1                
+ [3] farver_2.1.2                S7_0.2.2                   
+ [5] fastmap_1.2.0               promises_1.5.0             
+ [7] digest_0.6.39               lifecycle_1.0.5            
+ [9] processx_3.9.0              magrittr_2.0.5             
+[11] compiler_4.6.0              rlang_1.2.0                
+[13] sass_0.4.10                 tools_4.6.0                
+[15] yaml_2.3.12                 knitr_1.51                 
+[17] S4Arrays_1.12.0             labeling_0.4.3             
+[19] bit_4.6.0                   DelayedArray_0.38.1        
+[21] plyr_1.8.9                  RColorBrewer_1.1-3         
+[23] abind_1.4-8                 BiocParallel_1.46.0        
+[25] withr_3.0.2                 BiocGenerics_0.58.0        
+[27] grid_4.6.0                  stats4_4.6.0               
+[29] git2r_0.36.2                scales_1.4.0               
+[31] dichromat_2.0-0.1           SummarizedExperiment_1.42.0
+[33] cli_3.6.6                   crayon_1.5.3               
+[35] UpSetR_1.4.0                rmarkdown_2.31             
+[37] ragg_1.5.2                  generics_0.1.4             
+[39] otel_0.2.0                  rstudioapi_0.18.0          
+[41] httr_1.4.8                  tzdb_0.5.0                 
+[43] cachem_1.1.0                stringr_1.6.0              
+[45] parallel_4.6.0              XVector_0.52.0             
+[47] matrixStats_1.5.0           vctrs_0.7.3                
+[49] Matrix_1.7-5                jsonlite_2.0.0             
+[51] callr_3.7.6                 IRanges_2.46.0             
+[53] hms_1.1.4                   patchwork_1.3.2            
+[55] S4Vectors_0.50.1            bit64_4.8.0                
+[57] systemfonts_1.3.2           locfit_1.5-9.12            
+[59] jquerylib_0.1.4             glue_1.8.1                 
+[61] ggVennDiagram_1.5.7         codetools_0.2-20           
+[63] stringi_1.8.7               gtable_0.3.6               
+[65] later_1.4.8                 GenomicRanges_1.64.0       
+[67] tibble_3.3.1                pillar_1.11.1              
+[69] htmltools_0.5.9             Seqinfo_1.2.0              
+[71] R6_2.6.1                    textshaping_1.0.5          
+[73] rprojroot_2.1.1             vroom_1.7.1                
+[75] evaluate_1.0.5              lattice_0.22-9             
+[77] Biobase_2.72.0              readr_2.2.0                
+[79] httpuv_1.6.17               bslib_0.10.0               
+[81] Rcpp_1.1.1-1.1              gridExtra_2.3              
+[83] SparseArray_1.12.2          whisker_0.4.1              
+[85] DESeq2_1.52.0               xfun_0.57                  
+[87] fs_2.1.0                    MatrixGenerics_1.24.0      
+[89] getPass_0.2-4               pkgconfig_2.0.3            </code></pre>
 </div>
 </div>
 </div>

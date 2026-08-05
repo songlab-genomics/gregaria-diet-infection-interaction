@@ -1,3 +1,8 @@
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   color: #1f2933;
   background: #f7f8fb;
@@ -136,6 +141,7 @@ table {
 
 .metric-grid,
 .analysis-grid,
+.scope-grid,
 .figure-strip {
   display: grid;
   gap: 16px;
@@ -177,6 +183,67 @@ table {
 
 .analysis-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.scope-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 18px 0 30px;
+}
+
+.scope-panel {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-top: 6px solid #0f766e;
+  border-radius: 8px;
+  box-shadow: 0 10px 26px rgba(31, 41, 51, 0.09);
+  padding: 22px;
+}
+
+.scope-panel.placed-scope {
+  border-top-color: #b45309;
+}
+
+.scope-panel > span {
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.scope-panel.placed-scope > span {
+  color: #b45309;
+}
+
+.scope-panel h3 {
+  margin: 8px 0 10px;
+}
+
+.scope-panel p {
+  color: #52606d;
+  line-height: 1.55;
+}
+
+.scope-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.scope-links a {
+  background: #eef6f4;
+  border: 1px solid #c9ded9;
+  border-radius: 6px;
+  color: #0f5f59;
+  font-weight: 700;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+
+.placed-scope .scope-links a {
+  background: #fff7ed;
+  border-color: #f3d2ae;
+  color: #92400e;
 }
 
 .compact-grid .analysis-tile {
@@ -266,6 +333,27 @@ img {
   max-width: 100%;
 }
 
+/* Keep wide searchable tables inside the analysis column. */
+.dataTables_wrapper,
+.dataTables_scroll {
+  contain: inline-size;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.html-widget.datatables {
+  contain: inline-size;
+  width: 100% !important;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.dataTables_scrollHead,
+.dataTables_scrollBody {
+  max-width: 100% !important;
+}
+
 .tab-content {
   background: #ffffff;
   padding: 18px;
@@ -287,6 +375,7 @@ img {
   .hero-panel,
   .metric-grid,
   .analysis-grid,
+  .scope-grid,
   .figure-strip {
     grid-template-columns: 1fr 1fr;
   }
@@ -296,6 +385,7 @@ img {
   .hero-panel,
   .metric-grid,
   .analysis-grid,
+  .scope-grid,
   .figure-strip {
     grid-template-columns: 1fr;
   }

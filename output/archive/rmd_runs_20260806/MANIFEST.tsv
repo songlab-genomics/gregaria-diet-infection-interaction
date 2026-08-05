@@ -1,0 +1,56 @@
+folder	reason	active_replacement
+all-deg-catalogue_20260723-164715	superseded all-sample catalogue	main-chromosome-all-deg-catalogue_20260805-235540
+all-samples-deseq2-interaction-model_20260715-130121	superseded placed-scope model	main-chromosome-all-samples-deseq2-interaction-model_20260805-234902
+all-samples-diet-pairwise-deg_All_20260715-130143	superseded placed-scope diet contrasts	main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244
+all-samples-infection-within-diet-deg_20260722-235632	superseded placed-scope infection contrasts	main-chromosome-all-samples-infection-within-diet-deg_20260805-235258
+count-qc-exploration_20260804-151956	superseded rendered run	count-qc-exploration_20260806-000113
+curated-target-gene-figure_20260805-230618	superseded figure draft	curated-target-gene-figure_20260805-235850
+curated-target-gene-figure_20260805-230945	superseded figure draft	curated-target-gene-figure_20260805-235850
+curated-target-gene-figure_20260805-231113	superseded figure draft	curated-target-gene-figure_20260805-235850
+curated-target-gene-figure_20260805-231220	superseded figure draft	curated-target-gene-figure_20260805-235850
+deg-logical-set-construction_20260722-230917	superseded tissue-phase exploration	archive page
+deg-overlap-prioritization_20260715-131731	superseded overlap run	main-chromosome-deg-overlap-prioritization_20260805-235528
+deg-sample-filter-scenarios_20260722-230637	archived sample-removal analysis	outlier-sensitivity_20260805-234829
+deseq2-interaction-model_20260715-131611	superseded earlier model	all-scaffolds-deseq2-interaction-model_20260805-234231
+diet-infection-physiology-response_20260724-031243	superseded physiology plot helper	physiology-candidate-genes_20260805-234651
+diet-pairwise-deg_All_20260715-131631	superseded earlier diet contrasts	all-scaffolds-diet-pairwise-deg_All_20260805-234255
+enrichment-term-gene-index_20260804-152333	superseded placed-scope term index	enrichment-term-gene-index_20260805-235654
+go-term-enrichment_20260804-152115	superseded placed-scope enrichment	go-term-enrichment_20260805-235606
+infection-within-diet-deg_20260715-131650	superseded earlier infection contrasts	all-scaffolds-infection-within-diet-deg_20260805-234314
+main-chromosome-all-deg-catalogue_20260804-152308	superseded placed-scope catalogue	main-chromosome-all-deg-catalogue_20260805-235540
+main-chromosome-all-samples-deseq2-interaction-model_20260804-152207	superseded placed-scope model	main-chromosome-all-samples-deseq2-interaction-model_20260805-234902
+main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220	superseded placed-scope diet contrasts	main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244
+main-chromosome-all-samples-infection-within-diet-deg_20260804-152234	superseded placed-scope infection contrasts	main-chromosome-all-samples-infection-within-diet-deg_20260805-235258
+main-chromosome-cluster-enrichment_20260805-171903	superseded cluster draft	main-chromosome-cluster-enrichment_20260805-235722
+main-chromosome-cluster-enrichment_20260805-234916	superseded cluster draft	main-chromosome-cluster-enrichment_20260805-235722
+main-chromosome-deg-overlap-prioritization_20260804-152003	superseded overlap run	main-chromosome-deg-overlap-prioritization_20260805-235528
+main-chromosome-deg-overlap-prioritization_20260805-234815	superseded overlap run	main-chromosome-deg-overlap-prioritization_20260805-235528
+manual-validation_20260703-135100	superseded manual validation	current workflowR pages
+metarhizium-read-burden_20260805-170635	superseded read-burden run	metarhizium-read-burden_20260805-235857
+outlier-expression-signatures_20260722-180805	archived outlier-removal exploration	outlier-sensitivity_20260805-234829
+outlier-sensitivity_20260715-131934	superseded sensitivity run	outlier-sensitivity_20260805-234829
+outliers-load-enrichment_20260715-131837	archived outlier-removal exploration	outlier-sensitivity_20260805-234829
+outliers-removed-deseq2-interaction-model_20260715-130246	archived sample-removal analysis	all samples retained
+outliers-removed-diet-pairwise-deg_All_20260715-130302	archived sample-removal analysis	all samples retained
+outliers-removed-infection-within-diet-deg_20260723-001457	archived sample-removal analysis	all samples retained
+phase-signature-overlap-no-outliers_20260723-001557	archived sample-removal phase analysis	archive page
+phase-signature-overlap_20260722-235730	superseded tissue-phase exploration	archive page
+physiology-candidate-genes_20260715-130650	superseded physiology run	physiology-candidate-genes_20260805-234651
+placed-unplaced-scaffold-analysis_20260804-152445	superseded placement sensitivity	placed-unplaced-scaffold-analysis_20260805-235135
+presentation-labeled-infection-deg-pca_20260724-020436	superseded presentation export	publication-figures_20260805-235924
+publication-figures_20260805-014737	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-132450	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-134013	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-135151	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-140100	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-155843	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-160612	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-164712	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-170527	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-171500	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-172127	superseded publication draft	publication-figures_20260805-235924
+publication-figures_20260805-231240	superseded publication draft	publication-figures_20260805-235924
+study-design-data_20260804-151947	superseded rendered run	study-design-data_20260806-000104
+unplaced-scaffold-origin-screen_20260725-143720	superseded preliminary screen	scaffold-origin-audit_20260804-152436
+unplaced-scaffold-origin-workflow_20260724-024903	superseded preliminary workflow	scaffold-origin-audit_20260804-152436
+workflow-reproducibility_20260804-151949	superseded rendered run	workflow-reproducibility_20260806-000106

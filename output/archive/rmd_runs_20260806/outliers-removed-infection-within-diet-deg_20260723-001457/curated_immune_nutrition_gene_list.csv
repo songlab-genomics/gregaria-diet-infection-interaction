@@ -1,0 +1,91 @@
+"gene_id","Preferred_name","Description","Functional_theme","DEG_class","DEG_diets","DEG_direction_summary","min_padj","max_abs_lfc"
+"LOC126267163","","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Immune-related","DEG","33, 50, 83","Higher in infected",2.3713293079658e-21,5.33337632532354
+"LOC126285462","","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immune-related","DEG","33, 50, 83","Higher in infected",9.2037512824396e-21,3.80579754512816
+"LOC126266759","","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Immune-related","DEG","33, 50, 83","Higher in infected",1.40669685247819e-17,4.11317603230888
+"LOC126335463","","Belongs to the serpin family","Immune-related","DEG","33, 50, 83","Higher in infected",1.00766936934231e-15,6.74093441180729
+"LOC126266760","","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Immune-related","DEG","33, 50, 83","Higher in infected",1.03432990533766e-11,3.19823580204247
+"LOC126335468","","Belongs to the serpin family","Immune-related","DEG","33, 50, 83","Higher in infected",1.4157816487322e-10,4.60032491980348
+"LOC126267038","","Signal transducer and activator of transcription","Immune-related","DEG","33, 50, 83","Higher in infected",1.42028186694558e-10,1.19863917351442
+"LOC126271975","","Alpha-lactalbumin / lysozyme C","Immune-related","DEG","33, 50","Higher in infected",1.72371513119787e-09,7.28776000946932
+"LOC126336578","","Immunoglobulin V-set domain","Immune-related","DEG","33, 50, 83","Higher in infected",4.53905085619105e-09,4.99498824008944
+"LOC126268068","PGRPLA","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immune-related","DEG","50","Higher in infected",1.62266926758607e-08,2.42944740109156
+"LOC126267162","PGRPLC","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immune-related","DEG","33, 50, 83","Higher in infected",3.22199826852272e-08,2.12337612593157
+"LOC126335547","","Belongs to the serpin family","Immune-related","DEG","33, 50, 83","Higher in infected",3.50943744724327e-08,2.97769414431241
+"LOC126267215","PGRPLA","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immune-related","DEG","33, 50, 83","Higher in infected",7.02938599862505e-08,5.23608725977779
+"LOC126335467","","Belongs to the serpin family","Immune-related","DEG","50","Higher in infected",7.20136253026819e-08,2.73561979553284
+"LOC126336325","","Knottins","Immune-related","DEG","33, 50, 83","Higher in infected",6.65366732712145e-07,6.49218561836661
+"LOC126271991","","It is involved in the biological process described with","Immune-related","DEG","50, 83","Higher in infected",8.65026423473478e-07,1.12350763968764
+"LOC126272350","","carbohydrate binding","Immune-related","DEG","50","Higher in control",8.90086880102552e-07,3.43861911207472
+"LOC126353952","CLIPC1","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Immune-related","DEG","50, 83","Higher in infected",2.43106956768394e-06,2.37551003529927
+"LOC126267190","","Immunoglobulin","Immune-related","DEG","33, 83","Higher in control",9.90165681122419e-06,3.18353911041518
+"LOC126299332","","Lipid transporter activity. It is involved in the biological process described with lipid transport","Storage/lipid transport","DEG","33, 50, 83","Higher in infected",5.40259976375617e-09,2.01555376493537
+"LOC126336416","","Hemocyanin, all-alpha domain","Storage/lipid transport","DEG","33, 50, 83","Higher in infected",7.14430593394024e-09,2.08495877522568
+"LOC126336415","","Hemocyanin, all-alpha domain","Storage/lipid transport","DEG","50, 83","Higher in infected",5.7296427787383e-05,2.28982146357698
+"LOC126336409","","Hemocyanin, all-alpha domain","Storage/lipid transport","DEG","33","Higher in control",0.0316322628557231,1.93678475640366
+"LOC126298412","","Lipid transporter activity. It is involved in the biological process described with lipid transport","Storage/lipid transport","DEG","50","Higher in control",0.0474992329736751,1.36576201568466
+"LOC126339755","","Vault protein inter-alpha-trypsin domain","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",1.84968395542559e-20,4.39949544586871
+"LOC126285457","","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",1.61401119246563e-15,3.90580110976002
+"LOC126283989","","Gamma glutamyl transpeptidases","Nutrition/metabolism","DEG","33, 50","Higher in infected",2.09675245845822e-15,5.30975862590795
+"LOC126285413","","transporter activity. It is involved in the biological process described with sodium ion transport","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",3.57001230552083e-15,3.45638331220144
+"LOC126272336","","lipid binding","Nutrition/metabolism","DEG","50","Higher in infected",8.12513244854639e-15,2.19358807628494
+"LOC126355303","","Transporter activity. It is involved in the biological process described with transmembrane transport","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",8.18405022609908e-13,4.28567720375713
+"LOC126355939","","amino acid transporter","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",7.83554825426839e-12,6.42100542011682
+"LOC126282181","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",2.77199816245005e-11,6.52109910112457
+"LOC126278707","","Trypsin","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",3.75391606958533e-11,3.81402175398998
+"LOC126299559","","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",1.97879783475952e-10,3.13514168383545
+"LOC126355684","Orct","Sugar (and other) transporter","Nutrition/metabolism","DEG","33, 50","Higher in infected",1.97879783475952e-10,2.52946658726876
+"LOC126334774","","ABC transporter transmembrane region","Nutrition/metabolism","DEG","33, 50","Higher in infected",3.38563916108205e-10,3.53100273467898
+"LOC126284651","","Phosphoric diester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",8.84327701849847e-10,4.6397090999952
+"LOC126266982","","It is involved in the biological process described with carbohydrate metabolic process","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",1.2368901232133e-09,3.07763778879124
+"LOC126267545","","Trypsin-like serine protease","Nutrition/metabolism","DEG","33, 50","Higher in infected",1.34148227744357e-09,7.77341935245232
+"LOC126299510","","Trypsin-like serine protease","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",2.84020804693917e-09,5.52082235934154
+"LOC126360693","","Peptidase C13 family","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",3.25753352294805e-09,2.54861119080384
+"LOC126339612","","Vault protein inter-alpha-trypsin domain","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",3.80697973799165e-09,3.74823197601065
+"LOC126354995","","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",3.14704965334448e-08,6.80124212200908
+"LOC126278232","","Sugar proton symporter activity. It is involved in the biological process described with carbohydrate transport","Nutrition/metabolism","DEG","33, 50","Higher in infected",2.49504505909729e-07,2.12709030418221
+"LOC126335115","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","DEG","33, 50, 83","Higher in infected",2.83447276531478e-07,6.74503314978613
+"LOC126284686","","Phospholipase A2","Nutrition/metabolism","DEG","33, 50","Higher in control",6.11263136895444e-07,2.78344737074749
+"LOC126279122","CAH1","It is involved in the biological process described with one-carbon metabolic process","Nutrition/metabolism","DEG","33","Higher in control",1.02354790595184e-05,1.71088316822515
+"LOC126334779","","Defensin anti-microbial peptide","Immune-related","Not DEG","","",NA,0
+"LOC126299121","bt","Immunoglobulin like","Immune-related","Not DEG","","",NA,0
+"LOC126335167","","Belongs to the serpin family","Immune-related","Not DEG","","",NA,0
+"LOC126266677","","Immunoglobulin","Immune-related","Not DEG","","",NA,0
+"LOC126295319","","Immunoglobulin C-2 Type","Immune-related","Not DEG","","",NA,0
+"LOC126277885","","Immunoglobulin C-2 Type","Immune-related","Not DEG","","",NA,0
+"LOC126273183","stai","It is involved in the biological process described with regulation of microtubule polymerization or depolymerization","Immune-related","Not DEG","","",NA,0
+"LOC126273193","","carbohydrate binding","Immune-related","Not DEG","","",NA,0
+"LOC126345236","RpL5","Component of the ribosome, a large ribonucleoprotein complex responsible for the synthesis of proteins in the cell. The small ribosomal subunit (SSU) binds messenger RNAs (mRNAs) and translates the encoded message by selecting cognate aminoacyl- transfer RNA (tRNA) molecules. The large subunit (LSU) contains the ribosomal catalytic site termed the peptidyl transferase center (PTC), which catalyzes the formation of peptide bonds, thereby polymerizing the amino acids delivered by tRNAs into a polypeptide chain. The nascent polypeptides leave the ribosome through a tunnel in the LSU and interact with protein factors that function in enzymatic processing, targeting, and the membrane insertion of nascent chains at the exit of the ribosomal tunnel","Immune-related","Not DEG","","",NA,0
+"LOC126354270","","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Immune-related","Not DEG","","",NA,0
+"LOC126267477","","cysteine-type endopeptidase inhibitor activity. It is involved in the biological process described with proteolysis","Immune-related","Not DEG","","",NA,0
+"LOC126272138","","Immunoglobulin domain","Immune-related","Not DEG","","",NA,0
+"LOC126267690","CLIPD2","Domain of unknown function (DUF1986)","Immune-related","Not DEG","","",NA,0
+"LOC126273387","SCRASP1","It is involved in the biological process described with","Immune-related","Not DEG","","",NA,0
+"LOC126297465","","Legume-like lectin family","Immune-related","Not DEG","","",NA,0
+"LOC126336078","","Belongs to the serpin family","Immune-related","Not DEG","","",NA,0
+"LOC126298901","SRPN12","Belongs to the serpin family","Immune-related","Not DEG","","",NA,0
+"LOC126335616","","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Immune-related","Not DEG","","",NA,0
+"LOC126334876","","Hemocyanin, all-alpha domain","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126336408","","Hemocyanin, all-alpha domain","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126335724","","Hemocyanin, all-alpha domain","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126299565","","Lipid transporter activity. It is involved in the biological process described with lipid transport","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126335646","","Hemocyanin, copper containing domain","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126336762","","Microsomal triglyceride transfer protein","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126299533","","nutrient reservoir activity","Storage/lipid transport","Not DEG","","",NA,0
+"LOC126354316","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126332617","","activity. It is involved in the biological process described with carbohydrate metabolic process","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126355972","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126354457","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126355971","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126277939","bli-4","Proprotein convertase P-domain","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126354459","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126335006","","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126327137","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126355964","","It is involved in the biological process described with metabolic process","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126268026","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126272474","","Dipeptidyl peptidase IV (DPP IV) N-terminal region","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126298632","Gad1","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126356216","","Belongs to the type-B carboxylesterase lipase family","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126298210","","L-ascorbic acid metabolic process","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126298682","Cpap3-a1","chitin binding. It is involved in the biological process described with chitin metabolic process","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126267391","","PLAC (protease and lacunin) domain","Nutrition/metabolism","Not DEG","","",NA,0
+"LOC126332010","","Kazal type serine protease inhibitors","Nutrition/metabolism","Not DEG","","",NA,0

@@ -1,0 +1,12 @@
+### Focused BLASTn/DIAMOND audit of unresolved infected diet 33 vs 50 DEGs.
+###
+### This Snakefile starts from a frozen 59-scaffold/948-gene target set. It
+### contains no raw-read, mapping, featureCounts, DESeq2, or Kraken rules.
+
+include: "config.smk"
+include: "rules/09_scaffold_origin_homology.smk"
+
+
+rule all:
+    input:
+        scaffold_origin_homology_outputs()

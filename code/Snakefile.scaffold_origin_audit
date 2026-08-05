@@ -1,0 +1,13 @@
+### Independent scaffold-origin audit.
+###
+### This Snakefile has no RNA-seq trimming, read alignment, counting, or R
+### rules. It starts from the frozen 77-scaffold DEG candidate set and writes a
+### new run folder; minimap2 is used only for whole-scaffold genome comparison.
+
+include: "config.smk"
+include: "rules/08_scaffold_origin_audit.smk"
+
+
+rule all:
+    input:
+        scaffold_origin_audit_outputs()

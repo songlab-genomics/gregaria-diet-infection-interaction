@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Emily Baker and Maeva A. Techer" />
+
+<meta name="date" content="2026-08-05" />
+
+<title>Metarhizium read burden across fat body samples</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="site-style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">S. gregaria diet x infection</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Start Here
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="index.html">Project overview</a>
+    </li>
+    <li>
+      <a href="01-study-design-data.html">Study design and data</a>
+    </li>
+    <li>
+      <a href="02-workflow-reproducibility.html">RNA-seq workflow</a>
+    </li>
+    <li>
+      <a href="03-count-qc-exploration.html">Count QC and exploration</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Fat Body Experiment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="03-count-qc-exploration.html">Experiment QC</a>
+    </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+        </li>
+        <li>
+          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+        <li>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + placed chromosomes</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
+        </li>
+        <li>
+          <a href="15-all-samples-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Interpretation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Scaffold origin interpretation</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Placed chromosomes</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Figures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="08-publication-figures.html">Publication figure exports</a>
+    </li>
+    <li>
+      <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+    </li>
+    <li>
+      <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+    </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sensitivity and Validation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+    </li>
+    <li>
+      <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+    </li>
+    <li>
+      <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+    </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Archive
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="archive.html">Archived analysis index</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
+        </li>
+        <li>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
+        </li>
+        <li>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
+        </li>
+        <li>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
+        </li>
+        <li>
+          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
+        </li>
+        <li>
+          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
+        </li>
+        <li>
+          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
+        </li>
+        <li>
+          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
+        </li>
+        <li>
+          <a href="overlap.html">Original DEG overlap and prioritization</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="file_prep.html">Original file preparation</a>
+    </li>
+    <li>
+      <a href="deg.html">Original DEG with rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna.html">Original DEG without rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna-sva.html">Original DEG without rRNA + SVA</a>
+    </li>
+    <li>
+      <a href="overlap.html">Original overlap page</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Metarhizium read burden across fat body
+samples</h1>
+<h4 class="author">Emily Baker and Maeva A. Techer</h4>
+<h4 class="date">2026-08-05</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-08-05
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>gregaria-diet-infection-interaction/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260427code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260427)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260427code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260427)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    analysis/output/
+    Ignored:    code/R_timecourse_reference/
+    Ignored:    code/scripts/__pycache__/
+    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
+    Ignored:    data/reference/
+    Ignored:    output/.DS_Store
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
+    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
+    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
+    Ignored:    output/rmd_runs/all-scaffolds-all-deg-catalogue_20260805-234450/
+    Ignored:    output/rmd_runs/all-scaffolds-deg-overlap-prioritization_20260805-234426/
+    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
+    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
+    Ignored:    output/rmd_runs/all-scaffolds-enrichment-term-gene-index_20260805-234619/
+    Ignored:    output/rmd_runs/all-scaffolds-go-term-enrichment_20260805-234526/
+    Ignored:    output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/
+    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
+    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-235850/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
+    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
+    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
+    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260805-235654/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260805-235606/
+    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
+    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
+    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260805-235540/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-234916/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-235722/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-234815/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-235528/
+    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260805-234829/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
+    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
+    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
+    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
+    Ignored:    output/rmd_runs/physiology-candidate-genes_20260805-234651/
+    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
+    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260805-235135/
+    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
+    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
+    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
+    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
+    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
+    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
+    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
+    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
+    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
+    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
+    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
+    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
+    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
+    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
+    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
+    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
+    Ignored:    output/runs/
+    Ignored:    scripts/.RData
+    Ignored:    scripts/.Rhistory
+
+Untracked files:
+    Untracked:  Rplots.pdf
+    Untracked:  analysis/27-scaffold-origin-audit.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
+    Untracked:  analysis/29-metarhizium-read-burden.Rmd
+    Untracked:  analysis/30-curated-target-gene-figure.Rmd
+    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/archive.Rmd
+    Untracked:  analysis/assets/
+    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
+    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
+    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
+    Untracked:  code/Snakefile.scaffold_origin_audit
+    Untracked:  code/Snakefile.scaffold_origin_homology
+    Untracked:  code/config/
+    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
+    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
+    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
+    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
+    Untracked:  code/rules/08_scaffold_origin_audit.smk
+    Untracked:  code/rules/09_scaffold_origin_homology.smk
+    Untracked:  code/scripts/build_combined_reference.py
+    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
+    Untracked:  code/scripts/build_scaffold_origin_audit.py
+    Untracked:  code/scripts/compare_host_count_matrices.py
+    Untracked:  code/scripts/compare_host_deseq2_results.py
+    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
+    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
+    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
+    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
+    Untracked:  code/scripts/export_scaffold_origin_candidates.py
+    Untracked:  code/scripts/extract_unplaced_scaffolds.py
+    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
+    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
+    Untracked:  code/scripts/install_scaffold_homology_env.slurm
+    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
+    Untracked:  code/scripts/merge_featurecounts.py
+    Untracked:  code/scripts/merge_tsv_rows.py
+    Untracked:  code/scripts/plot_kraken_family_composition.R
+    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
+    Untracked:  code/scripts/run_fungal_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
+    Untracked:  code/scripts/select_scaffold_homology_targets.py
+    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
+    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
+    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
+    Untracked:  code/scripts/summarize_competitive_mapping.py
+    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
+    Untracked:  code/scripts/summarize_host_mapping_audit.py
+    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
+    Untracked:  code/scripts/summarize_scaffold_kraken.py
+    Untracked:  code/scripts/summarize_star_log.py
+    Untracked:  code/snakemake.host_pathogen_dual.slurm
+    Untracked:  code/snakemake.scaffold_origin_audit.slurm
+    Untracked:  code/snakemake.scaffold_origin_homology.slurm
+    Untracked:  data/external/curated_target_genes/
+    Untracked:  data/scaffold_origin/
+    Untracked:  scripts/make_diet_infection_physiology_response.R
+    Untracked:  scripts/reference/
+    Untracked:  scripts/screen_unplaced_scaffold_origin.R
+
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/site-style.css
+    Modified:   code/README.md
+    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/cluster.json
+    Modified:   code/config.smk
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p>This page quantifies the RNA-seq evidence for <em>Metarhizium
+robertsii</em> in each fat body library. It uses the competitive
+host-pathogen alignment, in which each read is aligned against a
+combined <em>Schistocerca gregaria</em> and <em>M. robertsii</em>
+reference. This avoids counting a read independently as both host and
+fungus.</p>
+<p>Three related measurements are reported:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Fungal genome-mapped reads:</strong> primary, uniquely
+mapped read alignments assigned by STAR anywhere on the <em>M.
+robertsii</em> genome.</li>
+<li><strong>Fungal exon-assigned fragments:</strong> paired-end
+fragments assigned by featureCounts to annotated <em>M. robertsii</em>
+exons.</li>
+<li><strong>Unique fungal alignment percentage:</strong> uniquely
+aligned reads assigned to the fungal reference, shown as a percentage of
+all unique alignments.</li>
+</ol>
+<p>The first measurement is the closest available equivalent to a
+general “mapped reads” plot because it is not restricted to annotated
+exons. The featureCounts value is instead an expression-level fungal
+exon count and is reported as fragments because the pipeline used
+<code>--countReadPairs</code>. Neither measurement is a direct
+measurement of fungal biomass, and matched qPCR validation was
+unavailable because no additional tissue remained.</p>
+</div>
+<div id="setup-and-input-validation" class="section level2">
+<h2>Setup and input validation</h2>
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required &lt;- c(&quot;dplyr&quot;, &quot;ggplot2&quot;, &quot;scales&quot;, &quot;patchwork&quot;, &quot;DT&quot;, &quot;knitr&quot;,
+              &quot;tidyr&quot;, &quot;tibble&quot;, &quot;stringr&quot;)
+missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) &gt; 0) {
+  stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
+}
+
+project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
+metadata_file &lt;- file.path(project_dir, params$metadata_file)
+fungal_counts_file &lt;- file.path(project_dir, params$fungal_counts_file)
+mapping_summary_file &lt;- file.path(project_dir, params$mapping_summary_file)
+
+latest_run_dir &lt;- function(prefix) {
+  run_root &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;)
+  candidates &lt;- list.dirs(run_root, recursive = FALSE, full.names = TRUE)
+  candidates &lt;- candidates[grepl(paste0(&quot;^&quot;, prefix, &quot;_&quot;), basename(candidates))]
+  if (length(candidates) == 0) {
+    stop(&quot;No completed run found for: &quot;, prefix)
+  }
+  candidates[[which.max(file.info(candidates)$mtime)]]
+}
+
+cluster_run_dir &lt;- if (nzchar(params$cluster_run_dir)) {
+  normalizePath(file.path(project_dir, params$cluster_run_dir), mustWork = TRUE)
+} else {
+  latest_run_dir(&quot;main-chromosome-cluster-enrichment&quot;)
+}
+cluster_matrix_file &lt;- file.path(
+  cluster_run_dir,
+  &quot;full_main_chromosome_deg_diagnostic_z_vst_matrix.csv.gz&quot;
+)
+cluster_assignment_file &lt;- file.path(
+  cluster_run_dir,
+  &quot;figure3_k2_gene_assignments.csv&quot;
+)
+
+input_files &lt;- c(
+  metadata_file, fungal_counts_file, mapping_summary_file,
+  cluster_matrix_file, cluster_assignment_file
+)
+if (!all(file.exists(input_files))) {
+  stop(&quot;Missing input(s): &quot;, paste(input_files[!file.exists(input_files)], collapse = &quot;, &quot;))
+}
+
+run_stamp &lt;- format(Sys.time(), &quot;%Y%m%d-%H%M%S&quot;)
+out_dir &lt;- file.path(
+  project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
+  paste(params$output_tag, run_stamp, sep = &quot;_&quot;)
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata &lt;- read.delim(metadata_file, check.names = FALSE)
+metadata &lt;- metadata[, !is.na(names(metadata)) &amp; nzchar(names(metadata)), drop = FALSE] |&gt;
+  dplyr::mutate(
+    label = as.character(label),
+    Treatment = factor(Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;)),
+    Diet = factor(as.character(Diet), levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;)),
+    condition = factor(
+      paste(Treatment, Diet),
+      levels = c(
+        &quot;Control 33&quot;, &quot;Control 50&quot;, &quot;Control 83&quot;,
+        &quot;Infected 33&quot;, &quot;Infected 50&quot;, &quot;Infected 83&quot;
+      )
+    )
+  )
+
+fungal_counts &lt;- read.delim(fungal_counts_file, check.names = FALSE)
+sample_ids &lt;- colnames(fungal_counts)[-1]
+stopifnot(setequal(sample_ids, metadata$label))
+
+mapping_summary &lt;- read.delim(mapping_summary_file, check.names = FALSE) |&gt;
+  dplyr::mutate(sample_id = as.character(sample_id))
+stopifnot(setequal(mapping_summary$sample_id, metadata$label))
+
+fungal_burden &lt;- data.frame(
+  label = sample_ids,
+  fungal_exon_fragments = colSums(fungal_counts[, -1, drop = FALSE])
+) |&gt;
+  dplyr::left_join(
+    mapping_summary |&gt;
+      dplyr::select(sample_id, unique_fungus, pct_unique_fungus),
+    by = c(&quot;label&quot; = &quot;sample_id&quot;)
+  ) |&gt;
+  dplyr::left_join(
+    metadata |&gt;
+      dplyr::select(label, Treatment, Diet, condition),
+    by = &quot;label&quot;
+  ) |&gt;
+  dplyr::mutate(
+    sample_name = as.character(label),
+    condition = factor(condition, levels = levels(metadata$condition))
+  ) |&gt;
+  dplyr::arrange(condition, as.numeric(label))
+
+write.csv(
+  fungal_burden,
+  file.path(out_dir, &quot;metarhizium_read_burden_by_sample.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+</div>
+<div id="fungal-genome-mapped-reads" class="section level2">
+<h2>Fungal genome-mapped reads</h2>
+<p>This is the broad mapping view most comparable to the previously
+generated “CDS alignment mapped reads” figure. Here, however, reads were
+aligned competitively against the complete locust and fungal genomes.
+The bars count primary read alignments that mapped uniquely anywhere on
+the fungal genome; they are not restricted to exons or CDS features.</p>
+<p>The values will not be identical to a direct CDS alignment because
+the reference target, competition with the host genome, alignment
+algorithm, and multimapping filters differ.</p>
+<pre class="r"><code>mapped_highlight_threshold &lt;- stats::quantile(
+  fungal_burden$unique_fungus,
+  probs = 0.90,
+  na.rm = TRUE
+)
+
+fungal_genome_plot &lt;- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = unique_fungus)
+) +
+  ggplot2::geom_col(
+    fill = &quot;#4C78A8&quot;,
+    color = &quot;#17202A&quot;,
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_text(
+    data = fungal_burden |&gt;
+      dplyr::filter(unique_fungus &gt;= mapped_highlight_threshold),
+    ggplot2::aes(label = scales::comma(unique_fungus)),
+    vjust = -0.35,
+    size = 3.8,
+    fontface = &quot;bold&quot;
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.12))
+  ) +
+  ggplot2::labs(
+    title = &quot;Metarhizium robertsii genome-mapped reads&quot;,
+    subtitle = &quot;Unique primary reads from competitive host-pathogen STAR alignment&quot;,
+    x = NULL,
+    y = &quot;Unique fungal read alignments&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
+  )
+
+print(fungal_genome_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="full-and-zoomed-fungal-read-counts" class="section level2">
+<h2>Full and zoomed fungal read counts</h2>
+<p>The zoom retains every individual library. Bars above 7,000 reads are
+capped at the upper boundary and labeled with their complete values, so
+their sample positions remain visible. The dashed gold horizontal line
+gives the mean fungal read count across all 20 control individuals
+(146.5 reads).</p>
+<pre class="r"><code>read_zoom_limit &lt;- 7000
+control_mean_reads &lt;- mean(
+  fungal_burden$unique_fungus[fungal_burden$Treatment == &quot;Control&quot;],
+  na.rm = TRUE
+)
+
+read_zoom_samples &lt;- fungal_burden |&gt;
+  dplyr::mutate(
+    display_value = pmin(unique_fungus, read_zoom_limit)
+  )
+
+fungal_genome_zoom_plot &lt;- ggplot2::ggplot(
+  read_zoom_samples,
+  ggplot2::aes(x = sample_name, y = display_value)
+) +
+  ggplot2::geom_col(
+    fill = &quot;#4C78A8&quot;,
+    color = &quot;#17202A&quot;,
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_reads,
+    color = &quot;#B7791F&quot;,
+    linewidth = 0.9,
+    linetype = &quot;dashed&quot;
+  ) +
+  ggplot2::geom_text(
+    data = read_zoom_samples |&gt;
+      dplyr::filter(unique_fungus &gt; read_zoom_limit),
+    ggplot2::aes(
+      x = sample_name,
+      y = read_zoom_limit * 0.94,
+      label = paste0(scales::comma(unique_fungus), &quot; (&gt;7k)&quot;)
+    ),
+    inherit.aes = FALSE,
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 3.3,
+    fontface = &quot;bold&quot;,
+    color = &quot;white&quot;
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, read_zoom_limit),
+    breaks = seq(0, read_zoom_limit, by = 1000),
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.01))
+  ) +
+  ggplot2::labs(
+    title = &quot;Zoomed Metarhizium robertsii alignment signal&quot;,
+    subtitle = paste0(
+      &quot;All samples retained; bars above 7,000 are capped; dashed line = control mean (&quot;,
+      round(control_mean_reads, 1), &quot; reads)&quot;
+    ),
+    x = NULL,
+    y = &quot;Unique fungal read alignments&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 8.5),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
+  )
+
+print(fungal_genome_zoom_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-zoom-7000-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fungal_genome_full_zoom_plot &lt;-
+  (fungal_genome_plot / fungal_genome_zoom_plot) +
+  patchwork::plot_annotation(tag_levels = &quot;A&quot;)
+
+print(fungal_genome_full_zoom_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-full-and-zoom-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fungal-exon-assigned-fragments" class="section level2">
+<h2>Fungal exon-assigned fragments</h2>
+<p>The bar plot mirrors the sample-level CDS alignment view while using
+the fresh competitive-mapping output. All six diet-treatment groups
+share the same y-axis, so the high fungal signal in a small number of
+infected libraries is not hidden by condition-specific scaling.</p>
+<pre class="r"><code>highlight_threshold &lt;- stats::quantile(
+  fungal_burden$fungal_exon_fragments,
+  probs = 0.90,
+  na.rm = TRUE
+)
+
+fungal_fragment_plot &lt;- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = fungal_exon_fragments)
+) +
+  ggplot2::geom_col(
+    fill = &quot;#4C78A8&quot;,
+    color = &quot;#17202A&quot;,
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_text(
+    data = fungal_burden |&gt;
+      dplyr::filter(fungal_exon_fragments &gt;= highlight_threshold),
+    ggplot2::aes(label = scales::comma(fungal_exon_fragments)),
+    vjust = -0.35,
+    size = 3.8,
+    fontface = &quot;bold&quot;
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.12))
+  ) +
+  ggplot2::labs(
+    title = &quot;Metarhizium robertsii exon-assigned fragments&quot;,
+    subtitle = &quot;Competitive host-pathogen alignment; paired-end featureCounts&quot;,
+    x = NULL,
+    y = &quot;Fungal exon-assigned fragments&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
+  )
+
+print(fungal_fragment_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-exon-fragments-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="library-normalized-fungal-alignment-signal"
+class="section level2">
+<h2>Library-normalized fungal alignment signal</h2>
+<p>The percentage view controls for differences in total unique
+alignment depth. It confirms whether samples with many fungal exon
+counts also devote a larger fraction of their sequenced library to the
+fungal reference.</p>
+<pre class="r"><code>fungal_percentage_plot &lt;- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = pct_unique_fungus)
+) +
+  ggplot2::geom_col(
+    fill = &quot;#8B1A1A&quot;,
+    color = &quot;#17202A&quot;,
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_number(suffix = &quot;%&quot;, accuracy = 0.01),
+    expand = ggplot2::expansion(mult = c(0, 0.08))
+  ) +
+  ggplot2::labs(
+    title = &quot;Fraction of unique alignments assigned to M. robertsii&quot;,
+    subtitle = &quot;Unique fungal alignments divided by all unique competitive alignments&quot;,
+    x = NULL,
+    y = &quot;Unique fungal alignments (%)&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
+  )
+
+print(fungal_percentage_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="full-and-zoomed-fungal-alignment-percentages"
+class="section level2">
+<h2>Full and zoomed fungal alignment percentages</h2>
+<p>The percentage zoom also retains every sample. Values exceeding 0.1%
+reach the upper boundary and carry their complete percentages. The
+dashed gold line is the mean across controls (0.00042% of unique
+competitive alignments), shown as a common background reference.</p>
+<pre class="r"><code>percentage_zoom_limit &lt;- 0.1
+control_mean_percentage &lt;- mean(
+  fungal_burden$pct_unique_fungus[fungal_burden$Treatment == &quot;Control&quot;],
+  na.rm = TRUE
+)
+
+percentage_zoom_samples &lt;- fungal_burden |&gt;
+  dplyr::mutate(
+    display_value = pmin(pct_unique_fungus, percentage_zoom_limit)
+  )
+
+fungal_percentage_zoom_plot &lt;- ggplot2::ggplot(
+  percentage_zoom_samples,
+  ggplot2::aes(x = sample_name, y = display_value)
+) +
+  ggplot2::geom_col(
+    fill = &quot;#8B1A1A&quot;,
+    color = &quot;#17202A&quot;,
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_percentage,
+    color = &quot;#B7791F&quot;,
+    linewidth = 0.9,
+    linetype = &quot;dashed&quot;
+  ) +
+  ggplot2::geom_text(
+    data = percentage_zoom_samples |&gt;
+      dplyr::filter(pct_unique_fungus &gt; percentage_zoom_limit),
+    ggplot2::aes(
+      x = sample_name,
+      y = percentage_zoom_limit * 0.94,
+      label = paste0(
+        scales::number(pct_unique_fungus, accuracy = 0.001),
+        &quot;% (&gt;0.1%)&quot;
+      )
+    ),
+    inherit.aes = FALSE,
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 3.3,
+    fontface = &quot;bold&quot;,
+    color = &quot;white&quot;
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, percentage_zoom_limit),
+    breaks = seq(0, percentage_zoom_limit, by = 0.025),
+    labels = scales::label_number(suffix = &quot;%&quot;, accuracy = 0.025),
+    expand = ggplot2::expansion(mult = c(0, 0.01))
+  ) +
+  ggplot2::labs(
+    title = &quot;Zoomed fraction of alignments assigned to M. robertsii&quot;,
+    subtitle = paste0(
+      &quot;All samples retained; values above 0.1% are capped; dashed line = control mean (&quot;,
+      scales::number(control_mean_percentage, accuracy = 0.00001), &quot;%)&quot;
+    ),
+    x = NULL,
+    y = &quot;Unique fungal alignments (%)&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 8.5),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
+  )
+
+print(fungal_percentage_zoom_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-zoom-0-1-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fungal_percentage_full_zoom_plot &lt;-
+  (fungal_percentage_plot / fungal_percentage_zoom_plot) +
+  patchwork::plot_annotation(tag_levels = &quot;A&quot;)
+
+print(fungal_percentage_full_zoom_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-percentage-full-and-zoom-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fungal-percentage-aligned-above-the-host-deg-heatmap"
+class="section level2">
+<h2>Fungal percentage aligned above the host DEG heatmap</h2>
+<p>This figure aligns the 0-0.1% fungal-percentage zoom directly above
+the complete two-cluster main-chromosome DEG heatmap. Columns are
+ordered first by treatment, then diet, and finally sample number. Values
+above 0.1% are capped only for the display and retain their complete
+percentage as a white label. The heatmap contains all significant
+main-chromosome DEGs used in the current Figure 3, not only genes
+annotated with GO or KEGG terms.</p>
+<pre class="r"><code>cluster_z &lt;- read.csv(
+  gzfile(cluster_matrix_file),
+  check.names = FALSE,
+  row.names = 1
+)
+cluster_z &lt;- as.matrix(cluster_z)
+storage.mode(cluster_z) &lt;- &quot;numeric&quot;
+
+cluster_assignments &lt;- read.csv(
+  cluster_assignment_file,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |&gt;
+  dplyr::mutate(
+    expression_cluster = factor(
+      expression_cluster,
+      levels = c(&quot;DEG cluster 1&quot;, &quot;DEG cluster 2&quot;)
+    ),
+    DEG_context_plot = dplyr::case_when(
+      DEG_context == &quot;Diet in controls&quot; ~ &quot;~ diet (controls)&quot;,
+      DEG_context == &quot;Diet in infected&quot; ~ &quot;~ diet (infected)&quot;,
+      DEG_context == &quot;Infection within diet&quot; ~ &quot;~ diet + infection&quot;,
+      DEG_context %in% c(&quot;Infection + diet&quot;, &quot;Diet in controls + infected&quot;) ~
+        &quot;shared DEGs&quot;,
+      TRUE ~ &quot;Other fat body DEG&quot;
+    )
+  ) |&gt;
+  dplyr::arrange(expression_cluster, within_cluster_order)
+
+sample_order_table &lt;- fungal_burden |&gt;
+  dplyr::arrange(condition, as.numeric(label)) |&gt;
+  dplyr::mutate(sample_index = dplyr::row_number())
+sample_order &lt;- sample_order_table$label
+
+if (!setequal(sample_order, colnames(cluster_z))) {
+  stop(&quot;Fungal-burden and DEG-heatmap samples do not match.&quot;)
+}
+if (!all(cluster_assignments$gene_id %in% rownames(cluster_z))) {
+  stop(&quot;One or more Figure 3 genes are absent from the VST matrix.&quot;)
+}
+
+sample_groups &lt;- sample_order_table |&gt;
+  dplyr::group_by(condition, Treatment, Diet) |&gt;
+  dplyr::summarise(
+    start = min(sample_index),
+    end = max(sample_index),
+    .groups = &quot;drop&quot;
+  ) |&gt;
+  dplyr::arrange(start)
+sample_gaps &lt;- utils::head(sample_groups$end, -1) + 0.5
+treatment_gaps &lt;- sample_groups$end[
+  which(
+    as.character(sample_groups$Treatment[-nrow(sample_groups)]) !=
+      as.character(sample_groups$Treatment[-1])
+  )
+] + 0.5
+diet_gaps &lt;- setdiff(sample_gaps, treatment_gaps)
+sample_x_limits &lt;- c(-1.25, length(sample_order) + 0.5)
+
+fungal_heatmap_percent &lt;- sample_order_table |&gt;
+  dplyr::mutate(
+    display_percentage = pmin(pct_unique_fungus, percentage_zoom_limit)
+  )
+
+fungal_percentage_track &lt;- ggplot2::ggplot(
+  fungal_heatmap_percent,
+  ggplot2::aes(
+    x = sample_index,
+    y = display_percentage,
+    fill = Treatment
+  )
+) +
+  ggplot2::geom_col(width = 0.82, color = &quot;#111827&quot;, linewidth = 0.25) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_percentage,
+    color = &quot;#B7791F&quot;,
+    linewidth = 0.9,
+    linetype = &quot;dashed&quot;
+  ) +
+  ggplot2::geom_vline(
+    xintercept = diet_gaps,
+    color = &quot;black&quot;,
+    linewidth = 0.25
+  ) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = &quot;black&quot;,
+    linewidth = 0.7
+  ) +
+  ggplot2::geom_text(
+    data = fungal_heatmap_percent |&gt;
+      dplyr::filter(pct_unique_fungus &gt; percentage_zoom_limit),
+    ggplot2::aes(
+      label = paste0(
+        scales::number(pct_unique_fungus, accuracy = 0.001),
+        &quot;%&quot;
+      ),
+      y = percentage_zoom_limit * 0.94
+    ),
+    color = &quot;white&quot;,
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 5.8,
+    fontface = &quot;bold&quot;,
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(Control = &quot;#FAEBD7&quot;, Infected = &quot;#8B0000&quot;),
+    guide = &quot;none&quot;
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_order_table$sample_index,
+    labels = sample_order,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, percentage_zoom_limit),
+    breaks = seq(0, percentage_zoom_limit, by = 0.025),
+    labels = scales::label_number(suffix = &quot;%&quot;, accuracy = 0.025),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = &quot;Fungal alignment percentage above host DEG expression&quot;,
+    subtitle = paste0(
+      &quot;All samples retained; values above 0.1% are capped and labeled; &quot;,
+      &quot;dashed line = control mean (&quot;,
+      scales::number(control_mean_percentage, accuracy = 0.00001),
+      &quot;%)&quot;
+    ),
+    x = NULL,
+    y = &quot;Unique fungal\nalignments (%)&quot;
+  ) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks.x = ggplot2::element_blank(),
+    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18),
+    plot.subtitle = ggplot2::element_text(size = 12),
+    plot.margin = ggplot2::margin(5, 5, 0, 5)
+  )
+
+sample_annotation_long &lt;- sample_order_table |&gt;
+  dplyr::transmute(
+    sample_index,
+    Treatment = as.character(Treatment),
+    Diet = as.character(Diet)
+  ) |&gt;
+  tidyr::pivot_longer(
+    cols = c(Treatment, Diet),
+    names_to = &quot;track&quot;,
+    values_to = &quot;value&quot;
+  ) |&gt;
+  dplyr::mutate(
+    track = factor(track, levels = c(&quot;Diet&quot;, &quot;Treatment&quot;)),
+    track_y = as.numeric(track),
+    annotation_key = paste(track, value, sep = &quot;: &quot;)
+  )
+
+sample_annotation_colors &lt;- c(
+  &quot;Treatment: Control&quot; = &quot;#FAEBD7&quot;,
+  &quot;Treatment: Infected&quot; = &quot;#8B0000&quot;,
+  &quot;Diet: 33&quot; = &quot;#E6862E&quot;,
+  &quot;Diet: 50&quot; = &quot;#2F8F5B&quot;,
+  &quot;Diet: 83&quot; = &quot;#7B4FA3&quot;
+)
+
+fungal_heatmap_annotation &lt;- ggplot2::ggplot(
+  sample_annotation_long,
+  ggplot2::aes(x = sample_index, y = track_y, fill = annotation_key)
+) +
+  ggplot2::geom_tile(width = 0.95, height = 0.9) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = &quot;black&quot;, linewidth = 0.25) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = &quot;black&quot;,
+    linewidth = 0.7
+  ) +
+  ggplot2::scale_fill_manual(values = sample_annotation_colors, guide = &quot;none&quot;) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = seq_len(2),
+    labels = c(&quot;Diet&quot;, &quot;Treatment&quot;),
+    limits = c(0.45, 2.55),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(face = &quot;bold&quot;, size = 11),
+    plot.margin = ggplot2::margin(0, 5, 0, 5)
+  )
+
+heatmap_matrix &lt;- cluster_z[
+  cluster_assignments$gene_id,
+  sample_order,
+  drop = FALSE
+]
+heatmap_matrix &lt;- pmax(pmin(heatmap_matrix, 3), -3)
+heatmap_df &lt;- as.data.frame(heatmap_matrix, check.names = FALSE) |&gt;
+  tibble::rownames_to_column(&quot;gene_id&quot;) |&gt;
+  dplyr::left_join(
+    cluster_assignments |&gt;
+      dplyr::select(
+        gene_id, expression_cluster, within_cluster_order, DEG_context_plot
+      ),
+    by = &quot;gene_id&quot;
+  ) |&gt;
+  tidyr::pivot_longer(
+    cols = dplyr::all_of(sample_order),
+    names_to = &quot;sample_id&quot;,
+    values_to = &quot;z&quot;
+  ) |&gt;
+  dplyr::mutate(sample_index = match(sample_id, sample_order))
+
+context_levels &lt;- c(
+  &quot;~ diet (controls)&quot;, &quot;~ diet (infected)&quot;, &quot;~ diet + infection&quot;,
+  &quot;shared DEGs&quot;, &quot;Other fat body DEG&quot;
+)
+context_colors &lt;- c(
+  &quot;~ diet (controls)&quot; = &quot;#DDE3EA&quot;,
+  &quot;~ diet (infected)&quot; = &quot;#AEBBC8&quot;,
+  &quot;~ diet + infection&quot; = &quot;#65788C&quot;,
+  &quot;shared DEGs&quot; = &quot;#263544&quot;,
+  &quot;Other fat body DEG&quot; = &quot;#F2F4F6&quot;
+)
+cluster_assignments$DEG_context_plot &lt;- factor(
+  cluster_assignments$DEG_context_plot,
+  levels = context_levels
+)
+present_contexts &lt;- context_levels[
+  context_levels %in% as.character(cluster_assignments$DEG_context_plot)
+]
+
+fungal_deg_heatmap &lt;- ggplot2::ggplot(
+  heatmap_df,
+  ggplot2::aes(x = sample_index, y = within_cluster_order, fill = z)
+) +
+  ggplot2::geom_segment(
+    data = cluster_assignments,
+    ggplot2::aes(
+      x = -1.1,
+      xend = 0.35,
+      y = within_cluster_order,
+      yend = within_cluster_order,
+      color = DEG_context_plot
+    ),
+    inherit.aes = FALSE,
+    linewidth = 1.15,
+    lineend = &quot;butt&quot;
+  ) +
+  ggplot2::geom_raster() +
+  ggplot2::geom_vline(xintercept = 0.5, color = &quot;#9CA3AF&quot;, linewidth = 0.4) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = &quot;black&quot;, linewidth = 0.25) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = &quot;black&quot;,
+    linewidth = 0.7
+  ) +
+  ggplot2::facet_grid(
+    expression_cluster ~ .,
+    scales = &quot;free_y&quot;,
+    space = &quot;free_y&quot;,
+    switch = &quot;y&quot;
+  ) +
+  ggplot2::scale_fill_gradientn(
+    colors = grDevices::colorRampPalette(
+      c(&quot;#237C8E&quot;, &quot;#F7F3E8&quot;, &quot;#C85A54&quot;)
+    )(101),
+    limits = c(-3, 3),
+    oob = scales::squish,
+    name = &quot;Row z-score&quot;
+  ) +
+  ggplot2::scale_color_manual(
+    values = context_colors,
+    breaks = present_contexts,
+    labels = stringr::str_wrap(present_contexts, 24),
+    drop = TRUE,
+    name = &quot;DEG context&quot;
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_order_table$sample_index,
+    labels = sample_order,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_reverse(expand = c(0, 0)) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(
+      angle = 90,
+      hjust = 1,
+      vjust = 0.5,
+      size = 12
+    ),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    strip.placement = &quot;outside&quot;,
+    strip.background.y = ggplot2::element_rect(
+      fill = &quot;#F3F4F6&quot;,
+      color = &quot;#111827&quot;
+    ),
+    strip.text.y.left = ggplot2::element_text(
+      angle = 90,
+      face = &quot;bold&quot;,
+      size = 14
+    ),
+    panel.spacing.y = grid::unit(0.2, &quot;lines&quot;),
+    legend.position = &quot;right&quot;,
+    legend.box = &quot;vertical&quot;,
+    legend.title = ggplot2::element_text(face = &quot;bold&quot;),
+    plot.margin = ggplot2::margin(0, 5, 5, 5)
+  )
+
+fungal_percentage_deg_heatmap &lt;-
+  fungal_percentage_track /
+  fungal_heatmap_annotation /
+  fungal_deg_heatmap +
+  patchwork::plot_layout(heights = c(2.2, 0.65, 8.5))
+
+print(fungal_percentage_deg_heatmap)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-percentage-above-deg-heatmap-1.png" alt="" width="2112" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>write.csv(
+  fungal_heatmap_percent |&gt;
+    dplyr::select(
+      sample_index, label, Treatment, Diet,
+      pct_unique_fungus, display_percentage
+    ),
+  file.path(out_dir, &quot;fungal_percentage_heatmap_sample_order.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+</div>
+<div id="combined-export" class="section level2">
+<h2>Combined export</h2>
+<pre class="r"><code>combined_plot &lt;- fungal_genome_plot / fungal_fragment_plot / fungal_percentage_plot +
+  patchwork::plot_annotation(
+    title = &quot;RNA-seq evidence for Metarhizium robertsii across fat body samples&quot;,
+    tag_levels = &quot;A&quot;
+  )
+
+print(combined_plot)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/combined-export-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>export_specs &lt;- list(
+  &quot;metarhizium_genome_mapped_reads&quot; = list(
+    plot = fungal_genome_plot, width = 20, height = 8
+  ),
+  &quot;metarhizium_genome_mapped_reads_zoom_7000_all_samples&quot; = list(
+    plot = fungal_genome_zoom_plot, width = 20, height = 8
+  ),
+  &quot;metarhizium_genome_mapped_reads_full_and_zoom&quot; = list(
+    plot = fungal_genome_full_zoom_plot, width = 20, height = 16
+  ),
+  &quot;metarhizium_exon_assigned_fragments&quot; = list(
+    plot = fungal_fragment_plot, width = 20, height = 8
+  ),
+  &quot;metarhizium_unique_alignment_percentage&quot; = list(
+    plot = fungal_percentage_plot, width = 20, height = 8
+  ),
+  &quot;metarhizium_unique_alignment_percentage_zoom_0_1_all_samples&quot; = list(
+    plot = fungal_percentage_zoom_plot, width = 20, height = 8
+  ),
+  &quot;metarhizium_unique_alignment_percentage_full_and_zoom&quot; = list(
+    plot = fungal_percentage_full_zoom_plot, width = 20, height = 16
+  ),
+  &quot;metarhizium_percentage_above_main_chromosome_deg_heatmap&quot; = list(
+    plot = fungal_percentage_deg_heatmap, width = 22, height = 16
+  ),
+  &quot;metarhizium_alignment_burden_combined&quot; = list(
+    plot = combined_plot, width = 20, height = 22
+  )
+)
+
+for (export_name in names(export_specs)) {
+  spec &lt;- export_specs[[export_name]]
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, &quot;.png&quot;)),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    dpi = 300,
+    limitsize = FALSE
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, &quot;.pdf&quot;)),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    limitsize = FALSE
+  )
+  if (requireNamespace(&quot;svglite&quot;, quietly = TRUE)) {
+    ggplot2::ggsave(
+      file.path(out_dir, paste0(export_name, &quot;.svg&quot;)),
+      spec$plot,
+      width = spec$width,
+      height = spec$height,
+      limitsize = FALSE
+    )
+  }
+}</code></pre>
+</div>
+<div id="sample-level-values" class="section level2">
+<h2>Sample-level values</h2>
+<pre class="r"><code>DT::datatable(
+  fungal_burden |&gt;
+    dplyr::arrange(dplyr::desc(unique_fungus)) |&gt;
+    dplyr::select(
+      label, Treatment, Diet, fungal_exon_fragments,
+      unique_fungus, pct_unique_fungus
+    ),
+  rownames = FALSE,
+  filter = &quot;top&quot;,
+  options = list(pageLength = 15, scrollX = TRUE),
+  caption = &quot;Competitive-mapping evidence for M. robertsii by sample&quot;
+)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-11f791fcfaca4190eb8e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Control&quot;,&quot;Infected&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;33&quot;,&quot;50&quot;,&quot;83&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"302890\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"8\" data-max=\"965784\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"4.359439254e-05\" data-max=\"3.12975903737515\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Competitive-mapping evidence for M. robertsii by sample<\/caption>","data":[["1029","1058","1025","1057","1054","1016","1023","1027","1049","1030","1018","1015","1046","1051","1055","1009","1039","1024","1028","1007","1050","1021","1045","1033","1003","1043","1052","1002","1035","1042","1031","1004","1020","1014","1005","1037","1040","1011","1036","1034","1041","1032","1038","1006"],["Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Control","Infected","Infected","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Control","Infected","Control","Control","Infected","Infected","Control","Control","Control","Control","Control","Control","Control","Control","Control","Control"],["83","50","50","33","33","50","83","33","50","33","33","33","50","33","50","33","33","83","50","50","83","33","33","33","33","50","50","83","83","33","50","50","83","83","83","50","50","83","33","50","83","83","83","33"],[302890,129925,93895,64832,5408,1913,1356,1305,496,193,8,74,22,7,27,4,8,2,1,7,4,6,21,4,2,5,3,0,3,12,3,0,2,2,2,19,4,5,6,2,3,1,4,4],[965784,478026,286680,225150,19262,6742,4584,4156,2346,996,692,456,286,276,264,256,238,222,214,212,194,182,174,160,158,150,134,132,126,114,102,100,98,90,84,72,70,60,46,32,32,30,16,8],[2.78622245847903,3.129759037375147,0.7836073540024944,0.6380475987192685,0.06354109697426348,0.04841599204202526,0.0274488158027575,0.01881957264536173,0.006720191781554924,0.001836109391858079,0.001384423439753283,0.001778736561859816,0.0009732001437477864,0.0008744790512840141,0.0008395402334233496,0.0007898220080570483,0.0005618368495664366,0.001085225071280222,0.0006609811783756239,0.0007874603623283421,0.0006031970875903424,0.0005204810434512446,0.0005040479832822927,0.0003504028274704954,0.0007519586022993275,0.0003912912446731893,0.0005098259826952886,0.0007478518380866778,0.0003403697301311061,0.0003344074069011246,0.0003030851753136768,0.0003282830056882909,0.0003681702539473111,0.0004690065612454563,0.000352236570131622,0.000190327588938298,0.0001965283050312454,0.0002570132600422898,0.000124930938313095,9.649444137739544e-05,0.0001343855441470161,8.106591737259092e-05,5.223207573076428e-05,4.35943925404763e-05]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>Treatment<\/th>\n      <th>Diet<\/th>\n      <th>fungal_exon_fragments<\/th>\n      <th>unique_fungus<\/th>\n      <th>pct_unique_fungus<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"name":"label","targets":0},{"name":"Treatment","targets":1},{"name":"Diet","targets":2},{"name":"fungal_exon_fragments","targets":3},{"name":"unique_fungus","targets":4},{"name":"pct_unique_fungus","targets":5}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="interpretation" class="section level2">
+<h2>Interpretation</h2>
+<p>The fungal signal is strongly heterogeneous among infected
+individuals rather than uniformly high after challenge. Samples 1029,
+1058, 1025, and 1057 have the highest whole-genome fungal alignment
+counts, the highest exon-assigned fungal fragment counts, and the
+highest fungal alignment percentages. Controls and most infected samples
+have low counts. Low non-zero values should be treated as alignment
+background or weak fungal evidence, whereas agreement between
+whole-genome alignment, exon assignment, and library-normalized signal
+provides stronger RNA-seq evidence of fungal burden.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] sass_0.4.10        generics_0.1.4     tidyr_1.3.2        stringi_1.8.7     
+ [5] digest_0.6.39      magrittr_2.0.5     evaluate_1.0.5     grid_4.6.0        
+ [9] RColorBrewer_1.1-3 fastmap_1.2.0      rprojroot_2.1.1    jsonlite_2.0.0    
+[13] processx_3.9.0     whisker_0.4.1      promises_1.5.0     httr_1.4.8        
+[17] purrr_1.2.2        crosstalk_1.2.2    scales_1.4.0       textshaping_1.0.5 
+[21] jquerylib_0.1.4    cli_3.6.6          rlang_1.2.0        withr_3.0.2       
+[25] cachem_1.1.0       yaml_2.3.12        otel_0.2.0         tools_4.6.0       
+[29] dplyr_1.2.1        ggplot2_4.0.3      httpuv_1.6.17      DT_0.34.0         
+[33] vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5    git2r_0.36.2      
+[37] stringr_1.6.0      fs_2.1.0           htmlwidgets_1.6.4  ragg_1.5.2        
+[41] pkgconfig_2.0.3    callr_3.7.6        pillar_1.11.1      bslib_0.10.0      
+[45] later_1.4.8        gtable_0.3.6       glue_1.8.1         Rcpp_1.1.1-1.1    
+[49] systemfonts_1.3.2  xfun_0.57          tibble_3.3.1       tidyselect_1.2.1  
+[53] rstudioapi_0.18.0  knitr_1.51         dichromat_2.0-0.1  farver_2.1.2      
+[57] htmltools_0.5.9    patchwork_1.3.2    svglite_2.2.2      labeling_0.4.3    
+[61] rmarkdown_2.31     compiler_4.6.0     getPass_0.2-4      S7_0.2.2          </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

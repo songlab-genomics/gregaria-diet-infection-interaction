@@ -1,0 +1,1113 @@
+---
+title: "Origin audit of DEG-rich unplaced scaffolds"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  audit_review_dir: "output/runs/scaffold_origin_20260729_030308/local-analysis/scaffold-origin-review_20260730-234810"
+  homology_review_dir: "output/runs/scaffold_homology_20260803_042409/local-analysis/homology-review_20260804-084526"
+  taxonomy_lookup: "data/scaffold_origin/ncbi_taxonomy_lookup_20260804.tsv"
+  output_tag: "scaffold-origin-audit"
+---
+
+## Purpose
+
+This page asks whether the unplaced *Schistocerca gregaria* assembly scaffolds
+carrying many differentially expressed genes (DEGs) have independent evidence
+of locust origin. The audit itself does not relabel an unresolved scaffold as a
+contaminant. Following this review, the manuscript-facing analysis now uses
+chromosome-assigned genes as its primary hypothesis family and preserves
+unplaced genes as an explicit sensitivity analysis on the
+[placed/unplaced analysis page](28-placed-unplaced-scaffold-analysis.html).
+
+> **Evidence boundary:** this is a focused origin audit of the 948 genes on 59
+> unresolved scaffolds that contribute to the infected diet 33 versus diet 50
+> contrast. BLASTn and DIAMOND results are now included. Similarity to a
+> non-metazoan sequence is treated as a review flag, not as proof that a gene or
+> scaffold is microbial.
+
+The evidence combines:
+
+1. scaffold sequence and RefSeq gene-annotation metrics;
+2. Kraken2 classification against PlusPF;
+3. NCBI Foreign Contamination Screen (FCS) flags distributed with the assembly;
+4. whole-scaffold alignments to three related *Schistocerca* assemblies;
+5. BLASTn searches of gene regions against NCBI `core_nt`; and
+6. DIAMOND searches of predicted proteins against NCBI `clustered_nr`.
+
+Cross-species support uses only minimap2 alignments with mapping quality at
+least 20 and divergence-derived nucleotide identity at least 70%. This avoids
+counting numerous ambiguous repetitive alignments as independent evidence of
+host conservation.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c(
+  "dplyr", "tidyr", "stringr", "readr", "ggplot2", "ggrepel",
+  "scales", "DT", "knitr", "patchwork"
+)
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+review_dir <- file.path(project_dir, params$audit_review_dir)
+homology_review_dir <- file.path(project_dir, params$homology_review_dir)
+homology_extract_dir <- file.path(homology_review_dir, "extracted")
+evidence_file <- file.path(
+  review_dir, "corrected-evidence-v2", "scaffold_origin_evidence_mapq20.tsv"
+)
+homology_file <- file.path(
+  review_dir, "corrected-evidence-v2",
+  "cross_species_scaffold_homology_mapq20.tsv"
+)
+candidate_gene_file <- file.path(
+  review_dir, "extracted", "00-input", "candidate_deg_genes.tsv"
+)
+validation_file <- file.path(review_dir, "archive_validation.tsv")
+homology_validation_file <- file.path(
+  homology_review_dir, "archive_validation.tsv"
+)
+homology_gene_file <- file.path(
+  homology_extract_dir, "04-evidence", "gene_homology_summary.tsv"
+)
+homology_top_hit_file <- file.path(
+  homology_extract_dir, "04-evidence", "top_tier_taxonomic_hits.tsv"
+)
+blastn_file <- file.path(
+  homology_extract_dir, "02-blastn-core-nt", "gene_regions_vs_core_nt.tsv"
+)
+taxonomy_file <- file.path(project_dir, params$taxonomy_lookup)
+
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(
+  project_dir, "output", "rmd_runs",
+  paste(params$output_tag, run_stamp, sep = "_")
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+status_levels <- c(
+  "Strong cross-Schistocerca support for host origin",
+  "Partial cross-Schistocerca support; likely host-associated",
+  "Unresolved by Kraken/FCS"
+)
+status_labels <- c(
+  "Strong host support",
+  "Partial host support",
+  "Unresolved"
+)
+status_colors <- c(
+  "Strong host support" = "#2E7D32",
+  "Partial host support" = "#D89000",
+  "Unresolved" = "#9C3D3D"
+)
+
+homology_colors <- c(
+  "External nucleotide support from Orthoptera/Arthropoda" = "#22543D",
+  "External nucleotide support from other Metazoa" = "#5C8362",
+  "Arthropod/orthopteran protein support only" = "#6F9C76",
+  "Other-metazoan protein support only" = "#9DB89D",
+  "Mixed external nucleotide evidence" = "#D7A144",
+  "Mixed protein evidence" = "#E9C46A",
+  "Conflicting nucleotide and protein evidence" = "#C98A40",
+  "Non-metazoan nucleotide evidence only" = "#B77B5A",
+  "Non-metazoan-only protein hits without nucleotide corroboration" = "#B76E49",
+  "Concordant non-metazoan nucleotide and protein hits" = "#8E3B46",
+  "No informative external evidence" = "#9A9A9A"
+)
+```
+
+## Transferred files and validation
+
+```{r transferred-files}
+input_files <- data.frame(
+  input = c(
+    "Corrected scaffold evidence",
+    "Corrected cross-species homology",
+    "Candidate DEG genes",
+    "Earlier transfer archive validation",
+    "Homology transfer archive validation",
+    "BLASTn raw hits",
+    "DIAMOND/BLAST top-hit summary",
+    "Gene homology summary",
+    "NCBI taxonomy lookup"
+  ),
+  path = c(
+    evidence_file, homology_file, candidate_gene_file, validation_file,
+    homology_validation_file, blastn_file, homology_top_hit_file,
+    homology_gene_file, taxonomy_file
+  ),
+  present = file.exists(c(
+    evidence_file, homology_file, candidate_gene_file, validation_file,
+    homology_validation_file, blastn_file, homology_top_hit_file,
+    homology_gene_file, taxonomy_file
+  ))
+)
+
+knitr::kable(input_files, caption = "Local inputs used for the origin audit")
+if (!all(input_files$present)) {
+  stop("One or more scaffold-audit inputs are missing.")
+}
+
+archive_validation <- readr::read_tsv(validation_file, show_col_types = FALSE)
+if (!all(archive_validation$size_ok & archive_validation$sha256_ok)) {
+  stop("The earlier scaffold-audit archive failed validation.")
+}
+
+homology_validation <- readr::read_tsv(
+  homology_validation_file, show_col_types = FALSE
+)
+if (!all(homology_validation$size_ok & homology_validation$sha256_ok)) {
+  stop("The BLASTn/DIAMOND archive failed validation.")
+}
+```
+
+All `r nrow(archive_validation)` files from the earlier scaffold audit and all
+`r nrow(homology_validation)` files from the BLASTn/DIAMOND transfer passed both
+size and SHA-256 checks before analysis.
+
+## BLASTn and DIAMOND origin audit
+
+The homology search produced one important technical result that must be
+corrected before biological interpretation. The raw BLASTn output contains
+exact matches to taxid 7010, *S. gregaria*, even though that taxid was excluded
+in the search command. If those self-hits are allowed to define the best bit
+score, almost every external match falls outside the retained 5% score tier.
+
+The code below therefore removes taxid 7010 **before** calculating the best
+external score for each gene. It then retains external hits whose bit score is
+at least 95% of the best remaining score. DIAMOND did not retain taxid 7010 and
+is summarized from its transferred top-hit table.
+
+```{r corrected-homology-load}
+hit_fields <- c(
+  "qseqid", "qlen", "sseqid", "staxids", "pident", "length",
+  "qcovhsp", "evalue", "bitscore", "stitle"
+)
+
+classify_broad_group <- function(lineage, scientific_name) {
+  value <- paste(lineage, scientific_name)
+  dplyr::case_when(
+    stringr::str_detect(value, "(^|;)Schistocerca(;| |$)") ~ "Schistocerca",
+    stringr::str_detect(value, "(^|;)Acrididae(;|$)") ~ "Other Acrididae",
+    stringr::str_detect(value, "(^|;)Orthoptera(;|$)") ~ "Other Orthoptera",
+    stringr::str_detect(value, "(^|;)Arthropoda(;|$)") ~ "Other Arthropoda",
+    stringr::str_detect(value, "(^|;)Metazoa(;|$)") ~ "Other Metazoa",
+    stringr::str_detect(value, "(^|;)Fungi(;|$)") ~ "Fungi",
+    stringr::str_detect(
+      value, "(^|;)(Viridiplantae|Streptophyta)(;|$)"
+    ) ~ "Plants",
+    stringr::str_detect(value, "(^|;)Bacteria(;|$)") ~ "Bacteria",
+    stringr::str_detect(value, "(^|;)Archaea(;|$)") ~ "Archaea",
+    stringr::str_detect(value, "(^|;)Viruses(;|$)") ~ "Viruses",
+    stringr::str_detect(value, "(^|;)Eukaryota(;|$)") ~ "Other Eukaryota",
+    TRUE ~ "Other/unclassified"
+  )
+}
+
+collapse_group_support <- function(groups) {
+  metazoan <- groups %in% c(
+    "Schistocerca", "Other Acrididae", "Other Orthoptera",
+    "Other Arthropoda", "Other Metazoa"
+  )
+  non_metazoan <- groups %in% c(
+    "Fungi", "Plants", "Bacteria", "Archaea", "Viruses",
+    "Other Eukaryota"
+  )
+  if (any(metazoan) && any(non_metazoan)) {
+    return("Mixed metazoan/non-metazoan")
+  }
+  if (any(groups %in% c(
+    "Schistocerca", "Other Acrididae", "Other Orthoptera"
+  ))) {
+    return("Locust/orthopteran")
+  }
+  if (any(groups == "Other Arthropoda")) return("Other arthropod")
+  if (any(groups == "Other Metazoa")) return("Other metazoan")
+  if (any(non_metazoan)) return("Non-metazoan only")
+  "No informative external hit"
+}
+
+blastn_raw <- readr::read_tsv(
+  blastn_file,
+  col_names = hit_fields,
+  col_types = readr::cols(
+    qseqid = readr::col_character(),
+    qlen = readr::col_double(),
+    sseqid = readr::col_character(),
+    staxids = readr::col_character(),
+    pident = readr::col_double(),
+    length = readr::col_double(),
+    qcovhsp = readr::col_double(),
+    evalue = readr::col_double(),
+    bitscore = readr::col_double(),
+    stitle = readr::col_character()
+  ),
+  show_col_types = FALSE
+) |>
+  dplyr::mutate(
+    self_hit_record = stringr::str_detect(
+      paste0(";", staxids, ";"), ";7010;"
+    )
+  )
+
+taxonomy_lookup <- readr::read_tsv(
+  taxonomy_file,
+  col_types = readr::cols(
+    taxid = readr::col_integer(),
+    scientific_name = readr::col_character(),
+    rank = readr::col_character(),
+    lineage = readr::col_character()
+  ),
+  show_col_types = FALSE
+)
+
+blastn_external <- blastn_raw |>
+  tidyr::separate_longer_delim(staxids, delim = ";") |>
+  dplyr::mutate(taxid = suppressWarnings(as.integer(staxids))) |>
+  dplyr::filter(!is.na(taxid), taxid != 7010) |>
+  dplyr::group_by(qseqid) |>
+  dplyr::mutate(
+    best_external_bitscore = max(bitscore),
+    external_tier_cutoff = 0.95 * best_external_bitscore
+  ) |>
+  dplyr::filter(bitscore >= external_tier_cutoff) |>
+  dplyr::ungroup() |>
+  dplyr::left_join(taxonomy_lookup, by = "taxid") |>
+  dplyr::mutate(
+    broad_group = classify_broad_group(lineage, scientific_name),
+    gene_id = stringr::str_extract(qseqid, "^[^|]+")
+  )
+
+nucleotide_gene <- blastn_external |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    nucleotide_support_corrected = collapse_group_support(
+      unique(broad_group)
+    ),
+    nucleotide_groups = paste(sort(unique(broad_group)), collapse = ";"),
+    nucleotide_taxa = paste(sort(unique(scientific_name)), collapse = ";"),
+    nucleotide_best_evalue = min(evalue),
+    nucleotide_max_identity = max(pident),
+    nucleotide_max_query_coverage = max(qcovhsp),
+    nucleotide_top_tier_records = dplyr::n(),
+    .groups = "drop"
+  )
+
+homology_top_hits <- readr::read_tsv(
+  homology_top_hit_file, show_col_types = FALSE
+)
+homology_gene <- readr::read_tsv(
+  homology_gene_file, show_col_types = FALSE
+) |>
+  dplyr::rename(reported_nucleotide_support = nucleotide_support) |>
+  dplyr::left_join(nucleotide_gene, by = "gene_id") |>
+  dplyr::mutate(
+    nucleotide_support_corrected = dplyr::coalesce(
+      nucleotide_support_corrected, "No informative external hit"
+    ),
+    protein_evidence = dplyr::case_when(
+      n_protein_queries == 0 ~ "lncRNA: no protein query",
+      stringr::str_detect(protein_support, "Mixed/ambiguous") |
+        (
+          stringr::str_detect(protein_support, "Non-metazoan candidate") &
+          stringr::str_detect(
+            protein_support,
+            "Locust/orthopteran|Broader arthropod|Other metazoan"
+          )
+        ) ~ "Mixed metazoan/non-metazoan",
+      stringr::str_detect(
+        protein_support, "Locust/orthopteran"
+      ) ~ "Locust/orthopteran",
+      stringr::str_detect(
+        protein_support, "Broader arthropod"
+      ) ~ "Other arthropod",
+      stringr::str_detect(
+        protein_support, "Other metazoan"
+      ) ~ "Other metazoan",
+      stringr::str_detect(
+        protein_support, "Non-metazoan candidate"
+      ) ~ "Non-metazoan only",
+      TRUE ~ "No informative protein hit"
+    ),
+    integrated_evidence = dplyr::case_when(
+      stringr::str_detect(
+        nucleotide_support_corrected,
+        "Locust/orthopteran|Other arthropod"
+      ) ~ "External nucleotide support from Orthoptera/Arthropoda",
+      stringr::str_detect(
+        nucleotide_support_corrected, "Other metazoan"
+      ) ~ "External nucleotide support from other Metazoa",
+      nucleotide_support_corrected == "Mixed metazoan/non-metazoan" ~
+        "Mixed external nucleotide evidence",
+      nucleotide_support_corrected == "Non-metazoan only" &
+        protein_evidence == "Non-metazoan only" ~
+        "Concordant non-metazoan nucleotide and protein hits",
+      nucleotide_support_corrected == "Non-metazoan only" &
+        protein_evidence %in% c(
+          "Locust/orthopteran", "Other arthropod", "Other metazoan",
+          "Mixed metazoan/non-metazoan"
+        ) ~ "Conflicting nucleotide and protein evidence",
+      nucleotide_support_corrected == "Non-metazoan only" ~
+        "Non-metazoan nucleotide evidence only",
+      protein_evidence %in% c("Locust/orthopteran", "Other arthropod") ~
+        "Arthropod/orthopteran protein support only",
+      protein_evidence == "Other metazoan" ~
+        "Other-metazoan protein support only",
+      protein_evidence == "Mixed metazoan/non-metazoan" ~
+        "Mixed protein evidence",
+      protein_evidence == "Non-metazoan only" ~
+        "Non-metazoan-only protein hits without nucleotide corroboration",
+      TRUE ~ "No informative external evidence"
+    )
+  )
+
+integrated_summary <- homology_gene |>
+  dplyr::count(integrated_evidence, sort = TRUE, name = "genes") |>
+  dplyr::mutate(
+    percent = 100 * genes / sum(genes),
+    integrated_evidence = factor(
+      integrated_evidence,
+      levels = rev(names(homology_colors))
+    )
+  )
+
+readr::write_tsv(
+  blastn_external,
+  file.path(out_dir, "blastn_external_top_tier_hits.tsv")
+)
+readr::write_tsv(
+  homology_gene,
+  file.path(out_dir, "corrected_gene_homology_evidence.tsv")
+)
+readr::write_tsv(
+  integrated_summary,
+  file.path(out_dir, "corrected_homology_evidence_summary.tsv")
+)
+```
+
+The raw BLASTn file contains `r scales::comma(nrow(blastn_raw))` hit records,
+including `r scales::comma(sum(blastn_raw$self_hit_record))` records assigned to
+*S. gregaria* itself. After removing taxid 7010 and re-ranking, only
+`r scales::comma(nrow(nucleotide_gene))` of the 948 candidate genes have an
+external nucleotide match passing the search thresholds. The other
+`r scales::comma(948 - nrow(nucleotide_gene))` genes have no informative
+external nucleotide match in this run.
+
+### Taxonomic support by search
+
+```{r homology-taxonomic-support, fig.width=14, fig.height=7}
+blastn_gene_groups <- blastn_external |>
+  dplyr::distinct(gene_id, broad_group) |>
+  dplyr::mutate(search = "BLASTn: external nucleotide hits")
+
+diamond_gene_groups <- homology_top_hits |>
+  dplyr::filter(method == "DIAMOND nr_cluster_seq") |>
+  dplyr::distinct(gene_id, broad_group) |>
+  dplyr::mutate(search = "DIAMOND: predicted protein hits")
+
+search_group_summary <- dplyr::bind_rows(
+  blastn_gene_groups, diamond_gene_groups
+) |>
+  dplyr::count(search, broad_group, name = "genes")
+
+readr::write_tsv(
+  search_group_summary,
+  file.path(out_dir, "homology_taxonomic_groups_by_search.tsv")
+)
+
+p_taxonomy <- ggplot2::ggplot(
+  search_group_summary,
+  ggplot2::aes(
+    x = genes,
+    y = stats::reorder(broad_group, genes),
+    fill = search
+  )
+) +
+  ggplot2::geom_col(width = 0.72, show.legend = FALSE) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = scales::comma(genes)),
+    hjust = -0.15,
+    size = 4.2
+  ) +
+  ggplot2::facet_wrap(~ search, scales = "free_x", nrow = 1) +
+  ggplot2::scale_fill_manual(values = c(
+    "BLASTn: external nucleotide hits" = "#315C6B",
+    "DIAMOND: predicted protein hits" = "#A8653E"
+  )) +
+  ggplot2::scale_x_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.15))
+  ) +
+  ggplot2::labs(
+    title = "External homology spans metazoan and non-metazoan groups",
+    subtitle = "Counts are unique genes; a gene can contribute to more than one group",
+    x = "Genes with a retained top-tier hit",
+    y = NULL
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(
+    strip.text = ggplot2::element_text(face = "bold", size = 13),
+    panel.grid.minor = ggplot2::element_blank()
+  )
+
+p_taxonomy
+ggplot2::ggsave(
+  file.path(out_dir, "homology_taxonomic_support_by_search.png"),
+  p_taxonomy, width = 14, height = 7, dpi = 320
+)
+ggplot2::ggsave(
+  file.path(out_dir, "homology_taxonomic_support_by_search.svg"),
+  p_taxonomy, width = 14, height = 7
+)
+```
+
+The DIAMOND result is dominated by non-metazoan top hits, but this does not
+mean that those predicted proteins are microbial. NCBI `clustered_nr` is not a
+balanced taxonomic sample, and many ancient eukaryotic proteins can have their
+closest retained representative in fungi, plants, amoebozoans, or other
+non-metazoan eukaryotes.
+
+### Strength of the external nucleotide matches
+
+```{r nucleotide-hit-strength, fig.width=11, fig.height=7}
+nucleotide_plot_data <- nucleotide_gene |>
+  dplyr::left_join(
+    homology_gene |>
+      dplyr::select(gene_id, integrated_evidence, max_abs_log2FoldChange),
+    by = "gene_id",
+    suffix = c("", ".joined")
+  ) |>
+  dplyr::mutate(
+    review_flag = dplyr::if_else(
+      integrated_evidence ==
+        "Concordant non-metazoan nucleotide and protein hits",
+      "Concordant non-metazoan top hits",
+      "Other external match"
+    )
+  )
+
+p_nucleotide_strength <- ggplot2::ggplot(
+  nucleotide_plot_data,
+  ggplot2::aes(
+    x = nucleotide_max_query_coverage,
+    y = nucleotide_max_identity,
+    color = review_flag,
+    size = max_abs_log2FoldChange
+  )
+) +
+  ggplot2::geom_vline(xintercept = 50, linetype = "dashed", color = "grey55") +
+  ggplot2::geom_hline(yintercept = 90, linetype = "dashed", color = "grey55") +
+  ggplot2::geom_point(alpha = 0.78) +
+  ggplot2::scale_color_manual(values = c(
+    "Concordant non-metazoan top hits" = "#9D332F",
+    "Other external match" = "#597C8D"
+  )) +
+  ggplot2::scale_size_continuous(range = c(2.5, 8)) +
+  ggplot2::labs(
+    title = "External nucleotide matches are generally divergent or partial",
+    subtitle = "Dashed lines mark 90% identity and 50% query coverage for visual reference",
+    x = "Maximum query coverage among top-tier external hits (%)",
+    y = "Maximum nucleotide identity among top-tier external hits (%)",
+    color = NULL,
+    size = "Maximum absolute\nlog2 fold change"
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+
+p_nucleotide_strength
+ggplot2::ggsave(
+  file.path(out_dir, "external_nucleotide_hit_strength.png"),
+  p_nucleotide_strength, width = 11, height = 7, dpi = 320
+)
+ggplot2::ggsave(
+  file.path(out_dir, "external_nucleotide_hit_strength.svg"),
+  p_nucleotide_strength, width = 11, height = 7
+)
+```
+
+Among the
+`r sum(homology_gene$integrated_evidence == "Concordant non-metazoan nucleotide and protein hits")`
+genes with non-metazoan top hits in both searches, the median maximum nucleotide
+identity is
+`r round(median(homology_gene$nucleotide_max_identity[homology_gene$integrated_evidence == "Concordant non-metazoan nucleotide and protein hits"], na.rm = TRUE), 1)`%
+and the median maximum query coverage is
+`r round(median(homology_gene$nucleotide_max_query_coverage[homology_gene$integrated_evidence == "Concordant non-metazoan nucleotide and protein hits"], na.rm = TRUE), 1)`%.
+None combines at least 90% identity with at least 50% query coverage. This is
+not the near-identity signal expected for an obvious recently incorporated
+microbial sequence.
+
+### Integrated gene-level evidence
+
+```{r integrated-homology-evidence, fig.width=13, fig.height=7.5}
+p_integrated <- ggplot2::ggplot(
+  integrated_summary,
+  ggplot2::aes(
+    x = genes,
+    y = integrated_evidence,
+    fill = integrated_evidence
+  )
+) +
+  ggplot2::geom_col(width = 0.72, show.legend = FALSE) +
+  ggplot2::geom_text(
+    ggplot2::aes(
+      label = paste0(
+        scales::comma(genes), " (",
+        scales::percent(percent / 100, accuracy = 0.1), ")"
+      )
+    ),
+    hjust = -0.12,
+    size = 4.1
+  ) +
+  ggplot2::scale_fill_manual(values = homology_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.25))
+  ) +
+  ggplot2::labs(
+    title = "Integrated external homology evidence for 948 candidate genes",
+    subtitle = "Protein-only non-metazoan hits remain weak provenance evidence",
+    x = "Genes",
+    y = NULL
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+
+p_integrated
+ggplot2::ggsave(
+  file.path(out_dir, "integrated_gene_homology_evidence.png"),
+  p_integrated, width = 13, height = 7.5, dpi = 320
+)
+ggplot2::ggsave(
+  file.path(out_dir, "integrated_gene_homology_evidence.svg"),
+  p_integrated, width = 13, height = 7.5
+)
+```
+
+Most flagged genes are in the protein-only non-metazoan or mixed-protein
+classes. These classes describe the database hits; they do not establish the
+organism of origin. Only
+`r sum(homology_gene$integrated_evidence == "Concordant non-metazoan nucleotide and protein hits")`
+genes have non-metazoan top hits in both the nucleotide and protein searches,
+and their weak nucleotide identity and coverage still make them candidates for
+review rather than confirmed contaminants.
+
+### Searchable review list
+
+```{r homology-candidate-table}
+homology_review_candidates <- homology_gene |>
+  dplyr::filter(
+    integrated_evidence %in% c(
+      "Concordant non-metazoan nucleotide and protein hits",
+      "Conflicting nucleotide and protein evidence",
+      "Non-metazoan-only protein hits without nucleotide corroboration"
+    )
+  ) |>
+  dplyr::arrange(
+    factor(
+      integrated_evidence,
+      levels = c(
+        "Concordant non-metazoan nucleotide and protein hits",
+        "Conflicting nucleotide and protein evidence",
+        "Non-metazoan-only protein hits without nucleotide corroboration"
+      )
+    ),
+    dplyr::desc(nucleotide_max_identity),
+    dplyr::desc(max_abs_log2FoldChange)
+  ) |>
+  dplyr::transmute(
+    gene_id,
+    scaffold = seqid,
+    description,
+    gene_biotype,
+    contrasts,
+    max_abs_log2FoldChange = round(max_abs_log2FoldChange, 3),
+    integrated_evidence,
+    nucleotide_groups,
+    nucleotide_taxa,
+    nucleotide_max_identity = round(nucleotide_max_identity, 2),
+    nucleotide_max_query_coverage = round(
+      nucleotide_max_query_coverage, 2
+    ),
+    protein_support
+  )
+
+readr::write_tsv(
+  homology_review_candidates,
+  file.path(out_dir, "homology_review_candidate_genes.tsv")
+)
+
+DT::datatable(
+  homology_review_candidates,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 15,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  ),
+  caption = paste(
+    "Genes prioritized for review; categories are evidence labels,",
+    "not automatic exclusion decisions"
+  )
+)
+```
+
+This table deliberately includes the broader protein-only class so individual
+genes can be inspected, but the concordant class should be reviewed first. No
+gene is removed from DESeq2 on the basis of this table.
+
+### Scaffold-level concentration of review candidates
+
+```{r homology-scaffold-table}
+homology_scaffold_review <- homology_gene |>
+  dplyr::group_by(scaffold = seqid) |>
+  dplyr::summarise(
+    candidate_DEG_genes = dplyr::n(),
+    concordant_non_metazoan = sum(
+      integrated_evidence ==
+        "Concordant non-metazoan nucleotide and protein hits"
+    ),
+    non_metazoan_protein_only = sum(
+      integrated_evidence ==
+        "Non-metazoan-only protein hits without nucleotide corroboration"
+    ),
+    clear_metazoan_or_arthropod_support = sum(
+      integrated_evidence %in% c(
+        "External nucleotide support from Orthoptera/Arthropoda",
+        "External nucleotide support from other Metazoa",
+        "Arthropod/orthopteran protein support only",
+        "Other-metazoan protein support only"
+      )
+    ),
+    maximum_absolute_log2FC = max(max_abs_log2FoldChange, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    concordant_percent = 100 * concordant_non_metazoan /
+      candidate_DEG_genes
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(concordant_non_metazoan),
+    dplyr::desc(candidate_DEG_genes)
+  )
+
+readr::write_tsv(
+  homology_scaffold_review,
+  file.path(out_dir, "homology_review_by_scaffold.tsv")
+)
+
+DT::datatable(
+  homology_scaffold_review |>
+    dplyr::mutate(
+      concordant_percent = round(concordant_percent, 1),
+      maximum_absolute_log2FC = round(maximum_absolute_log2FC, 3)
+    ),
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 15,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  ),
+  caption = "Homology evidence summarized across all candidate genes on each scaffold"
+)
+```
+
+Evidence from one conserved gene should not be used to label an entire
+scaffold. Scaffolds with several concordant candidates are more useful targets
+for whole-scaffold sequence and read-level follow-up than scaffolds flagged by
+one protein alone.
+
+## Evidence classification
+
+```{r load-evidence}
+evidence <- readr::read_tsv(evidence_file, show_col_types = FALSE) |>
+  dplyr::mutate(
+    evidence_class = factor(
+      preliminary_evidence_status,
+      levels = status_levels,
+      labels = status_labels
+    ),
+    length_mb = length_bp / 1e6
+  )
+
+candidate_genes <- readr::read_tsv(candidate_gene_file, show_col_types = FALSE) |>
+  dplyr::left_join(
+    evidence |>
+      dplyr::select(seqid = scaffold, evidence_class),
+    by = "seqid"
+  )
+
+evidence_summary <- evidence |>
+  dplyr::group_by(evidence_class) |>
+  dplyr::summarise(
+    scaffolds = dplyr::n(),
+    scaffold_length_Mb = sum(length_bp) / 1e6,
+    annotated_genes = sum(annotated_genes),
+    candidate_DEG_genes = sum(candidate_deg_genes),
+    median_gene_density_per_Mb = median(annotated_genes_per_mb),
+    median_GC_percent = median(gc_percent),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    percent_candidate_DEGs = 100 * candidate_DEG_genes /
+      sum(candidate_DEG_genes)
+  )
+
+readr::write_tsv(
+  evidence_summary,
+  file.path(out_dir, "scaffold_origin_evidence_summary.tsv")
+)
+knitr::kable(
+  evidence_summary,
+  digits = 2,
+  caption = "Scaffold and DEG burden by independent origin-evidence class"
+)
+```
+
+Of the `r nrow(evidence)` DEG-bearing unplaced scaffolds,
+`r sum(evidence$evidence_class == "Strong host support")` have strong
+cross-*Schistocerca* support and
+`r sum(evidence$evidence_class == "Partial host support")` have partial support.
+The remaining `r sum(evidence$evidence_class == "Unresolved")` are unclassified
+by Kraken2, unflagged by the archived NCBI FCS report, and lack sufficient
+high-confidence conservation in the three related locust assemblies.
+
+Importantly, those unresolved scaffolds contain
+`r scales::comma(sum(evidence$candidate_deg_genes[evidence$evidence_class == "Unresolved"]))`
+of the `r scales::comma(sum(evidence$candidate_deg_genes))` candidate DEG genes
+(`r scales::percent(sum(evidence$candidate_deg_genes[evidence$evidence_class == "Unresolved"]) / sum(evidence$candidate_deg_genes), accuracy = 0.1)`).
+This concentration makes scaffold provenance a material sensitivity question,
+but it is not proof of microbial origin.
+
+## Scaffold structure and DEG burden
+
+```{r scaffold-structure-plot, fig.width=14, fig.height=6.8}
+top_unresolved <- evidence |>
+  dplyr::filter(evidence_class == "Unresolved") |>
+  dplyr::slice_max(candidate_deg_genes, n = 10, with_ties = FALSE)
+
+p_density <- ggplot2::ggplot(
+  evidence,
+  ggplot2::aes(
+    x = length_mb,
+    y = annotated_genes_per_mb,
+    color = evidence_class,
+    size = candidate_deg_genes
+  )
+) +
+  ggplot2::geom_point(alpha = 0.82) +
+  ggrepel::geom_text_repel(
+    data = top_unresolved,
+    ggplot2::aes(label = scaffold),
+    size = 3.7,
+    max.overlaps = Inf,
+    box.padding = 0.45,
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_x_log10(labels = scales::label_number(accuracy = 0.1)) +
+  ggplot2::scale_y_log10(labels = scales::label_number(accuracy = 0.1)) +
+  ggplot2::scale_color_manual(values = status_colors, drop = FALSE) +
+  ggplot2::scale_size_continuous(range = c(2.5, 10)) +
+  ggplot2::labs(
+    title = "DEG-rich unresolved scaffolds are short and gene dense",
+    x = "Scaffold length (Mb, log scale)",
+    y = "Annotated genes per Mb (log scale)",
+    color = "Origin evidence",
+    size = "Candidate DEGs"
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    legend.position = "right"
+  )
+
+p_burden <- ggplot2::ggplot(
+  evidence_summary,
+  ggplot2::aes(x = evidence_class, y = candidate_DEG_genes, fill = evidence_class)
+) +
+  ggplot2::geom_col(width = 0.68) +
+  ggplot2::geom_text(
+    ggplot2::aes(
+      label = paste0(
+        scales::comma(candidate_DEG_genes), "\n",
+        scales::percent(percent_candidate_DEGs / 100, accuracy = 0.1)
+      )
+    ),
+    vjust = -0.25,
+    size = 4.5,
+    fontface = "bold"
+  ) +
+  ggplot2::scale_fill_manual(values = status_colors, drop = FALSE) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.15))
+  ) +
+  ggplot2::labs(
+    title = "Candidate DEG burden by scaffold evidence",
+    x = NULL,
+    y = "Unique candidate DEG genes"
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(
+    legend.position = "none",
+    axis.text.x = ggplot2::element_text(angle = 18, hjust = 1)
+  )
+
+combined_scaffold_plot <- p_density + p_burden +
+  patchwork::plot_layout(widths = c(1.7, 1))
+combined_scaffold_plot
+
+ggplot2::ggsave(
+  file.path(out_dir, "scaffold_origin_evidence_overview.png"),
+  combined_scaffold_plot,
+  width = 16,
+  height = 7,
+  dpi = 320
+)
+ggplot2::ggsave(
+  file.path(out_dir, "scaffold_origin_evidence_overview.svg"),
+  combined_scaffold_plot,
+  width = 16,
+  height = 7
+)
+```
+
+The unresolved class has a median gene density of
+`r round(evidence_summary$median_gene_density_per_Mb[evidence_summary$evidence_class == "Unresolved"], 1)`
+annotated genes per Mb, compared with
+`r round(evidence_summary$median_gene_density_per_Mb[evidence_summary$evidence_class == "Strong host support"], 1)`
+for the strongly supported class. This unusual combination of short sequence,
+high gene density, and weak cross-species support is compatible with several
+alternatives: contamination, assembly fragmentation, collapsed or duplicated
+gene-rich sequence, or genuinely lineage-specific locust sequence.
+
+## Which DEG contrasts drive the unresolved signal?
+
+```{r contrast-summary, fig.width=13, fig.height=7}
+contrast_status <- candidate_genes |>
+  dplyr::select(gene_id, seqid, evidence_class, contrasts) |>
+  tidyr::separate_longer_delim(contrasts, delim = ";") |>
+  dplyr::filter(!is.na(contrasts), contrasts != "") |>
+  dplyr::distinct(gene_id, contrasts, evidence_class) |>
+  dplyr::count(contrasts, evidence_class, name = "unique_DEG_genes") |>
+  tidyr::complete(
+    contrasts,
+    evidence_class = factor(status_labels, levels = status_labels),
+    fill = list(unique_DEG_genes = 0)
+  ) |>
+  dplyr::group_by(contrasts) |>
+  dplyr::mutate(
+    contrast_total = sum(unique_DEG_genes),
+    percent = ifelse(contrast_total > 0, 100 * unique_DEG_genes / contrast_total, 0)
+  ) |>
+  dplyr::ungroup()
+
+readr::write_tsv(
+  contrast_status,
+  file.path(out_dir, "contrast_by_scaffold_origin_evidence.tsv")
+)
+
+contrast_order <- contrast_status |>
+  dplyr::group_by(contrasts) |>
+  dplyr::summarise(total = max(contrast_total), .groups = "drop") |>
+  dplyr::arrange(total) |>
+  dplyr::pull(contrasts)
+
+p_contrast <- contrast_status |>
+  dplyr::mutate(contrasts = factor(contrasts, levels = contrast_order)) |>
+  ggplot2::ggplot(
+    ggplot2::aes(x = contrasts, y = unique_DEG_genes, fill = evidence_class)
+  ) +
+  ggplot2::geom_col(width = 0.72) +
+  ggplot2::coord_flip() +
+  ggplot2::scale_fill_manual(values = status_colors, drop = FALSE) +
+  ggplot2::scale_y_continuous(labels = scales::label_comma()) +
+  ggplot2::labs(
+    title = "Origin evidence for unplaced-scaffold DEGs in each contrast",
+    subtitle = "A gene may occur in more than one contrast",
+    x = NULL,
+    y = "Unique DEG genes",
+    fill = "Origin evidence"
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+
+p_contrast
+ggplot2::ggsave(
+  file.path(out_dir, "contrast_by_scaffold_origin_evidence.png"),
+  p_contrast,
+  width = 13,
+  height = 7,
+  dpi = 320
+)
+ggplot2::ggsave(
+  file.path(out_dir, "contrast_by_scaffold_origin_evidence.svg"),
+  p_contrast,
+  width = 13,
+  height = 7
+)
+```
+
+## High-priority unresolved scaffolds
+
+```{r unresolved-table}
+priority_unresolved <- evidence |>
+  dplyr::filter(evidence_class == "Unresolved") |>
+  dplyr::arrange(
+    dplyr::desc(candidate_deg_genes),
+    dplyr::desc(annotated_genes_per_mb)
+  ) |>
+  dplyr::transmute(
+    scaffold,
+    length_Mb = round(length_mb, 3),
+    GC_percent = round(gc_percent, 2),
+    annotated_genes,
+    gene_density_per_Mb = round(annotated_genes_per_mb, 1),
+    candidate_DEG_genes = candidate_deg_genes,
+    DEG_contrasts = deg_contrasts,
+    max_cross_species_coverage_percent =
+      round(cross_species_max_coverage_percent, 2),
+    cross_species_best_species,
+    Kraken = kraken_taxon_name,
+    NCBI_FCS_flagged = ncbi_fcs_flagged,
+    recommended_next_test
+  )
+
+readr::write_tsv(
+  priority_unresolved,
+  file.path(out_dir, "high_priority_unresolved_scaffolds.tsv")
+)
+
+DT::datatable(
+  priority_unresolved,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 15,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  ),
+  caption = "Unresolved scaffolds ranked by candidate DEG burden"
+)
+```
+
+## Candidate genes for sensitivity analysis
+
+```{r candidate-gene-table}
+unresolved_genes <- candidate_genes |>
+  dplyr::filter(evidence_class == "Unresolved") |>
+  dplyr::arrange(seqid, gene_id) |>
+  dplyr::select(
+    gene_id, seqid, description, gene_biotype, mapping_support,
+    n_contrasts, contrasts, min_padj, max_abs_log2FoldChange,
+    competitive_host_retained_fraction, host_counts_not_retained,
+    evidence_class
+  )
+
+readr::write_tsv(
+  unresolved_genes,
+  file.path(out_dir, "unresolved_scaffold_candidate_deg_genes.tsv")
+)
+
+biotype_summary <- unresolved_genes |>
+  dplyr::count(gene_biotype, sort = TRUE, name = "candidate_DEG_genes") |>
+  dplyr::mutate(
+    percent = 100 * candidate_DEG_genes / sum(candidate_DEG_genes)
+  )
+readr::write_tsv(
+  biotype_summary,
+  file.path(out_dir, "unresolved_candidate_gene_biotypes.tsv")
+)
+knitr::kable(
+  biotype_summary,
+  digits = 2,
+  caption = "Biotypes among unresolved-scaffold candidate DEG genes"
+)
+
+mapping_summary <- unresolved_genes |>
+  dplyr::count(mapping_support, sort = TRUE, name = "candidate_DEG_genes")
+readr::write_tsv(
+  mapping_summary,
+  file.path(out_dir, "unresolved_candidate_gene_mapping_support.tsv")
+)
+knitr::kable(
+  mapping_summary,
+  caption = "Host-only versus competitive host-fungus mapping support"
+)
+```
+
+`r scales::comma(sum(unresolved_genes$mapping_support == "Significant in both mappings"))`
+of the `r scales::comma(nrow(unresolved_genes))` unresolved-scaffold candidate
+genes remained significant in both the host-only and competitive
+host-*Metarhizium* mappings. Their median competitive-to-host-only retained
+count fraction was
+`r round(median(unresolved_genes$competitive_host_retained_fraction, na.rm = TRUE), 3)`.
+Therefore, the signal is not explained by reads being preferentially reassigned
+to the *M. robertsii* reference used in the competitive mapping. This result
+does not exclude another taxon that was absent from the competitive reference.
+
+The exported gene list is carried into the secondary unplaced-gene DESeq2 model
+and the cluster 1 verification catalogue. Exclusion from the paper-facing
+placed-host counts is a conservative reporting choice based on assembly
+placement and uncertainty; it is not a claim that these genes are microbial.
+
+## Interpretation and next tests
+
+The combined audit provides four conclusions:
+
+1. Some unplaced scaffolds are clearly or plausibly locust-derived because they
+   are conserved in related *Schistocerca* assemblies.
+2. Most of the unplaced-scaffold DEG burden is concentrated on 59 short,
+   gene-dense scaffolds that the current Kraken2, FCS, and cross-species tests
+   cannot resolve.
+3. Competitive mapping against *Metarhizium robertsii* does not by itself
+   establish the origin of these sequences, because absence from that single
+   fungal reference does not distinguish locust-specific sequence from another
+   microbe, assembly artifact, or divergent sequence.
+4. The corrected BLASTn/DIAMOND analysis does not identify a near-identical
+   non-metazoan sequence among the 948 genes. The 55 concordant non-metazoan
+   candidates are divergent or partial at the nucleotide level and include
+   many conserved cellular proteins. They warrant review but are not sufficient
+   evidence for removal.
+
+The most decisive follow-up is independent genomic evidence from the original
+*S. gregaria* assembly project: genomic DNA depth, paired-read or long-read
+support, and Hi-C linkage to chromosomes. For the highest-priority candidates,
+the next sequence-level checks are whole-scaffold BLASTn, taxon-aware read
+classification of reads mapping to each scaffold, GC and codon-usage comparison,
+and examination of whether several neighboring genes support the same taxon.
+Until those checks are complete, the reporting decision is
+`placed_host_primary_unplaced_exploratory`, while the biological-origin status
+of the unresolved genes remains `retain_pending_independent_validation`.
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = TRUE)
+knitr::kable(
+  data.frame(file = basename(exports), path = exports),
+  caption = "Timestamped files produced by this page"
+)
+```
+
+## Session information
+
+```{r session-info}
+sessionInfo()
+```

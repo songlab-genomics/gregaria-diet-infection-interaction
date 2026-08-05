@@ -1,0 +1,30 @@
+"pathway_scope","pathway_theme","n_pathways"
+"Broad KEGG reference map","Amino acid and nitrogen metabolism",1
+"Broad KEGG reference map","Broad metabolic map",1
+"Broad KEGG reference map","Carbohydrate and energy metabolism",1
+"Broad KEGG reference map","Detoxification and secondary
+metabolism",4
+"Broad KEGG reference map","Lipid and membrane metabolism",1
+"Broad KEGG reference map","Other KEGG pathway",1
+"Core metabolism or cross-domain","Amino acid and nitrogen metabolism",17
+"Core metabolism or cross-domain","Carbohydrate and energy metabolism",14
+"Core metabolism or cross-domain","Detoxification and secondary
+metabolism",7
+"Core metabolism or cross-domain","Genetic information processing",11
+"Core metabolism or cross-domain","Immune and stress signaling",2
+"Core metabolism or cross-domain","Lipid and membrane metabolism",14
+"Core metabolism or cross-domain","Other KEGG pathway",120
+"Core metabolism or cross-domain","Storage, lipid transport, and
+endocrine nutrition",3
+"Core metabolism or cross-domain","Transport and environmental response",3
+"Eukaryote/metazoan-compatible","Cellular process",42
+"Eukaryote/metazoan-compatible","Immune and stress signaling",53
+"Eukaryote/metazoan-compatible","Storage, lipid transport, and
+endocrine nutrition",41
+"Microbial/prokaryote-associated label","Other KEGG pathway",1
+"Microbial/prokaryote-associated label","Storage, lipid transport, and
+endocrine nutrition",1
+"Microbial/prokaryote-associated label","Transport and environmental response",2
+"Reference disease pathway","Carbohydrate and energy metabolism",1
+"Reference disease pathway","Genetic information processing",3
+"Reference disease pathway","Reference disease pathway",31

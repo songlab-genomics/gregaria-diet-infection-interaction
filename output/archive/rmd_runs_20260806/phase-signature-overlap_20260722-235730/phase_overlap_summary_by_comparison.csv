@@ -1,0 +1,271 @@
+"scenario","comparison_type","comparison","phase_class","phase_shift","direction","n_genes"
+"All samples","Diet contrasts among control","Control 33 vs 50","No phase DEG","Not phase-associated","Upregulated",1
+"All samples","Diet contrasts among control","Control 33 vs 50","No phase reference","Not phase-associated","Upregulated",2
+"All samples","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more solitarious-like","Downregulated",2
+"All samples","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Upregulated",21
+"All samples","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Downregulated",9
+"All samples","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Upregulated",17
+"All samples","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",3
+"All samples","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",3
+"All samples","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",6
+"All samples","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",2
+"All samples","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","Head phase DEG only","Numerator more solitarious-like","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","No phase DEG","Not phase-associated","Upregulated",19
+"All samples","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Downregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Upregulated",8
+"All samples","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",3
+"All samples","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Downregulated",6
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Downregulated",26
+"All samples","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Upregulated",2
+"All samples","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Downregulated",1877
+"All samples","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Upregulated",5
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",3
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",2
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",1
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",4
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",2
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Downregulated",3
+"All samples","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Upregulated",5
+"All samples","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Downregulated",6
+"All samples","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Upregulated",5
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 50","No phase reference","Not phase-associated","Upregulated",1
+"All samples","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",12
+"All samples","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",7
+"All samples","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",15
+"All samples","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Downregulated",151
+"All samples","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Upregulated",172
+"All samples","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Downregulated",189
+"All samples","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Upregulated",219
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",1
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",27
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",3
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",9
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",7
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",52
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",14
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",6
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",14
+"All samples","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",5
+"All samples","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",18
+"All samples","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",10
+"All samples","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",18
+"All samples","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Downregulated",199
+"All samples","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Upregulated",277
+"All samples","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Downregulated",199
+"All samples","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Upregulated",406
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",2
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",29
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",16
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",7
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",10
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",59
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",22
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",10
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",25
+"All samples","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"All samples","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",8
+"All samples","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",1
+"All samples","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",11
+"All samples","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Downregulated",74
+"All samples","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Upregulated",140
+"All samples","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Downregulated",58
+"All samples","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Upregulated",154
+"All samples","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",14
+"All samples","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",5
+"All samples","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",2
+"All samples","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",4
+"All samples","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",25
+"All samples","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",9
+"All samples","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",11
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","No phase reference","Not phase-associated","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",4
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Downregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Upregulated",18
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Downregulated",17
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Upregulated",47
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",6
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",5
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","No phase DEG","Not phase-associated","Upregulated",11
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Downregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Upregulated",9
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Downregulated",6
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Downregulated",26
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Upregulated",2
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Downregulated",1877
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Upregulated",5
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",3
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",4
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",2
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Downregulated",3
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Upregulated",5
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Downregulated",6
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Upregulated",5
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 50","No phase reference","Not phase-associated","Upregulated",1
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",10
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",6
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",14
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Downregulated",150
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Upregulated",143
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Downregulated",156
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Upregulated",213
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",1
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",22
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",5
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",8
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",5
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",41
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",12
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",3
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",14
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",4
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",16
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",3
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",20
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Downregulated",185
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Upregulated",286
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Downregulated",153
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Upregulated",2053
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",2
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",19
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",15
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",5
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",11
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",49
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",21
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",14
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",29
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",8
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",1
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",11
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Downregulated",74
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Upregulated",140
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Downregulated",58
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Upregulated",154
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",14
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",5
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",2
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",4
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",25
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",9
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",11
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","No phase reference","Not phase-associated","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",4
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Downregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","No phase DEG","Not phase-associated","Upregulated",18
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Downregulated",17
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","No phase reference","Not phase-associated","Upregulated",47
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",6
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",5
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","No phase DEG","Not phase-associated","Upregulated",11
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Downregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","No phase reference","Not phase-associated","Upregulated",9
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Downregulated",6
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Downregulated",26
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","No phase DEG","Not phase-associated","Upregulated",2
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Downregulated",1877
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","No phase reference","Not phase-associated","Upregulated",5
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",3
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",4
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more gregarious-like","Upregulated",2
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG only","Numerator more solitarious-like","Upregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Downregulated",3
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","No phase DEG","Not phase-associated","Upregulated",5
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Downregulated",6
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","No phase reference","Not phase-associated","Upregulated",5
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 50","No phase reference","Not phase-associated","Upregulated",1
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",10
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",6
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",14
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Downregulated",150
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","No phase DEG","Not phase-associated","Upregulated",143
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Downregulated",156
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","No phase reference","Not phase-associated","Upregulated",213
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",1
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",22
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",5
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",8
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",5
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",41
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",12
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",3
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",14
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",4
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",16
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",3
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",20
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Downregulated",185
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","No phase DEG","Not phase-associated","Upregulated",286
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Downregulated",153
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","No phase reference","Not phase-associated","Upregulated",2053
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Mixed head/thorax phase signal","Upregulated",2
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",19
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",15
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",5
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",11
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",49
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",21
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Downregulated",14
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",29
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Downregulated",3
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more gregarious-like","Upregulated",8
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Downregulated",1
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head phase DEG only","Numerator more solitarious-like","Upregulated",11
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Downregulated",74
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","No phase DEG","Not phase-associated","Upregulated",140
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Downregulated",58
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","No phase reference","Not phase-associated","Upregulated",154
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Downregulated",14
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more gregarious-like","Upregulated",5
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Downregulated",2
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG","Numerator more solitarious-like","Upregulated",4
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Downregulated",25
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more gregarious-like","Upregulated",9
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Thorax phase DEG only","Numerator more solitarious-like","Upregulated",11

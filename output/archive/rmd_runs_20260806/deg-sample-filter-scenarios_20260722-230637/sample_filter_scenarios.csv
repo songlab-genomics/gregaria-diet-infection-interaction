@@ -1,0 +1,4 @@
+"scenario_id","scenario","excluded_samples","rationale"
+"all_samples","All samples","None","No samples removed."
+"current_outliers_removed","Current outliers removed","1007, 1036, 1037, 1039","Removes the current four-sample outlier set."
+"expanded_outlier_set","Expanded outlier set","1007, 1036, 1037, 1039","Uses the editable expanded_outliers vector."

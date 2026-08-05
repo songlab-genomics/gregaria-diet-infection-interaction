@@ -1,0 +1,17 @@
+"comparison_type","comparison","signed_direction","n_DEGs"
+"Diet contrasts among control","Control 33 vs 50","Upregulated",3
+"Diet contrasts among control","Control 83 vs 33","Downregulated",23
+"Diet contrasts among control","Control 83 vs 33","Upregulated",45
+"Diet contrasts among control","Control 83 vs 50","Downregulated",3
+"Diet contrasts among control","Control 83 vs 50","Upregulated",32
+"Diet contrasts among infected","Infected 33 vs 50","Downregulated",1921
+"Diet contrasts among infected","Infected 33 vs 50","Upregulated",10
+"Diet contrasts among infected","Infected 83 vs 33","Downregulated",10
+"Diet contrasts among infected","Infected 83 vs 33","Upregulated",14
+"Diet contrasts among infected","Infected 83 vs 50","Upregulated",1
+"Infection within diet","Diet 33: infected vs control","Downregulated",441
+"Infection within diet","Diet 33: infected vs control","Upregulated",457
+"Infection within diet","Diet 50: infected vs control","Downregulated",518
+"Infection within diet","Diet 50: infected vs control","Upregulated",794
+"Infection within diet","Diet 83: infected vs control","Downregulated",177
+"Infection within diet","Diet 83: infected vs control","Upregulated",342

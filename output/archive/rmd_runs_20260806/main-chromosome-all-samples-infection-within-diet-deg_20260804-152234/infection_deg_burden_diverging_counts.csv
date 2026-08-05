@@ -1,0 +1,7 @@
+"diet","direction","n_significant_genes","signed_n"
+"33","Higher in infected",461,461
+"50","Higher in infected",742,742
+"83","Higher in infected",499,499
+"33","Higher in control",396,-396
+"50","Higher in control",374,-374
+"83","Higher in control",269,-269

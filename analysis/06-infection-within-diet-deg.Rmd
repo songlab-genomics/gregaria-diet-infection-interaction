@@ -1,5 +1,5 @@
 ---
-title: "Infection within diet DEGs"
+title: "All samples + all scaffolds: infection within diet DEGs"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   min_total_count: 10
@@ -18,13 +18,18 @@ params:
   top_functional_degs_per_theme: 18
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "infection-within-diet-deg"
+  output_tag: "all-scaffolds-infection-within-diet-deg"
 ---
 
 ## Purpose
 
 This page tests infected versus control samples separately within each diet.
 This is a simple and readable complement to the full interaction model.
+
+This branch retains all 44 samples and all expression-filtered, non-rRNA host
+loci from the fresh competitive mapping, including genes on unplaced
+scaffolds. The parallel [placed-chromosome analysis](16-all-samples-infection-within-diet-deg.html)
+uses the same sample set and thresholds but restricts the tested gene universe.
 
 The reason to split by diet is biological and statistical: infection may not
 produce the same transcriptional response under every nutritional condition.
@@ -73,8 +78,12 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- relevel(factor(metadata$Treatment), ref = "Control")
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_path <- file.path(project_dir, params$counts_file)
+counts_raw <- if (grepl("[.]tsv$", counts_path, ignore.case = TRUE)) {
+  read.delim(counts_path, check.names = FALSE)
+} else {
+  read.csv(counts_path, check.names = FALSE)
+}
 counts <- as.matrix(counts_raw[, -1])
 rownames(counts) <- counts_raw[[1]]
 storage.mode(counts) <- "integer"

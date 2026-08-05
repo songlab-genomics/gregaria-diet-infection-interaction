@@ -1,0 +1,1015 @@
+---
+title: "Curated target-gene Figure 4"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  workbook_file: "data/external/curated_target_genes/2026-07-26_curated-hypoth_DEGs_v14.xlsx"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  latest_results_root: "output/rmd_runs"
+  results_pattern: "^placed-unplaced-scaffold-analysis_"
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "curated-target-gene-figure"
+---
+
+## Purpose
+
+This page updates the coauthor-curated target-gene figure after the primary
+analysis was restricted to genes on the main *Schistocerca gregaria*
+chromosomes. The biological categories are preserved exactly from the supplied
+workbook, but every plotted differential-expression status is recalculated from
+the current competitive-host DESeq2 results.
+
+The primary Figure 4 contains all curated targets that map to a nuclear
+chromosome. A retained target is shown as `N.S.` when it does not meet both
+`padj < alpha` and `|log2FC| >= lfc_threshold` in a particular contrast. This
+keeps the target set fixed rather than selecting a new subset separately for
+each comparison. Curated targets on unplaced scaffolds are documented below and
+exported for follow-up, but they are not included in the primary percentages.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required_packages <- c(
+  "readxl", "readr", "dplyr", "tidyr", "tibble", "ggplot2",
+  "patchwork", "cowplot", "scales", "DT", "knitr"
+)
+
+missing_packages <- required_packages[
+  !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
+]
+if (length(missing_packages) > 0) {
+  stop(
+    "Install the following R packages before running this page: ",
+    paste(missing_packages, collapse = ", ")
+  )
+}
+
+suppressPackageStartupMessages({
+  library(readxl)
+  library(readr)
+  library(dplyr)
+  library(tidyr)
+  library(tibble)
+  library(ggplot2)
+  library(patchwork)
+})
+
+page_defaults <- list(
+  workbook_file = paste0(
+    "data/external/curated_target_genes/",
+    "2026-07-26_curated-hypoth_DEGs_v14.xlsx"
+  ),
+  placement_file = paste0(
+    "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
+    "host-mapping-audit_20260729-163928/unified-model/audit-summary/",
+    "host_gene_sequence_placement.tsv"
+  ),
+  latest_results_root = "output/rmd_runs",
+  results_pattern = "^placed-unplaced-scaffold-analysis_",
+  alpha = 0.05,
+  lfc_threshold = 1,
+  output_tag = "curated-target-gene-figure"
+)
+
+if (!exists("params", inherits = TRUE) || !is.list(params)) {
+  page_params <- page_defaults
+} else {
+  page_params <- utils::modifyList(page_defaults, params)
+}
+
+path_ancestors <- function(path) {
+  path <- normalizePath(path, mustWork = FALSE)
+  ancestors <- path
+  repeat {
+    parent <- dirname(path)
+    if (identical(parent, path)) break
+    ancestors <- c(ancestors, parent)
+    path <- parent
+  }
+  ancestors
+}
+
+is_project_root <- function(path) {
+  file.exists(file.path(path, "analysis", "30-curated-target-gene-figure.Rmd")) &&
+    dir.exists(file.path(path, "data")) &&
+    dir.exists(file.path(path, "output"))
+}
+
+find_project_root <- function() {
+  starts <- c(getwd())
+  explicit_root <- Sys.getenv("GREGARIA_DIET_PROJECT_DIR", unset = "")
+  if (nzchar(explicit_root)) starts <- c(explicit_root, starts)
+
+  input_file <- tryCatch(
+    knitr::current_input(dir = TRUE),
+    error = function(e) ""
+  )
+  if (nzchar(input_file)) starts <- c(dirname(input_file), starts)
+
+  candidates <- unique(unlist(lapply(starts, path_ancestors)))
+  hits <- candidates[vapply(candidates, is_project_root, logical(1))]
+  if (length(hits) == 0) {
+    stop("Could not locate the gregaria-diet-infection-interaction project root.")
+  }
+  hits[[1]]
+}
+
+project_dir <- find_project_root()
+resolve_path <- function(path) {
+  if (grepl("^/", path)) path else file.path(project_dir, path)
+}
+
+latest_matching_dir <- function(root, pattern) {
+  root <- resolve_path(root)
+  candidates <- list.dirs(root, recursive = FALSE, full.names = TRUE)
+  candidates <- candidates[grepl(pattern, basename(candidates))]
+  if (length(candidates) == 0) {
+    stop("No result folder matched ", pattern, " under ", root)
+  }
+  sort(candidates)[[length(candidates)]]
+}
+
+make_run_dir <- function(root, tag) {
+  stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+  base <- file.path(resolve_path(root), paste0(tag, "_", stamp))
+  candidate <- base
+  suffix <- 1L
+  while (dir.exists(candidate)) {
+    suffix <- suffix + 1L
+    candidate <- paste0(base, "_", suffix)
+  }
+  dir.create(candidate, recursive = TRUE, showWarnings = FALSE)
+  candidate
+}
+
+workbook_file <- resolve_path(page_params$workbook_file)
+placement_file <- resolve_path(page_params$placement_file)
+source_results_dir <- latest_matching_dir(
+  page_params$latest_results_root,
+  page_params$results_pattern
+)
+results_file <- file.path(
+  source_results_dir,
+  "placed_unplaced_all_deseq2_results.csv"
+)
+out_dir <- make_run_dir(page_params$latest_results_root, page_params$output_tag)
+
+required_files <- c(workbook_file, placement_file, results_file)
+missing_files <- required_files[!file.exists(required_files)]
+if (length(missing_files) > 0) {
+  stop("Missing required input files: ", paste(missing_files, collapse = ", "))
+}
+
+alpha <- as.numeric(page_params$alpha)
+lfc_threshold <- as.numeric(page_params$lfc_threshold)
+
+write_csv_out <- function(x, filename) {
+  readr::write_csv(x, file.path(out_dir, filename), na = "")
+}
+
+save_figure <- function(plot, stem, width, height) {
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(stem, ".png")), plot,
+    width = width, height = height, units = "in", dpi = 400,
+    bg = "white"
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(stem, ".svg")), plot,
+    width = width, height = height, units = "in", bg = "white"
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(stem, ".pdf")), plot,
+    width = width, height = height, units = "in",
+    device = grDevices::cairo_pdf, bg = "white"
+  )
+}
+```
+
+## Inputs and contrast direction
+
+The workbook contains 163 unique target genes divided between immune and
+protein-anabolism categories. Its values came from the earlier all-sequence DEG
+catalogue. Here, the workbook supplies only gene membership and biological
+categories; the current log2 fold changes and adjusted p-values come from the
+latest placed/unplaced sensitivity run.
+
+Within each diet, positive values mean higher expression in infected locusts.
+For across-diet comparisons, the sign is oriented to the higher-protein diet:
+50 versus 33, 83 versus 33, and 83 versus 50. Thus, `Upregulated` always means
+higher expression in the first condition printed below the bar.
+
+```{r read-inputs}
+curated_targets <- dplyr::bind_rows(
+  readxl::read_excel(workbook_file, sheet = "Immune") |>
+    dplyr::mutate(source_sheet = "Immune"),
+  readxl::read_excel(workbook_file, sheet = "Protein-Anabolism") |>
+    dplyr::mutate(source_sheet = "Protein-Anabolism")
+) |>
+  dplyr::rename(
+    umbrella = `Umbrella Category`,
+    subcategory = `Sub-Category`,
+    gene_id = `Gene ID`,
+    description_workbook = `Gene Description`
+  )
+
+if (anyDuplicated(curated_targets$gene_id)) {
+  stop("The curated workbook contains duplicated gene IDs.")
+}
+
+placement <- readr::read_tsv(placement_file, show_col_types = FALSE)
+all_results <- readr::read_csv(results_file, show_col_types = FALSE) |>
+  dplyr::filter(.data$mapping_branch == "Competitive host")
+
+contrast_map <- tibble::tribble(
+  ~contrast_id, ~contrast_label, ~figure_scope, ~x_label, ~x_order,
+  ~desired_sign, ~positive_condition, ~negative_condition,
+  ~workbook_lfc_col, ~workbook_padj_col, ~show_in_figure,
+  "infection_diet33", "Diet 33: infected vs control",
+  "Within-diet infection response", "33", 1, 1,
+  "Infected diet 33", "Control diet 33",
+  "Diet 33 log2FC", "Diet 33 padj", TRUE,
+  "infection_diet50", "Diet 50: infected vs control",
+  "Within-diet infection response", "50", 2, 1,
+  "Infected diet 50", "Control diet 50",
+  "Diet 50 log2FC", "Diet 50 padj", TRUE,
+  "infection_diet83", "Diet 83: infected vs control",
+  "Within-diet infection response", "83", 3, 1,
+  "Infected diet 83", "Control diet 83",
+  "Diet 83 log2FC", "Diet 83 padj", TRUE,
+  "infected_diet33_vs50", "Infected: diet 50 vs 33",
+  "Diet comparison among infected", "50\nvs\n33", 1, -1,
+  "Infected diet 50", "Infected diet 33",
+  "inf33 vs inf50_log2FC", "inf33 vs inf50_padj", TRUE,
+  "infected_diet83_vs33", "Infected: diet 83 vs 33",
+  "Diet comparison among infected", "83\nvs\n33", 2, 1,
+  "Infected diet 83", "Infected diet 33",
+  "inf83 vs inf33_log2FC", "inf83 vs inf33_padj", TRUE,
+  "infected_diet83_vs50", "Infected: diet 83 vs 50",
+  "Diet comparison among infected", "83\nvs\n50", 3, 1,
+  "Infected diet 83", "Infected diet 50",
+  "inf83 vs inf50_log2FC", "inf83 vs inf50_padj", TRUE,
+  "control_diet33_vs50", "Control: diet 50 vs 33",
+  "Diet comparison among controls", "50\nvs\n33", 1, -1,
+  "Control diet 50", "Control diet 33",
+  "cont33 vs cont50_log2FC", "cont33 vs cont50_padj", FALSE,
+  "control_diet83_vs33", "Control: diet 83 vs 33",
+  "Diet comparison among controls", "83\nvs\n33", 2, 1,
+  "Control diet 83", "Control diet 33",
+  "cont83 vs cont33_log2FC", "cont83 vs cont33_padj", FALSE,
+  "control_diet83_vs50", "Control: diet 83 vs 50",
+  "Diet comparison among controls", "83\nvs\n50", 3, 1,
+  "Control diet 83", "Control diet 50",
+  "cont83 vs cont50_log2FC", "cont83 vs cont50_padj", FALSE
+)
+
+target_placement <- curated_targets |>
+  dplyr::left_join(
+    placement |>
+      dplyr::select(
+        gene_id, seqid, description_gff = description, gene_biotype,
+        sequence_name, sequence_role, assigned_molecule, location_type,
+        sequence_class
+      ),
+    by = "gene_id"
+  )
+
+if (any(is.na(target_placement$sequence_class))) {
+  stop(
+    "Placement was not found for: ",
+    paste(target_placement$gene_id[is.na(target_placement$sequence_class)],
+          collapse = ", ")
+  )
+}
+
+current_target_results <- all_results |>
+  dplyr::filter(.data$contrast_id %in% contrast_map$contrast_id) |>
+  dplyr::select(
+    gene_id, analysis_scope, contrast_id, baseMean, log2FoldChange,
+    lfcSE, stat, pvalue, padj
+  )
+
+duplicate_result_rows <- current_target_results |>
+  dplyr::count(.data$gene_id, .data$contrast_id) |>
+  dplyr::filter(.data$n > 1)
+if (nrow(duplicate_result_rows) > 0) {
+  stop("More than one competitive-host result was found per gene and contrast.")
+}
+
+target_analysis <- target_placement |>
+  dplyr::select(
+    source_sheet, umbrella, subcategory, gene_id, description_workbook,
+    description_gff, gene_biotype, seqid, sequence_name, sequence_role,
+    assigned_molecule, location_type, sequence_class
+  ) |>
+  tidyr::crossing(contrast_map) |>
+  dplyr::left_join(
+    current_target_results,
+    by = c("gene_id", "contrast_id")
+  ) |>
+  dplyr::mutate(
+    significant = !is.na(.data$padj) &
+      .data$padj < alpha &
+      abs(.data$log2FoldChange) >= lfc_threshold,
+    oriented_log2FC = .data$log2FoldChange * .data$desired_sign,
+    status = dplyr::case_when(
+      !.data$significant ~ "N.S.",
+      .data$oriented_log2FC > 0 ~ "Upregulated",
+      TRUE ~ "Downregulated"
+    ),
+    higher_expression_condition = dplyr::case_when(
+      !.data$significant ~ "Not significant",
+      .data$oriented_log2FC > 0 ~ .data$positive_condition,
+      TRUE ~ .data$negative_condition
+    ),
+    primary_figure = .data$sequence_class == "Nuclear chromosome"
+  )
+
+original_status_long <- dplyr::bind_rows(lapply(
+  seq_len(nrow(contrast_map)),
+  function(i) {
+    original_value <- as.character(
+      curated_targets[[contrast_map$workbook_lfc_col[[i]]]]
+    )
+    numeric_value <- suppressWarnings(as.numeric(original_value))
+    tibble::tibble(
+      gene_id = curated_targets$gene_id,
+      contrast_id = contrast_map$contrast_id[[i]],
+      original_value = original_value,
+      original_oriented_log2FC = numeric_value * contrast_map$desired_sign[[i]],
+      original_status = dplyr::case_when(
+        is.na(numeric_value) ~ "N.S.",
+        numeric_value * contrast_map$desired_sign[[i]] > 0 ~ "Upregulated",
+        numeric_value * contrast_map$desired_sign[[i]] < 0 ~ "Downregulated",
+        TRUE ~ "N.S."
+      )
+    )
+  }
+))
+
+target_analysis <- target_analysis |>
+  dplyr::left_join(
+    original_status_long,
+    by = c("gene_id", "contrast_id")
+  )
+```
+
+## Effect of the chromosome restriction
+
+```{r placement-summary}
+target_gene_summary <- target_analysis |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$gene_id,
+    .data$description_workbook, .data$description_gff,
+    .data$gene_biotype, .data$seqid, .data$sequence_class
+  ) |>
+  dplyr::summarise(
+    currently_significant = any(.data$significant),
+    n_current_significant_contrasts = sum(.data$significant),
+    .groups = "drop"
+  )
+
+category_impact <- target_gene_summary |>
+  dplyr::group_by(.data$source_sheet, .data$umbrella) |>
+  dplyr::summarise(
+    original_targets = dplyr::n(),
+    main_chromosome_targets = sum(.data$sequence_class == "Nuclear chromosome"),
+    unplaced_targets = sum(.data$sequence_class == "Unplaced scaffold"),
+    retained_percent = 100 * .data$main_chromosome_targets / .data$original_targets,
+    main_chromosome_targets_significant_now = sum(
+      .data$sequence_class == "Nuclear chromosome" &
+        .data$currently_significant
+    ),
+    .groups = "drop"
+  )
+
+total_targets <- nrow(target_gene_summary)
+main_targets <- sum(target_gene_summary$sequence_class == "Nuclear chromosome")
+unplaced_targets_n <- sum(target_gene_summary$sequence_class == "Unplaced scaffold")
+main_targets_significant <- sum(
+  target_gene_summary$sequence_class == "Nuclear chromosome" &
+    target_gene_summary$currently_significant
+)
+
+protein_row <- category_impact |>
+  dplyr::filter(.data$umbrella == "Protein Synthesis & Translation")
+
+write_csv_out(category_impact, "curated_target_placement_summary.csv")
+write_csv_out(target_analysis, "curated_target_gene_reanalysis_long.csv")
+```
+
+Of the `r total_targets` curated genes, **`r main_targets` are on main nuclear
+chromosomes** and enter the revised primary figure. The remaining
+**`r unplaced_targets_n` genes are on unplaced scaffolds**. Among the retained
+targets, `r main_targets_significant` are currently significant in at least one
+of the nine reconstructed contrasts.
+
+The largest change is Protein Synthesis & Translation: only
+`r protein_row$main_chromosome_targets` of its
+`r protein_row$original_targets` targets are retained, while
+`r protein_row$unplaced_targets` are moved to the audit set. This is why the
+across-diet protein-synthesis pattern in the older figure cannot be carried
+forward as a main-chromosome result.
+
+```{r target-placement-table}
+knitr::kable(
+  category_impact |>
+    dplyr::mutate(
+      retained_percent = scales::percent(.data$retained_percent / 100,
+                                         accuracy = 0.1)
+    ),
+  col.names = c(
+    "Group", "Curated category", "Original targets", "Main chromosome",
+    "Unplaced", "Retained", "Main-chromosome targets significant now"
+  ),
+  align = c("l", "l", "r", "r", "r", "r", "r")
+)
+```
+
+```{r target-placement-plot, fig.width=12, fig.height=7.5}
+category_order <- c(
+  "Innate Immune Recognition & Signaling",
+  "Humoral Immunity",
+  "Cellular Immunity",
+  "Detoxification",
+  "Protein Synthesis & Translation",
+  "Nutrient Sensing & TOR/Insulin Signaling",
+  "Nitrogen & Amino Acid Metabolism",
+  "Storage Hexamerins & Reserves"
+)
+
+category_labels <- c(
+  "Innate Immune Recognition & Signaling" =
+    "Innate immune recognition & signaling",
+  "Humoral Immunity" = "Humoral immunity",
+  "Cellular Immunity" = "Cellular immunity",
+  "Detoxification" = "Detoxification",
+  "Protein Synthesis & Translation" = "Protein synthesis & translation",
+  "Nutrient Sensing & TOR/Insulin Signaling" =
+    "Nutrient sensing & TOR/insulin signaling",
+  "Nitrogen & Amino Acid Metabolism" =
+    "Nitrogen & amino acid metabolism",
+  "Storage Hexamerins & Reserves" = "Storage hexamerins & reserves"
+)
+
+placement_plot_data <- target_gene_summary |>
+  dplyr::mutate(
+    placement_for_figure = dplyr::if_else(
+      .data$sequence_class == "Nuclear chromosome",
+      "Main chromosome - retained",
+      "Unplaced scaffold - audit only"
+    )
+  ) |>
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$placement_for_figure,
+    name = "n_genes"
+  ) |>
+  dplyr::group_by(.data$source_sheet, .data$umbrella) |>
+  tidyr::complete(
+    placement_for_figure = c(
+      "Main chromosome - retained", "Unplaced scaffold - audit only"
+    ),
+    fill = list(n_genes = 0)
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    umbrella = factor(.data$umbrella, levels = rev(category_order)),
+    source_sheet = dplyr::recode(
+      .data$source_sheet,
+      "Protein-Anabolism" = "Protein anabolism"
+    )
+  )
+
+placement_impact_plot <- ggplot(
+  placement_plot_data,
+  aes(x = n_genes, y = umbrella, fill = placement_for_figure)
+) +
+  geom_col(width = 0.72, color = "white", linewidth = 0.4) +
+  geom_text(
+    aes(label = ifelse(n_genes > 0, n_genes, "")),
+    position = position_stack(vjust = 0.5),
+    color = "white", fontface = "bold", size = 4.2
+  ) +
+  facet_grid(source_sheet ~ ., scales = "free_y", space = "free_y") +
+  scale_fill_manual(
+    values = c(
+      "Main chromosome - retained" = "#2F7D5B",
+      "Unplaced scaffold - audit only" = "#B85C4B"
+    ),
+    breaks = c(
+      "Main chromosome - retained", "Unplaced scaffold - audit only"
+    )
+  ) +
+  scale_y_discrete(labels = category_labels) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    title = "Curated target genes retained for primary Figure 4",
+    subtitle = paste0(
+      main_targets, " of ", total_targets,
+      " targets are on main chromosomes; unplaced targets remain in the audit"
+    ),
+    x = "Number of curated target genes",
+    y = NULL,
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 12),
+    axis.text.y = element_text(size = 12, color = "black"),
+    axis.text.x = element_text(size = 11, color = "black"),
+    strip.text.y = element_text(face = "bold", size = 13, angle = 0),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom",
+    legend.text = element_text(size = 12),
+    plot.margin = margin(12, 18, 12, 12)
+  )
+
+placement_impact_plot
+save_figure(placement_impact_plot, "curated_target_placement_impact", 12, 7.5)
+```
+
+## Revised Figure 4
+
+```{r build-revised-figure4, fig.width=15, fig.height=11.5}
+figure_contrasts <- contrast_map |>
+  dplyr::filter(.data$show_in_figure)
+
+figure_gene_data <- target_analysis |>
+  dplyr::filter(
+    .data$primary_figure,
+    .data$show_in_figure
+  )
+
+figure_counts <- figure_gene_data |>
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order, .data$status,
+    name = "n_genes"
+  ) |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order
+  ) |>
+  dplyr::mutate(percentage = 100 * .data$n_genes / sum(.data$n_genes)) |>
+  dplyr::ungroup()
+
+category_n <- target_gene_summary |>
+  dplyr::filter(.data$sequence_class == "Nuclear chromosome") |>
+  dplyr::count(.data$source_sheet, .data$umbrella, name = "n_targets")
+
+format_test_label <- function(p) {
+  if (is.na(p) || p >= 0.05) return("N.S.D.")
+  if (p < 0.0001) return("p < 0.0001")
+  if (p < 0.001) return("p < 0.001")
+  paste0("p = ", formatC(p, digits = 3, format = "f"))
+}
+
+set.seed(20260805)
+test_rows <- list()
+row_i <- 0L
+for (sheet_name in unique(figure_counts$source_sheet)) {
+  for (category_name in unique(
+    figure_counts$umbrella[figure_counts$source_sheet == sheet_name]
+  )) {
+    for (scope_name in unique(figure_counts$figure_scope)) {
+      test_df <- figure_counts |>
+        dplyr::filter(
+          .data$source_sheet == sheet_name,
+          .data$umbrella == category_name,
+          .data$figure_scope == scope_name
+        ) |>
+        tidyr::complete(
+          x_order = 1:3,
+          status = c("Upregulated", "N.S.", "Downregulated"),
+          fill = list(n_genes = 0)
+        ) |>
+        dplyr::arrange(.data$x_order, match(
+          .data$status,
+          c("Upregulated", "N.S.", "Downregulated")
+        ))
+
+      count_matrix <- matrix(test_df$n_genes, nrow = 3, byrow = TRUE)
+      count_matrix <- count_matrix[, colSums(count_matrix) > 0, drop = FALSE]
+
+      p_value <- NA_real_
+      if (ncol(count_matrix) >= 2 && nrow(count_matrix) >= 2) {
+        p_value <- suppressWarnings(stats::chisq.test(
+          count_matrix,
+          simulate.p.value = any(count_matrix < 5),
+          B = 20000
+        )$p.value)
+      }
+
+      row_i <- row_i + 1L
+      test_rows[[row_i]] <- tibble::tibble(
+        source_sheet = sheet_name,
+        umbrella = category_name,
+        figure_scope = scope_name,
+        p_value = p_value,
+        p_label = format_test_label(p_value)
+      )
+    }
+  }
+}
+figure_tests <- dplyr::bind_rows(test_rows)
+
+figure_status_counts <- figure_counts |>
+  dplyr::left_join(category_n, by = c("source_sheet", "umbrella")) |>
+  dplyr::left_join(
+    figure_tests,
+    by = c("source_sheet", "umbrella", "figure_scope")
+  )
+
+write_csv_out(figure_status_counts, "figure4_main_chromosome_status_counts.csv")
+write_csv_out(figure_tests, "figure4_exploratory_chisquare_tests.csv")
+
+category_display <- c(
+  "Innate Immune Recognition & Signaling" =
+    "Innate immune\nrecognition &\nsignaling",
+  "Humoral Immunity" = "Humoral\nimmunity",
+  "Cellular Immunity" = "Cellular\nimmunity",
+  "Detoxification" = "Detoxification",
+  "Protein Synthesis & Translation" =
+    "Protein synthesis\n& translation",
+  "Nutrient Sensing & TOR/Insulin Signaling" =
+    "Nutrient sensing\n& TOR/insulin\nsignaling",
+  "Nitrogen & Amino Acid Metabolism" =
+    "Nitrogen & amino acid\nmetabolism",
+  "Storage Hexamerins & Reserves" =
+    "Storage hexamerins\n& reserves"
+)
+
+status_colors <- c(
+  "Downregulated" = "#3B59B6",
+  "N.S." = "#CCCCCC",
+  "Upregulated" = "#9E1B22"
+)
+diet_colors <- c("33" = "#C8641A", "50" = "#1B6B3A", "83" = "#5A2A82")
+
+build_figure4_panel <- function(
+    sheet_name, scope_name, tag, show_y = TRUE, show_legend = FALSE) {
+  panel_data <- figure_status_counts |>
+    dplyr::filter(
+      .data$source_sheet == sheet_name,
+      .data$figure_scope == scope_name
+    ) |>
+    dplyr::mutate(
+      umbrella = factor(
+        .data$umbrella,
+        levels = category_order[category_order %in% unique(.data$umbrella)]
+      ),
+      status = factor(
+        .data$status,
+        levels = c("Downregulated", "N.S.", "Upregulated")
+      ),
+      x_label = factor(
+        .data$x_label,
+        levels = unique(.data$x_label[order(.data$x_order)])
+      ),
+      outline = if (scope_name == "Within-diet infection response") {
+        unname(diet_colors[as.character(.data$x_label)])
+      } else {
+        "#252525"
+      }
+    )
+
+  panel_annotations <- panel_data |>
+    dplyr::distinct(
+      .data$umbrella, .data$p_label, .data$n_targets
+    ) |>
+    dplyr::mutate(
+      x_label = factor(
+        levels(panel_data$x_label)[[2]],
+        levels = levels(panel_data$x_label)
+      )
+    )
+
+  panel_title <- if (scope_name == "Within-diet infection response") {
+    "Within-diet comparisons\n(Infected vs control)"
+  } else {
+    "Across-diet comparisons among infected\n(Higher protein vs lower protein)"
+  }
+
+  group_title <- dplyr::recode(
+    sheet_name,
+    "Immune" = "Immune-related",
+    "Protein-Anabolism" = "Protein anabolism"
+  )
+  y_title <- if (show_y) {
+    paste0(group_title, "\n\nPercentage of curated target genes (%)")
+  } else {
+    NULL
+  }
+
+  ggplot(panel_data, aes(x = x_label, y = percentage, fill = status)) +
+    geom_col(
+      aes(color = outline),
+      width = 0.66, linewidth = 0.65
+    ) +
+    geom_text(
+      data = panel_annotations,
+      aes(x = x_label, y = 108, label = p_label),
+      inherit.aes = FALSE,
+      size = 3.3, fontface = "bold"
+    ) +
+    geom_text(
+      data = panel_annotations,
+      aes(x = x_label, y = -13, label = paste0("n = ", n_targets)),
+      inherit.aes = FALSE,
+      size = 3.2
+    ) +
+    facet_wrap(
+      ~ umbrella,
+      nrow = 1,
+      labeller = as_labeller(category_display)
+    ) +
+    scale_fill_manual(values = status_colors, drop = FALSE) +
+    scale_color_identity() +
+    scale_y_continuous(
+      breaks = c(0, 50, 100),
+      limits = c(-17, 113),
+      expand = expansion(mult = c(0, 0))
+    ) +
+    coord_cartesian(clip = "off") +
+    labs(
+      tag = tag,
+      title = panel_title,
+      x = NULL,
+      y = y_title,
+      fill = NULL
+    ) +
+    theme_classic(base_size = 11) +
+    theme(
+      plot.tag = element_text(face = "bold", size = 17),
+      plot.tag.position = c(0.005, 1.02),
+      plot.title = element_text(
+        face = "bold", size = 13, hjust = 0.5,
+        margin = margin(b = 10)
+      ),
+      axis.title.y = element_text(size = 12, margin = margin(r = 7)),
+      axis.text.y = if (show_y) {
+        element_text(size = 10, color = "black")
+      } else {
+        element_blank()
+      },
+      axis.ticks.y = if (show_y) element_line() else element_blank(),
+      axis.line.y = if (show_y) element_line() else element_blank(),
+      axis.text.x = element_text(size = 10.5, color = "black", lineheight = 0.9),
+      axis.ticks.x = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_text(
+        face = "bold", size = 10.5, lineheight = 0.9,
+        margin = margin(b = 7)
+      ),
+      panel.spacing.x = grid::unit(0.35, "lines"),
+      legend.position = if (show_legend) "bottom" else "none",
+      legend.text = element_text(size = 11),
+      legend.key.size = grid::unit(4.5, "mm"),
+      plot.margin = margin(12, 8, 30, 8)
+    )
+}
+
+p_a <- build_figure4_panel(
+  "Immune", "Within-diet infection response", "A", TRUE, FALSE
+)
+p_b <- build_figure4_panel(
+  "Immune", "Diet comparison among infected", "B", FALSE
+)
+p_c <- build_figure4_panel(
+  "Protein-Anabolism", "Within-diet infection response", "C", TRUE
+)
+p_d <- build_figure4_panel(
+  "Protein-Anabolism", "Diet comparison among infected", "D", FALSE
+)
+
+legend_data <- tibble::tibble(
+  status = factor(
+    c("Downregulated", "N.S.", "Upregulated"),
+    levels = c("Downregulated", "N.S.", "Upregulated")
+  ),
+  x = seq_len(3),
+  y = 1
+)
+legend_plot <- ggplot(legend_data, aes(x = x, y = y, fill = status)) +
+  geom_point(shape = 22, size = 5, color = NA) +
+  scale_fill_manual(values = status_colors, drop = FALSE) +
+  guides(fill = guide_legend(title = NULL, nrow = 1)) +
+  theme_void(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 12),
+    legend.key.size = grid::unit(5, "mm")
+  )
+shared_status_legend <- cowplot::get_legend(legend_plot)
+
+figure4_main_chromosome <- (
+  (p_a | p_b) /
+  (p_c | p_d) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(
+    heights = c(1, 1, 0.075)
+  ) +
+  patchwork::plot_annotation(
+    title = "Curated immune and protein-anabolism targets on main chromosomes",
+    subtitle = paste0(
+      "Competitive-host DESeq2; ", main_targets,
+      " retained targets; padj < ", alpha,
+      " and |log2FC| >= ", lfc_threshold
+    ),
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+figure4_main_chromosome
+save_figure(
+  figure4_main_chromosome,
+  "figure4_curated_targets_main_chromosomes",
+  15,
+  11.5
+)
+```
+
+The left panels summarize infection responses within each diet. The right
+panels summarize expression differences among infected locusts, with all signs
+oriented toward the higher-protein diet. The `N.S.` portion includes retained
+targets that do not meet the current thresholds for that contrast. The
+chi-square labels reproduce the exploratory comparison used in the coauthor
+figure; they should not be interpreted as a replacement for the gene-level
+DESeq2 tests.
+
+## What changed from the coauthor workbook?
+
+```{r old-new-comparison}
+status_transition <- target_analysis |>
+  dplyr::filter(.data$primary_figure) |>
+  dplyr::count(
+    .data$original_status,
+    current_status = .data$status,
+    name = "gene_contrast_cells"
+  ) |>
+  dplyr::arrange(.data$original_status, .data$current_status)
+
+changed_cells <- target_analysis |>
+  dplyr::filter(
+    .data$primary_figure,
+    .data$original_status != .data$status
+  )
+
+write_csv_out(status_transition, "figure4_old_to_current_status_transitions.csv")
+write_csv_out(changed_cells, "figure4_changed_placed_target_cells.csv")
+
+knitr::kable(
+  status_transition,
+  col.names = c("Workbook status", "Current status", "Gene-contrast cells"),
+  align = c("l", "l", "r")
+)
+```
+
+There are `r nrow(changed_cells)` placed-gene contrast cells whose status differs
+between the supplied workbook and the current competitive-host analysis. This
+comparison separates two effects: removal of unplaced targets changes the
+category denominator, while remapping and re-fitting DESeq2 can change the
+status of targets that remain on main chromosomes.
+
+## Unplaced targets retained for follow-up
+
+```{r unplaced-targets}
+unplaced_followup <- target_analysis |>
+  dplyr::filter(.data$sequence_class == "Unplaced scaffold") |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$subcategory,
+    .data$gene_id, .data$description_workbook, .data$description_gff,
+    .data$gene_biotype, .data$seqid
+  ) |>
+  dplyr::summarise(
+    significant_in_current_unplaced_analysis = any(.data$significant),
+    n_significant_contrasts = sum(.data$significant),
+    significant_contrasts = paste(
+      .data$contrast_label[.data$significant],
+      collapse = "; "
+    ),
+    higher_expression_conditions = paste(
+      .data$higher_expression_condition[.data$significant],
+      collapse = "; "
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    significant_contrasts = dplyr::if_else(
+      .data$significant_contrasts == "",
+      "None at current thresholds",
+      .data$significant_contrasts
+    ),
+    higher_expression_conditions = dplyr::if_else(
+      .data$higher_expression_conditions == "",
+      "Not significant",
+      .data$higher_expression_conditions
+    )
+  ) |>
+  dplyr::arrange(.data$source_sheet, .data$umbrella, .data$gene_id)
+
+unplaced_33_vs_50 <- target_analysis |>
+  dplyr::filter(
+    .data$sequence_class == "Unplaced scaffold",
+    .data$contrast_id == "infected_diet33_vs50",
+    .data$significant
+  ) |>
+  dplyr::distinct(.data$gene_id) |>
+  nrow()
+
+write_csv_out(unplaced_followup, "curated_unplaced_targets_for_followup.csv")
+```
+
+Of the `r unplaced_targets_n` excluded curated targets,
+`r unplaced_33_vs_50` are significant in the current unplaced-scaffold analysis
+for infected diet 33 versus infected diet 50. These genes are therefore a
+specific follow-up set for the scaffold-origin work, not evidence to include in
+the primary host-chromosome Figure 4.
+
+```{r unplaced-searchable-table}
+DT::datatable(
+  unplaced_followup,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+)
+```
+
+## Searchable retained target table
+
+```{r retained-searchable-table}
+retained_target_table <- target_analysis |>
+  dplyr::filter(.data$primary_figure) |>
+  dplyr::select(
+    source_sheet, umbrella, subcategory, gene_id,
+    description_gff, gene_biotype, assigned_molecule,
+    contrast_label, log2FoldChange, padj, status,
+    higher_expression_condition
+  ) |>
+  dplyr::arrange(.data$source_sheet, .data$umbrella, .data$gene_id)
+
+DT::datatable(
+  retained_target_table,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+)
+```
+
+## Exported files
+
+```{r export-manifest}
+manifest <- tibble::tibble(
+  item = c(
+    "Frozen curated workbook",
+    "Official placement table",
+    "Current DESeq2 result table",
+    "Output directory"
+  ),
+  path = c(
+    workbook_file,
+    placement_file,
+    results_file,
+    out_dir
+  )
+)
+write_csv_out(manifest, "figure4_input_manifest.csv")
+
+knitr::kable(manifest, col.names = c("Item", "Path"), align = c("l", "l"))
+```
+
+Each knit creates a new timestamped output folder. The principal figure is
+exported as `figure4_curated_targets_main_chromosomes` in PNG, SVG, and PDF
+formats. The placement-impact figure and all gene-level audit tables are
+exported beside it.
+
+## Session information
+
+```{r session-info}
+sessionInfo()
+```

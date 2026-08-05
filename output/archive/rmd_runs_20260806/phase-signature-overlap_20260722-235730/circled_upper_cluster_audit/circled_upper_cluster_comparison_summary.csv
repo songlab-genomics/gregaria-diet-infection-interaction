@@ -1,0 +1,9 @@
+"comparison","n_genes","pct_genes"
+"Infected 33 vs 50",1873,96.6
+"Diet 33: infected vs control",60,3.1
+"Diet 50: infected vs control",39,2
+"Diet 83: infected vs control",24,1.2
+"Infected 83 vs 33",6,0.3
+"Control 83 vs 33",3,0.2
+"Control 83 vs 50",1,0.1
+"Infected 83 vs 50",1,0.1

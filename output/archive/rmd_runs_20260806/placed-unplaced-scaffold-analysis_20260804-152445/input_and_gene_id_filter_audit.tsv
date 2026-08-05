@@ -1,0 +1,3 @@
+mapping_branch	input_count_rows	official_gene_ids_matched	annotated_rrna_ids_removed	unmatched_count_rows_excluded	genes_after_filters
+Competitive host	95606	35683	12402	59923	23281
+Host only	95606	35683	12402	59923	23281

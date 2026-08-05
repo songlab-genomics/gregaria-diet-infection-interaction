@@ -1,0 +1,2101 @@
+---
+title: "All samples + all scaffolds: GO term and KEGG enrichment"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  latest_results_root: "output/rmd_runs"
+  all_results_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_deseq2_all_contrasts.csv"
+  alpha: 0.05
+  lfc_threshold: 1
+  top_terms: 8
+  output_tag: "all-scaffolds-go-term-enrichment"
+---
+
+## Purpose
+
+<style>
+.main-container table.table:not(.dataTable) {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed;
+  overflow-x: auto;
+}
+.main-container table.table:not(.dataTable) th,
+.main-container table.table:not(.dataTable) td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.main-container .dataTables_wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+</style>
+
+This page applies the eggNOG-based functional enrichment to the all-samples,
+all-scaffold differential-expression results from the fresh competitive host
+mapping. It retains every expression-filtered non-rRNA host locus, lifts eggNOG
+protein annotations onto the `LOC...` gene IDs, and tests infection and diet DEG
+sets for enriched GO terms and KEGG pathways.
+
+The key point is that this is a custom enrichment workflow for this reference:
+the foregrounds and background both come from the same all-scaffold DESeq2
+universe, and GO names/ontologies come from `GO.db`. Sequence placement is not
+used as a filter in this branch. Compare it with the
+[placed-chromosome enrichment](10-go-term-enrichment.html) to see which terms
+depend on genes from unplaced scaffolds.
+
+The first enrichment section keeps the infection response non-directional,
+which asks what functions are over-represented among infection DEGs regardless
+of whether genes increase or decrease. A later section adds the requested
+direction-aware contrasts: infected-versus-control within each diet, diet
+contrasts among controls only, and diet contrasts among infected samples only.
+
+Important KEGG scope note: the foreground genes and enrichment background are
+from the *S. gregaria* fat body count matrix, but the KEGG pathway IDs are
+`koXXXXX` KEGG Orthology reference pathways carried by eggNOG. These are not
+Insecta-only organism pathways. Some enriched labels can therefore be broad
+cross-domain maps or microbial/prokaryote-associated KEGG reference labels,
+even though the genes tested here are locust gene IDs. The pathway-scope table
+below flags those cases for interpretation.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c(
+  "dplyr", "tidyr", "stringr", "ggplot2", "forcats", "clusterProfiler",
+  "GO.db", "AnnotationDbi", "DT"
+)
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+results_root <- file.path(project_dir, params$latest_results_root)
+
+primary_results_file <- file.path(project_dir, params$all_results_file)
+all_results <- read.csv(primary_results_file, check.names = FALSE) |>
+  dplyr::filter(mapping_branch == "competitive-host")
+if (nrow(all_results) == 0) {
+  stop("The all-scaffold result file has no competitive-host rows.")
+}
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+ontology_colors <- c(
+  "Biological process" = "#2F8F5B",
+  "Molecular function" = "#E6862E",
+  "Cellular component" = "#7B4FA3"
+)
+kegg_theme_colors <- c(
+  "Immune and stress signaling" = "#C23B22",
+  "Storage, lipid transport, and endocrine nutrition" = "#D7832F",
+  "Amino acid and nitrogen metabolism" = "#6F4AA8",
+  "Carbohydrate and energy metabolism" = "#2C7FB8",
+  "Lipid and membrane metabolism" = "#2F8F5B",
+  "Detoxification and secondary metabolism" = "#8C6D31",
+  "Transport and environmental response" = "#00A6A6",
+  "Genetic information processing" = "#6B7280",
+  "Cellular process" = "#9C5DA5",
+  "Broad metabolic map" = "#4B5563",
+  "Reference disease pathway" = "#A0AEC0",
+  "Other KEGG pathway" = "#7B8794"
+)
+kegg_scope_colors <- c(
+  "Eukaryote/metazoan-compatible" = "#2F8F5B",
+  "Core metabolism or cross-domain" = "#2C7FB8",
+  "Broad KEGG reference map" = "#4B5563",
+  "Microbial/prokaryote-associated label" = "#D81B60",
+  "Reference disease pathway" = "#7B4FA3",
+  "Unclassified KEGG reference label" = "#F59E0B"
+)
+
+direction_colors <- c(
+  "Upregulated" = "#E41A1C",
+  "Downregulated" = "#1E88E5"
+)
+```
+
+## Build eggNOG annotation maps
+
+eggNOG reports annotations at the protein-query level, while DESeq2 reports
+uses `LOC...` gene IDs. The GFF provides the bridge from CDS protein IDs to gene
+IDs. Only expression-filtered genes tested in the competitive all-scaffold
+analysis are kept in the enrichment background.
+
+```{r annotation-maps}
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+eggnog <- read_emapper(eggnog_file)
+protein_to_gene <- parse_cds_gene_bridge(gff_file)
+gene_universe <- unique(as.character(all_results$gene_id))
+
+annotation <- eggnog |>
+  dplyr::left_join(protein_to_gene, by = "protein_id") |>
+  dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+annotation_summary <- data.frame(
+  all_scaffold_genes_tested_by_deseq2 = length(gene_universe),
+  annotated_genes_lifted_to_LOC = dplyr::n_distinct(annotation$gene_id),
+  genes_with_GO = sum(annotation$GOs != "-" & annotation$GOs != ""),
+  genes_with_KEGG_KO = sum(annotation$KEGG_ko != "-" & annotation$KEGG_ko != ""),
+  genes_with_KEGG_pathway = sum(annotation$KEGG_Pathway != "-" &
+                                  annotation$KEGG_Pathway != "")
+)
+
+knitr::kable(annotation_summary)
+write.csv(annotation_summary, file.path(out_dir, "annotation_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r term-maps}
+term2gene_go <- annotation |>
+  dplyr::select(gene_id, GOs) |>
+  tidyr::separate_rows(GOs, sep = ",") |>
+  dplyr::filter(grepl("^GO:", GOs)) |>
+  dplyr::transmute(term = GOs, gene = gene_id) |>
+  dplyr::distinct()
+
+go_names <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "TERM",
+  multiVals = "first"
+)
+
+go_ontology <- AnnotationDbi::mapIds(
+  GO.db::GO.db,
+  keys = unique(term2gene_go$term),
+  keytype = "GOID",
+  column = "ONTOLOGY",
+  multiVals = "first"
+)
+
+term2name_go <- data.frame(
+  term = names(go_names),
+  name = unname(go_names),
+  ontology = unname(go_ontology)
+) |>
+  dplyr::filter(!is.na(name))
+
+term2gene_kegg_pathway <- annotation |>
+  dplyr::select(gene_id, KEGG_Pathway) |>
+  tidyr::separate_rows(KEGG_Pathway, sep = ",") |>
+  dplyr::filter(grepl("^ko[0-9]+$", KEGG_Pathway)) |>
+  dplyr::transmute(term = KEGG_Pathway, gene = gene_id) |>
+  dplyr::distinct()
+
+kegg_fallback_names <- c(
+  ko00010 = "Glycolysis / Gluconeogenesis",
+  ko00020 = "Citrate cycle (TCA cycle)",
+  ko00030 = "Pentose phosphate pathway",
+  ko00040 = "Pentose and glucuronate interconversions",
+  ko00051 = "Fructose and mannose metabolism",
+  ko00052 = "Galactose metabolism",
+  ko00053 = "Ascorbate and aldarate metabolism",
+  ko00061 = "Fatty acid biosynthesis",
+  ko00062 = "Fatty acid elongation",
+  ko00071 = "Fatty acid degradation",
+  ko00190 = "Oxidative phosphorylation",
+  ko00220 = "Arginine biosynthesis",
+  ko00230 = "Purine metabolism",
+  ko00240 = "Pyrimidine metabolism",
+  ko00250 = "Alanine, aspartate and glutamate metabolism",
+  ko00260 = "Glycine, serine and threonine metabolism",
+  ko00270 = "Cysteine and methionine metabolism",
+  ko00280 = "Valine, leucine and isoleucine degradation",
+  ko00330 = "Arginine and proline metabolism",
+  ko00340 = "Histidine metabolism",
+  ko00350 = "Tyrosine metabolism",
+  ko00360 = "Phenylalanine metabolism",
+  ko00500 = "Starch and sucrose metabolism",
+  ko00520 = "Amino sugar and nucleotide sugar metabolism",
+  ko00561 = "Glycerolipid metabolism",
+  ko00564 = "Glycerophospholipid metabolism",
+  ko00565 = "Ether lipid metabolism",
+  ko00590 = "Arachidonic acid metabolism",
+  ko00591 = "Linoleic acid metabolism",
+  ko00592 = "alpha-Linolenic acid metabolism",
+  ko00620 = "Pyruvate metabolism",
+  ko00630 = "Glyoxylate and dicarboxylate metabolism",
+  ko00640 = "Propanoate metabolism",
+  ko00650 = "Butanoate metabolism",
+  ko00670 = "One carbon pool by folate",
+  ko00730 = "Thiamine metabolism",
+  ko00860 = "Porphyrin metabolism",
+  ko00900 = "Terpenoid backbone biosynthesis",
+  ko00910 = "Nitrogen metabolism",
+  ko00920 = "Sulfur metabolism",
+  ko00930 = "Caprolactam degradation",
+  ko00970 = "Aminoacyl-tRNA biosynthesis",
+  ko01040 = "Biosynthesis of unsaturated fatty acids",
+  ko01100 = "Metabolic pathways",
+  ko01110 = "Biosynthesis of secondary metabolites",
+  ko01120 = "Microbial metabolism in diverse environments",
+  ko01130 = "Biosynthesis of antibiotics",
+  ko01200 = "Carbon metabolism",
+  ko01212 = "Fatty acid metabolism",
+  ko01220 = "Degradation of aromatic compounds",
+  ko01230 = "Biosynthesis of amino acids",
+  ko02010 = "ABC transporters",
+  ko02020 = "Two-component system",
+  ko03010 = "Ribosome",
+  ko03013 = "Nucleocytoplasmic transport",
+  ko03015 = "mRNA surveillance pathway",
+  ko03018 = "RNA degradation",
+  ko03022 = "Basal transcription factors",
+  ko03030 = "DNA replication",
+  ko03040 = "Spliceosome",
+  ko03050 = "Proteasome",
+  ko03060 = "Protein export",
+  ko03320 = "PPAR signaling pathway",
+  ko04010 = "MAPK signaling pathway",
+  ko04014 = "Ras signaling pathway",
+  ko04020 = "Calcium signaling pathway",
+  ko04024 = "cAMP signaling pathway",
+  ko04110 = "Cell cycle",
+  ko04120 = "Ubiquitin mediated proteolysis",
+  ko04130 = "SNARE interactions in vesicular transport",
+  ko04141 = "Protein processing in endoplasmic reticulum",
+  ko04142 = "Lysosome",
+  ko04144 = "Endocytosis",
+  ko04145 = "Phagosome",
+  ko04146 = "Peroxisome",
+  ko04147 = "Exosome",
+  ko04150 = "mTOR signaling pathway",
+  ko04151 = "PI3K-Akt signaling pathway",
+  ko04152 = "AMPK signaling pathway",
+  ko04210 = "Apoptosis",
+  ko04213 = "Longevity regulating pathway - multiple species",
+  ko04217 = "Necroptosis",
+  ko04218 = "Cellular senescence",
+  ko04270 = "Vascular smooth muscle contraction",
+  ko04310 = "Wnt signaling pathway",
+  ko04330 = "Notch signaling pathway",
+  ko04340 = "Hedgehog signaling pathway",
+  ko04350 = "TGF-beta signaling pathway",
+  ko04370 = "VEGF signaling pathway",
+  ko04371 = "Apelin signaling pathway",
+  ko04510 = "Focal adhesion",
+  ko04512 = "ECM-receptor interaction",
+  ko04514 = "Cell adhesion molecules",
+  ko04520 = "Adherens junction",
+  ko04530 = "Tight junction",
+  ko04630 = "JAK-STAT signaling pathway",
+  ko04668 = "TNF signaling pathway",
+  ko04710 = "Circadian rhythm",
+  ko04713 = "Circadian entrainment",
+  ko04714 = "Thermogenesis",
+  ko04723 = "Retrograde endocannabinoid signaling",
+  ko04730 = "Long-term depression",
+  ko04910 = "Insulin signaling pathway",
+  ko04920 = "Adipocytokine signaling pathway",
+  ko04922 = "Glucagon signaling pathway",
+  ko04926 = "Relaxin signaling pathway",
+  ko04970 = "Salivary secretion",
+  ko04972 = "Pancreatic secretion",
+  ko04975 = "Fat digestion and absorption",
+  ko05010 = "Alzheimer disease",
+  ko05012 = "Parkinson disease",
+  ko05014 = "Amyotrophic lateral sclerosis",
+  ko05016 = "Huntington disease"
+)
+
+get_kegg_pathway_names <- function(ids) {
+  ids <- unique(ids)
+  resolved <- setNames(rep(NA_character_, length(ids)), ids)
+
+  if (requireNamespace("KEGGREST", quietly = TRUE)) {
+    kegg_list <- tryCatch(
+      KEGGREST::keggList("pathway", "ko"),
+      error = function(e) character()
+    )
+    if (length(kegg_list) > 0) {
+      live_ids <- sub("^path:", "", names(kegg_list))
+      live_names <- sub(" - Reference pathway$", "", unname(kegg_list))
+      live_names <- sub(" - Homo sapiens \\(human\\)$", "", live_names)
+      resolved[intersect(ids, live_ids)] <- live_names[match(intersect(ids, live_ids),
+                                                             live_ids)]
+    }
+  }
+
+  fallback_ids <- intersect(ids, names(kegg_fallback_names))
+  resolved[fallback_ids] <- ifelse(
+    is.na(resolved[fallback_ids]),
+    unname(kegg_fallback_names[fallback_ids]),
+    resolved[fallback_ids]
+  )
+  resolved[is.na(resolved)] <- ids[is.na(resolved)]
+  resolved
+}
+
+classify_kegg_theme <- function(ids, names) {
+  ids <- as.character(ids)
+  names_lower <- stringr::str_to_lower(names)
+  dplyr::case_when(
+    stringr::str_detect(ids, "^ko046|^ko040|^ko042") |
+      stringr::str_detect(names_lower, "toll|imd|tnf|jak-stat|immune|apoptosis|necrosis|stress") ~
+      "Immune and stress signaling",
+    stringr::str_detect(ids, "^ko049|^ko033|^ko00981") |
+      stringr::str_detect(names_lower, "insulin|glucagon|adipocytokine|ppar|hormone|bile|mineral|fat digestion|secretion|absorption") ~
+      "Storage, lipid transport, and endocrine nutrition",
+    ids %in% c("ko00220", "ko00230", "ko00240", "ko00250", "ko00260",
+               "ko00270", "ko00280", "ko00330", "ko00340", "ko00350",
+               "ko00360", "ko00380", "ko00410", "ko01230") |
+      stringr::str_detect(names_lower, "amino acid|arginine|proline|glycine|serine|threonine|tryptophan|tyrosine|nitrogen") ~
+      "Amino acid and nitrogen metabolism",
+    ids %in% c("ko00010", "ko00020", "ko00030", "ko00040", "ko00051",
+               "ko00052", "ko00053", "ko00190", "ko00620", "ko00630",
+               "ko00640", "ko00650", "ko00720", "ko01200") |
+      stringr::str_detect(names_lower, "glycolysis|gluconeogenesis|citrate|carbon metabolism|pentose|pyruvate|oxidative phosphorylation|carbon fixation|ascorbate") ~
+      "Carbohydrate and energy metabolism",
+    ids %in% c("ko00061", "ko00062", "ko00071", "ko00561", "ko00564",
+               "ko00565", "ko00590", "ko00591", "ko00592", "ko01040",
+               "ko01212") |
+      stringr::str_detect(names_lower, "fatty acid|lipid|glycerolipid|glycerophospholipid|linoleic|arachidonic") ~
+      "Lipid and membrane metabolism",
+    ids %in% c("ko00480", "ko00900", "ko00920", "ko00930", "ko00970",
+               "ko00980", "ko01110", "ko01120", "ko01130", "ko01220") |
+      stringr::str_detect(names_lower, "glutathione|xenobiotic|cytochrome|secondary metabolite|microbial metabolism|antibiotic|aromatic") ~
+      "Detoxification and secondary metabolism",
+    stringr::str_detect(ids, "^ko020") |
+      stringr::str_detect(names_lower, "transporter|two-component|environmental") ~
+      "Transport and environmental response",
+    stringr::str_detect(ids, "^ko030") |
+      stringr::str_detect(names_lower, "ribosome|spliceosome|rna|dna|replication|transcription|proteasome") ~
+      "Genetic information processing",
+    stringr::str_detect(ids, "^ko041|^ko043|^ko045") |
+      stringr::str_detect(names_lower, "cell cycle|endocytosis|phagosome|peroxisome|junction|adhesion|notch|wnt|hedgehog") ~
+      "Cellular process",
+    ids == "ko01100" ~ "Broad metabolic map",
+    stringr::str_detect(ids, "^ko050|^ko052") ~ "Reference disease pathway",
+    TRUE ~ "Other KEGG pathway"
+  )
+}
+
+classify_kegg_scope <- function(ids, names) {
+  ids <- as.character(ids)
+  names_lower <- stringr::str_to_lower(names)
+  dplyr::case_when(
+    ids %in% c("ko01100", "ko01110", "ko01120", "ko01130",
+               "ko01200", "ko01210", "ko01212", "ko01220", "ko01230") ~
+      "Broad KEGG reference map",
+    stringr::str_detect(
+      names_lower,
+      "microbial|antibiotic|two-component|bacterial|quorum|peptidoglycan|lipopolysaccharide|aromatic compound"
+    ) ~
+      "Microbial/prokaryote-associated label",
+    stringr::str_detect(ids, "^ko050|^ko052") ~
+      "Reference disease pathway",
+    stringr::str_detect(ids, "^ko040|^ko041|^ko042|^ko043|^ko045|^ko046|^ko049|^ko033") ~
+      "Eukaryote/metazoan-compatible",
+    TRUE ~ "Core metabolism or cross-domain"
+  )
+}
+
+kegg_names <- get_kegg_pathway_names(unique(term2gene_kegg_pathway$term))
+
+term2name_kegg_pathway <- term2gene_kegg_pathway |>
+  dplyr::distinct(term) |>
+  dplyr::mutate(
+    name = unname(kegg_names[term]),
+    pathway_theme = classify_kegg_theme(term, name),
+    pathway_scope = classify_kegg_scope(term, name)
+  )
+
+write.csv(term2gene_go, file.path(out_dir, "eggNOG_GO_TERM2GENE.csv"),
+          row.names = FALSE)
+write.csv(term2name_go, file.path(out_dir, "eggNOG_GO_TERM2NAME.csv"),
+          row.names = FALSE)
+write.csv(term2gene_kegg_pathway,
+          file.path(out_dir, "eggNOG_KEGG_pathway_TERM2GENE.csv"),
+          row.names = FALSE)
+write.csv(term2name_kegg_pathway,
+          file.path(out_dir, "eggNOG_KEGG_pathway_TERM2NAME.csv"),
+          row.names = FALSE)
+
+kegg_scope_summary <- term2name_kegg_pathway |>
+  dplyr::count(pathway_scope, pathway_theme, name = "n_pathways") |>
+  dplyr::arrange(pathway_scope, pathway_theme)
+write.csv(kegg_scope_summary,
+          file.path(out_dir, "eggNOG_KEGG_pathway_scope_summary.csv"),
+          row.names = FALSE)
+```
+
+## KEGG pathway scope
+
+The KEGG pathway names used here are `ko` reference pathway labels from eggNOG,
+not insect-only pathway labels. This table flags whether a pathway is best read
+as a broad KEGG reference map, a microbial/prokaryote-associated label, a
+reference disease pathway, a eukaryote/metazoan-compatible pathway, or a core
+metabolism/cross-domain pathway. This flag is for interpretation; it does not
+change the enrichment test.
+
+```{r kegg-pathway-scope}
+knitr::kable(
+  kegg_scope_summary,
+  caption = "Interpretive scope of KEGG reference pathways present in the eggNOG annotation map"
+)
+```
+
+```{r kegg-pathway-scope-figures, fig.width=14, fig.height=10}
+scope_levels <- names(kegg_scope_colors)
+
+kegg_scope_summary_plot <- kegg_scope_summary |>
+  dplyr::mutate(
+    pathway_scope = factor(pathway_scope, levels = scope_levels),
+    pathway_theme = stringr::str_wrap(pathway_theme, width = 38)
+  )
+
+write.csv(kegg_scope_summary_plot,
+          file.path(out_dir, "eggNOG_KEGG_pathway_scope_summary_for_plot.csv"),
+          row.names = FALSE)
+
+scope_total_df <- kegg_scope_summary_plot |>
+  dplyr::group_by(pathway_scope) |>
+  dplyr::summarise(n_pathways = sum(n_pathways), .groups = "drop") |>
+  tidyr::complete(
+    pathway_scope = factor(scope_levels, levels = scope_levels),
+    fill = list(n_pathways = 0)
+  ) |>
+  dplyr::mutate(
+    pathway_scope = forcats::fct_reorder(pathway_scope, n_pathways)
+  )
+
+scope_total_plot <- scope_total_df |>
+  ggplot2::ggplot(ggplot2::aes(x = pathway_scope, y = n_pathways,
+                               fill = pathway_scope)) +
+  ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.3) +
+  ggplot2::geom_point(ggplot2::aes(color = pathway_scope), size = 3.2) +
+  ggplot2::geom_text(ggplot2::aes(label = n_pathways), hjust = -0.25,
+                     size = 4.2) +
+  ggplot2::coord_flip() +
+  ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                             breaks = scope_levels, drop = FALSE) +
+  ggplot2::scale_color_manual(values = kegg_scope_colors, limits = scope_levels,
+                              breaks = scope_levels, drop = FALSE,
+                              guide = "none") +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.08))) +
+  ggplot2::labs(
+    title = "KEGG pathway scope in the eggNOG annotation map",
+    subtitle = "Counts are unique KEGG pathway IDs linked to genes in the count-matrix background",
+    x = NULL,
+    y = "Number of KEGG pathway IDs"
+  ) +
+  ggplot2::theme_minimal(base_size = 15) +
+  ggplot2::theme(
+    legend.position = "none",
+    panel.grid.major.y = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(size = 13)
+  )
+
+scope_theme_plot <- kegg_scope_summary_plot |>
+  dplyr::mutate(
+    pathway_theme = forcats::fct_reorder(pathway_theme, n_pathways, sum)
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(x = pathway_theme, y = n_pathways,
+                               fill = pathway_scope)) +
+  ggplot2::geom_col(width = 0.74, color = "white", linewidth = 0.25) +
+  ggplot2::coord_flip() +
+  ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                             breaks = scope_levels, drop = FALSE) +
+  ggplot2::labs(
+    title = "KEGG pathway scope by biological theme",
+    subtitle = "Theme groups remain useful, but the scope flag shows which labels are broad or cross-domain",
+    x = NULL,
+    y = "Number of KEGG pathway IDs",
+    fill = "Pathway scope"
+  ) +
+  ggplot2::theme_minimal(base_size = 15) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(size = 13),
+    legend.text = ggplot2::element_text(size = 12),
+    panel.grid.major.y = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(size = 12)
+  )
+
+ggplot2::ggsave(file.path(out_dir, "eggNOG_KEGG_pathway_scope_counts.png"),
+                scope_total_plot, width = 14, height = 6, dpi = 300)
+ggplot2::ggsave(file.path(out_dir, "eggNOG_KEGG_pathway_scope_by_theme.png"),
+                scope_theme_plot, width = 14, height = 8, dpi = 300)
+
+print(scope_total_plot)
+print(scope_theme_plot)
+```
+
+## Collect current infection DEG sets
+
+The enrichment foregrounds are built from all-scaffold infected-versus-control
+DEGs without
+splitting genes by direction. This keeps the infection-response question simple:
+which functional categories are over-represented among infection-responsive
+genes in general and within each diet. All sets come from the same newest
+competitive all-scaffold DESeq2 result file.
+
+```{r deg-sets}
+infection_contrasts <- c(
+  "Diet 33" = "infection_diet33",
+  "Diet 50" = "infection_diet50",
+  "Diet 83" = "infection_diet83"
+)
+
+infection_sets_by_diet <- lapply(infection_contrasts, function(contrast_name) {
+  all_results |>
+    dplyr::filter(.data$contrast_id == contrast_name, .data$significant) |>
+    dplyr::pull(.data$gene_id) |>
+    unique()
+})
+
+if (length(infection_sets_by_diet) == 0) {
+  stop("No all-scaffold within-diet infection DEG sets were found.")
+}
+
+all_infection_genes <- sort(unique(unlist(infection_sets_by_diet, use.names = FALSE)))
+
+enrichment_sets <- c(
+  list("All infection DEGs" = all_infection_genes),
+  infection_sets_by_diet
+)
+
+overview_set_label_levels <- stringr::str_replace_all(names(enrichment_sets),
+                                                       "_", " ")
+
+deg_set_summary <- data.frame(
+  DEG_set = names(enrichment_sets),
+  n_genes = lengths(enrichment_sets),
+  stringsAsFactors = FALSE
+)
+deg_set_summary <- deg_set_summary[order(factor(
+  deg_set_summary$DEG_set,
+  levels = names(enrichment_sets)
+)), ]
+
+source_table <- data.frame(
+  DEG_set = names(infection_sets_by_diet),
+  contrast_id = unname(infection_contrasts),
+  result_file = primary_results_file,
+  modified = file.info(primary_results_file)$mtime,
+  stringsAsFactors = FALSE
+)
+
+infection_deg_long <- all_results |>
+  dplyr::filter(.data$contrast_id %in% unname(infection_contrasts), .data$significant) |>
+  dplyr::mutate(
+    diet = stringr::str_remove(.data$contrast_id, "infection_diet"),
+    DEG_set = paste("Diet", .data$diet)
+  ) |>
+  dplyr::select("gene_id", "diet", "DEG_set", "log2FoldChange", "padj", "significant")
+
+DT::datatable(deg_set_summary, options = list(pageLength = 15))
+write.csv(deg_set_summary, file.path(out_dir, "go_enrichment_deg_set_summary.csv"),
+          row.names = FALSE)
+write.csv(source_table, file.path(out_dir, "infection_deg_source_files.csv"),
+          row.names = FALSE)
+write.csv(infection_deg_long, file.path(out_dir, "infection_DEGs_long.csv"),
+          row.names = FALSE)
+```
+
+## Collect requested direction-aware DEG sets
+
+These foregrounds match the extra comparisons requested for discussion. The
+requested figures use one column per contrast and use color/shape to show which
+side of the contrast carries the enriched genes. For infection contrasts, red
+means higher in infected samples and blue means higher in controls. For diet
+contrasts, red means higher in the first diet named in the column and blue means
+higher in the second diet. For example, in a `33 vs 83` column, blue points are
+the genes higher in diet 83.
+
+The diet-only contrasts use the same competitive all-scaffold DESeq2 catalogue
+as the within-diet infection contrasts. They are kept separate from the
+non-directional infection overview above because they answer a different
+question: whether functional categories are enriched in one side of a contrast.
+
+```{r directional-deg-sets}
+make_directional_record <- function(set_id, family, comparison, direction,
+                                    plot_label, genes, source_file) {
+  data.frame(
+    set_id = set_id,
+    family = family,
+    comparison = comparison,
+    direction = direction,
+    plot_label = plot_label,
+    n_genes = length(genes),
+    source_file = source_file,
+    stringsAsFactors = FALSE
+  )
+}
+
+directional_sets <- list()
+directional_records <- list()
+
+add_directional_sets <- function(contrast_key, set_prefix, family,
+                                 comparison, plot_label) {
+  tab <- all_results |>
+    dplyr::filter(.data$contrast_id == .env$contrast_key, .data$significant)
+  up_genes <- unique(tab$gene_id[tab$log2FoldChange > 0])
+  down_genes <- unique(tab$gene_id[tab$log2FoldChange < 0])
+
+  list(
+    sets = list(
+      stats::setNames(list(up_genes), paste0(set_prefix, "_up")),
+      stats::setNames(list(down_genes), paste0(set_prefix, "_down"))
+    ) |>
+      unlist(recursive = FALSE),
+    records = list(
+      make_directional_record(
+        paste0(set_prefix, "_up"), family, comparison, "Upregulated",
+        plot_label, up_genes, primary_results_file
+      ),
+      make_directional_record(
+        paste0(set_prefix, "_down"), family, comparison, "Downregulated",
+        plot_label, down_genes, primary_results_file
+      )
+    )
+  )
+}
+
+directional_contrasts <- tibble::tribble(
+  ~contrast_id, ~set_prefix, ~family, ~comparison, ~plot_label,
+  "infection_diet33", "infection_diet33", "Infected within diet", "Diet 33 infected vs control", "Diet 33",
+  "infection_diet50", "infection_diet50", "Infected within diet", "Diet 50 infected vs control", "Diet 50",
+  "infection_diet83", "infection_diet83", "Infected within diet", "Diet 83 infected vs control", "Diet 83",
+  "control_diet33_vs50", "control_diet33_vs_50", "Control animals only", "Control diet 33 vs 50", "33 vs 50",
+  "control_diet83_vs50", "control_diet83_vs_50", "Control animals only", "Control diet 83 vs 50", "83 vs 50",
+  "control_diet83_vs33", "control_diet83_vs_33", "Control animals only", "Control diet 83 vs 33", "83 vs 33",
+  "infected_diet33_vs50", "infected_diet33_vs_50", "Infected animals only", "Infected diet 33 vs 50", "33 vs 50",
+  "infected_diet83_vs50", "infected_diet83_vs_50", "Infected animals only", "Infected diet 83 vs 50", "83 vs 50",
+  "infected_diet83_vs33", "infected_diet83_vs_33", "Infected animals only", "Infected diet 83 vs 33", "83 vs 33"
+)
+
+for (i in seq_len(nrow(directional_contrasts))) {
+  added <- add_directional_sets(
+    contrast_key = directional_contrasts$contrast_id[[i]],
+    set_prefix = directional_contrasts$set_prefix[[i]],
+    family = directional_contrasts$family[[i]],
+    comparison = directional_contrasts$comparison[[i]],
+    plot_label = directional_contrasts$plot_label[[i]]
+  )
+  directional_sets <- c(directional_sets, added$sets)
+  directional_records <- c(directional_records, added$records)
+}
+
+directional_set_summary <- dplyr::bind_rows(directional_records) |>
+  dplyr::mutate(
+    family = factor(
+      family,
+      levels = c("Infected within diet", "Control animals only",
+                 "Infected animals only")
+    ),
+    direction = factor(direction, levels = c("Upregulated", "Downregulated"))
+  ) |>
+  dplyr::arrange(family, comparison, direction)
+
+directional_sets <- directional_sets[directional_set_summary$set_id]
+
+DT::datatable(
+  directional_set_summary |>
+    dplyr::select(family, comparison, direction, plot_label, n_genes),
+  rownames = FALSE,
+  options = list(pageLength = 18, scrollX = TRUE)
+)
+
+write.csv(directional_set_summary,
+          file.path(out_dir, "requested_directional_deg_set_summary.csv"),
+          row.names = FALSE)
+write.csv(
+  data.frame(
+    set_id = rep(names(directional_sets), lengths(directional_sets)),
+    gene_id = unlist(directional_sets, use.names = FALSE)
+  ),
+  file.path(out_dir, "requested_directional_DEG_sets_long.csv"),
+  row.names = FALSE
+)
+```
+
+## Fat body immune and storage candidates
+
+The fat body is central to immune defense, detoxification, lipid transport, and
+nutrient storage. This table therefore flags significant infection-responsive
+genes whose eggNOG annotation contains immune, storage-protein, lipid-transport,
+endocrine-nutrition, or detoxification language. This is a transparent keyword
+screen to help prioritize genes for biological interpretation; it does not
+replace the GO or KEGG enrichment tests.
+
+```{r fat-body-candidates}
+classify_fat_body_candidate <- function(text) {
+  text <- stringr::str_to_lower(text)
+  immune <- stringr::str_detect(
+    text,
+    "immune|defen[cs]e|defensin|attacin|cecropin|gloverin|lysozyme|toll|imd|tnf|jak-stat|peptidoglycan|antimicrobial|phenoloxidase|prophenoloxidase|serpin|thioester|transferrin|lectin|phagosome"
+  )
+  storage <- stringr::str_detect(
+    text,
+    "storage protein|hexamerin|arylphorin|hemocyanin|vitellogenin|lipophorin|apolipophorin|nutrient reservoir"
+  )
+  detox <- stringr::str_detect(
+    text,
+    "detox|glutathione|cytochrome p450|p450|xenobiotic|oxidative stress|peroxidase|superoxide|catalase"
+  )
+  endocrine_nutrition <- stringr::str_detect(
+    text,
+    "juvenile hormone|insulin|glucagon|adipocytokine|ppar|bile secretion|mineral absorption|fat digestion|glycerolipid|amino acid|lipid transport"
+  )
+
+  dplyr::case_when(
+    immune & storage ~ "Immune + storage/lipid transport",
+    storage ~ "Storage / lipid transport",
+    immune ~ "Immune / defense",
+    detox ~ "Detoxification / oxidative stress",
+    endocrine_nutrition ~ "Endocrine / nutrient metabolism",
+    TRUE ~ NA_character_
+  )
+}
+
+fat_body_candidates <- infection_deg_long |>
+  dplyr::inner_join(
+    annotation |>
+      dplyr::select(gene_id, Preferred_name, Description, GOs, KEGG_ko,
+                    KEGG_Pathway, BRITE, PFAMs),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    annotation_text = paste(Preferred_name, Description, GOs, KEGG_ko,
+                            KEGG_Pathway, BRITE, PFAMs, sep = " "),
+    candidate_theme = classify_fat_body_candidate(annotation_text)
+  ) |>
+  dplyr::filter(!is.na(candidate_theme)) |>
+  dplyr::arrange(candidate_theme, padj) |>
+  dplyr::group_by(gene_id, candidate_theme, Preferred_name, Description, PFAMs) |>
+  dplyr::summarise(
+    DEG_sets = paste(unique(DEG_set), collapse = "; "),
+    log2FC_by_diet = paste0(DEG_set, "=", round(log2FoldChange, 2),
+                            collapse = "; "),
+    min_padj = signif(min(padj, na.rm = TRUE), 3),
+    max_abs_log2FC = round(max(abs(log2FoldChange), na.rm = TRUE), 2),
+    KEGG_Pathway = paste(unique(KEGG_Pathway), collapse = "; "),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(candidate_theme, min_padj)
+
+write.csv(fat_body_candidates,
+          file.path(out_dir, "fat_body_immune_storage_DEG_candidates.csv"),
+          row.names = FALSE)
+
+if (nrow(fat_body_candidates) > 0) {
+  DT::datatable(
+    fat_body_candidates,
+    rownames = FALSE,
+    options = list(pageLength = 15, scrollX = TRUE)
+  )
+} else {
+  cat("No significant infection DEGs matched the current fat-body candidate keyword screen.")
+}
+```
+
+## Run GO and KEGG enrichment
+
+Enrichment tests whether a DEG set contains more genes from a term than expected
+from the annotated background. Here the DEG sets are not separated by
+upregulation or downregulation; each foreground contains significant
+infected-versus-control DEGs regardless of fold-change direction.
+
+```{r run-enrichment}
+run_enrichment <- function(genes, term2gene, term2name, universe) {
+  genes <- unique(genes[genes %in% universe])
+  if (length(genes) < 5) return(NULL)
+  clusterProfiler::enricher(
+    gene = genes,
+    universe = universe,
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name[, c("term", "name")],
+    pvalueCutoff = 0.1,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2
+  )
+}
+
+universe_go <- unique(term2gene_go$gene)
+universe_kegg <- unique(term2gene_kegg_pathway$gene)
+
+go_results <- lapply(enrichment_sets, run_enrichment,
+                     term2gene = term2gene_go,
+                     term2name = term2name_go,
+                     universe = universe_go)
+kegg_results <- lapply(enrichment_sets, run_enrichment,
+                       term2gene = term2gene_kegg_pathway,
+                       term2name = term2name_kegg_pathway,
+                       universe = universe_kegg)
+directional_go_results <- lapply(directional_sets, run_enrichment,
+                                 term2gene = term2gene_go,
+                                 term2name = term2name_go,
+                                 universe = universe_go)
+directional_kegg_results <- lapply(directional_sets, run_enrichment,
+                                   term2gene = term2gene_kegg_pathway,
+                                   term2name = term2name_kegg_pathway,
+                                   universe = universe_kegg)
+
+enrich_to_df <- function(result_list, database) {
+  pieces <- lapply(names(result_list), function(nm) {
+    res <- result_list[[nm]]
+    if (is.null(res)) return(NULL)
+    df <- as.data.frame(res)
+    if (nrow(df) == 0) return(NULL)
+    df$set <- nm
+    df$database <- database
+    df
+  })
+  dplyr::bind_rows(pieces)
+}
+
+go_enrichment_df <- enrich_to_df(go_results, "GO")
+kegg_enrichment_df <- enrich_to_df(kegg_results, "KEGG_pathway")
+directional_go_enrichment_df <- enrich_to_df(directional_go_results, "GO")
+directional_kegg_enrichment_df <- enrich_to_df(directional_kegg_results,
+                                               "KEGG_pathway")
+
+if (nrow(kegg_enrichment_df) > 0) {
+  kegg_enrichment_df <- kegg_enrichment_df |>
+    dplyr::left_join(
+      term2name_kegg_pathway |>
+        dplyr::select(term, pathway_theme, pathway_scope),
+      by = c("ID" = "term")
+    )
+}
+if (nrow(directional_kegg_enrichment_df) > 0) {
+  directional_kegg_enrichment_df <- directional_kegg_enrichment_df |>
+    dplyr::left_join(
+      term2name_kegg_pathway |>
+        dplyr::select(term, pathway_theme, pathway_scope),
+      by = c("ID" = "term")
+    )
+}
+
+all_enrichment <- dplyr::bind_rows(go_enrichment_df, kegg_enrichment_df)
+
+if (nrow(directional_go_enrichment_df) > 0) {
+  directional_go_enrichment_df <- directional_go_enrichment_df |>
+    dplyr::left_join(directional_set_summary, by = c("set" = "set_id"))
+}
+if (nrow(directional_kegg_enrichment_df) > 0) {
+  directional_kegg_enrichment_df <- directional_kegg_enrichment_df |>
+    dplyr::left_join(directional_set_summary, by = c("set" = "set_id"))
+}
+directional_all_enrichment <- dplyr::bind_rows(
+  directional_go_enrichment_df,
+  directional_kegg_enrichment_df
+)
+
+write.csv(go_enrichment_df, file.path(out_dir, "GO_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(kegg_enrichment_df,
+          file.path(out_dir, "KEGG_pathway_enrichment_all_sets.csv"),
+          row.names = FALSE)
+write.csv(all_enrichment, file.path(out_dir, "all_enrichment_results.csv"),
+          row.names = FALSE)
+write.csv(directional_go_enrichment_df,
+          file.path(out_dir, "requested_directional_GO_enrichment.csv"),
+          row.names = FALSE)
+write.csv(directional_kegg_enrichment_df,
+          file.path(out_dir, "requested_directional_KEGG_pathway_enrichment.csv"),
+          row.names = FALSE)
+write.csv(directional_all_enrichment,
+          file.path(out_dir, "requested_directional_all_enrichment.csv"),
+          row.names = FALSE)
+
+if (nrow(all_enrichment) == 0) {
+  cat("No enriched terms passed the current cutoffs.")
+} else {
+  DT::datatable(
+    all_enrichment |>
+      dplyr::select(dplyr::any_of(c(
+        "database", "set", "ID", "Description", "pathway_theme",
+        "pathway_scope", "GeneRatio", "BgRatio", "p.adjust", "qvalue",
+        "geneID"
+      ))) |>
+      dplyr::arrange(p.adjust),
+    options = list(pageLength = 15, scrollX = TRUE)
+  )
+}
+
+if (nrow(directional_all_enrichment) == 0) {
+  cat("No requested direction-aware sets produced enriched terms at the current cutoffs.")
+} else {
+  DT::datatable(
+    directional_all_enrichment |>
+      dplyr::select(dplyr::any_of(c(
+        "database", "family", "comparison", "direction", "plot_label",
+        "ID", "Description", "pathway_theme", "pathway_scope",
+        "GeneRatio", "BgRatio", "p.adjust", "qvalue", "geneID"
+      ))) |>
+      dplyr::arrange(family, comparison, direction, p.adjust),
+    rownames = FALSE,
+    options = list(pageLength = 18, scrollX = TRUE)
+  )
+}
+```
+
+## KEGG pathway scope among enriched terms
+
+These figures show the same scope categories after enrichment. A pathway is
+counted once per DEG set where it is significantly enriched, so the bars
+summarize enriched KEGG pathway labels rather than the number of genes inside
+each pathway.
+
+```{r kegg-pathway-scope-enriched, fig.width=16, fig.height=10}
+if (nrow(kegg_enrichment_df) > 0) {
+  kegg_scope_enrichment_summary <- kegg_enrichment_df |>
+    dplyr::mutate(
+      set_label = stringr::str_replace_all(set, "_", " "),
+      pathway_scope = dplyr::coalesce(as.character(pathway_scope),
+                                      "Unclassified KEGG reference label")
+    ) |>
+    dplyr::distinct(set_label, ID, pathway_scope) |>
+    dplyr::count(set_label, pathway_scope, name = "n_enriched_pathways") |>
+    dplyr::mutate(
+      set_label = factor(set_label, levels = overview_set_label_levels),
+      pathway_scope = factor(pathway_scope, levels = scope_levels)
+    )
+} else {
+  kegg_scope_enrichment_summary <- tibble::tibble(
+    set_label = factor(character(), levels = overview_set_label_levels),
+    pathway_scope = factor(character(), levels = scope_levels),
+    n_enriched_pathways = integer()
+  )
+}
+
+kegg_scope_enrichment_summary <- kegg_scope_enrichment_summary |>
+  tidyr::complete(set_label, pathway_scope,
+                  fill = list(n_enriched_pathways = 0))
+
+write.csv(kegg_scope_enrichment_summary,
+          file.path(out_dir, "KEGG_pathway_scope_enrichment_summary.csv"),
+          row.names = FALSE)
+
+if (nrow(kegg_scope_enrichment_summary) > 0) {
+  kegg_scope_matrix_df <- dplyr::bind_rows(
+    scope_total_df |>
+      dplyr::mutate(
+        pathway_scope = factor(as.character(pathway_scope),
+                               levels = scope_levels),
+        context = "Annotation map",
+        n_pathways = as.integer(n_pathways)
+      ) |>
+      dplyr::select(context, pathway_scope, n_pathways),
+    kegg_scope_enrichment_summary |>
+      dplyr::group_by(pathway_scope) |>
+      dplyr::summarise(n_pathways = sum(n_enriched_pathways),
+                       .groups = "drop") |>
+      dplyr::mutate(context = "Non-directional enrichments") |>
+      dplyr::select(context, pathway_scope, n_pathways)
+  ) |>
+    tidyr::complete(
+      context = c("Annotation map", "Non-directional enrichments"),
+      pathway_scope = factor(scope_levels, levels = scope_levels),
+      fill = list(n_pathways = 0)
+    ) |>
+    dplyr::mutate(
+      context = factor(context,
+                       levels = c("Annotation map",
+                                  "Non-directional enrichments")),
+      pathway_scope = factor(pathway_scope, levels = rev(scope_levels))
+    )
+
+  kegg_scope_matrix_plot <- kegg_scope_matrix_df |>
+    ggplot2::ggplot(ggplot2::aes(x = context, y = pathway_scope,
+                                 fill = pathway_scope)) +
+    ggplot2::geom_tile(color = "white", linewidth = 0.7, width = 0.92,
+                       height = 0.92) +
+    ggplot2::geom_text(ggplot2::aes(label = n_pathways), size = 5,
+                       fontface = "bold") +
+    ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                               breaks = scope_levels, drop = FALSE) +
+    ggplot2::labs(
+      title = "KEGG pathway scope color key and counts",
+      subtitle = "Zero means that scope category is absent from the corresponding pathway set at the current cutoff",
+      x = NULL,
+      y = NULL,
+      fill = "Pathway scope"
+    ) +
+    ggplot2::theme_minimal(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(size = 13),
+      legend.text = ggplot2::element_text(size = 12),
+      panel.grid = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(size = 13, face = "bold"),
+      axis.text.y = ggplot2::element_text(size = 12)
+    )
+
+  kegg_scope_enrichment_plot <- kegg_scope_enrichment_summary |>
+    ggplot2::ggplot(ggplot2::aes(x = set_label, y = n_enriched_pathways,
+                                 fill = pathway_scope)) +
+    ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.25) +
+    ggplot2::coord_flip() +
+    ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                               breaks = scope_levels, drop = FALSE) +
+    ggplot2::labs(
+      title = "KEGG pathway scope among enriched infection DEG sets",
+      subtitle = "Counts are unique enriched KEGG pathway IDs per non-directional DEG set",
+      x = NULL,
+      y = "Enriched KEGG pathway IDs",
+      fill = "Pathway scope"
+    ) +
+    ggplot2::theme_minimal(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(size = 13),
+      legend.text = ggplot2::element_text(size = 12),
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = 13)
+    )
+
+  ggplot2::ggsave(
+    file.path(out_dir, "KEGG_pathway_scope_color_key_counts.png"),
+    kegg_scope_matrix_plot, width = 16, height = 6, dpi = 300
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, "KEGG_pathway_scope_enrichment_summary.png"),
+    kegg_scope_enrichment_plot, width = 16, height = 7, dpi = 300
+  )
+  print(kegg_scope_matrix_plot)
+  print(kegg_scope_enrichment_plot)
+} else {
+  cat("No non-directional KEGG enrichment rows were available for scope plotting.")
+}
+```
+
+```{r requested-kegg-pathway-scope-enriched, fig.width=18, fig.height=12}
+if (nrow(directional_kegg_enrichment_df) > 0) {
+  requested_kegg_scope_counts <- directional_kegg_enrichment_df |>
+    dplyr::mutate(
+      pathway_scope = dplyr::coalesce(as.character(pathway_scope),
+                                      "Unclassified KEGG reference label"),
+      plot_label = stringr::str_wrap(plot_label, width = 28)
+    ) |>
+    dplyr::distinct(family, plot_label, direction, ID, pathway_scope) |>
+    dplyr::count(family, plot_label, direction, pathway_scope,
+                 name = "n_enriched_pathways")
+  requested_kegg_scope_keys <- directional_set_summary |>
+    dplyr::mutate(
+      plot_label = stringr::str_wrap(plot_label, width = 28),
+      direction = factor(direction, levels = c("Upregulated", "Downregulated"))
+    ) |>
+    dplyr::distinct(family, plot_label, direction)
+  requested_kegg_scope_summary <- requested_kegg_scope_keys |>
+    tidyr::crossing(pathway_scope = factor(scope_levels, levels = scope_levels)) |>
+    dplyr::left_join(
+      requested_kegg_scope_counts |>
+        dplyr::mutate(
+          direction = factor(direction,
+                             levels = c("Upregulated", "Downregulated")),
+          pathway_scope = factor(pathway_scope, levels = scope_levels)
+        ),
+      by = c("family", "plot_label", "direction", "pathway_scope")
+    ) |>
+    dplyr::mutate(
+      n_enriched_pathways = dplyr::coalesce(n_enriched_pathways, 0L)
+    )
+} else {
+  requested_kegg_scope_summary <- tibble::tibble(
+    family = character(),
+    plot_label = character(),
+    direction = factor(character(),
+                       levels = c("Upregulated", "Downregulated")),
+    pathway_scope = factor(character(), levels = scope_levels),
+    n_enriched_pathways = integer()
+  )
+}
+
+write.csv(requested_kegg_scope_summary,
+          file.path(out_dir, "requested_KEGG_pathway_scope_enrichment_summary.csv"),
+          row.names = FALSE)
+
+if (nrow(requested_kegg_scope_summary) > 0) {
+  requested_kegg_scope_matrix_df <- requested_kegg_scope_summary |>
+    dplyr::group_by(pathway_scope) |>
+    dplyr::summarise(n_pathways = sum(n_enriched_pathways),
+                     .groups = "drop") |>
+    dplyr::mutate(
+      context = "Direction-aware enrichments",
+      pathway_scope = factor(pathway_scope, levels = rev(scope_levels))
+    ) |>
+    tidyr::complete(
+      context = "Direction-aware enrichments",
+      pathway_scope = factor(rev(scope_levels), levels = rev(scope_levels)),
+      fill = list(n_pathways = 0)
+    )
+
+  requested_kegg_scope_matrix_plot <- requested_kegg_scope_matrix_df |>
+    ggplot2::ggplot(ggplot2::aes(x = context, y = pathway_scope,
+                                 fill = pathway_scope)) +
+    ggplot2::geom_tile(color = "white", linewidth = 0.7, width = 0.92,
+                       height = 0.92) +
+    ggplot2::geom_text(ggplot2::aes(label = n_pathways), size = 5,
+                       fontface = "bold") +
+    ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                               breaks = scope_levels, drop = FALSE) +
+    ggplot2::labs(
+      title = "KEGG pathway scope counts in requested direction-aware enrichments",
+      subtitle = "Zero means that scope category is not enriched in any requested contrast at the current cutoff",
+      x = NULL,
+      y = NULL,
+      fill = "Pathway scope"
+    ) +
+    ggplot2::theme_minimal(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(size = 13),
+      legend.text = ggplot2::element_text(size = 12),
+      panel.grid = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(size = 13, face = "bold"),
+      axis.text.y = ggplot2::element_text(size = 12)
+    )
+
+  requested_kegg_scope_plot <- requested_kegg_scope_summary |>
+    ggplot2::ggplot(ggplot2::aes(x = plot_label, y = n_enriched_pathways,
+                                 fill = pathway_scope)) +
+    ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.25) +
+    ggplot2::coord_flip() +
+    ggplot2::facet_grid(direction ~ family, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
+                               breaks = scope_levels, drop = FALSE) +
+    ggplot2::labs(
+      title = "KEGG pathway scope among requested direction-aware enrichments",
+      subtitle = "Counts are unique enriched KEGG pathway IDs per contrast and direction",
+      x = NULL,
+      y = "Enriched KEGG pathway IDs",
+      fill = "Pathway scope"
+    ) +
+    ggplot2::theme_minimal(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(size = 13),
+      legend.text = ggplot2::element_text(size = 12),
+      strip.text = ggplot2::element_text(size = 13, face = "bold"),
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = 12)
+    )
+
+  ggplot2::ggsave(
+    file.path(out_dir, "requested_KEGG_pathway_scope_color_key_counts.png"),
+    requested_kegg_scope_matrix_plot, width = 14, height = 6, dpi = 300
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, "requested_KEGG_pathway_scope_enrichment_summary.png"),
+    requested_kegg_scope_plot, width = 18, height = 12, dpi = 300
+  )
+  print(requested_kegg_scope_matrix_plot)
+  print(requested_kegg_scope_plot)
+} else {
+  cat("No requested direction-aware KEGG enrichment rows were available for scope plotting.")
+}
+```
+
+## GO terms by ontology
+
+This figure separates biological process, molecular function, and cellular
+component terms. Each GO term is shown once per ontology row, so terms shared
+by multiple DEG sets align across columns instead of being repeated as separate
+y-axis rows. A few eggNOG GO IDs can be obsolete or unavailable in the local
+`GO.db` ontology table; those terms are kept in the complete enrichment CSV but
+omitted from this ontology-specific plot. The dashed vertical line marks FDR =
+0.05. Ontology is shown by the right-side row label and colored panel frames so
+the GO terms remain aligned across DEG-set columns.
+
+```{r go-ontology-figure, fig.height=22, fig.width=30}
+if (nrow(go_enrichment_df) > 0 && "ID" %in% names(go_enrichment_df)) {
+  go_enrichment_ontology <- go_enrichment_df |>
+    dplyr::left_join(term2name_go |> dplyr::select(term, ontology),
+                     by = c("ID" = "term")) |>
+    dplyr::mutate(
+      ontology = dplyr::case_when(
+        ontology == "BP" ~ "Biological process",
+        ontology == "MF" ~ "Molecular function",
+        ontology == "CC" ~ "Cellular component",
+        TRUE ~ NA_character_
+      ),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      term_label = stringr::str_wrap(paste0(Description, " [", ID, "]"),
+                                     width = 80),
+      set_label = factor(stringr::str_replace_all(set, "_", " "),
+                         levels = overview_set_label_levels)
+    )
+} else {
+  go_enrichment_ontology <- data.frame()
+}
+
+write.csv(go_enrichment_ontology,
+          file.path(out_dir, "eggNOG_GO_enrichment_with_ontology.csv"),
+          row.names = FALSE)
+
+unmapped_go_terms <- go_enrichment_ontology |>
+  dplyr::filter(is.na(ontology)) |>
+  dplyr::distinct(ID, Description, set, p.adjust, Count)
+write.csv(unmapped_go_terms,
+          file.path(out_dir, "eggNOG_GO_enrichment_unmapped_ontology.csv"),
+          row.names = FALSE)
+
+if (nrow(unmapped_go_terms) > 0) {
+  cat(nrow(unmapped_go_terms),
+      "enriched GO rows did not map to BP, MF, or CC in the local GO.db and are omitted from the ontology plot.\n")
+}
+
+if (nrow(go_enrichment_ontology) > 0) {
+  go_plot_df <- go_enrichment_ontology |>
+    dplyr::filter(!is.na(p.adjust), !is.na(ontology)) |>
+    dplyr::group_by(set_label, ontology) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = params$top_terms) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(set_label, ontology, p.adjust, dplyr::desc(Count)) |>
+    dplyr::mutate(
+      term_label_facet = paste(term_label, ontology, sep = "___")
+    )
+
+  go_term_levels <- go_plot_df |>
+    dplyr::group_by(ontology, term_label_facet) |>
+    dplyr::summarise(
+      best_p = min(p.adjust, na.rm = TRUE),
+      max_count = max(Count, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(ontology, best_p, dplyr::desc(max_count)) |>
+    dplyr::pull(term_label_facet)
+
+  go_plot_df <- go_plot_df |>
+    dplyr::mutate(
+      term_label_facet = factor(term_label_facet,
+                                levels = rev(unique(go_term_levels)))
+    )
+  go_frame_df <- go_plot_df |>
+    dplyr::distinct(ontology)
+  go_missing_set_labels <- setdiff(
+    overview_set_label_levels,
+    as.character(stats::na.omit(unique(go_plot_df$set_label)))
+  )
+  go_column_dummy <- data.frame(
+    set_label = factor(character(), levels = overview_set_label_levels),
+    ontology = character(),
+    term_label_facet = factor(character(),
+                              levels = levels(go_plot_df$term_label_facet)),
+    neg_log10_padj = numeric(),
+    Count = numeric()
+  )
+  if (length(go_missing_set_labels) > 0) {
+    go_column_dummy <- data.frame(
+      set_label = factor(go_missing_set_labels,
+                         levels = overview_set_label_levels),
+      ontology = as.character(go_plot_df$ontology[1]),
+      term_label_facet = factor(as.character(go_plot_df$term_label_facet[1]),
+                                levels = levels(go_plot_df$term_label_facet)),
+      neg_log10_padj = 0,
+      Count = min(go_plot_df$Count, na.rm = TRUE)
+    )
+  }
+
+  p_go_ontology <- ggplot2::ggplot(
+    go_plot_df,
+    ggplot2::aes(y = term_label_facet)
+  ) +
+    ggplot2::geom_blank(
+      data = go_column_dummy,
+      ggplot2::aes(x = neg_log10_padj, y = term_label_facet),
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_rect(
+      data = go_frame_df,
+      ggplot2::aes(color = ontology),
+      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf,
+      fill = NA, linewidth = 0.95, inherit.aes = FALSE
+    ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_point(ggplot2::aes(x = neg_log10_padj, size = Count,
+                                     fill = ontology),
+                        shape = 21, color = "#1f2937",
+                        alpha = 0.9,
+                        stroke = 0.35) +
+    ggplot2::facet_grid(ontology ~ set_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_color_manual(values = ontology_colors, drop = FALSE) +
+    ggplot2::scale_fill_manual(values = ontology_colors, drop = FALSE) +
+    ggplot2::scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0.02, 0.05))
+    ) +
+    ggplot2::scale_size(range = c(4.5, 13)) +
+    ggplot2::guides(
+      color = "none",
+      fill = ggplot2::guide_legend(nrow = 1, byrow = TRUE, order = 1),
+      size = ggplot2::guide_legend(order = 2)
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = 18, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 18, face = "bold",
+                                           angle = 90),
+      axis.text.y = ggplot2::element_text(size = 18, lineheight = 0.95,
+                                          hjust = 1),
+      panel.border = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      legend.title = ggplot2::element_text(size = 12, face = "bold"),
+      legend.text = ggplot2::element_text(size = 11),
+      plot.margin = ggplot2::margin(10, 16, 10, 16)
+    ) +
+    ggplot2::labs(
+      title = "eggNOG GO enrichment by ontology",
+      subtitle = "Top GO terms per DEG set and ontology",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      fill = "GO ontology",
+      size = "DEGs in term"
+    )
+
+  print(p_go_ontology)
+  ggplot2::ggsave(file.path(out_dir, "eggNOG_GO_enrichment_by_ontology.png"),
+                  p_go_ontology, width = 30, height = 22, dpi = 300)
+}
+```
+
+## Directional GO terms by ontology
+
+These panels show the requested direction-aware foregrounds. The same annotated
+background is used as above. Empty facets mean that no term passed the
+enrichment cutoffs for that particular contrast. Colored panel frames mark GO
+ontology, while the enrichment dots mark the side of the contrast carrying the
+enriched genes.
+
+```{r requested-go-ontology-setup}
+if (nrow(directional_go_enrichment_df) > 0 && "ID" %in% names(directional_go_enrichment_df)) {
+  directional_go_enrichment_ontology <- directional_go_enrichment_df |>
+    dplyr::left_join(term2name_go |> dplyr::select(term, ontology),
+                     by = c("ID" = "term")) |>
+    dplyr::mutate(
+      ontology = dplyr::case_when(
+        ontology == "BP" ~ "Biological process",
+        ontology == "MF" ~ "Molecular function",
+        ontology == "CC" ~ "Cellular component",
+        TRUE ~ NA_character_
+      ),
+      family = factor(
+        as.character(family),
+        levels = c("Infected within diet", "Control animals only",
+                   "Infected animals only")
+      ),
+      direction = factor(as.character(direction),
+                         levels = c("Upregulated", "Downregulated")),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      term_label = stringr::str_wrap(paste0(Description, " [", ID, "]"),
+                                     width = 80)
+    )
+} else {
+  directional_go_enrichment_ontology <- data.frame()
+}
+
+write.csv(directional_go_enrichment_ontology,
+          file.path(out_dir, "requested_directional_GO_enrichment_with_ontology.csv"),
+          row.names = FALSE)
+
+plot_directional_go_family <- function(family_name) {
+  family_df <- directional_go_enrichment_ontology |>
+    dplyr::filter(family == family_name, !is.na(ontology))
+  if (nrow(family_df) == 0) {
+    cat("No requested GO enrichment terms to plot for ", family_name, ".\n",
+        sep = "")
+    return(NULL)
+  }
+
+  plot_order <- directional_set_summary |>
+    dplyr::filter(family == family_name) |>
+    dplyr::pull(plot_label) |>
+    unique()
+
+  plot_df <- family_df |>
+    dplyr::group_by(plot_label, direction, ontology) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = min(params$top_terms, 5)) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(plot_label, direction, ontology, p.adjust,
+                   dplyr::desc(Count)) |>
+    dplyr::mutate(
+      plot_label = factor(plot_label, levels = plot_order),
+      term_label_facet = paste(term_label, ontology, sep = "___")
+    )
+
+  go_term_levels <- plot_df |>
+    dplyr::group_by(ontology, term_label_facet) |>
+    dplyr::summarise(
+      best_p = min(p.adjust, na.rm = TRUE),
+      max_count = max(Count, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(ontology, best_p, dplyr::desc(max_count)) |>
+    dplyr::pull(term_label_facet)
+
+  plot_df <- plot_df |>
+    dplyr::mutate(
+      term_label_facet = factor(term_label_facet,
+                                levels = rev(unique(go_term_levels)))
+    )
+  go_frame_df <- plot_df |>
+    dplyr::distinct(ontology)
+  direction_legend_df <- data.frame(
+    plot_label = factor(levels(plot_df$plot_label)[1],
+                        levels = levels(plot_df$plot_label)),
+    ontology = as.character(plot_df$ontology[1]),
+    term_label_facet = plot_df$term_label_facet[1],
+    neg_log10_padj = 0,
+    Count = min(plot_df$Count, na.rm = TRUE),
+    direction = factor(names(direction_colors), levels = names(direction_colors))
+  )
+  go_strip_x_size <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 18,
+    family_name == "Control animals only" ~ 14,
+    TRUE ~ 13
+  )
+  direction_legend_title <- if (family_name == "Infected within diet") {
+    "Infection response"
+  } else {
+    "Diet side"
+  }
+  direction_legend_labels <- if (family_name == "Infected within diet") {
+    c("Upregulated" = "Higher infected",
+      "Downregulated" = "Higher control")
+  } else {
+    c("Upregulated" = "Higher first diet",
+      "Downregulated" = "Higher second diet")
+  }
+  missing_plot_labels <- setdiff(
+    as.character(plot_order),
+    as.character(stats::na.omit(unique(plot_df$plot_label)))
+  )
+  no_terms_df <- data.frame(
+    plot_label = factor(character(), levels = plot_order),
+    ontology = character(),
+    term_label_facet = factor(character(),
+                              levels = levels(plot_df$term_label_facet)),
+    label_x = numeric(),
+    label = character()
+  )
+  if (length(missing_plot_labels) > 0) {
+    label_x <- max(plot_df$neg_log10_padj, na.rm = TRUE) * 0.55
+    if (!is.finite(label_x) || label_x <= 0) label_x <- 1
+    go_y_by_row <- plot_df |>
+      dplyr::group_by(ontology) |>
+      dplyr::summarise(
+        term_label_facet = dplyr::first(term_label_facet),
+        .groups = "drop"
+      )
+    no_terms_df <- expand.grid(
+      plot_label = missing_plot_labels,
+      ontology = unique(as.character(go_y_by_row$ontology)),
+      stringsAsFactors = FALSE
+    ) |>
+      dplyr::left_join(
+        go_y_by_row |>
+          dplyr::mutate(ontology = as.character(ontology)),
+        by = "ontology"
+      ) |>
+      dplyr::mutate(
+        plot_label = factor(plot_label, levels = plot_order),
+        term_label_facet = factor(
+          as.character(term_label_facet),
+          levels = levels(plot_df$term_label_facet)
+        ),
+        label_x = label_x,
+        label = "No enriched terms"
+      )
+  }
+
+  p <- ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(y = term_label_facet)
+  ) +
+    ggplot2::geom_rect(
+      data = go_frame_df,
+      ggplot2::aes(color = ontology),
+      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf,
+      fill = NA, linewidth = 0.95, inherit.aes = FALSE
+    ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_text(
+      data = no_terms_df,
+      ggplot2::aes(x = label_x, y = term_label_facet, label = label),
+      inherit.aes = FALSE, color = "#6B7280", fontface = "italic",
+      size = 5
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(x = neg_log10_padj, fill = direction,
+                   shape = direction),
+      color = "#1f2937", size = 4.5, alpha = 0.9, stroke = 0.35
+    ) +
+    ggplot2::geom_point(
+      data = direction_legend_df,
+      ggplot2::aes(x = neg_log10_padj, y = term_label_facet,
+                   fill = direction, shape = direction),
+      inherit.aes = FALSE, color = "#1f2937", size = 4.5,
+      alpha = 0, show.legend = TRUE
+    ) +
+    ggplot2::facet_grid(ontology ~ plot_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_color_manual(values = ontology_colors, drop = FALSE) +
+    ggplot2::scale_fill_manual(name = direction_legend_title,
+                               values = direction_colors,
+                               breaks = names(direction_colors),
+                               labels = direction_legend_labels,
+                               drop = FALSE) +
+    ggplot2::scale_shape_manual(values = c("Upregulated" = 21,
+                                           "Downregulated" = 24),
+                                breaks = names(direction_colors),
+                                name = direction_legend_title,
+                                labels = direction_legend_labels,
+                                drop = FALSE) +
+    ggplot2::scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0.02, 0.05))
+    ) +
+    ggplot2::guides(
+      color = "none",
+      fill = "none",
+      shape = ggplot2::guide_legend(
+        nrow = 1, byrow = TRUE, order = 2,
+        override.aes = list(fill = unname(direction_colors), size = 4.5,
+                            alpha = 1,
+                            color = "#1f2937")
+      )
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = go_strip_x_size,
+                                           face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 14, face = "bold",
+                                           angle = 90),
+      axis.text.y = ggplot2::element_text(size = 18, lineheight = 0.95,
+                                          hjust = 1),
+      panel.border = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      plot.margin = ggplot2::margin(10, 16, 10, 16)
+    ) +
+    ggplot2::labs(
+      title = paste("eggNOG GO enrichment:", family_name),
+      subtitle = "Directional DEG foregrounds; dashed line marks FDR = 0.05",
+      x = "-log10 adjusted p-value",
+      y = "GO term",
+      color = "GO ontology",
+      fill = direction_legend_title,
+      shape = direction_legend_title
+    )
+
+  file_stub <- stringr::str_replace_all(stringr::str_to_lower(family_name),
+                                        "[^a-z0-9]+", "_")
+  figure_height <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 22,
+    family_name == "Control animals only" ~ 10,
+    TRUE ~ 18
+  )
+  figure_width <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 30,
+    TRUE ~ 18
+  )
+
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("requested_GO_ontology_", file_stub, ".png")),
+    p, width = figure_width, height = figure_height, dpi = 300
+  )
+  p
+}
+```
+
+```{r requested-go-ontology-infected-within-diet, fig.height=22, fig.width=30}
+plot_directional_go_family("Infected within diet")
+```
+
+```{r requested-go-ontology-control-animals-only, fig.height=10, fig.width=18}
+plot_directional_go_family("Control animals only")
+```
+
+## KEGG pathway overview
+
+KEGG pathways are labelled with descriptive pathway names and the pathway ID in
+brackets. The names are resolved from KEGGREST when available, with an offline
+fallback for common KEGG pathway IDs so the page remains reproducible. Pathways
+are grouped into broad themes to keep immune, nutrition/storage, detoxification,
+and core metabolic signals visually separate. Each pathway is shown once per
+theme row, so shared pathways align across DEG-set columns. The biological
+theme is shown by the right-side row label and colored panel frames.
+
+```{r kegg-overview, fig.height=15, fig.width=25}
+if (nrow(kegg_enrichment_df) > 0) {
+  kegg_plot_df <- kegg_enrichment_df |>
+    dplyr::mutate(
+      pathway_theme = dplyr::coalesce(as.character(pathway_theme),
+                                      "Other KEGG pathway"),
+      pathway_scope = dplyr::coalesce(as.character(pathway_scope),
+                                      "Unclassified KEGG reference label"),
+      set_label = factor(stringr::str_replace_all(set, "_", " "),
+                         levels = overview_set_label_levels),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin))
+    ) |>
+    dplyr::group_by(set_label, pathway_theme) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = 5) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(set_label, pathway_theme, p.adjust, dplyr::desc(Count)) |>
+    dplyr::mutate(
+      term_label = stringr::str_wrap(paste0(Description, " [", ID, "]"),
+                                     width = 80),
+      pathway_theme = factor(pathway_theme, levels = names(kegg_theme_colors)),
+      term_label_facet = paste(term_label, pathway_theme, sep = "___")
+    )
+
+  kegg_term_levels <- kegg_plot_df |>
+    dplyr::group_by(pathway_theme, term_label_facet) |>
+    dplyr::summarise(
+      best_p = min(p.adjust, na.rm = TRUE),
+      max_count = max(Count, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(pathway_theme, best_p, dplyr::desc(max_count)) |>
+    dplyr::pull(term_label_facet)
+
+  kegg_plot_df <- kegg_plot_df |>
+    dplyr::mutate(
+      term_label_facet = factor(term_label_facet,
+                                levels = rev(unique(kegg_term_levels)))
+    )
+  kegg_frame_df <- kegg_plot_df |>
+    dplyr::distinct(pathway_theme)
+  kegg_missing_set_labels <- setdiff(
+    overview_set_label_levels,
+    as.character(stats::na.omit(unique(kegg_plot_df$set_label)))
+  )
+  kegg_column_dummy <- data.frame(
+    set_label = factor(character(), levels = overview_set_label_levels),
+    pathway_theme = factor(character(), levels = names(kegg_theme_colors)),
+    term_label_facet = factor(character(),
+                              levels = levels(kegg_plot_df$term_label_facet)),
+    neg_log10_padj = numeric(),
+    Count = numeric()
+  )
+  if (length(kegg_missing_set_labels) > 0) {
+    kegg_column_dummy <- data.frame(
+      set_label = factor(kegg_missing_set_labels,
+                         levels = overview_set_label_levels),
+      pathway_theme = factor(as.character(kegg_plot_df$pathway_theme[1]),
+                             levels = names(kegg_theme_colors)),
+      term_label_facet = factor(as.character(kegg_plot_df$term_label_facet[1]),
+                                levels = levels(kegg_plot_df$term_label_facet)),
+      neg_log10_padj = 0,
+      Count = min(kegg_plot_df$Count, na.rm = TRUE)
+    )
+  }
+
+  p_kegg <- ggplot2::ggplot(
+    kegg_plot_df,
+    ggplot2::aes(y = term_label_facet)
+  ) +
+    ggplot2::geom_blank(
+      data = kegg_column_dummy,
+      ggplot2::aes(x = neg_log10_padj, y = term_label_facet),
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_rect(
+      data = kegg_frame_df,
+      ggplot2::aes(color = pathway_theme),
+      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf,
+      fill = NA, linewidth = 1.2, inherit.aes = FALSE
+    ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_point(ggplot2::aes(x = neg_log10_padj, size = Count,
+                                     fill = pathway_theme),
+                        shape = 21, color = "#1f2937",
+                        alpha = 0.9,
+                        stroke = 0.35) +
+    ggplot2::facet_grid(pathway_theme ~ set_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_color_manual(values = kegg_theme_colors) +
+    ggplot2::scale_fill_manual(values = kegg_theme_colors) +
+    ggplot2::scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0.02, 0.05))
+    ) +
+    ggplot2::scale_size(range = c(4.5, 13)) +
+    ggplot2::guides(
+      color = "none",
+      fill = "none",
+      size = ggplot2::guide_legend(order = 1)
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = 18, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 14, face = "bold",
+                                           angle = 0),
+      axis.text.y = ggplot2::element_text(size = 18, lineheight = 0.95,
+                                          hjust = 1),
+      panel.border = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      legend.title = ggplot2::element_text(size = 12, face = "bold"),
+      legend.text = ggplot2::element_text(size = 11),
+      plot.margin = ggplot2::margin(10, 16, 10, 16)
+    ) +
+    ggplot2::labs(
+      title = "eggNOG KEGG pathway enrichment by biological theme",
+      subtitle = "Top KEGG pathways per DEG set and theme",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      size = "DEGs in pathway",
+      color = "KEGG theme"
+    )
+
+  print(p_kegg)
+  ggplot2::ggsave(file.path(out_dir, "eggNOG_KEGG_pathway_enrichment.png"),
+                  p_kegg, width = 25, height = 15, dpi = 300)
+}
+```
+
+## Directional KEGG pathways by biological theme
+
+These panels repeat the requested direction-aware contrasts for KEGG pathways.
+The pathway descriptions are shown alongside IDs, and pathways are grouped by
+the same broad biological themes used in the non-directional overview. The
+colored panel frames mark pathway theme, and the enrichment dots mark the side
+of the contrast carrying the enriched genes and the number of DEGs in the
+pathway.
+
+```{r requested-kegg-theme-setup}
+if (nrow(directional_kegg_enrichment_df) > 0 && "ID" %in% names(directional_kegg_enrichment_df)) {
+  directional_kegg_plot_source <- directional_kegg_enrichment_df |>
+    dplyr::mutate(
+      pathway_theme = dplyr::coalesce(as.character(pathway_theme),
+                                      "Other KEGG pathway"),
+      pathway_scope = dplyr::coalesce(as.character(pathway_scope),
+                                      "Unclassified KEGG reference label"),
+      pathway_theme = factor(pathway_theme, levels = names(kegg_theme_colors)),
+      family = factor(
+        as.character(family),
+        levels = c("Infected within diet", "Control animals only",
+                   "Infected animals only")
+      ),
+      direction = factor(as.character(direction),
+                         levels = c("Upregulated", "Downregulated")),
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin))
+    )
+} else {
+  directional_kegg_plot_source <- data.frame()
+}
+
+write.csv(directional_kegg_plot_source,
+          file.path(out_dir, "requested_directional_KEGG_enrichment_with_themes.csv"),
+          row.names = FALSE)
+
+plot_directional_kegg_family <- function(family_name) {
+  family_df <- directional_kegg_plot_source |>
+    dplyr::filter(family == family_name, !is.na(pathway_theme))
+  if (nrow(family_df) == 0) {
+    cat("No requested KEGG enrichment terms to plot for ", family_name, ".\n",
+        sep = "")
+    return(NULL)
+  }
+
+  plot_order <- directional_set_summary |>
+    dplyr::filter(family == family_name) |>
+    dplyr::pull(plot_label) |>
+    unique()
+
+  plot_df <- family_df |>
+    dplyr::group_by(plot_label, direction, pathway_theme) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = 5) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(plot_label, direction, pathway_theme, p.adjust,
+                   dplyr::desc(Count)) |>
+    dplyr::mutate(
+      plot_label = factor(plot_label, levels = plot_order),
+      term_label = stringr::str_wrap(paste0(Description, " [", ID, "]"),
+                                     width = 80),
+      term_label_facet = paste(term_label, pathway_theme, sep = "___")
+    )
+
+  kegg_term_levels <- plot_df |>
+    dplyr::group_by(pathway_theme, term_label_facet) |>
+    dplyr::summarise(
+      best_p = min(p.adjust, na.rm = TRUE),
+      max_count = max(Count, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(pathway_theme, best_p, dplyr::desc(max_count)) |>
+    dplyr::pull(term_label_facet)
+
+  plot_df <- plot_df |>
+    dplyr::mutate(
+      term_label_facet = factor(term_label_facet,
+                                levels = rev(unique(kegg_term_levels)))
+    )
+  kegg_frame_df <- plot_df |>
+    dplyr::distinct(pathway_theme)
+  direction_legend_df <- data.frame(
+    plot_label = factor(levels(plot_df$plot_label)[1],
+                        levels = levels(plot_df$plot_label)),
+    pathway_theme = factor(as.character(plot_df$pathway_theme[1]),
+                           levels = levels(plot_df$pathway_theme)),
+    term_label_facet = plot_df$term_label_facet[1],
+    neg_log10_padj = 0,
+    Count = min(plot_df$Count, na.rm = TRUE),
+    direction = factor(names(direction_colors), levels = names(direction_colors))
+  )
+  kegg_strip_x_size <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 16,
+    TRUE ~ 18
+  )
+  direction_legend_title <- if (family_name == "Infected within diet") {
+    "Infection response"
+  } else {
+    "Diet side"
+  }
+  direction_legend_labels <- if (family_name == "Infected within diet") {
+    c("Upregulated" = "Higher infected",
+      "Downregulated" = "Higher control")
+  } else {
+    c("Upregulated" = "Higher first diet",
+      "Downregulated" = "Higher second diet")
+  }
+  missing_plot_labels <- setdiff(
+    as.character(plot_order),
+    as.character(stats::na.omit(unique(plot_df$plot_label)))
+  )
+  no_terms_df <- data.frame(
+    plot_label = factor(character(), levels = plot_order),
+    pathway_theme = factor(character(),
+                           levels = levels(plot_df$pathway_theme)),
+    term_label_facet = factor(character(),
+                              levels = levels(plot_df$term_label_facet)),
+    label_x = numeric(),
+    label = character()
+  )
+  if (length(missing_plot_labels) > 0) {
+    label_x <- max(plot_df$neg_log10_padj, na.rm = TRUE) * 0.55
+    if (!is.finite(label_x) || label_x <= 0) label_x <- 1
+    kegg_y_by_row <- plot_df |>
+      dplyr::group_by(pathway_theme) |>
+      dplyr::summarise(
+        term_label_facet = dplyr::first(term_label_facet),
+        .groups = "drop"
+      )
+    no_terms_df <- expand.grid(
+      plot_label = missing_plot_labels,
+      pathway_theme = unique(as.character(kegg_y_by_row$pathway_theme)),
+      stringsAsFactors = FALSE
+    ) |>
+      dplyr::left_join(
+        kegg_y_by_row |>
+          dplyr::mutate(pathway_theme = as.character(pathway_theme)),
+        by = "pathway_theme"
+      ) |>
+      dplyr::mutate(
+        plot_label = factor(plot_label, levels = plot_order),
+        pathway_theme = factor(
+          pathway_theme,
+          levels = levels(plot_df$pathway_theme)
+        ),
+        term_label_facet = factor(
+          as.character(term_label_facet),
+          levels = levels(plot_df$term_label_facet)
+        ),
+        label_x = label_x,
+        label = "No enriched terms"
+      )
+  }
+
+  p <- ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(y = term_label_facet)
+  ) +
+    ggplot2::geom_rect(
+      data = kegg_frame_df,
+      ggplot2::aes(color = pathway_theme),
+      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf,
+      fill = NA, linewidth = 1.2, inherit.aes = FALSE
+    ) +
+    ggplot2::geom_vline(xintercept = -log10(0.05),
+                        linetype = "dashed", color = "#374151",
+                        linewidth = 0.35) +
+    ggplot2::geom_text(
+      data = no_terms_df,
+      ggplot2::aes(x = label_x, y = term_label_facet, label = label),
+      inherit.aes = FALSE, color = "#6B7280", fontface = "italic",
+      size = 5
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(x = neg_log10_padj, size = Count, fill = direction,
+                   shape = direction),
+      color = "#1f2937", alpha = 0.9, stroke = 0.35
+    ) +
+    ggplot2::geom_point(
+      data = direction_legend_df,
+      ggplot2::aes(x = neg_log10_padj, y = term_label_facet,
+                   fill = direction, shape = direction),
+      inherit.aes = FALSE, color = "#1f2937", size = 5,
+      alpha = 0, show.legend = TRUE
+    ) +
+    ggplot2::facet_grid(pathway_theme ~ plot_label, scales = "free_y",
+                        space = "free_y") +
+    ggplot2::scale_color_manual(values = kegg_theme_colors) +
+    ggplot2::scale_fill_manual(name = direction_legend_title,
+                               values = direction_colors,
+                               breaks = names(direction_colors),
+                               labels = direction_legend_labels,
+                               drop = FALSE) +
+    ggplot2::scale_shape_manual(values = c("Upregulated" = 21,
+                                           "Downregulated" = 24),
+                                breaks = names(direction_colors),
+                                name = direction_legend_title,
+                                labels = direction_legend_labels,
+                                drop = FALSE) +
+    ggplot2::scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0.02, 0.05))
+    ) +
+    ggplot2::scale_size(range = c(4.5, 13)) +
+    ggplot2::guides(
+      color = "none",
+      fill = "none",
+      shape = ggplot2::guide_legend(
+        nrow = 1, byrow = TRUE, order = 1,
+        override.aes = list(fill = unname(direction_colors), size = 5,
+                            alpha = 1,
+                            color = "#1f2937")
+      ),
+      size = ggplot2::guide_legend(order = 2)
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F1F4F3",
+                                               color = "#C8D0CC"),
+      strip.text.x = ggplot2::element_text(size = kegg_strip_x_size,
+                                           face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 14, face = "bold",
+                                           angle = 0),
+      axis.text.y = ggplot2::element_text(size = 18, lineheight = 0.95,
+                                          hjust = 1),
+      panel.border = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      plot.margin = ggplot2::margin(10, 16, 10, 16)
+    ) +
+    ggplot2::labs(
+      title = paste("eggNOG KEGG enrichment:", family_name),
+      subtitle = "Directional DEG foregrounds; pathway groups use broad biological themes",
+      x = "-log10 adjusted p-value",
+      y = "KEGG pathway",
+      size = "DEGs in pathway",
+      color = "KEGG theme",
+      fill = direction_legend_title,
+      shape = direction_legend_title
+    )
+
+  file_stub <- stringr::str_replace_all(stringr::str_to_lower(family_name),
+                                        "[^a-z0-9]+", "_")
+  figure_width <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 30,
+    TRUE ~ 18
+  )
+  figure_height <- dplyr::case_when(
+    family_name == "Infected within diet" ~ 18,
+    family_name == "Infected animals only" ~ 15,
+    TRUE ~ 12
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("requested_KEGG_theme_", file_stub, ".png")),
+    p, width = figure_width, height = figure_height, dpi = 300
+  )
+  p
+}
+```
+
+```{r requested-kegg-theme-infected-within-diet, fig.height=18, fig.width=30}
+plot_directional_kegg_family("Infected within diet")
+```
+
+```{r requested-kegg-theme-control-animals-only, fig.height=12, fig.width=18}
+plot_directional_kegg_family("Control animals only")
+```
+
+```{r requested-kegg-theme-infected-animals-only, fig.height=15, fig.width=18}
+plot_directional_kegg_family("Infected animals only")
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

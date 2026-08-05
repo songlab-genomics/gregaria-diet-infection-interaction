@@ -1,5 +1,5 @@
 ---
-title: "Infection within diet DEGs - all samples"
+title: "Main-chromosome infection within diet DEGs - all samples"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,23 +9,31 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
-  min_total_count: 10
+  min_count: 10
+  min_samples: 3
   top_variable_genes: 500
   top_curated_degs_per_direction: 12
   top_functional_degs_per_theme: 18
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "all-samples-infection-within-diet-deg"
+  output_tag: "main-chromosome-all-samples-infection-within-diet-deg"
 ---
 
 ## Purpose
 
-This is the all-samples version of the infection-within-diet DEG page. It keeps
+This is the all-samples, main-chromosome version of the infection-within-diet
+DEG page. It keeps
 every library in `mehreen_metadata_fixed.txt`, including the samples currently
 treated as outliers in sensitivity analyses.
+
+Every plot and test uses only non-rRNA genes assigned to nuclear chromosomes in
+the official assembly-placement table. Unplaced scaffolds are not allowed to
+enter normalization, VST, PCA, heatmaps, or the DEG hypothesis family here.
 
 This page tests infected versus control samples separately within each diet.
 This is a simple and readable complement to the full interaction model.
@@ -46,7 +54,7 @@ the model inputs visible before any statistics are run.
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "pheatmap", "ggrepel",
-              "dplyr", "SummarizedExperiment", "DT")
+              "dplyr", "SummarizedExperiment", "DT", "readr")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -77,10 +85,11 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- relevel(factor(metadata$Treatment), ref = "Control")
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
-counts <- as.matrix(counts_raw[, -1])
-rownames(counts) <- counts_raw[[1]]
+counts_table <- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+stopifnot("gene_id" %in% names(counts_table))
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id")])
+rownames(counts) <- counts_table$gene_id
 storage.mode(counts) <- "integer"
 
 count_labels_all <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
@@ -92,14 +101,48 @@ stopifnot(identical(metadata$label, count_labels))
 rownames(metadata) <- metadata$label
 colnames(counts) <- count_labels
 
-keep_vst <- rowSums(counts) >= params$min_total_count
-dds_vst <- DESeq2::DESeqDataSetFromMatrix(
-  countData = counts[keep_vst, ],
-  colData = metadata,
-  design = ~ Diet + Treatment
+placement <- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+counts <- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
+keep_vst <- rowSums(counts >= params$min_count) >= params$min_samples
+input_audit <- data.frame(
+  samples_retained = ncol(counts),
+  raw_count_rows = nrow(counts_table),
+  main_chromosome_non_rRNA_rows = nrow(counts),
+  genes_entering_VST = sum(keep_vst)
+)
+knitr::kable(input_audit, caption = "Main-chromosome analysis input audit")
+write.csv(input_audit, file.path(out_dir, "main_chromosome_input_audit.csv"),
+          row.names = FALSE)
+
+metadata$group <- factor(
+  paste0("diet", metadata$Diet, "_", tolower(as.character(metadata$Treatment))),
+  levels = c(
+    "diet50_control", "diet33_control", "diet83_control",
+    "diet50_infected", "diet33_infected", "diet83_infected"
+  )
 )
 
-vsd <- DESeq2::vst(dds_vst, blind = TRUE)
+dds_global <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_vst, ],
+  colData = metadata,
+  design = ~ 0 + group
+)
+dds_global <- DESeq2::DESeq(
+  dds_global,
+  minReplicatesForReplace = Inf,
+  quiet = TRUE
+)
+
+vsd <- DESeq2::vst(dds_global, blind = TRUE)
 vst_mat <- SummarizedExperiment::assay(vsd)
 ```
 
@@ -235,12 +278,13 @@ pheatmap::pheatmap(
 
 ## Run one infected-control test per diet
 
-For each diet, the code keeps only samples from that diet and fits a simple
-`~ Treatment` DESeq2 model. This avoids averaging the infection effect across
-diets. A positive log2 fold-change means higher expression in infected samples;
-a negative log2 fold-change means higher expression in controls. Genes are
-called significant only when they pass both the adjusted p-value threshold and
-the absolute log2 fold-change threshold.
+One joint `~ 0 + group` DESeq2 model is fitted across all 44 samples, using a
+separate coefficient for every diet-by-treatment group. Each displayed result
+then contrasts infected and control coefficients within one diet. This keeps
+normalization, dispersion estimation, filtering, and multiple-testing behavior
+consistent across the interaction, catalogue, enrichment, and publication
+pages. A positive log2 fold-change means higher expression in infected samples;
+a negative value means higher expression in controls.
 
 ```{r infection-tests, fig.height=7, fig.width=8}
 diet_results <- list()
@@ -248,21 +292,23 @@ diet_results <- list()
 for (diet_level in levels(droplevels(metadata$Diet))) {
   message("Running infection contrast for diet ", diet_level)
 
-  sample_keep <- metadata$Diet == diet_level
-  metadata_sub <- droplevels(metadata[sample_keep, ])
-  counts_sub <- counts[, sample_keep]
-  gene_keep <- rowSums(counts_sub) >= params$min_total_count
+  coefficient_names <- DESeq2::resultsNames(dds_global)
+  contrast_vector <- stats::setNames(rep(0, length(coefficient_names)),
+                                     coefficient_names)
+  infected_name <- paste0("groupdiet", diet_level, "_infected")
+  control_name <- paste0("groupdiet", diet_level, "_control")
+  if (!all(c(infected_name, control_name) %in% coefficient_names)) {
+    stop("Missing group coefficient for diet ", diet_level)
+  }
+  contrast_vector[infected_name] <- 1
+  contrast_vector[control_name] <- -1
 
-  dds <- DESeq2::DESeqDataSetFromMatrix(
-    countData = counts_sub[gene_keep, ],
-    colData = metadata_sub,
-    design = ~ Treatment
+  res <- DESeq2::results(
+    dds_global,
+    contrast = contrast_vector,
+    alpha = params$alpha,
+    cooksCutoff = FALSE
   )
-  dds <- DESeq2::DESeq(dds)
-
-  res <- DESeq2::results(dds,
-                         contrast = c("Treatment", "Infected", "Control"),
-                         alpha = params$alpha)
   res_df <- as.data.frame(res)
   res_df$gene_id <- rownames(res_df)
   res_df$diet <- diet_level

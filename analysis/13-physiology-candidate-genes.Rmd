@@ -1,5 +1,5 @@
 ---
-title: "Physiology candidate genes"
+title: "Physiology candidate genes: all scaffolds and placed chromosomes"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -8,7 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  all_results_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_deseq2_all_contrasts.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -19,9 +20,12 @@ params:
 
 ## Purpose
 
-This page tests the co-author hypothesis in a targeted way. Instead of starting
+This page tests the co-author hypothesis in a targeted way using all 44 samples.
+Instead of starting
 from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
-genes plausibly involved in three insect-relevant processes:
+genes plausibly involved in insect-relevant immune and fat-body processes. The
+same summaries are shown for the all-scaffold and placed-chromosome gene
+universes so the effect of assembly placement remains visible.
 
 1. Protein and amino-acid availability that could affect fungal growth.
 2. Energy stores and starvation resistance in the locust fat body.
@@ -122,7 +126,11 @@ parse_cds_gene_bridge <- function(path) {
     dplyr::distinct()
 }
 
-counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_raw <- if (grepl("[.]tsv$", counts_file, ignore.case = TRUE)) {
+  read.delim(counts_file, check.names = FALSE)
+} else {
+  read.csv(counts_file, check.names = FALSE)
+}
 gene_universe <- unique(counts_raw[[1]])
 eggnog <- read_emapper(eggnog_file)
 protein_to_gene <- parse_cds_gene_bridge(gff_file)
@@ -175,153 +183,249 @@ knitr::kable(
 )
 ```
 
-## DEG source
+## Current all-sample DEG sources
 
-The page first looks for the newest sample-filter scenario results. If those
-have not been rendered yet, it falls back to the latest infection-within-diet
-DEG tables already present on disk.
+The all-scaffold and placed-chromosome models use the same 44 samples and the
+same significance thresholds. Their gene universes differ, so their adjusted
+p-values are estimated independently and should be compared as analysis
+scopes, not added together.
 
-```{r load-deg-results}
+```{r load-current-deg-results}
 latest_dir <- function(pattern) {
   dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
   dirs <- dirs[grepl(pattern, basename(dirs))]
-  if (length(dirs) == 0) return(NA_character_)
+  if (length(dirs) == 0) stop("No output folder matched: ", pattern)
   dirs[which.max(file.info(dirs)$mtime)]
 }
 
-scenario_dir <- latest_dir("^deg-sample-filter-scenarios_")
-infection_dir <- latest_dir("^infection-within-diet-deg_")
+all_results_file <- file.path(project_dir, params$all_results_file)
+placed_dir <- latest_dir("^placed-unplaced-scaffold-analysis_")
+placed_results_file <- file.path(placed_dir, "placed_unplaced_all_deseq2_results.csv")
 
-if (!is.na(scenario_dir)) {
-  deg_source <- file.path(scenario_dir, "all_deseq2_results.csv")
-  deg_results <- read.csv(deg_source, check.names = FALSE)
-  deg_results <- deg_results |>
-    dplyr::mutate(
-      significant = !is.na(padj) &
-        padj < params$alpha &
-        abs(log2FoldChange) >= params$lfc_threshold,
-      direction = dplyr::case_when(
-        !significant ~ "Not DEG",
-        log2FoldChange > 0 ~ "Upregulated",
-        log2FoldChange < 0 ~ "Downregulated",
-        TRUE ~ "Not DEG"
-      )
-    )
-} else if (!is.na(infection_dir)) {
-  files <- list.files(infection_dir,
-                      pattern = "^DESeq2_infected_vs_control_diet_.*[.]csv$",
-                      full.names = TRUE)
-  if (length(files) == 0) stop("No infection DEG result files found.")
-  deg_results <- dplyr::bind_rows(lapply(files, function(path) {
-    diet <- stringr::str_match(basename(path), "diet_([0-9]+)[.]csv$")[, 2]
-    tab <- read.csv(path, check.names = FALSE)
-    tab$gene_id <- if ("gene_id" %in% names(tab)) tab$gene_id else tab[[1]]
-    tab$scenario <- "Current DEG page"
-    tab$comparison_type <- "Infection within diet"
-    tab$comparison <- paste0("Diet ", diet, ": infected vs control")
-    tab
-  })) |>
-    dplyr::mutate(
-      significant = !is.na(padj) &
-        padj < params$alpha &
-        abs(log2FoldChange) >= params$lfc_threshold,
-      direction = dplyr::case_when(
-        !significant ~ "Not DEG",
-        log2FoldChange > 0 ~ "Upregulated",
-        log2FoldChange < 0 ~ "Downregulated",
-        TRUE ~ "Not DEG"
-      )
-    )
-  deg_source <- infection_dir
-} else {
-  stop("No DEG source found under ", results_root)
+all_scope <- read.csv(all_results_file, check.names = FALSE) |>
+  dplyr::filter(mapping_branch == "competitive-host") |>
+  dplyr::mutate(analysis_scope = "All scaffolds")
+
+placed_scope <- read.csv(placed_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    mapping_branch == "Competitive host",
+    analysis_scope == "Placed/host-assigned",
+    sequence_class == "Nuclear chromosome"
+  ) |>
+  dplyr::mutate(analysis_scope = "Placed chromosomes")
+
+deg_results <- dplyr::bind_rows(all_scope, placed_scope) |>
+  dplyr::mutate(
+    significant = !is.na(padj) & padj < params$alpha &
+      abs(log2FoldChange) >= params$lfc_threshold
+  )
+
+knitr::kable(
+  data.frame(
+    scope = c("All scaffolds", "Placed chromosomes"),
+    result_file = c(all_results_file, placed_results_file)
+  ),
+  caption = "Current all-sample DEG sources"
+)
+```
+
+## Four physiology themes
+
+These four themes reflect the current biological hypotheses for fat body:
+immune pathways, protein storage and synthesis, lipid metabolism, and
+detoxification. Classification is based on local GFF/eggNOG description and
+domain text and is therefore a transparent candidate screen rather than a
+formal ontology.
+
+```{r four-theme-candidate-screen}
+classify_physiology_theme <- function(x) {
+  x <- stringr::str_to_lower(dplyr::coalesce(x, ""))
+  dplyr::case_when(
+    stringr::str_detect(x, paste(
+      "antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|lysozyme|",
+      "toll|imd|relish|myd88|cactus|dorsal|jak|stat|immune|peptidoglycan|",
+      "pgrp|glucan|phenoloxidase|melanization|lectin|serpin", sep = ""
+    )) ~ "Immune pathway",
+    stringr::str_detect(x, paste(
+      "protein synthesis|translation|ribosom|elongation factor|initiation factor|",
+      "aminoacyl|trna synthetase|vitellogenin|hexamerin|arylphorin|storage protein",
+      sep = ""
+    )) ~ "Protein storage and synthesis",
+    stringr::str_detect(x, paste(
+      "lipid|fatty acid|acyl-coa|acetyl-coa carboxylase|elongase|desaturase|",
+      "glycerolipid|phospholipid|triacylglycerol|sterol|lipase", sep = ""
+    )) ~ "Lipid metabolism",
+    stringr::str_detect(x, paste(
+      "detox|cytochrome p450|glutathione|carboxylesterase|esterase|",
+      "udp-glucuronosyltransferase|abc transporter|oxidoreductase|peroxidase|",
+      "catalase|superoxide|heat shock|stress", sep = ""
+    )) ~ "Detoxification",
+    TRUE ~ NA_character_
+  )
 }
 
-data.frame(DEG_source = deg_source) |>
-  knitr::kable(caption = "DEG table source")
-```
+physiology_annotation <- annotation |>
+  dplyr::transmute(
+    gene_id,
+    Description,
+    Preferred_name,
+    PFAMs,
+    annotation_text,
+    physiology_theme = classify_physiology_theme(annotation_text)
+  ) |>
+  dplyr::filter(!is.na(physiology_theme))
 
-## Candidate genes that are DEGs
+theme_levels <- c(
+  "Immune pathway", "Protein storage and synthesis",
+  "Lipid metabolism", "Detoxification"
+)
+scope_levels <- c("All scaffolds", "Placed chromosomes")
+response_colors <- c(
+  "Higher in infected" = "#B91C1C",
+  "Higher in control" = "#1D4ED8"
+)
 
-```{r candidate-degs}
 candidate_degs <- deg_results |>
-  dplyr::filter(significant, gene_id %in% candidate_gene_summary$gene_id) |>
-  dplyr::left_join(candidate_gene_summary, by = "gene_id") |>
-  dplyr::arrange(comparison_type, comparison, direction, padj)
+  dplyr::filter(
+    contrast_id %in% paste0("infection_diet", c("33", "50", "83")),
+    significant
+  ) |>
+  dplyr::left_join(physiology_annotation, by = "gene_id") |>
+  dplyr::filter(!is.na(physiology_theme)) |>
+  dplyr::mutate(
+    diet = stringr::str_extract(contrast_id, "[0-9]+$"),
+    direction = ifelse(log2FoldChange > 0,
+                       "Higher in infected", "Higher in control"),
+    physiology_theme = factor(physiology_theme, levels = theme_levels),
+    analysis_scope = factor(analysis_scope, levels = scope_levels)
+  )
 
-candidate_deg_summary <- candidate_degs |>
-  tidyr::separate_rows(themes, sep = "; ") |>
-  dplyr::count(scenario, comparison_type, comparison, themes, direction,
-               name = "n_candidate_degs")
+candidate_counts <- candidate_degs |>
+  dplyr::distinct(analysis_scope, physiology_theme, diet, direction, gene_id) |>
+  dplyr::count(analysis_scope, physiology_theme, diet, direction,
+               name = "n_candidate_degs") |>
+  tidyr::complete(
+    analysis_scope = factor(scope_levels, levels = scope_levels),
+    physiology_theme = factor(theme_levels, levels = theme_levels),
+    diet = c("33", "50", "83"),
+    direction = c("Higher in infected", "Higher in control"),
+    fill = list(n_candidate_degs = 0)
+  )
 
-write.csv(candidate_degs, file.path(out_dir, "candidate_degs.csv"),
+write.csv(candidate_degs,
+          file.path(out_dir, "physiology_candidate_degs_both_scopes.csv"),
           row.names = FALSE)
-write.csv(candidate_deg_summary,
-          file.path(out_dir, "candidate_deg_summary.csv"),
+write.csv(candidate_counts,
+          file.path(out_dir, "physiology_candidate_counts_both_scopes.csv"),
           row.names = FALSE)
 ```
 
-```{r candidate-deg-barplot, fig.height=6.8, fig.width=12}
-plot_df <- candidate_deg_summary |>
-  dplyr::filter(n_candidate_degs > 0) |>
-  dplyr::mutate(themes = factor(themes, levels = names(theme_colors)))
+## Diet-specific infection-response barplots
 
+```{r physiology-response-barplots, fig.width=16, fig.height=10}
 p_candidate <- ggplot2::ggplot(
-  plot_df,
-  ggplot2::aes(x = comparison, y = n_candidate_degs, fill = direction)
+  candidate_counts,
+  ggplot2::aes(x = diet, y = n_candidate_degs, fill = direction)
 ) +
-  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.72),
-                    width = 0.65) +
-  ggplot2::facet_grid(themes ~ scenario, scales = "free_y", space = "free_y") +
-  ggplot2::scale_fill_manual(values = direction_colors) +
-  ggplot2::labs(
-    title = "Candidate physiology DEGs",
-    x = NULL,
-    y = "Number of candidate DEGs",
-    fill = "Direction"
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge(width = 0.74),
+    width = 0.64,
+    color = "white"
   ) +
-  ggplot2::theme_bw(base_size = 12) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = ifelse(n_candidate_degs > 0, n_candidate_degs, "")),
+    position = ggplot2::position_dodge(width = 0.74),
+    vjust = -0.25,
+    size = 4.2
+  ) +
+  ggplot2::facet_grid(analysis_scope ~ physiology_theme, scales = "free_y") +
+  ggplot2::scale_fill_manual(values = response_colors) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.15))) +
+  ggplot2::labs(
+    title = "Diet-specific infection-response DEGs in four physiology themes",
+    subtitle = "All 44 samples retained; panels differ only in the tested gene universe",
+    x = "Diet", y = "Number of candidate DEGs", fill = NULL
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
   ggplot2::theme(
-    axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
-    strip.background = ggplot2::element_rect(fill = "#EEF2F4", color = "#9CA3AF"),
-    strip.text = ggplot2::element_text(face = "bold"),
-    panel.grid.minor = ggplot2::element_blank(),
-    legend.position = "bottom"
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    legend.position = "bottom",
+    panel.grid.minor = ggplot2::element_blank()
   )
 
 p_candidate
-ggplot2::ggsave(file.path(out_dir, "candidate_physiology_deg_barplot.png"),
-                p_candidate, width = 12, height = 6.8, dpi = 300)
+ggplot2::ggsave(
+  file.path(out_dir, "physiology_response_counts_all_vs_placed.png"),
+  p_candidate, width = 16, height = 10, dpi = 300, bg = "white"
+)
+ggplot2::ggsave(
+  file.path(out_dir, "physiology_response_counts_all_vs_placed.svg"),
+  p_candidate, width = 16, height = 10, bg = "white"
+)
 ```
 
-## Candidate DEG table
+## Diet 50 versus diet 83
+
+This contrast of counts asks whether each physiology class contains more
+infection-responsive genes under diet 50 or diet 83. It is descriptive and does
+not replace the gene-level diet-by-infection interaction test.
+
+```{r diet50-vs-diet83-barplot, fig.width=12, fig.height=7}
+diet_50_83 <- candidate_counts |>
+  dplyr::filter(diet %in% c("50", "83")) |>
+  tidyr::pivot_wider(
+    names_from = diet,
+    values_from = n_candidate_degs,
+    values_fill = 0
+  ) |>
+  dplyr::mutate(diet50_minus_diet83 = `50` - `83`)
+
+p_delta <- ggplot2::ggplot(
+  diet_50_83,
+  ggplot2::aes(x = physiology_theme, y = diet50_minus_diet83, fill = direction)
+) +
+  ggplot2::geom_hline(yintercept = 0, color = "#374151", linewidth = 0.7) +
+  ggplot2::geom_col(position = "dodge", width = 0.68) +
+  ggplot2::facet_wrap(~ analysis_scope, ncol = 1) +
+  ggplot2::scale_fill_manual(values = response_colors) +
+  ggplot2::labs(
+    title = "Difference in infection-response DEG counts: diet 50 minus diet 83",
+    subtitle = "Positive bars indicate more candidate DEGs in diet 50; negative bars indicate more in diet 83",
+    x = NULL, y = "Difference in DEG count", fill = NULL
+  ) +
+  ggplot2::theme_bw(base_size = 14) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+    strip.text = ggplot2::element_text(face = "bold"),
+    legend.position = "bottom",
+    panel.grid.minor = ggplot2::element_blank()
+  )
+
+p_delta
+ggplot2::ggsave(
+  file.path(out_dir, "diet50_vs_diet83_physiology_deg_count_difference.png"),
+  p_delta, width = 12, height = 7, dpi = 300, bg = "white"
+)
+ggplot2::ggsave(
+  file.path(out_dir, "diet50_vs_diet83_physiology_deg_count_difference.svg"),
+  p_delta, width = 12, height = 7, bg = "white"
+)
+```
+
+## Searchable candidate DEG table
 
 ```{r candidate-deg-table}
-display_cols <- intersect(
-  c("scenario", "comparison_type", "comparison", "gene_id", "direction",
-    "log2FoldChange", "padj", "themes", "term_groups", "Preferred_name",
-    "Description"),
-  names(candidate_degs)
-)
-
 DT::datatable(
-  candidate_degs[, display_cols, drop = FALSE],
+  candidate_degs |>
+    dplyr::select(
+      analysis_scope, physiology_theme, diet, direction, gene_id,
+      Description, log2FoldChange, padj
+    ) |>
+    dplyr::arrange(analysis_scope, physiology_theme, diet, padj),
   rownames = FALSE,
   filter = "top",
   options = list(pageLength = 25, scrollX = TRUE),
-  caption = "Candidate physiology genes that are DEGs"
-)
-```
-
-## Full candidate gene table
-
-```{r full-candidate-table}
-DT::datatable(
-  candidate_gene_summary,
-  rownames = FALSE,
-  filter = "top",
-  options = list(pageLength = 25, scrollX = TRUE),
-  caption = "All genes matching candidate physiology keyword rules"
+  caption = "Candidate physiology genes significant within at least one diet"
 )
 ```
 

@@ -1,0 +1,81 @@
+seqid,region_claim,taxon,isolate,mol_type,region_length_bp,n_deg_memberships,n_distinct_deg_genes,DEG_contexts,evidence_classes,n_possible_nonhost,n_repeat_mobile,n_low_information
+NW_026061960.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,597154,130,126,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,56
+NW_026062071.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,621335,117,114,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,58
+NW_026061988.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,376478,73,72,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,36
+NW_026062097.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,426281,67,67,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,32
+NW_026061732.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,395514,61,60,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,21
+NW_026062344.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,391542,60,60,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,32
+NW_026062185.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,366495,61,59,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,31
+NW_026061886.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,283099,59,58,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,31
+NW_026062003.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,342834,56,56,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,27
+NW_026062048.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,353118,55,53,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,25
+NW_026062229.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,248508,51,50,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,23
+NW_026062282.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,292790,48,48,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,23
+NW_026062299.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,262043,48,47,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,18
+NW_026062249.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,241426,43,43,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,23
+NW_026062018.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,242317,41,41,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,13
+NW_026062176.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,242820,42,40,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,19
+NW_026062105.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,222873,39,39,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,21
+NW_026061838.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,218639,39,38,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,19
+NW_026062196.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,207904,35,35,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,16
+NW_026062315.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,206002,34,34,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,19
+NW_026062217.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,108767,33,33,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,14
+NW_026061953.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,216778,32,32,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,17
+NW_026062302.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,191019,33,32,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,10
+NW_026062009.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,188512,32,31,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,18
+NW_026062056.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,187012,31,31,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,19
+NW_026062043.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,187750,29,29,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,15
+NW_026062236.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,256518,32,29,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,17
+NW_026062244.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,120664,29,28,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,11
+NW_026061974.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,122239,26,26,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,15
+NW_026061743.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,149608,26,24,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,9
+NW_026062051.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,147068,24,24,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,9
+NW_026062059.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,117526,21,21,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,10
+NW_026061985.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,114926,20,20,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,12
+NW_026062374.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,156446,21,20,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,6
+NW_026062425.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,82666,20,20,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,8
+NW_026062553.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,133558,20,20,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,11
+NW_026062331.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,134788,20,19,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,7
+NW_026062491.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,78405,19,19,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,9
+NW_026062566.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,85828,19,19,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,12
+NW_026062120.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,51614,16,16,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,9
+NW_026062094.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,84846,16,15,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,6
+NW_026062549.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,81318,14,13,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,5
+NW_026062325.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,42430,12,12,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,7
+NW_026062445.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,57899,11,11,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,4
+NW_026062747.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,57233,11,11,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,6
+NW_026062253.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,74958,10,10,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,5
+NW_026062521.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,45343,10,10,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,7
+NW_026062803.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,61147,10,10,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,4
+NW_026062667.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,51953,8,8,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,4
+NW_026062676.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,41897,8,8,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,4
+NW_026062795.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,43210,9,8,Diet DEGs in infected; Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,3
+NW_026061724.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,17802503,9,6,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,6
+NW_026062332.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,46418,6,6,Diet DEGs in infected,RefSeq annotated host-like; Uncharacterized but has domains,0,0,1
+NW_026062990.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,11589,5,5,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,3
+NW_026062750.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,50201,4,4,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like; Uncharacterized but has domains,0,0,3
+NW_026061710.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,26857663,6,3,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,3
+NW_026061824.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,21740884,6,3,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,3
+NW_026061707.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,20428078,3,2,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,2
+NW_026061762.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,9066619,4,2,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,2
+NW_026061954.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,852195,2,2,Infection within diets,Low-information RefSeq gene; RefSeq annotated host-like,0,0,1
+NW_026061958.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,23566,3,2,Diet DEGs in infected; Infection within diets,RefSeq annotated host-like,0,0,0
+NW_026062453.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,120714,2,2,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,1
+NW_026062732.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,69605,2,2,Diet DEGs in infected,Low-information RefSeq gene; RefSeq annotated host-like,0,0,1
+NW_026061723.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,1659960,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061726.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,6115594,1,1,Infection vs control,Low-information RefSeq gene,0,0,1
+NW_026061752.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,4839267,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061786.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,8140279,1,1,Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061799.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,11369862,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061842.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,6163012,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061847.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,2743148,2,1,Infection vs control; Infection within diets,RefSeq annotated host-like,0,0,0
+NW_026061883.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,6573511,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061884.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,6337860,2,1,Infection vs control; Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026061891.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,1791060,1,1,Infection within diets,RefSeq annotated host-like,0,0,0
+NW_026061970.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,278481,1,1,Infection within diets,Low-information RefSeq gene,0,0,1
+NW_026062019.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,40940,1,1,Infection within diets,RefSeq annotated host-like,0,0,0
+NW_026062080.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,82901,1,1,Infection within diets,RefSeq annotated host-like,0,0,0
+NW_026062108.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,31061,1,1,Diet DEGs in infected,Low-information RefSeq gene,0,0,1
+NW_026062140.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,54349,1,1,Diet DEGs in infected,Low-information RefSeq gene,0,0,1
+NW_026062171.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,36907,1,1,Diet DEGs in infected,RefSeq annotated host-like,0,0,0
+NW_026062647.1,RefSeq S. gregaria unplaced genomic region,7010,iqSchGreg1,genomic DNA,42657,1,1,Infection within diets,Low-information RefSeq gene,0,0,1

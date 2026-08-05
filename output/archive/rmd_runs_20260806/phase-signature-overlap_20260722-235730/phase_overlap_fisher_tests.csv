@@ -1,0 +1,109 @@
+"scenario","comparison_type","comparison","phase_set","n_fat_degs","n_phase_genes","n_overlap","odds_ratio","p_value","p_adj"
+"All samples","Infection within diet","Diet 50: infected vs control","Any phase DEG",707,1272,231,2.13388570036845,3.54583687158482e-17,3.8295038213116e-15
+"All samples","Infection within diet","Diet 33: infected vs control","Any phase DEG",490,1272,167,2.21330197031399,2.89173430211605e-14,1.56153652314267e-12
+"All samples","Infection within diet","Diet 50: infected vs control","Thorax phase DEG",707,995,180,2.01304998743772,7.82049947872203e-13,2.81537981233993e-11
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Any phase DEG",679,1272,208,1.90202509701942,3.16081070675446e-12,6.82735112658963e-11
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Any phase DEG",679,1272,208,1.90202509701942,3.16081070675446e-12,6.82735112658963e-11
+"All samples","Infection within diet","Diet 33: infected vs control","Thorax phase DEG",490,995,133,2.14940555456567,1.14180992878208e-11,2.05525787180774e-10
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Any phase DEG",434,1272,141,2.02553407455516,1.98883308003222e-10,2.6849246580435e-09
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Any phase DEG",434,1272,141,2.02553407455516,1.98883308003222e-10,2.6849246580435e-09
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Thorax phase DEG",679,995,165,1.86289411311761,4.87328009987223e-10,5.26314250786201e-09
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Thorax phase DEG",679,995,165,1.86289411311761,4.87328009987223e-10,5.26314250786201e-09
+"All samples","Infection within diet","Diet 50: infected vs control","Head phase DEG",707,606,115,2.02854359726329,1.67482712465507e-09,1.64437572238862e-08
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Thorax phase DEG",434,995,111,1.94666388114581,2.81470674821809e-08,2.3383717600581e-07
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Thorax phase DEG",434,995,111,1.94666388114581,2.81470674821809e-08,2.3383717600581e-07
+"All samples","Infection within diet","Diet 33: infected vs control","Head phase DEG",490,606,81,2.0031848347722,3.25201554791037e-07,2.508697708388e-06
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Head phase DEG",434,606,71,1.95824622391242,2.79912557307996e-06,1.88940976182898e-05
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Head phase DEG",434,606,71,1.95824622391242,2.79912557307996e-06,1.88940976182898e-05
+"All samples","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG",707,329,64,2.01069007711568,4.23958621307414e-06,2.69338418242357e-05
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG",49,606,16,4.67154909867853,6.80110962009432e-06,3.52964809544534e-05
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG",49,606,16,4.67154909867853,6.80110962009432e-06,3.52964809544534e-05
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Head phase DEG",49,606,16,4.67154909867853,6.80110962009432e-06,3.52964809544534e-05
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Shared head/thorax phase DEG",4,329,4,Inf,7.1900238981294e-06,3.52964809544534e-05
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Shared head/thorax phase DEG",4,329,4,Inf,7.1900238981294e-06,3.52964809544534e-05
+"All samples","Infection within diet","Diet 83: infected vs control","Any phase DEG",307,1272,93,1.7838190145822,8.96622462971656e-06,3.87340904003756e-05
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Any phase DEG",307,1272,93,1.7838190145822,8.96622462971656e-06,3.87340904003756e-05
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Any phase DEG",307,1272,93,1.7838190145822,8.96622462971656e-06,3.87340904003756e-05
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Any phase DEG",40,1272,20,4.01957322309635,2.20076703389332e-05,8.79642693498047e-05
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Any phase DEG",40,1272,20,4.01957322309635,2.20076703389332e-05,8.79642693498047e-05
+"All samples","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG",490,329,47,2.08922150568356,2.28055513129123e-05,8.79642693498047e-05
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG",40,329,10,6.23099470693234,2.64366014323563e-05,9.51717651564828e-05
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG",40,329,10,6.23099470693234,2.64366014323563e-05,9.51717651564828e-05
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG",40,995,17,4.01032978486178,4.66495227547188e-05,0.000157442139297176
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG",40,995,17,4.01032978486178,4.66495227547188e-05,0.000157442139297176
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Head phase DEG",40,606,13,4.6205476103133,5.27857048113937e-05,0.000158204615130646
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Head phase DEG",40,606,13,4.6205476103133,5.27857048113937e-05,0.000158204615130646
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Head phase DEG",679,606,95,1.6348376160024,5.29839063077309e-05,0.000158204615130646
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Head phase DEG",679,606,95,1.6348376160024,5.29839063077309e-05,0.000158204615130646
+"All samples","Diet contrasts among control","Control 83 vs 33","Any phase DEG",42,1272,20,3.65279169053273,5.41997292577213e-05,0.000158204615130646
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Head phase DEG",4,606,4,Inf,8.34598287163638e-05,0.000231119525676084
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Head phase DEG",4,606,4,Inf,8.34598287163638e-05,0.000231119525676084
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG",434,329,41,2.02970927696558,0.000112930396105059,0.000297475189740154
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Shared head/thorax phase DEG",434,329,41,2.02970927696558,0.000112930396105059,0.000297475189740154
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Any phase DEG",49,1272,21,3.01244454400389,0.000233119673250591,0.00057220283434236
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Any phase DEG",49,1272,21,3.01244454400389,0.000233119673250591,0.00057220283434236
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Any phase DEG",49,1272,21,3.01244454400389,0.000233119673250591,0.00057220283434236
+"All samples","Diet contrasts among control","Control 83 vs 33","Thorax phase DEG",42,995,16,3.33374872684841,0.000358727609313738,0.000849958920647863
+"All samples","Infection within diet","Diet 83: infected vs control","Head phase DEG",307,606,48,1.81349644890525,0.000377759520287939,0.000849958920647863
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Head phase DEG",307,606,48,1.81349644890525,0.000377759520287939,0.000849958920647863
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Head phase DEG",307,606,48,1.81349644890525,0.000377759520287939,0.000849958920647863
+"All samples","Infection within diet","Diet 83: infected vs control","Thorax phase DEG",307,995,70,1.62639908913979,0.000551450289199651,0.00116777708301103
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Thorax phase DEG",307,995,70,1.62639908913979,0.000551450289199651,0.00116777708301103
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Thorax phase DEG",307,995,70,1.62639908913979,0.000551450289199651,0.00116777708301103
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Thorax phase DEG",4,995,4,Inf,0.000608927552523699,0.00124083350325584
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Thorax phase DEG",4,995,4,Inf,0.000608927552523699,0.00124083350325584
+"All samples","Diet contrasts among control","Control 83 vs 33","Head phase DEG",42,606,11,3.39169300702063,0.00153435244474734,0.00306870488949469
+"Current outliers removed","Diet contrasts among control","Control 33 vs 50","Any phase DEG",4,1272,4,Inf,0.00162852055449528,0.00314071821224089
+"Expanded outlier set","Diet contrasts among control","Control 33 vs 50","Any phase DEG",4,1272,4,Inf,0.00162852055449528,0.00314071821224089
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG",679,329,52,1.60764475109589,0.00237876950517993,0.00442943287171435
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Shared head/thorax phase DEG",679,329,52,1.60764475109589,0.00237876950517993,0.00442943287171435
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG",13,606,5,5.93681227033891,0.00531518830447896,0.00939480307669378
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG",13,606,5,5.93681227033891,0.00531518830447896,0.00939480307669378
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Head phase DEG",13,606,5,5.93681227033891,0.00531518830447896,0.00939480307669378
+"All samples","Diet contrasts among control","Control 83 vs 33","Shared head/thorax phase DEG",42,329,7,3.70155078284183,0.00539331287736124,0.00939480307669378
+"All samples","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG",307,329,25,1.66643723186963,0.0164415694343478,0.027318299983224
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG",307,329,25,1.66643723186963,0.0164415694343478,0.027318299983224
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Shared head/thorax phase DEG",307,329,25,1.66643723186963,0.0164415694343478,0.027318299983224
+"All samples","Diet contrasts among control","Control 83 vs 50","Head phase DEG",26,606,6,2.84925498991258,0.0328980923388351,0.0538332420090028
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG",49,329,6,2.5714540884164,0.0401425033349173,0.0628317443503054
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG",49,329,6,2.5714540884164,0.0401425033349173,0.0628317443503054
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Shared head/thorax phase DEG",49,329,6,2.5714540884164,0.0401425033349173,0.0628317443503054
+"All samples","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG",26,329,4,3.34153420082609,0.0434268131798704,0.0670013689060857
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG",17,329,3,3.93148995389274,0.0551305360006142,0.0826958040009212
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Shared head/thorax phase DEG",17,329,3,3.93148995389274,0.0551305360006142,0.0826958040009212
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Head phase DEG",17,606,4,2.91612388332079,0.0725377446090775,0.105865897537573
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Head phase DEG",17,606,4,2.91612388332079,0.0725377446090775,0.105865897537573
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Any phase DEG",13,1272,5,2.48869748650354,0.100778133246476,0.141351147930122
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Any phase DEG",13,1272,5,2.48869748650354,0.100778133246476,0.141351147930122
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Any phase DEG",13,1272,5,2.48869748650354,0.100778133246476,0.141351147930122
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Any phase DEG",17,1272,6,2.17247407687919,0.10761703059104,0.147122016504207
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Any phase DEG",17,1272,6,2.17247407687919,0.10761703059104,0.147122016504207
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG",17,995,5,2.23827448465282,0.115397210502512,0.153862947336682
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG",17,995,5,2.23827448465282,0.115397210502512,0.153862947336682
+"All samples","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG",49,995,11,1.55696787092633,0.136722045487547,0.175785487055418
+"Current outliers removed","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG",49,995,11,1.55696787092633,0.136722045487547,0.175785487055418
+"Expanded outlier set","Diet contrasts among infected","Infected 33 vs 50","Thorax phase DEG",49,995,11,1.55696787092633,0.136722045487547,0.175785487055418
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG",13,329,2,3.32721160052649,0.144269757119714,0.179093491596886
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG",13,329,2,3.32721160052649,0.144269757119714,0.179093491596886
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Shared head/thorax phase DEG",13,329,2,3.32721160052649,0.144269757119714,0.179093491596886
+"All samples","Diet contrasts among control","Control 83 vs 50","Any phase DEG",26,1272,7,1.46630288252662,0.256884360252062,0.315267169400259
+"All samples","Diet contrasts among control","Control 83 vs 50","Thorax phase DEG",26,995,5,1.27700182265835,0.389701383197236,0.472896060509005
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Thorax phase DEG",13,995,2,0.974092817275496,0.629864627244947,0.739406301548416
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Thorax phase DEG",13,995,2,0.974092817275496,0.629864627244947,0.739406301548416
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Thorax phase DEG",13,995,2,0.974092817275496,0.629864627244947,0.739406301548416
+"All samples","Diet contrasts among control","Control 33 vs 50","Any phase DEG",1,1272,0,0,1,1
+"All samples","Diet contrasts among control","Control 33 vs 50","Head phase DEG",1,606,0,0,1,1
+"All samples","Diet contrasts among control","Control 33 vs 50","Shared head/thorax phase DEG",1,329,0,0,1,1
+"All samples","Diet contrasts among control","Control 33 vs 50","Thorax phase DEG",1,995,0,0,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 50","Any phase DEG",0,1272,0,0,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 50","Head phase DEG",0,606,0,0,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 50","Shared head/thorax phase DEG",0,329,0,0,1,1
+"All samples","Diet contrasts among infected","Infected 83 vs 50","Thorax phase DEG",0,995,0,0,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 50","Any phase DEG",0,1272,0,0,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 50","Head phase DEG",0,606,0,0,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 50","Shared head/thorax phase DEG",0,329,0,0,1,1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 50","Thorax phase DEG",0,995,0,0,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 50","Any phase DEG",0,1272,0,0,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 50","Head phase DEG",0,606,0,0,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 50","Shared head/thorax phase DEG",0,329,0,0,1,1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 50","Thorax phase DEG",0,995,0,0,1,1

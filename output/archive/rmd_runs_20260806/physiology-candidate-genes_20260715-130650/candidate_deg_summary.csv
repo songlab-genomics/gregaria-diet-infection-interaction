@@ -1,0 +1,98 @@
+"scenario","comparison_type","comparison","themes","direction","n_candidate_degs"
+"All samples","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Downregulated",2
+"All samples","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Upregulated",4
+"All samples","Diet contrasts among control","Control 83 vs 33","Immune and stress response","Upregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 33","Protein and amino-acid availability","Upregulated",3
+"All samples","Diet contrasts among control","Control 83 vs 50","Energy stores and starvation resistance","Upregulated",4
+"All samples","Diet contrasts among control","Control 83 vs 50","Immune and stress response","Upregulated",1
+"All samples","Diet contrasts among control","Control 83 vs 50","Protein and amino-acid availability","Upregulated",5
+"All samples","Diet contrasts among infected","Infected 50 vs 33","Energy stores and starvation resistance","Upregulated",5
+"All samples","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Downregulated",1
+"All samples","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Upregulated",9
+"All samples","Diet contrasts among infected","Infected 50 vs 33","Protein and amino-acid availability","Upregulated",9
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Downregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Immune and stress response","Upregulated",1
+"All samples","Diet contrasts among infected","Infected 83 vs 33","Protein and amino-acid availability","Upregulated",1
+"All samples","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Downregulated",19
+"All samples","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Upregulated",21
+"All samples","Infection within diet","Diet 33: infected vs control","Immune and stress response","Downregulated",12
+"All samples","Infection within diet","Diet 33: infected vs control","Immune and stress response","Upregulated",24
+"All samples","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Downregulated",13
+"All samples","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Upregulated",44
+"All samples","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Downregulated",26
+"All samples","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Upregulated",37
+"All samples","Infection within diet","Diet 50: infected vs control","Immune and stress response","Downregulated",24
+"All samples","Infection within diet","Diet 50: infected vs control","Immune and stress response","Upregulated",50
+"All samples","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Downregulated",15
+"All samples","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Upregulated",63
+"All samples","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Downregulated",11
+"All samples","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Upregulated",14
+"All samples","Infection within diet","Diet 83: infected vs control","Immune and stress response","Downregulated",3
+"All samples","Infection within diet","Diet 83: infected vs control","Immune and stress response","Upregulated",21
+"All samples","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Downregulated",6
+"All samples","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Upregulated",25
+"Current outliers removed","Diet contrasts among control","Control 50 vs 33","Immune and stress response","Downregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Downregulated",1
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Upregulated",3
+"Current outliers removed","Diet contrasts among control","Control 83 vs 33","Protein and amino-acid availability","Upregulated",4
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Energy stores and starvation resistance","Upregulated",2
+"Current outliers removed","Diet contrasts among control","Control 83 vs 50","Protein and amino-acid availability","Upregulated",4
+"Current outliers removed","Diet contrasts among infected","Infected 50 vs 33","Energy stores and starvation resistance","Upregulated",5
+"Current outliers removed","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Downregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Upregulated",9
+"Current outliers removed","Diet contrasts among infected","Infected 50 vs 33","Protein and amino-acid availability","Upregulated",9
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Downregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Upregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Immune and stress response","Upregulated",1
+"Current outliers removed","Diet contrasts among infected","Infected 83 vs 33","Protein and amino-acid availability","Upregulated",1
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Downregulated",20
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Upregulated",17
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Immune and stress response","Downregulated",9
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Immune and stress response","Upregulated",21
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Downregulated",11
+"Current outliers removed","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Upregulated",38
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Downregulated",16
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Upregulated",35
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Immune and stress response","Downregulated",22
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Immune and stress response","Upregulated",53
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Downregulated",12
+"Current outliers removed","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Upregulated",62
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Downregulated",11
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Upregulated",14
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Immune and stress response","Downregulated",3
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Immune and stress response","Upregulated",21
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Downregulated",6
+"Current outliers removed","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Upregulated",25
+"Expanded outlier set","Diet contrasts among control","Control 50 vs 33","Immune and stress response","Downregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Downregulated",1
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Energy stores and starvation resistance","Upregulated",3
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 33","Protein and amino-acid availability","Upregulated",4
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Energy stores and starvation resistance","Upregulated",2
+"Expanded outlier set","Diet contrasts among control","Control 83 vs 50","Protein and amino-acid availability","Upregulated",4
+"Expanded outlier set","Diet contrasts among infected","Infected 50 vs 33","Energy stores and starvation resistance","Upregulated",5
+"Expanded outlier set","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Downregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 50 vs 33","Immune and stress response","Upregulated",9
+"Expanded outlier set","Diet contrasts among infected","Infected 50 vs 33","Protein and amino-acid availability","Upregulated",9
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Downregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Energy stores and starvation resistance","Upregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Immune and stress response","Upregulated",1
+"Expanded outlier set","Diet contrasts among infected","Infected 83 vs 33","Protein and amino-acid availability","Upregulated",1
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Downregulated",20
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Energy stores and starvation resistance","Upregulated",17
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Immune and stress response","Downregulated",9
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Immune and stress response","Upregulated",21
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Downregulated",11
+"Expanded outlier set","Infection within diet","Diet 33: infected vs control","Protein and amino-acid availability","Upregulated",38
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Downregulated",16
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Energy stores and starvation resistance","Upregulated",35
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Immune and stress response","Downregulated",22
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Immune and stress response","Upregulated",53
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Downregulated",12
+"Expanded outlier set","Infection within diet","Diet 50: infected vs control","Protein and amino-acid availability","Upregulated",62
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Downregulated",11
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Energy stores and starvation resistance","Upregulated",14
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Immune and stress response","Downregulated",3
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Immune and stress response","Upregulated",21
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Downregulated",6
+"Expanded outlier set","Infection within diet","Diet 83: infected vs control","Protein and amino-acid availability","Upregulated",25

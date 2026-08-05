@@ -1,0 +1,949 @@
+gene_id	seqid	sequence_length	description	gene_biotype	mapping_support	n_contrasts	contrasts	min_padj	max_abs_log2FoldChange	competitive_host_retained_fraction	host_counts_not_retained
+LOC126304650	NW_026061732.1	395514	uncharacterized LOC126304650	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380271566047917	5.889856257356219	1.0	0.0
+LOC126304653	NW_026061732.1	395514	cyclic GMP-binding protein C-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430592718248711	5.794381139707334	1.0	0.0
+LOC126304666	NW_026061732.1	395514	uncharacterized LOC126304666	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0139267445372453	6.598506339541848	1.0	0.0
+LOC126304673	NW_026061732.1	395514	SCF ubiquitin ligase complex protein SKP1b-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449187727964838	6.4054662556486495	1.0	0.0
+LOC126304682	NW_026061732.1	395514	uncharacterized LOC126304682	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0304273212136565	6.119837673195303	1.0	0.0
+LOC126304685	NW_026061732.1	395514	F-actin-capping protein subunit alpha-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	5.759180917382306	1.0	0.0
+LOC126304689	NW_026061732.1	395514	actin, plasmodial isoform-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0264374497232303	5.206039321843789	0.9995782738311642	29.0
+LOC126304692	NW_026061732.1	395514	uncharacterized LOC126304692	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_average_all_diets	0.0448417216968317	5.885903257417209	1.0	0.0
+LOC126304701	NW_026061732.1	395514	uncharacterized LOC126304701	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307217240803232	6.351802653021625	1.0	0.0
+LOC126304702	NW_026061732.1	395514	60S ribosomal protein L34-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0238128386524711	6.242735261921967	1.0	0.0
+LOC126304713	NW_026061732.1	395514	general transcription and DNA repair factor IIH helicase subunit XPB-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.724588606685287	1.0	0.0
+LOC126304721	NW_026061732.1	395514	S-adenosylmethionine synthase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	6.172208558162599	1.0	0.0
+LOC126304722	NW_026061732.1	395514	putative protein TPRXL	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0333084731359573	6.056381895093934	1.0	0.0
+LOC126304732	NW_026061732.1	395514	phosphatidate phosphatase LPIN3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.170595131618833	1.0	0.0
+LOC126304739	NW_026061732.1	395514	uncharacterized LOC126304739	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.513430987411545e-21	22.245677493476173	1.0	0.0
+LOC126304741	NW_026061732.1	395514	probable chitinase 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0470294434674024	5.851238716433116	1.0	0.0
+LOC126304742	NW_026061732.1	395514	filamin-C-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0363211010092351	5.986312598592844	1.0	0.0
+LOC126304744	NW_026061732.1	395514	ras-related protein rapA-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0396014799737801	5.345640894246915	1.0	0.0
+LOC126304746	NW_026061732.1	395514	protein aubergine-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0301340179287213	6.4213533748514395	1.0	0.0
+LOC126304749	NW_026061732.1	395514	uncharacterized LOC126304749	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	5.118557419872599	1.0	0.0
+LOC126304750	NW_026061732.1	395514	ATP-dependent zinc metalloprotease FtsH-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.289205712606315	1.0	0.0
+LOC126304751	NW_026061732.1	395514	crustapain-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.977054960980428	1.0	0.0
+LOC126304753	NW_026061732.1	395514	uncharacterized LOC126304753	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0344466040260539	6.5701430811203165	1.0	0.0
+LOC126304757	NW_026061732.1	395514	uncharacterized LOC126304757	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0400044084584899	5.70451280125073	1.0	0.0
+LOC126304758	NW_026061732.1	395514	adenosylhomocysteinase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.043939976915736	5.967654988830525	1.000667556742323	-1.0
+LOC126304759	NW_026061732.1	395514	eukaryotic peptide chain release factor subunit 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0243808454651399	6.696997014456989	1.0	0.0
+LOC126304760	NW_026061732.1	395514	uncharacterized LOC126304760	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	5.572642201426187	1.0	0.0
+LOC126304762	NW_026061732.1	395514	branchpoint-bridging protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351986125474578	5.595377900382879	1.0	0.0
+LOC126304763	NW_026061732.1	395514	thioredoxin reductase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	6.368933688070398	1.0	0.0
+LOC126304764	NW_026061732.1	395514	trafficking protein particle complex subunit 12-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0232004788453257	7.118713846926923	1.0	0.0
+LOC126304766	NW_026061732.1	395514	actin-related protein 2/3 complex subunit 5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0477936458830511	5.522959276837562	1.0	0.0
+LOC126304767	NW_026061732.1	395514	uncharacterized LOC126304767	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0333084731359573	5.749619841845071	1.0	0.0
+LOC126304973	NW_026061743.1	149608	uncharacterized LOC126304973	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0335615833036042	5.62259319679701	1.0	0.0
+LOC126304974	NW_026061743.1	149608	rasGAP-activating-like protein 1	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	6.009524971753298	1.0	0.0
+LOC126304976	NW_026061743.1	149608	puromycin-sensitive aminopeptidase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0306433873497688	6.201857987920959	1.0	0.0
+LOC126304977	NW_026061743.1	149608	dnaJ homolog subfamily C member 21-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.136260534620497	1.0	0.0
+LOC126304978	NW_026061743.1	149608	ribonucleoside-diphosphate reductase small subunit-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.6963047386316514e-27	23.358368436227455	1.0	0.0
+LOC126304986	NW_026061743.1	149608	myotubularin-related protein 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	6.154570389936268	1.0	0.0
+LOC126304987	NW_026061743.1	149608	uncharacterized LOC126304987	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.5970225760672247e-18	21.441104454472153	1.0	0.0
+LOC126304991	NW_026061743.1	149608	protein BTG2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390194780945143	6.161176620248246	1.0	0.0
+LOC126304995	NW_026061743.1	149608	uncharacterized LOC126304995	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0397892210581392	5.520005839736213	1.0	0.0
+LOC126304997	NW_026061743.1	149608	ras guanine nucleotide exchange factor S-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0353795471488059	5.651368115346646	1.0	0.0
+LOC126305002	NW_026061743.1	149608	glucosamine 6-phosphate N-acetyltransferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0232739527824719	6.536961220828887	1.0	0.0
+LOC126305007	NW_026061743.1	149608	arpin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0425021315713419	5.329545715561191	1.0	0.0
+LOC126305015	NW_026061743.1	149608	uncharacterized LOC126305015	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0403143602900636	5.8248113575068015	1.0	0.0
+LOC126311186	NW_026061838.1	218639	dynamin-like protein A	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.6046889634507995	1.0	0.0
+LOC126311187	NW_026061838.1	218639	uncharacterized LOC126311187	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0470294434674024	5.435681495637833	1.0	0.0
+LOC126311194	NW_026061838.1	218639	uncharacterized LOC126311194	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0482189354468444	5.42519233148846	1.0	0.0
+LOC126311195	NW_026061838.1	218639	malonate-semialdehyde dehydrogenase 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390612391363319	5.900202526522947	1.0	0.0
+LOC126311198	NW_026061838.1	218639	tubulin beta chain-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0326878505963037	6.824380319249032	1.0	0.0
+LOC126311199	NW_026061838.1	218639	uncharacterized LOC126311199	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.25351574085367	1.0	0.0
+LOC126311202	NW_026061838.1	218639	uncharacterized LOC126311202	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380271566047917	6.0390654835671125	1.0	0.0
+LOC126311203	NW_026061838.1	218639	elongation of fatty acids protein sre1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.8107703387371865	1.0	0.0
+LOC126311213	NW_026061838.1	218639	uncharacterized LOC126311213	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	5.501742205524381	1.0	0.0
+LOC126311215	NW_026061838.1	218639	uncharacterized LOC126311215	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0314842647526097	5.918582630584786	1.0	0.0
+LOC126311216	NW_026061838.1	218639	uncharacterized LOC126311216	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0328361998245162	5.871508341250736	1.0	0.0
+LOC126311218	NW_026061838.1	218639	uncharacterized LOC126311218	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485695363987296	5.828680781157852	1.0	0.0
+LOC126311220	NW_026061838.1	218639	uncharacterized LOC126311220	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.3754021691219624e-26	22.331199065047848	1.0	0.0
+LOC126311224	NW_026061838.1	218639	phosphate carrier protein, mitochondrial-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0276924283757612	6.197140389558924	1.0	0.0
+LOC126311232	NW_026061838.1	218639	uncharacterized LOC126311232	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.902025959149374e-26	22.26430902534445	1.0	0.0
+LOC126311233	NW_026061838.1	218639	uncharacterized LOC126311233	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.0320158805385695	1.0	0.0
+LOC126311234	NW_026061838.1	218639	kinase and exchange factor for Rac B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.217419989115175	1.0	0.0
+LOC126311239	NW_026061838.1	218639	uncharacterized LOC126311239	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.7893678878857235	1.0	0.0
+LOC126311241	NW_026061838.1	218639	26S proteasome non-ATPase regulatory subunit 6-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0319954514525205	6.612779094257703	1.0	0.0
+LOC126311243	NW_026061838.1	218639	uncharacterized LOC126311243	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.29939308429904	1.0	0.0
+LOC126311246	NW_026061838.1	218639	ribosome biogenesis protein BOP1 homolog	protein_coding	Significant in both mappings	4	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33	0.0010409412650676	8.57406963273865	1.0	0.0
+LOC126311252	NW_026061838.1	218639	uncharacterized LOC126311252	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.3647934660300874e-18	22.266760184978192	1.0	0.0
+LOC126311254	NW_026061838.1	218639	uncharacterized LOC126311254	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430467420458379	6.033516258601542	1.0	0.0
+LOC126313301	NW_026061886.1	283099	uncharacterized LOC126313301	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0346801332403875	5.882207920035381	1.0	0.0
+LOC126313304	NW_026061886.1	283099	uncharacterized LOC126313304	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.296512739184747	1.0	0.0
+LOC126313306	NW_026061886.1	283099	uncharacterized LOC126313306	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382631983743167	5.650201191758633	1.0	0.0
+LOC126313313	NW_026061886.1	283099	uncharacterized LOC126313313	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0492901416040655	5.070952683255324	1.0	0.0
+LOC126313315	NW_026061886.1	283099	histone H1.1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	6.143422614951785	1.0	0.0
+LOC126313318	NW_026061886.1	283099	nucleoside diphosphate kinase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.041749485800631	5.889569290447205	1.0	0.0
+LOC126313321	NW_026061886.1	283099	60S ribosomal protein L8-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0227431243094957	6.617319045225389	1.0	0.0
+LOC126313323	NW_026061886.1	283099	uncharacterized LOC126313323	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.0593089637395368e-21	22.755945252305803	1.0	0.0
+LOC126313327	NW_026061886.1	283099	uncharacterized LOC126313327	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.966459202412354	1.0	0.0
+LOC126313328	NW_026061886.1	283099	uncharacterized LOC126313328	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0403164128974091	5.773848399068803	1.0	0.0
+LOC126313334	NW_026061886.1	283099	uncharacterized LOC126313334	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0345290919622028	5.814537955985214	1.0	0.0
+LOC126313336	NW_026061886.1	283099	uncharacterized LOC126313336	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0203524784662056	6.989373513198465	1.0	0.0
+LOC126313340	NW_026061886.1	283099	26S proteasome regulatory subunit 10B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351986125474578	5.98486148480216	1.0	0.0
+LOC126313349	NW_026061886.1	283099	uncharacterized LOC126313349	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0294853857290474	6.151179135622415	1.0	0.0
+LOC126313356	NW_026061886.1	283099	hydroxysteroid dehydrogenase-like protein 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.783046714348789	1.0	0.0
+LOC126313357	NW_026061886.1	283099	uncharacterized LOC126313357	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479858271633482	5.44776492478024	1.0	0.0
+LOC126313363	NW_026061886.1	283099	AP-1 complex subunit beta-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307957396784762	6.019378320532533	1.0	0.0
+LOC126313364	NW_026061886.1	283099	counting factor 60-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.987776523700573	1.0	0.0
+LOC126313366	NW_026061886.1	283099	3-hydroxybutyryl-CoA dehydrogenase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	5.984079042977761	1.0	0.0
+LOC126313367	NW_026061886.1	283099	uncharacterized LOC126313367	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275088540800155	6.583349312886857	1.0	0.0
+LOC126313369	NW_026061886.1	283099	CAP-Gly domain-containing linker protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.521985302678152	1.0	0.0
+LOC126313371	NW_026061886.1	283099	RNA cytidine acetyltransferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0378192738882803	6.7822509821696695	1.0	0.0
+LOC126313372	NW_026061886.1	283099	uncharacterized LOC126313372	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0400641249678961	5.244986740518017	1.0	0.0
+LOC126313375	NW_026061886.1	283099	rapA guanosine triphosphatase-activating protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.3935114743147725	1.0	0.0
+LOC126313386	NW_026061886.1	283099	cleavage stimulation factor subunit 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0078787576878556	7.860861885444342	1.0	0.0
+LOC126313387	NW_026061886.1	283099	ER membrane protein complex subunit 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0339546106696041	6.303416770765886	1.0	0.0
+LOC126313393	NW_026061886.1	283099	uncharacterized LOC126313393	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.041749485800631	6.070488142160712	1.0	0.0
+LOC126313394	NW_026061886.1	283099	uncharacterized LOC126313394	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0400249925805896	5.784176327345403	1.0	0.0
+LOC126313397	NW_026061886.1	283099	uncharacterized LOC126313397	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.975920137292021	1.0	0.0
+LOC126313408	NW_026061886.1	283099	uncharacterized LOC126313408	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.8033084001065293e-24	22.908527545424157	1.0	0.0
+LOC126314408	NW_026061953.1	216778	uncharacterized LOC126314408	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0083680392990138	8.235692207714049	1.0	0.0
+LOC126314411	NW_026061953.1	216778	uncharacterized LOC126314411	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0132310048420892	7.364612936410041	1.0	0.0
+LOC126314418	NW_026061953.1	216778	DNA repair protein RAD50-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390194780945143	5.638121508732065	1.0	0.0
+LOC126314419	NW_026061953.1	216778	uncharacterized LOC126314419	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0215593980116681	7.525282554429171	1.0	0.0
+LOC126314420	NW_026061953.1	216778	protein HID1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.339021512488266	1.0	0.0
+LOC126314423	NW_026061953.1	216778	NPC intracellular cholesterol transporter 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0097176572605579	8.557871119028606	1.0	0.0
+LOC126314424	NW_026061953.1	216778	trafficking protein particle complex subunit 3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.420261815759318	1.0	0.0
+LOC126314426	NW_026061953.1	216778	uncharacterized LOC126314426	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0284134621615519	6.748335584421956	1.0	0.0
+LOC126314427	NW_026061953.1	216778	gem-associated protein 5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325370503797891	5.9986009789743004	1.0	0.0
+LOC126314430	NW_026061953.1	216778	uncharacterized LOC126314430	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.088020048914265	1.0	0.0
+LOC126314433	NW_026061953.1	216778	vam6/Vps39-like protein	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0338102889541811	5.71876365760849	1.0	0.0
+LOC126314438	NW_026061953.1	216778	probable RNA-binding protein 19	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	9.897809502688436e-19	21.812140348445105	1.0	0.0
+LOC126314439	NW_026061953.1	216778	uncharacterized LOC126314439	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.37905220666083	1.0	0.0
+LOC126314440	NW_026061953.1	216778	uncharacterized LOC126314440	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320836396263404	6.481868111940867	1.0	0.0
+LOC126314441	NW_026061953.1	216778	ras guanine nucleotide exchange factor A-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0298300930840483	7.317257839637439	1.0	0.0
+LOC126314447	NW_026061953.1	216778	uncharacterized LOC126314447	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0497449900671885	4.902866553257959	1.0	0.0
+LOC126314450	NW_026061953.1	216778	E3 ubiquitin-protein transferase MAEA-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.09376710637884	1.0	0.0
+LOC126314452	NW_026061953.1	216778	proteasome subunit beta type-7-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0360329958682104	5.82864674384842	1.0	0.0
+LOC126314456	NW_026061953.1	216778	60S ribosomal protein L9-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.5860676806425175e-27	22.829517565790944	1.0	0.0
+LOC126314457	NW_026061953.1	216778	uncharacterized LOC126314457	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0396014799737801	5.38960341761902	1.0	0.0
+LOC126314458	NW_026061953.1	216778	uncharacterized LOC126314458	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0406979750744332	6.304171806232077	1.0	0.0
+LOC126315207	NW_026061958.1	23566	protein FAN-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0403143602900636	5.510673196019861	1.0	0.0
+LOC126315212	NW_026061958.1	23566	40S ribosomal protein S6-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0416929390496464	5.61960923613772	1.0	0.0
+LOC126315214	NW_026061960.1	597154	uncharacterized LOC126315214	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	5.958717730953385	1.0	0.0
+LOC126315223	NW_026061960.1	597154	ras-related C3 botulinum toxin substrate 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0361421888154404	5.95985148931164	1.0	0.0
+LOC126315224	NW_026061960.1	597154	dual specificity protein kinase shkC-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0243808454651399	6.174222669370643	1.0	0.0
+LOC126315226	NW_026061960.1	597154	tRNA-specific 2-thiouridylase MnmA-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0343776734881589	6.326118612070679	1.0	0.0
+LOC126315227	NW_026061960.1	597154	60S ribosomal protein L11-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0163803452307021	6.949268731316877	1.0	0.0
+LOC126315228	NW_026061960.1	597154	uncharacterized LOC126315228	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380271566047917	5.930270839615598	1.0	0.0
+LOC126315231	NW_026061960.1	597154	regulator of nonsense transcripts 3B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390231295115185	5.52282867515435	0.9972451790633609	1.0
+LOC126315233	NW_026061960.1	597154	ATP-dependent zinc metalloprotease FtsH-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.049732221045085	5.481624053113043	1.0	0.0
+LOC126315234	NW_026061960.1	597154	uncharacterized LOC126315234	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036447267090227	6.049184986093051	1.0	0.0
+LOC126315236	NW_026061960.1	597154	F-box-like/WD repeat-containing protein TBL1X	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.646612957642584	1.0	0.0
+LOC126315238	NW_026061960.1	597154	uncharacterized LOC126315238	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0291720936226063	5.835730481037648	1.0	0.0
+LOC126315241	NW_026061960.1	597154	protease 4-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0113569586722282	7.520219862793993	1.0	0.0
+LOC126315242	NW_026061960.1	597154	uncharacterized LOC126315242	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445931658170337	5.662327216107116	1.0001527883880823	-1.0
+LOC126315245	NW_026061960.1	597154	uncharacterized LOC126315245	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	5.916693821862782	1.0	0.0
+LOC126315246	NW_026061960.1	597154	ankyrin repeat, PH and SEC7 domain containing protein secG-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infected_diet83_vs33;infection_diet33	0.0020438891121073	8.375802444725977	1.0	0.0
+LOC126315248	NW_026061960.1	597154	uncharacterized LOC126315248	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0491059319980224	5.607488212841975	1.0	0.0
+LOC126315249	NW_026061960.1	597154	uncharacterized LOC126315249	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0492901416040655	5.592862455132542	1.0	0.0
+LOC126315252	NW_026061960.1	597154	uncharacterized LOC126315252	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0170957462828739	7.425261919876815	1.0	0.0
+LOC126315266	NW_026061960.1	597154	60 kDa heat shock protein, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0415186263755936	5.594113135120895	1.0	0.0
+LOC126315270	NW_026061960.1	597154	elongin-C-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438300856812304	5.6905898317345	1.0	0.0
+LOC126315271	NW_026061960.1	597154	2-oxoglutarate dehydrogenase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479346653336872	5.9504169016468325	1.0	0.0
+LOC126315275	NW_026061960.1	597154	N-formylmaleamate deformylase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0310810498226754	6.630791820421726	1.0	0.0
+LOC126315278	NW_026061960.1	597154	leucine-rich repeat-containing protein 40-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357613691902037	6.354936457511436	1.0	0.0
+LOC126315280	NW_026061960.1	597154	uncharacterized LOC126315280	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0313673590536372	6.527574175408674	0.9998159057437408	1.0
+LOC126315281	NW_026061960.1	597154	luminal-binding protein 2-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0380142389159576	6.059509265131803	1.0	0.0
+LOC126315282	NW_026061960.1	597154	T-complex protein 1 subunit delta-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.8047481837692215e-26	21.88159441916145	1.0	0.0
+LOC126315283	NW_026061960.1	597154	transitional endoplasmic reticulum ATPase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0284134621615519	6.197556313657688	1.0	0.0
+LOC126315285	NW_026061960.1	597154	actin-related protein 2/3 complex subunit 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	5.63753250528945	1.0	0.0
+LOC126315286	NW_026061960.1	597154	mannose-1-phosphate guanyltransferase beta-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401380936682709	6.473835194607117	1.0	0.0
+LOC126315288	NW_026061960.1	597154	stress-activated protein kinase alpha-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486309641157455	5.591701748488443	1.0	0.0
+LOC126315289	NW_026061960.1	597154	LIM domain kinase 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357613691902037	6.153834033173803	1.0	0.0
+LOC126315292	NW_026061960.1	597154	uncharacterized LOC126315292	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	4.351512616103792e-24	23.656268726864493	1.0	0.0
+LOC126315295	NW_026061960.1	597154	protein AATF-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.94401773760163	1.0	0.0
+LOC126315298	NW_026061960.1	597154	uncharacterized LOC126315298	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0291205680397999	6.989778919618526	1.0	0.0
+LOC126315304	NW_026061960.1	597154	ras-specific guanine nucleotide-releasing factor 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0150343879387922	7.304647589451418	1.0	0.0
+LOC126315308	NW_026061960.1	597154	uncharacterized LOC126315308	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0216963074180597	6.184296647612502	1.0	0.0
+LOC126315309	NW_026061960.1	597154	folic acid synthesis protein FOL1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485695363987296	5.641748523396769	1.0	0.0
+LOC126315314	NW_026061960.1	597154	probable N-acetyl-LL-diaminopimelate aminotransferase	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0333084731359573	6.058808526637176	1.0	0.0
+LOC126315316	NW_026061960.1	597154	isocitrate dehydrogenase [NAD] regulatory subunit B, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0227281602756154	7.961701554991009	1.0	0.0
+LOC126315321	NW_026061960.1	597154	copine-9-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0462775836482765	5.385573952299867	1.0	0.0
+LOC126315322	NW_026061960.1	597154	5'-3' exonuclease PLD3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.778291324405706	1.0	0.0
+LOC126315324	NW_026061960.1	597154	uncharacterized LOC126315324	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.585948920820059	1.0	0.0
+LOC126315335	NW_026061960.1	597154	talin-B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0461759331197143	5.279971991824308	1.0001140380887217	-1.0
+LOC126315336	NW_026061960.1	597154	uncharacterized LOC126315336	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.666991616204743	1.0	0.0
+LOC126315337	NW_026061960.1	597154	probable lysosomal cobalamin transporter	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0263515144023505	7.176320582213954	1.0	0.0
+LOC126315341	NW_026061960.1	597154	uncharacterized LOC126315341	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0244435034006229	6.683931097808203	1.0	0.0
+LOC126315347	NW_026061960.1	597154	metaxin-3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0348768773580783	6.1508732594230535	1.0	0.0
+LOC126315349	NW_026061960.1	597154	citrate synthase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307087434168987	5.957121828620764	1.0	0.0
+LOC126315352	NW_026061960.1	597154	uncharacterized LOC126315352	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0160765622006882	7.546274740738384	1.0	0.0
+LOC126315353	NW_026061960.1	597154	26S proteasome regulatory subunit 6A-B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.258235170339835	1.0	0.0
+LOC126315356	NW_026061960.1	597154	uncharacterized LOC126315356	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0469470842316004	6.301350269368646	1.0	0.0
+LOC126315357	NW_026061960.1	597154	uncharacterized LOC126315357	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.934712495720539	1.0	0.0
+LOC126315358	NW_026061960.1	597154	uncharacterized LOC126315358	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.027764770091685	6.626603772327806	1.0	0.0
+LOC126315362	NW_026061960.1	597154	malate dehydrogenase-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0127841548169815	7.673544956256868	1.0	0.0
+LOC126315373	NW_026061960.1	597154	uncharacterized LOC126315373	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.041749485800631	5.721685418039577	1.0	0.0
+LOC126315375	NW_026061960.1	597154	uncharacterized LOC126315375	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0478105615664705	5.252132287503918	1.0	0.0
+LOC126315376	NW_026061960.1	597154	RING-box protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.023236374451806	6.319188589945808	1.0	0.0
+LOC126315379	NW_026061960.1	597154	ankyrin-1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.750495529326082	1.0	0.0
+LOC126315382	NW_026061960.1	597154	uncharacterized LOC126315382	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	5.750283877074824	1.0	0.0
+LOC126315390	NW_026061960.1	597154	chitinase domain-containing protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0419723344029543	5.469512324970581	1.0	0.0
+LOC126315403	NW_026061960.1	597154	uncharacterized LOC126315403	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0243808454651399	7.270612769665713	1.0	0.0
+LOC126315407	NW_026061960.1	597154	uncharacterized LOC126315407	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0452354216269371	5.94170000241176	1.0	0.0
+LOC126315409	NW_026061960.1	597154	ATPase family protein 2 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.762597927533064	1.0	0.0
+LOC126315412	NW_026061960.1	597154	protein FAM50A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.273596144137434	1.0	0.0
+LOC126315417	NW_026061960.1	597154	uncharacterized LOC126315417	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0015350748175591	8.652465674041174	1.0	0.0
+LOC126315424	NW_026061960.1	597154	uncharacterized LOC126315424	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357941894989518	6.304233692677275	1.0	0.0
+LOC126315425	NW_026061960.1	597154	uncharacterized LOC126315425	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0483461922709452	5.754280770952896	1.0	0.0
+LOC126315429	NW_026061960.1	597154	protein pirA-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.017723747029042	6.951125232029993	1.0	0.0
+LOC126315433	NW_026061960.1	597154	uncharacterized CDP-alcohol phosphatidyltransferase class-I family protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.402748070227458	1.0	0.0
+LOC126315440	NW_026061960.1	597154	probable methionine--tRNA ligase, cytoplasmic	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0325845808569807	6.009252280179121	1.0	0.0
+LOC126315447	NW_026061960.1	597154	uncharacterized LOC126315447	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0268778720515373	6.2758567387348565	1.0	0.0
+LOC126315451	NW_026061960.1	597154	uncharacterized LOC126315451	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0328361998245162	6.142166170284553	1.0	0.0
+LOC126315453	NW_026061960.1	597154	uncharacterized LOC126315453	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493028809546405	5.418165490202655	1.0	0.0
+LOC126316437	NW_026061974.1	122239	probable phosphoglucomutase-2	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0325845808569807	6.371236663811129	0.999657416923604	1.0
+LOC126316439	NW_026061974.1	122239	uncharacterized LOC126316439	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0424356524363925	6.128936878369948	1.0	0.0
+LOC126316443	NW_026061974.1	122239	uncharacterized LOC126316443	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.141171405823439	1.0	0.0
+LOC126316445	NW_026061974.1	122239	exocyst complex component 7-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0491690630392757	5.563633578100425	1.0	0.0
+LOC126316446	NW_026061974.1	122239	uncharacterized LOC126316446	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.3957320293472	1.0	0.0
+LOC126316449	NW_026061974.1	122239	uncharacterized LOC126316449	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.032554069547961	1.0	0.0
+LOC126316453	NW_026061974.1	122239	actin-related protein 10-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0425021315713419	6.1983372561831915	1.0	0.0
+LOC126316454	NW_026061974.1	122239	uncharacterized protein DDB_G0288133-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0406979750744332	5.792806488216957	1.0	0.0
+LOC126316455	NW_026061974.1	122239	uncharacterized LOC126316455	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0305144922116161	6.4359984539695665	1.0	0.0
+LOC126316460	NW_026061974.1	122239	GPI transamidase component PIG-T-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0470294434674024	5.419839665462978	1.0	0.0
+LOC126316667	NW_026061985.1	114926	uncharacterized LOC126316667	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275088540800155	6.963583970410823	1.0	0.0
+LOC126316668	NW_026061985.1	114926	uncharacterized LOC126316668	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.038741956790635e-25	22.99115274620064	1.0	0.0
+LOC126316669	NW_026061985.1	114926	protein Aster-A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0364579541378434	6.171643068791403	1.0	0.0
+LOC126316674	NW_026061985.1	114926	dipeptidyl aminopeptidase BI-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445130237845242	5.612305631068952	1.0	0.0
+LOC126316675	NW_026061985.1	114926	uncharacterized LOC126316675	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390194780945143	5.978905441778051	1.0	0.0
+LOC126316678	NW_026061985.1	114926	uncharacterized LOC126316678	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380271566047917	6.037710418998866	1.0	0.0
+LOC126316679	NW_026061985.1	114926	anaphase-promoting complex subunit 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0473867269112177	5.3223994910699775	1.0	0.0
+LOC126316685	NW_026061985.1	114926	uncharacterized LOC126316685	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.502930775008318	1.0	0.0
+LOC126316686	NW_026061985.1	114926	uncharacterized LOC126316686	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0490364262657194	5.672246106237384	1.0	0.0
+LOC126316687	NW_026061985.1	114926	proton-coupled amino acid transporter 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.759386012024708	1.0	0.0
+LOC126316689	NW_026061985.1	114926	eukaryotic peptide chain release factor GTP-binding subunit ERF3A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0412055290715718	6.073489761079391	1.0	0.0
+LOC126316698	NW_026061985.1	114926	uncharacterized LOC126316698	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0481433380043141	5.300616434893958	1.0	0.0
+LOC126316701	NW_026061988.1	376478	dynamin-A-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275088540800155	7.058075879959512	1.0	0.0
+LOC126316702	NW_026061988.1	376478	tRNA uridine 5-carboxymethylaminomethyl modification enzyme MnmG-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414475396635705	6.6076927008385615	1.0	0.0
+LOC126316708	NW_026061988.1	376478	zinc finger protein 622-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.659349081991079	1.0	0.0
+LOC126316712	NW_026061988.1	376478	uncharacterized LOC126316712	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	6.670732067042566	1.0012048192771084	-1.0
+LOC126316726	NW_026061988.1	376478	transcription elongation factor SPT5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.040527906224012	5.871552065691173	1.0	0.0
+LOC126316736	NW_026061988.1	376478	ribonucleoside-diphosphate reductase large subunit-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0342210450333798	6.004095614091269	1.0	0.0
+LOC126316737	NW_026061988.1	376478	uncharacterized LOC126316737	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.052141280465405	1.0	0.0
+LOC126316738	NW_026061988.1	376478	glucose-6-phosphate 1-dehydrogenase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0436818996077291	5.5712354031161375	1.0	0.0
+LOC126316741	NW_026061988.1	376478	uncharacterized LOC126316741	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.331433889488931	1.0	0.0
+LOC126316744	NW_026061988.1	376478	uncharacterized LOC126316744	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.029209411753529	6.510999413612585	1.0	0.0
+LOC126316747	NW_026061988.1	376478	T-cell activation inhibitor, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320284294124798	6.160473017136737	1.0	0.0
+LOC126316751	NW_026061988.1	376478	dolichyl-diphosphooligosaccharide--protein glycosyltransferase subunit 1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	4.999423647069763e-27	22.70618539679793	1.0	0.0
+LOC126316754	NW_026061988.1	376478	uncharacterized LOC126316754	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0334551510057822	6.174766634642286	1.0	0.0
+LOC126316761	NW_026061988.1	376478	trimethyllysine dioxygenase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0270926660165698	6.309089970956405	1.0	0.0
+LOC126316762	NW_026061988.1	376478	uncharacterized LOC126316762	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389818584399979	6.014657742473467	1.0	0.0
+LOC126316764	NW_026061988.1	376478	probable serine incorporator	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.085568015537077	1.0	0.0
+LOC126316772	NW_026061988.1	376478	brefeldin A-inhibited guanine nucleotide-exchange protein 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.96199675880248	1.0	0.0
+LOC126316773	NW_026061988.1	376478	uncharacterized LOC126316773	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.853136977916458	1.0	0.0
+LOC126316776	NW_026061988.1	376478	uncharacterized LOC126316776	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.266987776173889	1.0	0.0
+LOC126316781	NW_026061988.1	376478	protein pirA-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036694776429566	5.804791358064847	1.0	0.0
+LOC126316786	NW_026061988.1	376478	nck-associated protein 1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0371928674800214	6.222064373319886	1.0	0.0
+LOC126316788	NW_026061988.1	376478	serine-rich adhesin for platelets-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0135716980851575	7.71355984920072	1.0	0.0
+LOC126316795	NW_026061988.1	376478	uncharacterized LOC126316795	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0397463442871822	5.8883977700382895	1.0	0.0
+LOC126316796	NW_026061988.1	376478	uncharacterized LOC126316796	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0316620464311642	6.332764579602586	1.0	0.0
+LOC126316800	NW_026061988.1	376478	ER membrane protein complex subunit 2-A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351431772545874	5.683967507586729	1.0	0.0
+LOC126316806	NW_026061988.1	376478	serine/threonine-protein kinase pakC-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.010610770650915	1.0	0.0
+LOC126316808	NW_026061988.1	376478	importin-5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	5.966975983051814	1.0	0.0
+LOC126316821	NW_026061988.1	376478	dedicator of cytokinesis protein 11-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0415799488984808	5.266534524472011	1.0	0.0
+LOC126316823	NW_026061988.1	376478	dedicator of cytokinesis protein 9-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0452354216269371	5.288889047508606	1.0	0.0
+LOC126316825	NW_026061988.1	376478	DNA replication licensing factor MCM2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0350509387122826	6.4353920371569595	1.0	0.0
+LOC126316833	NW_026061988.1	376478	uncharacterized LOC126316833	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.256197935587408	1.0	0.0
+LOC126316834	NW_026061988.1	376478	HBS1-like protein	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.8047481837692215e-26	22.47702214826259	1.0	0.0
+LOC126316907	NW_026062003.1	342834	uncharacterized LOC126316907	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0436307355304067	5.578270176032044	1.0	0.0
+LOC126316911	NW_026062003.1	342834	uncharacterized LOC126316911	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.412898234926131	1.0	0.0
+LOC126316912	NW_026062003.1	342834	calcium/calmodulin-dependent protein kinase type 1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	8.319153443716356e-23	22.638353362367155	1.0	0.0
+LOC126316916	NW_026062003.1	342834	uncharacterized LOC126316916	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.31912211025721	1.0	0.0
+LOC126316920	NW_026062003.1	342834	6-phosphogluconate dehydrogenase, decarboxylating-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.631496846623224	1.0	0.0
+LOC126316928	NW_026062003.1	342834	uncharacterized LOC126316928	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0453327570438599	5.320050405648917	1.0	0.0
+LOC126316931	NW_026062003.1	342834	ankyrin repeat, PH and SEC7 domain containing protein secG-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	6.168332273352203	1.0	0.0
+LOC126316935	NW_026062003.1	342834	coatomer subunit beta'-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351431772545874	6.01628152579551	1.0	0.0
+LOC126316939	NW_026062003.1	342834	ATP-binding cassette sub-family F member 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.24049056931902	1.0	0.0
+LOC126316945	NW_026062003.1	342834	uncharacterized LOC126316945	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320284294124798	6.218416533972654	1.0	0.0
+LOC126316947	NW_026062003.1	342834	elongator complex protein 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0284149760204965	6.90198005427484	1.0	0.0
+LOC126316951	NW_026062003.1	342834	conserved oligomeric Golgi complex subunit 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.560595240149754	1.0	0.0
+LOC126316955	NW_026062003.1	342834	CTP synthase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0356762860154557	6.151106292520611	1.0	0.0
+LOC126316958	NW_026062003.1	342834	uncharacterized LOC126316958	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	6.040963374741648	1.0	0.0
+LOC126316961	NW_026062003.1	342834	uncharacterized LOC126316961	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.407938499728386	1.0	0.0
+LOC126316966	NW_026062003.1	342834	uncharacterized LOC126316966	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0200807917326282	6.528689353691374	1.0	0.0
+LOC126316975	NW_026062003.1	342834	transcription factor mef2A-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0356762860154557	5.912223779567104	1.0	0.0
+LOC126316978	NW_026062003.1	342834	U1 small nuclear ribonucleoprotein C-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0492203575597666	5.298522014987305	1.0	0.0
+LOC126316982	NW_026062003.1	342834	serine/threonine-protein kinase 4 homolog B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	5.1722448573604085	1.0	0.0
+LOC126316983	NW_026062003.1	342834	uncharacterized LOC126316983	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0293902526313933	6.910680356843834	1.0	0.0
+LOC126316991	NW_026062003.1	342834	uncharacterized LOC126316991	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0202628312857215	6.380280335701846	1.0	0.0
+LOC126316992	NW_026062003.1	342834	trichohyalin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0476051845029717	5.227262869977707	1.0	0.0
+LOC126316993	NW_026062003.1	342834	probable clathrin heavy chain 1	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449706731353744	5.277567566672743	1.0002766251728907	-1.0
+LOC126316998	NW_026062003.1	342834	nuclear pore complex protein Nup155-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	6.03919867670113	1.0	0.0
+LOC126317001	NW_026062003.1	342834	uncharacterized LOC126317001	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0407875848929355	5.7041981212522	1.0	0.0
+LOC126317013	NW_026062003.1	342834	putative protein TPRXL	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351431772545874	5.954825698621273	1.0	0.0
+LOC126317014	NW_026062003.1	342834	ras guanine nucleotide exchange factor K-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0199604290838632	6.556608196416131	1.0	0.0
+LOC126317076	NW_026062009.1	188512	uncharacterized LOC126317076	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0460263815965844	4.942135583931381	1.0	0.0
+LOC126317077	NW_026062009.1	188512	probable phospholipid-transporting ATPase IA	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.442929226262964	1.0	0.0
+LOC126317078	NW_026062009.1	188512	uncharacterized LOC126317078	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.039515809460292	5.618018643953483	1.0	0.0
+LOC126317081	NW_026062009.1	188512	uncharacterized LOC126317081	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0391950082177224	6.106006077150192	1.0	0.0
+LOC126317083	NW_026062009.1	188512	uncharacterized LOC126317083	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	6.011468660499809	1.0	0.0
+LOC126317089	NW_026062009.1	188512	peroxisomal multifunctional enzyme type 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380271566047917	5.720162725936812	1.0	0.0
+LOC126317091	NW_026062009.1	188512	uncharacterized LOC126317091	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0458828005210422	5.646112483769742	1.0	0.0
+LOC126317096	NW_026062009.1	188512	uncharacterized LOC126317096	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0381796230546747	5.637443563219063	1.0	0.0
+LOC126317099	NW_026062009.1	188512	uncharacterized LOC126317099	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.726167374172352	1.0	0.0
+LOC126317103	NW_026062009.1	188512	uncharacterized LOC126317103	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.348519195702523	1.0	0.0
+LOC126317104	NW_026062009.1	188512	type-3 glutamine synthetase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.61388202892089	1.0	0.0
+LOC126317105	NW_026062009.1	188512	uncharacterized LOC126317105	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.789977480458388	1.0	0.0
+LOC126317107	NW_026062009.1	188512	uncharacterized LOC126317107	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0139267445372453	6.9411960846159335	1.0	0.0
+LOC126317111	NW_026062009.1	188512	single-stranded DNA-binding protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.916246299487452	1.0	0.0
+LOC126317117	NW_026062009.1	188512	putative rho GDP-dissociation inhibitor 1	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.915455535594996	1.0	0.0
+LOC126317118	NW_026062009.1	188512	serine/threonine-protein phosphatase 4 catalytic subunit-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.06336485706359e-26	23.758392351415115	1.0	0.0
+LOC126317121	NW_026062009.1	188512	uncharacterized LOC126317121	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0386598925724029	5.847629309193617	1.0	0.0
+LOC126317122	NW_026062009.1	188512	proline--tRNA ligase 2-like	protein_coding	Host-only significant only; Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0428031834567124	5.613374807286756	1.0	0.0
+LOC126317123	NW_026062009.1	188512	serine/threonine-protein kinase svkA-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.376497124011476	1.0	0.0
+LOC126317124	NW_026062009.1	188512	CCR4-NOT transcription complex subunit 7-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479647856969422	5.948670654669092	1.0	0.0
+LOC126317441	NW_026062018.1	242317	leucine--tRNA ligase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0195546944975661	6.848425360895638	1.0	0.0
+LOC126317444	NW_026062018.1	242317	RAB11-binding protein RELCH-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0381228102945724	6.327446095426217	1.0	0.0
+LOC126317445	NW_026062018.1	242317	serine/threonine-protein phosphatase 6 catalytic subunit-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479346653336872	5.262677845497115	1.0	0.0
+LOC126317447	NW_026062018.1	242317	nascent polypeptide-associated complex subunit alpha, muscle-specific form-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.651507663442946	1.000184331797235	-4.0
+LOC126317450	NW_026062018.1	242317	heat shock 70 kDa protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0476051845029717	5.774526909188298	1.0	0.0
+LOC126317453	NW_026062018.1	242317	exportin-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.84462037610882	1.0	0.0
+LOC126317455	NW_026062018.1	242317	antizyme inhibitor 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.133843707840431	1.0	0.0
+LOC126317467	NW_026062018.1	242317	small nuclear ribonucleoprotein-associated protein B-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0232415173185012	6.6272268465481075	1.0	0.0
+LOC126317468	NW_026062018.1	242317	uncharacterized LOC126317468	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.1717320685452925	1.0	0.0
+LOC126317472	NW_026062018.1	242317	inositol polyphosphate 5-phosphatase OCRL-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349259161162311	7.1778234601556585	1.0	0.0
+LOC126317474	NW_026062018.1	242317	tRNA (guanine(26)-N(2))-dimethyltransferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0423963633961676	5.546579092569642	1.0	0.0
+LOC126317476	NW_026062018.1	242317	uncharacterized LOC126317476	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.041749485800631	4.98592225383423	1.0	0.0
+LOC126317483	NW_026062018.1	242317	cytosolic purine 5'-nucleotidase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485491720672687	5.093956611248812	1.0	0.0
+LOC126317484	NW_026062018.1	242317	protein MEMO1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	5.951828629960549	1.0	0.0
+LOC126317486	NW_026062018.1	242317	ribosome maturation protein SBDS-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0333084731359573	5.319756370131349	1.0	0.0
+LOC126317490	NW_026062018.1	242317	uncharacterized LOC126317490	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275088540800155	6.741894931022818	1.0	0.0
+LOC126317497	NW_026062018.1	242317	proteasome subunit alpha type-6-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0336504893087505	6.061338727160221	1.0	0.0
+LOC126317501	NW_026062018.1	242317	uncharacterized LOC126317501	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0499692891317927	5.455535356579152	1.0	0.0
+LOC126317502	NW_026062018.1	242317	5'-AMP-activated protein kinase subunit gamma-1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.269760812577648	1.0	0.0
+LOC126317508	NW_026062018.1	242317	uncharacterized LOC126317508	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0095532778703645	7.590053370287936	1.0	0.0
+LOC126317516	NW_026062018.1	242317	uncharacterized protein DDB_G0271670-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0487625685177	5.28050124280644	1.0	0.0
+LOC126317518	NW_026062018.1	242317	non-structural maintenance of chromosomes element 1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0317447180116703	6.4721982022868	1.0	0.0
+LOC126318193	NW_026062043.1	187750	uncharacterized LOC126318193	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0462775836482765	5.326223790648558	1.0	0.0
+LOC126318194	NW_026062043.1	187750	uncharacterized LOC126318194	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0499793662930493	5.467742985674127	1.0	0.0
+LOC126318197	NW_026062043.1	187750	uncharacterized LOC126318197	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0215695702008987	6.563444729191381	1.0	0.0
+LOC126318198	NW_026062043.1	187750	uncharacterized LOC126318198	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0296092457295607	6.423624855443633	1.0	0.0
+LOC126318199	NW_026062043.1	187750	RING finger protein 121-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0481433380043141	5.809992018917649	1.0	0.0
+LOC126318208	NW_026062043.1	187750	phosphatidylinositol glycan anchor biosynthesis class U protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.4721053692155515	1.0	0.0
+LOC126318217	NW_026062043.1	187750	uncharacterized LOC126318217	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0397463442871822	6.023776901943503	1.0	0.0
+LOC126318218	NW_026062043.1	187750	30S ribosomal protein S9-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.8520894743947585	1.0	0.0
+LOC126318220	NW_026062043.1	187750	uncharacterized LOC126318220	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430624156070164	6.371953469319437	1.0	0.0
+LOC126318224	NW_026062043.1	187750	uncharacterized LOC126318224	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0195546944975661	7.389611589218186	1.0	0.0
+LOC126318230	NW_026062043.1	187750	E3 SUMO-protein ligase RanBP2-like	protein_coding	Host-only significant only; Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0410576049049219	6.495294047574953	1.0	0.0
+LOC126318232	NW_026062043.1	187750	uncharacterized LOC126318232	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036447267090227	6.1651955294308625	1.0	0.0
+LOC126318238	NW_026062043.1	187750	probable splicing factor YJU2B	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0481433380043141	5.261889633570321	1.0	0.0
+LOC126318239	NW_026062043.1	187750	probable myosin light chain kinase DDB_G0279831	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0310810498226754	6.66899446588959	1.0	0.0
+LOC126318247	NW_026062043.1	187750	uncharacterized LOC126318247	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	5.75355988202467	1.0	0.0
+LOC126318250	NW_026062043.1	187750	uncharacterized LOC126318250	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	5.813070600460977	1.0	0.0
+LOC126318272	NW_026062048.1	353118	uncharacterized LOC126318272	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0339546106696041	5.984224937095762	1.0	0.0
+LOC126318273	NW_026062048.1	353118	uncharacterized LOC126318273	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0189281452122082	6.78786689454163	1.0	0.0
+LOC126318274	NW_026062048.1	353118	uncharacterized LOC126318274	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493897409025642	5.7982727247161305	1.0	0.0
+LOC126318275	NW_026062048.1	353118	uncharacterized LOC126318275	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0232004788453257	7.494497062803975	1.0	0.0
+LOC126318278	NW_026062048.1	353118	uncharacterized LOC126318278	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.291933079635537	1.0	0.0
+LOC126318279	NW_026062048.1	353118	uncharacterized LOC126318279	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.034723943745276	6.10376681530364	1.0	0.0
+LOC126318290	NW_026062048.1	353118	uncharacterized LOC126318290	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0318801445930931	6.318310618150556	1.0	0.0
+LOC126318294	NW_026062048.1	353118	F-actin-capping protein subunit beta-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0483534526722863	5.385395389077404	1.0	0.0
+LOC126318298	NW_026062048.1	353118	uncharacterized LOC126318298	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0385543752125032	5.86097850023202	1.0	0.0
+LOC126318300	NW_026062048.1	353118	uncharacterized LOC126318300	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	7.337709158817801	1.0	0.0
+LOC126318306	NW_026062048.1	353118	tetratricopeptide repeat protein 27 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307505956253677	6.637777087011758	1.0	0.0
+LOC126318308	NW_026062048.1	353118	malate synthase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0243808454651399	6.248939689647643	1.0	0.0
+LOC126318310	NW_026062048.1	353118	chaperone protein DnaK-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	6.196108312573497	1.0004739336492892	-1.0
+LOC126318314	NW_026062048.1	353118	transcription elongation factor SPT6-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0135018062978742	7.259801218509987	1.0	0.0
+LOC126318317	NW_026062048.1	353118	apoptosis-inducing factor 3-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.1803927411796503e-19	22.32779167977519	1.0	0.0
+LOC126318325	NW_026062048.1	353118	uncharacterized LOC126318325	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.029261231787824	6.870593658422196	1.0	0.0
+LOC126318332	NW_026062048.1	353118	pre-mRNA-processing factor 40 homolog A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.931496847459546	1.0	0.0
+LOC126318338	NW_026062048.1	353118	uncharacterized LOC126318338	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493028809546405	5.271324645527707	1.0	0.0
+LOC126318342	NW_026062048.1	353118	protein transport protein SEC23-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0186970643966862	7.759454932101498	1.0	0.0
+LOC126318345	NW_026062048.1	353118	monoacylglycerol lipase ABHD2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0348768773580783	5.673927446526209	1.0	0.0
+LOC126318360	NW_026062048.1	353118	uncharacterized LOC126318360	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.031421479980354	6.788007498899315	1.0	0.0
+LOC126318362	NW_026062048.1	353118	vegetative catalase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0238786035759156	6.685131429325875	0.9997022036926744	1.0
+LOC126318424	NW_026062051.1	147068	protein PYR1-3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438580948319292	5.734585876553514	1.0	0.0
+LOC126318428	NW_026062051.1	147068	citrate synthase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0455932722432584	6.003901214235145	1.0	0.0
+LOC126318433	NW_026062051.1	147068	SEC14-like protein 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0462775836482765	5.580461617700566	1.0	0.0
+LOC126318434	NW_026062051.1	147068	terminal nucleotidyltransferase 4B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0370936375865962	5.269347797584459	1.0	0.0
+LOC126318435	NW_026062051.1	147068	mitochondrial inner membrane protein OXA1L-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0308670153387051	6.032281833271171	1.0	0.0
+LOC126318439	NW_026062051.1	147068	valine--tRNA ligase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.021067673054451	1.0	0.0
+LOC126318440	NW_026062051.1	147068	myosin heavy chain IB-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449942085090109	5.576489628749849	1.0	0.0
+LOC126318441	NW_026062051.1	147068	elongation factor 1-gamma-A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.047955911908591	5.9989443865166985	1.0	0.0
+LOC126318442	NW_026062051.1	147068	uncharacterized LOC126318442	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453327570438599	5.542272677072533	1.0	0.0
+LOC126318444	NW_026062051.1	147068	sarcoplasmic reticulum histidine-rich calcium-binding protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.433328586571344	1.0	0.0
+LOC126318447	NW_026062051.1	147068	uncharacterized LOC126318447	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.15163517793223	1.0	0.0
+LOC126318457	NW_026062051.1	147068	uncharacterized LOC126318457	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0499406588890625	5.628106661432639	1.0	0.0
+LOC126318459	NW_026062051.1	147068	uncharacterized LOC126318459	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.776847919737482	1.0	0.0
+LOC126318594	NW_026062056.1	187012	protein SCAR-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.190869454683527	1.0	0.0
+LOC126318597	NW_026062056.1	187012	uncharacterized LOC126318597	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0243808454651399	7.0663720746844865	1.0	0.0
+LOC126318601	NW_026062056.1	187012	uncharacterized LOC126318601	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0461759331197143	5.8845295544277505	1.0	0.0
+LOC126318610	NW_026062056.1	187012	uncharacterized LOC126318610	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486309641157455	5.429591706551313	1.0	0.0
+LOC126318611	NW_026062056.1	187012	uncharacterized LOC126318611	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0427349838785806	6.01855716186986	1.0	0.0
+LOC126318615	NW_026062056.1	187012	uncharacterized LOC126318615	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	9.09236247882776e-25	22.88573495758447	1.0	0.0
+LOC126318617	NW_026062056.1	187012	transforming growth factor beta-1-induced transcript 1 protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.700731405169612	0.9995073891625617	1.0
+LOC126318621	NW_026062056.1	187012	uncharacterized LOC126318621	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0305144922116161	6.438525923453808	1.0	0.0
+LOC126318622	NW_026062056.1	187012	serine/threonine-protein phosphatase 4 regulatory subunit 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0465939656186169	5.574654790533316	1.0	0.0
+LOC126318626	NW_026062056.1	187012	protein timeless homolog	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0306055196148521	6.617940116272649	1.0	0.0
+LOC126318629	NW_026062056.1	187012	uncharacterized LOC126318629	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0302552576962858	7.03399886839607	1.0	0.0
+LOC126318636	NW_026062056.1	187012	uncharacterized LOC126318636	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0460912796036039	5.41436178556676	1.0	0.0
+LOC126318638	NW_026062056.1	187012	4-hydroxybutyrate coenzyme A transferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	5.781435027922711	1.0	0.0
+LOC126318639	NW_026062056.1	187012	uncharacterized LOC126318639	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493897409025642	5.4384682752424585	1.0	0.0
+LOC126318640	NW_026062056.1	187012	probable dimethyladenosine transferase	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0456162316203064	5.401462413606238	1.0	0.0
+LOC126318641	NW_026062056.1	187012	uncharacterized LOC126318641	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0268778720515373	6.76372580785236	1.0	0.0
+LOC126318646	NW_026062056.1	187012	uncharacterized LOC126318646	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	6.484939915838774e-26	21.63374479174875	1.0	0.0
+LOC126318651	NW_026062056.1	187012	elongation factor 1-beta-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0109129985706351	7.817412937666717	1.0	0.0
+LOC126318670	NW_026062059.1	117526	pre-mRNA-processing-splicing factor 8-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0432183030178234	5.770468637579583	1.0	0.0
+LOC126318672	NW_026062059.1	117526	chromatin-remodeling ATPase INO80-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0365661602886898	5.543673915491017	1.0	0.0
+LOC126318673	NW_026062059.1	117526	pre-mRNA-processing factor 6-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357941894989518	5.639761041991875	1.0	0.0
+LOC126318674	NW_026062059.1	117526	rho-associated protein kinase let-502-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.049438594096273	5.7315172123864775	1.0	0.0
+LOC126318676	NW_026062059.1	117526	ras guanine nucleotide exchange factor A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0361421888154404	5.98991214688983	1.0	0.0
+LOC126318685	NW_026062059.1	117526	uncharacterized LOC126318685	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	4.492870352207349e-23	22.318083527306634	1.0	0.0
+LOC126318692	NW_026062059.1	117526	V-type proton ATPase subunit D-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453999577671057	5.880726479535534	1.0	0.0
+LOC126318698	NW_026062059.1	117526	uncharacterized LOC126318698	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0232004788453257	7.1298847113074855	1.0	0.0
+LOC126318706	NW_026062059.1	117526	ras-related GTP-binding protein A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	5.4443167015035066	1.0	0.0
+LOC126319841	NW_026062071.1	621335	uncharacterized LOC126319841	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0435266621063347	5.878554833742791	1.0	0.0
+LOC126319844	NW_026062071.1	621335	uncharacterized LOC126319844	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.040388038836567	1.0	0.0
+LOC126319845	NW_026062071.1	621335	AP-3 complex subunit beta-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0422860845393586	5.843637159062823	1.0	0.0
+LOC126319846	NW_026062071.1	621335	guanine nucleotide-binding protein subunit beta-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.064603651029247	1.0	0.0
+LOC126319848	NW_026062071.1	621335	uncharacterized LOC126319848	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0057861365277665	7.769149133181557	1.0	0.0
+LOC126319849	NW_026062071.1	621335	uncharacterized LOC126319849	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0364579541378434	6.50288798088379	1.0	0.0
+LOC126319850	NW_026062071.1	621335	uncharacterized LOC126319850	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453327570438599	5.905728392979913	1.0	0.0
+LOC126319853	NW_026062071.1	621335	uncharacterized LOC126319853	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	6.249255367776074	1.0	0.0
+LOC126319857	NW_026062071.1	621335	uncharacterized LOC126319857	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	6.122446482580918	1.0	0.0
+LOC126319860	NW_026062071.1	621335	nuclear pore membrane glycoprotein 210-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0319954514525205	6.418277362153887	1.0	0.0
+LOC126319861	NW_026062071.1	621335	transmembrane emp24 domain-containing protein A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	5.507216807637419	1.0	0.0
+LOC126319863	NW_026062071.1	621335	trafficking protein particle complex subunit 11-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0243808454651399	6.049406941605368	1.0	0.0
+LOC126319864	NW_026062071.1	621335	uncharacterized LOC126319864	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414609472499256	5.536096688732912	1.0	0.0
+LOC126319866	NW_026062071.1	621335	uncharacterized LOC126319866	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.379348381242161	1.0	0.0
+LOC126319868	NW_026062071.1	621335	ras-related protein Rab-1B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414475396635705	5.717840108677748	1.0	0.0
+LOC126319871	NW_026062071.1	621335	uncharacterized LOC126319871	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.019827454754058	1.0	0.0
+LOC126319874	NW_026062071.1	621335	uncharacterized LOC126319874	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	5.990851039862492	1.0	0.0
+LOC126319876	NW_026062071.1	621335	inositol 2-dehydrogenase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0499793662930493	6.108413365584097	1.0	0.0
+LOC126319878	NW_026062071.1	621335	uncharacterized LOC126319878	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	6.463597087415926	1.0	0.0
+LOC126319879	NW_026062071.1	621335	protein raptor homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0432183030178234	5.451025428890047	1.0	0.0
+LOC126319883	NW_026062071.1	621335	extracellular serine proteinase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.637069866630491	1.0	0.0
+LOC126319884	NW_026062071.1	621335	uncharacterized LOC126319884	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0329829160445666	6.318099505993953	1.0	0.0
+LOC126319885	NW_026062071.1	621335	crustapain-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.740261770018881	1.0	0.0
+LOC126319886	NW_026062071.1	621335	rap1 GTPase-GDP dissociation stimulator 1-A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0408749236692479	5.535382310865835	1.0	0.0
+LOC126319891	NW_026062071.1	621335	uncharacterized LOC126319891	lncRNA	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0157933994013046	7.31900689889788	1.0	0.0
+LOC126319894	NW_026062071.1	621335	uncharacterized LOC126319894	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.841022616741034	1.0	0.0
+LOC126319896	NW_026062071.1	621335	uncharacterized LOC126319896	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.64551074023099	1.0	0.0
+LOC126319898	NW_026062071.1	621335	myosin-2 heavy chain, non muscle-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0360329958682104	5.455154312706154	1.0	0.0
+LOC126319901	NW_026062071.1	621335	vacuolar protein sorting-associated protein 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0399939541563011	5.922175220799666	1.0	0.0
+LOC126319906	NW_026062071.1	621335	dolichyl-diphosphooligosaccharide--protein glycosyltransferase subunit STT3A-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0268778720515373	7.073501923920274	1.0	0.0
+LOC126319911	NW_026062071.1	621335	la-related protein 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0407875848929355	6.244941575222477	1.0	0.0
+LOC126319912	NW_026062071.1	621335	phospholipid-transporting ATPase ABCA3-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275088540800155	6.495607126779255	1.0	0.0
+LOC126319913	NW_026062071.1	621335	uncharacterized LOC126319913	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0487625685177	5.358330170092971	1.0	0.0
+LOC126319915	NW_026062071.1	621335	cullin-4A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0324215271093804	5.74387758542303	1.0	0.0
+LOC126319918	NW_026062071.1	621335	nuclear pore complex protein Nup93-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.034723943745276	6.456633202254465	1.0	0.0
+LOC126319923	NW_026062071.1	621335	uncharacterized LOC126319923	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0200807917326282	6.3825168029065225	1.0	0.0
+LOC126319924	NW_026062071.1	621335	uncharacterized LOC126319924	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.034723943745276	6.232889100635811	1.0	0.0
+LOC126319930	NW_026062071.1	621335	uncharacterized LOC126319930	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0162015588859519	7.441574889691809	1.0	0.0
+LOC126319933	NW_026062071.1	621335	uncharacterized LOC126319933	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.642335582839909	1.0	0.0
+LOC126319934	NW_026062071.1	621335	aldo-keto reductase family 1 member B1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	9.41116005811017e-25	22.282685920590502	1.0	0.0
+LOC126319935	NW_026062071.1	621335	uncharacterized LOC126319935	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.3242596461145769e-27	22.057679375079573	1.0	0.0
+LOC126319936	NW_026062071.1	621335	uncharacterized LOC126319936	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.0593089637395368e-21	22.217332727135897	1.0	0.0
+LOC126319937	NW_026062071.1	621335	uncharacterized LOC126319937	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.040944158965449	6.228442719636357	1.0	0.0
+LOC126319939	NW_026062071.1	621335	uncharacterized LOC126319939	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0414475396635705	5.619069123977414	1.0	0.0
+LOC126319940	NW_026062071.1	621335	aspartate aminotransferase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	6.762239462140675	1.0	0.0
+LOC126319950	NW_026062071.1	621335	alcohol dehydrogenase class-3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0309044943592768	6.740645974162091	1.0	0.0
+LOC126319951	NW_026062071.1	621335	phosphatidylinositol 4-kinase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036447267090227	6.068440241384941	1.0	0.0
+LOC126319952	NW_026062071.1	621335	H(+)/Cl(-) exchange transporter 7-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	6.516792378259403	1.0	0.0
+LOC126319954	NW_026062071.1	621335	uncharacterized LOC126319954	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0407875848929355	5.958942378183344	1.0	0.0
+LOC126319956	NW_026062071.1	621335	uncharacterized LOC126319956	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351431772545874	6.220122733323497	1.0	0.0
+LOC126319957	NW_026062071.1	621335	probable replication factor C subunit 4	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0420097118865425	5.868563103976607	1.0	0.0
+LOC126319963	NW_026062071.1	621335	anaphase-promoting complex subunit cdc20-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0491134634426208	5.793929360503084	1.0	0.0
+LOC126319965	NW_026062071.1	621335	uncharacterized LOC126319965	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.139956280370276	1.0	0.0
+LOC126319968	NW_026062071.1	621335	uncharacterized LOC126319968	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.6963047386316514e-27	23.185767940328734	1.0	0.0
+LOC126319972	NW_026062071.1	621335	uncharacterized LOC126319972	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0387827178176067	5.5525545709879065	1.0	0.0
+LOC126319973	NW_026062071.1	621335	probable valine--tRNA ligase, cytoplasmic	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.895299566133778	1.0	0.0
+LOC126319975	NW_026062071.1	621335	uncharacterized LOC126319975	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0444141116897844	5.706717147253948	1.0	0.0
+LOC126319977	NW_026062071.1	621335	dnaJ homolog subfamily A member 4-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0239865464474141	6.452294738540588	1.0	0.0
+LOC126319978	NW_026062071.1	621335	V-type proton ATPase subunit d-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349259161162311	6.161841097222652	1.0	0.0
+LOC126319984	NW_026062071.1	621335	tyrosine-protein phosphatase 3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380142389159576	5.628450222806529	1.0	0.0
+LOC126319985	NW_026062071.1	621335	uncharacterized LOC126319985	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0433444074842876	5.972088369097576	1.0	0.0
+LOC126319988	NW_026062071.1	621335	charged multivesicular body protein 2a homolog 2-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0195546944975661	7.032488671775194	1.0	0.0
+LOC126319994	NW_026062071.1	621335	uncharacterized LOC126319994	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_average_all_diets	0.0423963633961676	5.373725227776806	1.0	0.0
+LOC126319996	NW_026062071.1	621335	U4/U6.U5 tri-snRNP-associated protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0224094749216708	6.404381470677659	1.0	0.0
+LOC126319998	NW_026062071.1	621335	uncharacterized LOC126319998	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0333084731359573	6.41746239611018	1.0	0.0
+LOC126320001	NW_026062071.1	621335	uncharacterized LOC126320001	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.725188946356157	1.0	0.0
+LOC126320352	NW_026062094.1	84846	ankyrin repeat, bromo and BTB domain-containing protein DDB_G0293800-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.325215726832454	1.0	0.0
+LOC126320354	NW_026062094.1	84846	uncharacterized LOC126320354	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0213912734342779	7.4345118771185295	1.0	0.0
+LOC126320356	NW_026062094.1	84846	myosin light chain kinase A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	6.000807367072782	1.0	0.0
+LOC126320360	NW_026062094.1	84846	guanine exchange factor for Rac 30-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	5.786399226080834	1.0	0.0
+LOC126320362	NW_026062094.1	84846	uncharacterized LOC126320362	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0301468610941199	6.2894709623543985	1.0	0.0
+LOC126320364	NW_026062094.1	84846	uncharacterized LOC126320364	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0359443130843009	5.425311853213269	1.0	0.0
+LOC126320365	NW_026062094.1	84846	40S ribosomal protein SA-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0321202567591405	6.56109205870093	1.0	0.0
+LOC126320367	NW_026062094.1	84846	uncharacterized LOC126320367	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.9862676377049	1.0	0.0
+LOC126320379	NW_026062097.1	426281	wee1-like protein kinase 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0364579541378434	5.778680650215783	1.0	0.0
+LOC126320384	NW_026062097.1	426281	uncharacterized LOC126320384	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0325845808569807	6.083675826872523	1.0	0.0
+LOC126320385	NW_026062097.1	426281	uncharacterized LOC126320385	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0188448427818794	6.8736348819146755	1.0	0.0
+LOC126320386	NW_026062097.1	426281	serine/threonine-protein kinase/endoribonuclease IRE1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0470294434674024	5.663332333421863	1.0	0.0
+LOC126320389	NW_026062097.1	426281	bromodomain testis-specific protein-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0172988134521418	7.638299306639108	1.0	0.0
+LOC126320396	NW_026062097.1	426281	uncharacterized LOC126320396	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493028809546405	4.990773279672346	0.9979879275653925	1.0
+LOC126320404	NW_026062097.1	426281	uncharacterized LOC126320404	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.649068035513912	1.0	0.0
+LOC126320405	NW_026062097.1	426281	uncharacterized LOC126320405	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0430137801778073	5.414853505616075	1.0	0.0
+LOC126320409	NW_026062097.1	426281	myosin heavy chain, cardiac muscle isoform-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.225949317913106	1.0	0.0
+LOC126320413	NW_026062097.1	426281	bifunctional purine biosynthesis protein PurH-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0063817555333985	7.627965230961464	1.0	0.0
+LOC126320416	NW_026062097.1	426281	FACT complex subunit SPT16-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0276854955092359	6.447805166663968	1.0	0.0
+LOC126320417	NW_026062097.1	426281	T-cell immunomodulatory protein	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357613691902037	5.69010350274096	1.0	0.0
+LOC126320422	NW_026062097.1	426281	charged multivesicular body protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0444141116897844	5.560822198407135	1.0	0.0
+LOC126320424	NW_026062097.1	426281	uncharacterized LOC126320424	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0424438318427973	5.727994707746179	1.0	0.0
+LOC126320427	NW_026062097.1	426281	eukaryotic initiation factor 4A-III-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486309641157455	5.076902855458137	1.0	0.0
+LOC126320431	NW_026062097.1	426281	signal recognition particle subunit SRP68-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.026114668735361	7.094473686002531	1.0	0.0
+LOC126320433	NW_026062097.1	426281	uncharacterized LOC126320433	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	5.750136163450857	1.0	0.0
+LOC126320434	NW_026062097.1	426281	uncharacterized LOC126320434	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0313673590536372	5.785075075018696	1.0	0.0
+LOC126320436	NW_026062097.1	426281	intron Large complex component GCFC2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0482026128472913	5.072378266905021	1.0	0.0
+LOC126320439	NW_026062097.1	426281	putative folylpolyglutamate synthase	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0408749236692479	5.819689978380325	1.0	0.0
+LOC126320441	NW_026062097.1	426281	dynamin-like protein C	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.362378447715187	1.0	0.0
+LOC126320447	NW_026062097.1	426281	uncharacterized LOC126320447	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0447008464107101	5.468622017618424	1.0	0.0
+LOC126320449	NW_026062097.1	426281	kinesin light chain-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.040090975518341	5.835124454697946	1.0	0.0
+LOC126320454	NW_026062097.1	426281	uncharacterized LOC126320454	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0306433873497688	6.225174456011694	1.0	0.0
+LOC126320455	NW_026062097.1	426281	serine/threonine-protein phosphatase 6 regulatory subunit 3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.5545590139757595	1.0	0.0
+LOC126320456	NW_026062097.1	426281	uncharacterized LOC126320456	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0360329958682104	6.05236673693622	1.0	0.0
+LOC126320457	NW_026062097.1	426281	uncharacterized LOC126320457	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.836714451029787	1.0	0.0
+LOC126320458	NW_026062097.1	426281	uncharacterized LOC126320458	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.2595248667800266e-23	21.814260029312717	1.0	0.0
+LOC126320459	NW_026062097.1	426281	uncharacterized LOC126320459	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0350509387122826	6.451474790574637	1.0	0.0
+LOC126320460	NW_026062097.1	426281	probable phospholipid-transporting ATPase IIB	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380651734427211	5.571285224032103	1.0	0.0
+LOC126320462	NW_026062097.1	426281	uncharacterized LOC126320462	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.048201509140024	5.65782553470318	1.0	0.0
+LOC126320463	NW_026062097.1	426281	glycogen debranching enzyme-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0474356982966821	5.614687336805825	1.0	0.0
+LOC126320473	NW_026062097.1	426281	uncharacterized LOC126320473	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0353795471488059	5.655756772401021	1.0	0.0
+LOC126320474	NW_026062097.1	426281	uncharacterized LOC126320474	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0324215271093804	6.873432269729824	1.0	0.0
+LOC126320477	NW_026062097.1	426281	abnormal spindle-like microcephaly-associated protein homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0272325025491134	6.111370057053388	1.0	0.0
+LOC126320481	NW_026062097.1	426281	hornerin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0415799488984808	5.765331441849785	1.0	0.0
+LOC126320486	NW_026062097.1	426281	uncharacterized LOC126320486	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0333084731359573	6.034615385940868	1.0	0.0
+LOC126320487	NW_026062097.1	426281	probable ATP-dependent RNA helicase ddx10	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0419731391177512	5.811443232918679	1.0	0.0
+LOC126320545	NW_026062105.1	222873	uncharacterized LOC126320545	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_average_all_diets	0.0416816689876033	5.428441358158151	1.0	0.0
+LOC126320550	NW_026062105.1	222873	uncharacterized LOC126320550	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380339136452078	6.177996009633569	0.9988636363636364	1.0
+LOC126320555	NW_026062105.1	222873	integrin beta-like protein B	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0386598925724029	5.299059923727521	0.999967825485433	2.0
+LOC126320562	NW_026062105.1	222873	myosin light chain kinase A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414475396635705	5.592837237294775	1.0	0.0
+LOC126320569	NW_026062105.1	222873	uncharacterized LOC126320569	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	5.639053426184516	1.0	0.0
+LOC126320571	NW_026062105.1	222873	uncharacterized LOC126320571	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0245756499945028	7.007515644110854	1.0	0.0
+LOC126320575	NW_026062105.1	222873	uncharacterized LOC126320575	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.205102475762534	1.0	0.0
+LOC126320583	NW_026062105.1	222873	uncharacterized LOC126320583	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0363211010092351	5.707913094599764	1.0	0.0
+LOC126320584	NW_026062105.1	222873	probable threonine--tRNA ligase 1, cytoplasmic	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0480385692815712	5.5321383179430965	1.0	0.0
+LOC126320588	NW_026062105.1	222873	uncharacterized LOC126320588	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0364579541378434	5.7332793041591765	1.0	0.0
+LOC126320589	NW_026062105.1	222873	uncharacterized LOC126320589	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.667223138411532	1.0	0.0
+LOC126320590	NW_026062105.1	222873	kinase and exchange factor for Rac B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0469954626027057	6.086082071834444	1.0	0.0
+LOC126320593	NW_026062105.1	222873	uncharacterized LOC126320593	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.503691430622112	1.0	0.0
+LOC126320594	NW_026062105.1	222873	uncharacterized LOC126320594	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0348768773580783	6.146765320389162	1.0	0.0
+LOC126320600	NW_026062105.1	222873	uncharacterized LOC126320600	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0106355770349207	7.419199069853464	1.0	0.0
+LOC126320602	NW_026062105.1	222873	serine/threonine-protein kinase 3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0460912796036039	5.503902359156635	1.0	0.0
+LOC126320609	NW_026062108.1	31061	uncharacterized LOC126320609	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0481399907284109	5.330169227145831	1.0	0.0
+LOC126320753	NW_026062120.1	51614	insulin-degrading enzyme-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0199604290838632	6.702761684880868	1.0	0.0
+LOC126320754	NW_026062120.1	51614	GTPase-activating Rap/Ran-GAP domain-like protein 3	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453999577671057	5.054745397983661	1.0	0.0
+LOC126320759	NW_026062120.1	51614	uncharacterized LOC126320759	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0172175311874733	7.273231624366027	1.0	0.0
+LOC126320761	NW_026062120.1	51614	uncharacterized LOC126320761	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	6.043854222539074	1.0	0.0
+LOC126320762	NW_026062120.1	51614	uncharacterized LOC126320762	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380651734427211	5.465130873768547	1.0	0.0
+LOC126320766	NW_026062120.1	51614	uncharacterized LOC126320766	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.720924944582399	1.0	0.0
+LOC126320771	NW_026062120.1	51614	mucin-1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036447267090227	5.701767089347595	0.999644760213144	1.0
+LOC126321793	NW_026062140.1	54349	uncharacterized LOC126321793	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.013734423471776	5.158528190305886	1.000004260250162	-1.0
+LOC126322236	NW_026062171.1	36907	elongation factor Tu-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	5.668160711384036	1.0	0.0
+LOC126322374	NW_026062176.1	242820	helicase domino-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0321202567591405	6.304017548671803	1.0	0.0
+LOC126322375	NW_026062176.1	242820	uncharacterized LOC126322375	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0491690630392757	5.4893880007974944	1.0	0.0
+LOC126322378	NW_026062176.1	242820	uncharacterized LOC126322378	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357613691902037	5.658704504104188	1.0	0.0
+LOC126322382	NW_026062176.1	242820	polyadenylate-binding protein 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.0755421524023925	1.0	0.0
+LOC126322384	NW_026062176.1	242820	splicing factor 3B subunit 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0271878235461447	6.860593802096272	0.9985007496251874	1.0
+LOC126322386	NW_026062176.1	242820	glyceraldehyde-3-phosphate dehydrogenase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	6.0700594046290055	1.0	0.0
+LOC126322390	NW_026062176.1	242820	AMP deaminase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0338053881494276	6.018232222701564	0.9989200863930886	1.0
+LOC126322392	NW_026062176.1	242820	nuclear pore glycoprotein p62-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.609015521270508	1.0	0.0
+LOC126322395	NW_026062176.1	242820	uncharacterized LOC126322395	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429052457793034	5.389636740229581	1.0	0.0
+LOC126322397	NW_026062176.1	242820	60S ribosomal protein L19-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0284991946561331	6.28720345683627	1.0	0.0
+LOC126322405	NW_026062176.1	242820	uncharacterized LOC126322405	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438580948319292	5.533245492766437	1.0	0.0
+LOC126322411	NW_026062176.1	242820	GTPase HRas-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0321202567591405	6.6943278183942265	1.0	0.0
+LOC126322416	NW_026062176.1	242820	uncharacterized LOC126322416	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0425869626894764	5.543351704523608	1.0	0.0
+LOC126322417	NW_026062176.1	242820	proteoglycan 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320284294124798	6.053250135697595	1.0	0.0
+LOC126322418	NW_026062176.1	242820	uncharacterized LOC126322418	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.158519725526185	1.0	0.0
+LOC126322419	NW_026062176.1	242820	uncharacterized LOC126322419	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0446846352399626	5.949888753029593	1.0	0.0
+LOC126322422	NW_026062176.1	242820	trafficking protein particle complex subunit 10-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0313842747738886	6.492270384540118	1.0	0.0
+LOC126322427	NW_026062176.1	242820	uncharacterized LOC126322427	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.514907571742206	1.0	0.0
+LOC126322522	NW_026062185.1	366495	uncharacterized LOC126322522	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0450446762400413	6.025950796834676	1.0	0.0
+LOC126322523	NW_026062185.1	366495	mitochondrial-processing peptidase subunit alpha-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486785826614133	5.670743461124598	1.0	0.0
+LOC126322528	NW_026062185.1	366495	uncharacterized LOC126322528	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0208628600724946	7.301295296898977	1.0	0.0
+LOC126322531	NW_026062185.1	366495	ras GTPase-activating-like protein rgaA	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0318412745454105	5.840419101217989	1.0	0.0
+LOC126322532	NW_026062185.1	366495	multidrug resistance-associated protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.696030056878735	1.0	0.0
+LOC126322534	NW_026062185.1	366495	uncharacterized LOC126322534	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0487625685177	5.390886572342219	1.0	0.0
+LOC126322535	NW_026062185.1	366495	vacuolar protein sorting-associated protein 28-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0426608273442374	5.771840854583254	1.0	0.0
+LOC126322537	NW_026062185.1	366495	CYFIP-related Rac1 interactor homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0215593980116681	7.060860218164112	1.0	0.0
+LOC126322544	NW_026062185.1	366495	leucine-rich repeat protein lrrA-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.044216640322295	5.832022677209248	1.0	0.0
+LOC126322547	NW_026062185.1	366495	uncharacterized LOC126322547	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.9359287838259664	1.0	0.0
+LOC126322548	NW_026062185.1	366495	serine/threonine-protein kinase pakC-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.857593338257425	1.0	0.0
+LOC126322550	NW_026062185.1	366495	uncharacterized LOC126322550	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0139267445372453	7.9056112036961	1.0	0.0
+LOC126322554	NW_026062185.1	366495	uncharacterized LOC126322554	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	6.815875676001941	1.0	0.0
+LOC126322557	NW_026062185.1	366495	uncharacterized LOC126322557	lncRNA	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0284991946561331	6.43524105750522	1.0	0.0
+LOC126322562	NW_026062185.1	366495	Golgi-specific brefeldin A-resistance guanine nucleotide exchange factor 1 homolog	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.4127709263462242e-26	24.027676714299258	1.0	0.0
+LOC126322563	NW_026062185.1	366495	uncharacterized LOC126322563	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389818584399979	5.6655257050239545	1.001912045889101	-2.0
+LOC126322570	NW_026062185.1	366495	uncharacterized LOC126322570	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0310681524382982	6.617305808673078	1.0	0.0
+LOC126322573	NW_026062185.1	366495	uncharacterized LOC126322573	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430467420458379	5.597651760217139	1.0	0.0
+LOC126322575	NW_026062185.1	366495	uncharacterized LOC126322575	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	6.151957769729684	1.0	0.0
+LOC126322579	NW_026062185.1	366495	CTD small phosphatase-like protein 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.280536442997958	1.0	0.0
+LOC126322583	NW_026062185.1	366495	uncharacterized LOC126322583	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.558907418087268	1.0	0.0
+LOC126322588	NW_026062185.1	366495	uncharacterized LOC126322588	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0306433873497688	6.078648137233994	1.0	0.0
+LOC126322590	NW_026062185.1	366495	leucine-rich repeat protein SHOC-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380730306005511	6.680305378978444	1.0	0.0
+LOC126322593	NW_026062185.1	366495	glutathione S-transferase D4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.230548430018305	1.0	0.0
+LOC126322599	NW_026062185.1	366495	proteasome inhibitor PI31 subunit-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	6.082178259101057	1.0	0.0
+LOC126322603	NW_026062185.1	366495	uncharacterized LOC126322603	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.306044901486104	1.0	0.0
+LOC126322604	NW_026062185.1	366495	T-complex protein 1 subunit theta-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.3161140138681666e-24	22.80672392890253	1.0	0.0
+LOC126322607	NW_026062185.1	366495	uncharacterized LOC126322607	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0195546944975661	7.207475617544488	1.0	0.0
+LOC126322614	NW_026062185.1	366495	uncharacterized LOC126322614	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0196281973216387	6.185019834028999	1.0	0.0
+LOC126322619	NW_026062185.1	366495	uncharacterized LOC126322619	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.031421479980354	6.6685122430406585	1.0	0.0
+LOC126322623	NW_026062185.1	366495	DNA-directed RNA polymerase III subunit RPC1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.10044965122677	1.0	0.0
+LOC126322680	NW_026062196.1	207904	UBX domain-containing protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0420097118865425	5.582463266746841	1.0	0.0
+LOC126322682	NW_026062196.1	207904	THO complex subunit 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.0453466683619	1.0	0.0
+LOC126322685	NW_026062196.1	207904	NAD kinase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	5.9784500902926485	1.0	0.0
+LOC126322687	NW_026062196.1	207904	uncharacterized LOC126322687	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0069249401187379	7.793932866898864	1.0	0.0
+LOC126322693	NW_026062196.1	207904	peroxisomal membrane protein PEX14-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	5.929843642061334	1.0	0.0
+LOC126322694	NW_026062196.1	207904	uncharacterized LOC126322694	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0370448298176062	5.5831590729721565	1.0	0.0
+LOC126322701	NW_026062196.1	207904	uncharacterized LOC126322701	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0380651734427211	7.138090466503539	1.0	0.0
+LOC126322706	NW_026062196.1	207904	uncharacterized LOC126322706	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0413845037058324	5.55458455849247	1.0	0.0
+LOC126322707	NW_026062196.1	207904	formin-like protein	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0371928674800214	5.680660899138735	1.0005202913631634	-1.0
+LOC126322712	NW_026062196.1	207904	carboxy-terminal kinesin 2	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.966410174695943	1.0	0.0
+LOC126322718	NW_026062196.1	207904	nuclear pore complex protein Nup160-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0318412745454105	6.445165039532192	1.0	0.0
+LOC126322726	NW_026062196.1	207904	uncharacterized LOC126322726	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.021995695013684	1.0	0.0
+LOC126322729	NW_026062196.1	207904	uncharacterized LOC126322729	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438580948319292	5.308396334028035	1.0	0.0
+LOC126322730	NW_026062196.1	207904	uncharacterized LOC126322730	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.376571375698106	1.0	0.0
+LOC126323236	NW_026062217.1	108767	titin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.24022084311037	1.0	0.0
+LOC126323238	NW_026062217.1	108767	autophagy-related protein 9-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.559573730286976	1.0	0.0
+LOC126323239	NW_026062217.1	108767	vacuolar protein sorting-associated protein 45-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.686704715487646	1.0	0.0
+LOC126323241	NW_026062217.1	108767	adenylyl cyclase-associated protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0469470842316004	5.050917388532903	1.0	0.0
+LOC126323244	NW_026062217.1	108767	START domain-containing protein 10-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.962728426448338	1.0	0.0
+LOC126323246	NW_026062217.1	108767	splicing factor 3B subunit 4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0365661602886898	5.375513608932338	1.0	0.0
+LOC126323247	NW_026062217.1	108767	ADP-ribosylation factor 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	6.11190460648125	1.0	0.0
+LOC126323249	NW_026062217.1	108767	uncharacterized LOC126323249	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0438300856812304	5.384447989465658	1.0	0.0
+LOC126323253	NW_026062217.1	108767	superoxide dismutase [Fe]-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	9.009616068069544e-18	21.80798537388784	1.0	0.0
+LOC126323254	NW_026062217.1	108767	peptidyl-prolyl cis-trans isomerase FKBP4-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0055387886592174	8.116364422384105	1.0	0.0
+LOC126323255	NW_026062217.1	108767	splicing factor 3B subunit 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0473867269112177	5.167548407283974	1.0	0.0
+LOC126323258	NW_026062217.1	108767	uncharacterized LOC126323258	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0462775836482765	5.965820354186425	1.0	0.0
+LOC126323260	NW_026062217.1	108767	rho GTPase-activating protein gacW-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0456162316203064	5.662628561158015	1.0	0.0
+LOC126323263	NW_026062217.1	108767	uncharacterized LOC126323263	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0387046495164412	6.192101623078957	1.0	0.0
+LOC126323264	NW_026062217.1	108767	uncharacterized LOC126323264	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.486319280220341	1.0	0.0
+LOC126323267	NW_026062217.1	108767	uncharacterized LOC126323267	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0178031433275999	6.502384835936594	1.0	0.0
+LOC126323268	NW_026062217.1	108767	citrate/2-methylcitrate dehydratase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0496607406165008	5.648692537622528	1.0	0.0
+LOC126323271	NW_026062217.1	108767	uncharacterized LOC126323271	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0452354216269371	6.154519095387929	1.0	0.0
+LOC126323273	NW_026062217.1	108767	uncharacterized LOC126323273	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.666495906421442	1.0	0.0
+LOC126323276	NW_026062217.1	108767	cardiolipin synthase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.545997425534726	1.0	0.0
+LOC126323277	NW_026062217.1	108767	uncharacterized LOC126323277	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.941847303233077	1.0	0.0
+LOC126323279	NW_026062217.1	108767	uncharacterized LOC126323279	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382631983743167	5.253836901018448	1.0	0.0
+LOC126323716	NW_026062229.1	248508	uncharacterized LOC126323716	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.838426175246646	1.0	0.0
+LOC126323719	NW_026062229.1	248508	uncharacterized LOC126323719	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.04186315996553	5.320542700229593	1.0	0.0
+LOC126323721	NW_026062229.1	248508	uncharacterized LOC126323721	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	5.896471929923404	1.0	0.0
+LOC126323723	NW_026062229.1	248508	uncharacterized LOC126323723	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0397892210581392	5.947889779939147	1.0	0.0
+LOC126323725	NW_026062229.1	248508	protein YIPF5 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0484388389702582	5.455825733530821	1.0	0.0
+LOC126323732	NW_026062229.1	248508	fimbrin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0471550469822426	5.231858657752092	1.0	0.0
+LOC126323738	NW_026062229.1	248508	pumilio homolog 3	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0284134621615519	6.710089336374727	1.0	0.0
+LOC126323739	NW_026062229.1	248508	splicing factor U2AF 50 kDa subunit-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0232739527824719	7.073235555827331	1.0	0.0
+LOC126323740	NW_026062229.1	248508	rho GTPase-activating protein gacJJ-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	5.413891588130713	1.0	0.0
+LOC126323742	NW_026062229.1	248508	uncharacterized LOC126323742	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0095532778703645	7.776886527944257	1.0	0.0
+LOC126323753	NW_026062229.1	248508	eukaryotic translation initiation factor 5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.910842593706653	1.0	0.0
+LOC126323757	NW_026062229.1	248508	uncharacterized LOC126323757	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486956085488582	5.60187798011253	1.0	0.0
+LOC126323759	NW_026062229.1	248508	ABC transporter C family member 8-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0443073273629268	5.134868463886654	1.0	0.0
+LOC126323761	NW_026062229.1	248508	60S ribosomal protein L14-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.047398990847502	5.499440175016711	1.0	0.0
+LOC126323763	NW_026062229.1	248508	uncharacterized LOC126323763	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0257409063120153	5.88226297772809	1.0	0.0
+LOC126323764	NW_026062229.1	248508	glycerol-3-phosphate dehydrogenase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.7595930641515745	1.0	0.0
+LOC126323765	NW_026062229.1	248508	uncharacterized LOC126323765	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	5.309839390696916	1.0	0.0
+LOC126323770	NW_026062229.1	248508	uncharacterized LOC126323770	protein_coding	Significant in both mappings	4	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33	0.0008736688046422917	7.935379831506727	1.0	0.0
+LOC126323771	NW_026062229.1	248508	mRNA export factor-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0097176572605579	7.649598369664528	1.0	0.0
+LOC126323772	NW_026062229.1	248508	uncharacterized LOC126323772	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0351986125474578	5.969954921468412	1.0	0.0
+LOC126323773	NW_026062229.1	248508	uncharacterized LOC126323773	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0493897409025642	5.415103411503792	1.0	0.0
+LOC126323776	NW_026062229.1	248508	uncharacterized LOC126323776	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0345084234855954	5.927141898767506	1.0	0.0
+LOC126323787	NW_026062229.1	248508	proteasome subunit alpha type-4-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	9.20523865266728e-17	21.523176988582883	1.0	0.0
+LOC126323788	NW_026062229.1	248508	uncharacterized LOC126323788	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.142371292512861	1.0	0.0
+LOC126323886	NW_026062236.1	256518	Fanconi anemia group D2 protein-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	7.059178679550897e-26	23.31114263063503	1.0	0.0
+LOC126323888	NW_026062236.1	256518	transducin beta-like protein 3	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430467420458379	5.684813361247461	1.0	0.0
+LOC126323889	NW_026062236.1	256518	uncharacterized LOC126323889	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.940217259186323	1.0	0.0
+LOC126323891	NW_026062236.1	256518	uncharacterized LOC126323891	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0398662011005077	6.367320027622171	1.0	0.0
+LOC126323893	NW_026062236.1	256518	uncharacterized LOC126323893	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485695363987296	5.0337013185568535	1.0	0.0
+LOC126323894	NW_026062236.1	256518	uncharacterized LOC126323894	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	7.987950934466327e-24	23.40399693408227	1.0	0.0
+LOC126323895	NW_026062236.1	256518	uncharacterized LOC126323895	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0329064208353294	6.1460817055745665	1.0	0.0
+LOC126323897	NW_026062236.1	256518	3-mercaptopyruvate sulfurtransferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0333084731359573	5.892802215583853	1.0	0.0
+LOC126323900	NW_026062236.1	256518	chaperone protein DnaJ-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0301468610941199	6.249759647484078	1.0	0.0
+LOC126323901	NW_026062236.1	256518	zinc finger MIZ domain-containing protein 1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.7955506450800467e-19	22.41452164278233	1.0	0.0
+LOC126323902	NW_026062236.1	256518	uncharacterized LOC126323902	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	7.107277820882922	1.0	0.0
+LOC126323905	NW_026062236.1	256518	uncharacterized LOC126323905	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	5.813774118769985	1.0	0.0
+LOC126323906	NW_026062236.1	256518	uncharacterized LOC126323906	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0318412745454105	6.152990393939631	1.0	0.0
+LOC126323908	NW_026062236.1	256518	7-methyl-GTP pyrophosphatase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307067202373248	6.445261074202454	1.0	0.0
+LOC126323910	NW_026062236.1	256518	uncharacterized LOC126323910	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	6.447179295071636	1.0	0.0
+LOC126323913	NW_026062236.1	256518	uncharacterized LOC126323913	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0289249610181597	6.310979780513152	1.0	0.0
+LOC126323914	NW_026062236.1	256518	uncharacterized LOC126323914	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0460263815965844	5.493437134518034	1.0	0.0
+LOC126323915	NW_026062236.1	256518	uncharacterized LOC126323915	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.967881917592204e-24	22.727754406088195	1.0	0.0
+LOC126323920	NW_026062236.1	256518	poly(A)-specific ribonuclease PARN-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0276854955092359	6.411631039352926	1.0	0.0
+LOC126323922	NW_026062236.1	256518	60S ribosomal protein L7a-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0203798822570525	7.047118710343249	1.0	0.0
+LOC126323924	NW_026062236.1	256518	alanine--tRNA ligase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0357941894989518	5.801037189005856	1.0	0.0
+LOC126323927	NW_026062236.1	256518	uncharacterized LOC126323927	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0200807917326282	7.413922425397111	1.0	0.0
+LOC126323929	NW_026062236.1	256518	uncharacterized LOC126323929	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.029673345695268	6.802697623916082	1.0	0.0
+LOC126323930	NW_026062236.1	256518	uncharacterized LOC126323930	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0307217240803232	6.398474360971769	1.0	0.0
+LOC126323932	NW_026062236.1	256518	uncharacterized LOC126323932	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.652605080412032	1.0	0.0
+LOC126323937	NW_026062236.1	256518	uncharacterized LOC126323937	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453327570438599	5.457906900669191	1.0	0.0
+LOC126324029	NW_026062244.1	120664	glycogen phosphorylase 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.031421479980354	6.087205979630385	0.99954240390482	3.0
+LOC126324033	NW_026062244.1	120664	probable sphingosine-1-phosphate phosphatase	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	5.796947552827814	1.0	0.0
+LOC126324035	NW_026062244.1	120664	cysteine desulfurase IscS-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0441248804034456	6.370140369787922	1.0	0.0
+LOC126324036	NW_026062244.1	120664	mini-chromosome maintenance complex-binding protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	5.723690124307311	1.0	0.0
+LOC126324038	NW_026062244.1	120664	ubiquitin carboxyl-terminal hydrolase MINDY-1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0497449900671885	5.119376643257288	1.0	0.0
+LOC126324050	NW_026062244.1	120664	uncharacterized LOC126324050	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.768864571117344e-20	24.221847332450587	1.0	0.0
+LOC126324052	NW_026062244.1	120664	uncharacterized LOC126324052	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0285794612405587	6.031382420549664	1.0	0.0
+LOC126324053	NW_026062244.1	120664	profilin-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0462775836482765	5.54929114979207	1.0	0.0
+LOC126324054	NW_026062244.1	120664	serine/threonine-protein kinase WNK4-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0146098407416509	6.823612440878834	1.0	0.0
+LOC126324062	NW_026062244.1	120664	kinesin-like protein KIF18B	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0442028109200236	5.6860331450221295	1.0	0.0
+LOC126324069	NW_026062244.1	120664	uncharacterized LOC126324069	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414609472499256	5.778383063398741	1.0	0.0
+LOC126324070	NW_026062244.1	120664	ras-like protein rasG	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0463230412349226	6.325643413112237	1.0	0.0
+LOC126324477	NW_026062249.1	241426	uncharacterized LOC126324477	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	5.88779263324758	1.0	0.0
+LOC126324481	NW_026062249.1	241426	transcription initiation factor TFIID subunit 11-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0477936458830511	5.509811447423499	1.0	0.0
+LOC126324482	NW_026062249.1	241426	elongator complex protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.62389336712983	1.0	0.0
+LOC126324489	NW_026062249.1	241426	dynein heavy chain, cytoplasmic-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0370448298176062	5.523559631699457	1.0	0.0
+LOC126324490	NW_026062249.1	241426	uncharacterized LOC126324490	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.238715055611405	1.0	0.0
+LOC126324493	NW_026062249.1	241426	uncharacterized LOC126324493	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0393417487062535	6.267371938165455	1.0	0.0
+LOC126324494	NW_026062249.1	241426	uncharacterized LOC126324494	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.031421479980354	6.80207425359991	1.0	0.0
+LOC126324498	NW_026062249.1	241426	uncharacterized LOC126324498	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0370990455890823	5.639926575304554	1.0	0.0
+LOC126324499	NW_026062249.1	241426	uncharacterized LOC126324499	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401228333051272	5.512113982460808	1.0	0.0
+LOC126324503	NW_026062249.1	241426	probable protein disulfide-isomerase A4	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0380730306005511	6.043174593781207	1.0	0.0
+LOC126324508	NW_026062249.1	241426	vacuolar protein sorting-associated protein 53 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0391950082177224	5.8962720461465	1.0	0.0
+LOC126324522	NW_026062249.1	241426	uncharacterized LOC126324522	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	5.800717944370566	1.0	0.0
+LOC126324534	NW_026062249.1	241426	uncharacterized LOC126324534	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449233481423088	6.025304020979979	1.0	0.0
+LOC126324537	NW_026062249.1	241426	actobindin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0426608273442374	5.559070481599688	1.0	0.0
+LOC126324541	NW_026062249.1	241426	SH3 and F-BAR domain-containing protein DDB_G0274695-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0423963633961676	5.989574039569793	1.0	0.0
+LOC126324547	NW_026062249.1	241426	uncharacterized LOC126324547	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0348768773580783	5.795506949768224	1.0	0.0
+LOC126324549	NW_026062249.1	241426	uncharacterized LOC126324549	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0183837677685716	6.589975263291423	1.0	0.0
+LOC126324550	NW_026062249.1	241426	uncharacterized LOC126324550	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	5.847798916398979	1.0	0.0
+LOC126324552	NW_026062249.1	241426	transcription elongation regulator 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0208384240831761	6.47385936228044	1.0	0.0
+LOC126324742	NW_026062253.1	74958	U3 small nucleolar ribonucleoprotein protein MPP10-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.427385830407119	1.0	0.0
+LOC126324743	NW_026062253.1	74958	DNA topoisomerase I, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410576049049219	6.091719932222714	1.0	0.0
+LOC126324744	NW_026062253.1	74958	UTP--glucose-1-phosphate uridylyltransferase 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0478105615664705	5.540083683883213	1.0	0.0
+LOC126324747	NW_026062253.1	74958	uncharacterized LOC126324747	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.468549602021778	1.0	0.0
+LOC126324748	NW_026062253.1	74958	dolichyldiphosphatase 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0285794612405587	6.957372323681792	1.0	0.0
+LOC126324749	NW_026062253.1	74958	protein transport protein Sec61 subunit alpha-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.7552241231693335	1.0	0.0
+LOC126324751	NW_026062253.1	74958	uncharacterized LOC126324751	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.023236374451806	6.571838481749919	1.0	0.0
+LOC126324752	NW_026062253.1	74958	uncharacterized LOC126324752	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0305144922116161	5.945409203450516	1.0	0.0
+LOC126324753	NW_026062253.1	74958	uncharacterized LOC126324753	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0413065193880707	6.280570985980364	1.0	0.0
+LOC126325474	NW_026062282.1	292790	structural maintenance of chromosomes protein 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349093712642754	5.6583604604854205	1.0	0.0
+LOC126325475	NW_026062282.1	292790	uncharacterized LOC126325475	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430467420458379	5.183783207026583	1.0	0.0
+LOC126325476	NW_026062282.1	292790	origin recognition complex subunit 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.032178116463033	6.524789848603657	1.0	0.0
+LOC126325477	NW_026062282.1	292790	double-strand-break repair protein rad21 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.600662925557011	1.0	0.0
+LOC126325479	NW_026062282.1	292790	uncharacterized LOC126325479	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0289363316047869	7.02806251612827	1.0	0.0
+LOC126325484	NW_026062282.1	292790	uncharacterized LOC126325484	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0492429051242433	5.348122173425009	1.0	0.0
+LOC126325491	NW_026062282.1	292790	uncharacterized LOC126325491	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0368136533370356	5.3732858731652655	1.0	0.0
+LOC126325492	NW_026062282.1	292790	uncharacterized LOC126325492	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351986125474578	5.338500451615597	1.0	0.0
+LOC126325493	NW_026062282.1	292790	ATP-dependent RNA helicase ddx24-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.037313574052592	5.370717506355143	1.0	0.0
+LOC126325504	NW_026062282.1	292790	trans-1,2-dihydrobenzene-1,2-diol dehydrogenase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.75217706790712	1.0	0.0
+LOC126325505	NW_026062282.1	292790	uncharacterized LOC126325505	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0018497792018086	8.680713938671229	1.0	0.0
+LOC126325510	NW_026062282.1	292790	uncharacterized LOC126325510	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0403537914111631	6.215712493881841	1.0	0.0
+LOC126325515	NW_026062282.1	292790	uncharacterized LOC126325515	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	6.579614464116736	1.0	0.0
+LOC126325517	NW_026062282.1	292790	DDB1- and CUL4-associated factor 13-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.711594191052097	1.0	0.0
+LOC126325519	NW_026062282.1	292790	protein pelota homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0284134621615519	6.700701567732721	1.0	0.0
+LOC126325520	NW_026062282.1	292790	serine/arginine repetitive matrix protein 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	6.4830954219969374	1.0	0.0
+LOC126325522	NW_026062282.1	292790	uncharacterized LOC126325522	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.8652113796642436	1.0	0.0
+LOC126325525	NW_026062282.1	292790	vacuolar protein sorting-associated protein 51 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	5.841909706352852	1.0	0.0
+LOC126325526	NW_026062282.1	292790	nucleolar protein 14-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0324859976656444	5.8478813003830155	1.0	0.0
+LOC126325534	NW_026062282.1	292790	vacuolar protein sorting-associated protein 54-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0280100767479561	6.656198687616302	1.0	0.0
+LOC126325536	NW_026062282.1	292790	T-complex protein 1 subunit beta-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0106355770349207	7.402300875571333	1.0	0.0
+LOC126325541	NW_026062282.1	292790	phosphatidylethanolamine-binding protein homolog F40A3.3-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.7411512051008496e-22	22.031791754211557	1.0	0.0
+LOC126325544	NW_026062282.1	292790	uncharacterized LOC126325544	lncRNA	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0133299515002569	7.649034404247071	1.0	0.0
+LOC126325546	NW_026062282.1	292790	actin-histidine N-methyltransferase-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	5.922808149116768e-23	21.67982974271157	1.0	0.0
+LOC126325548	NW_026062282.1	292790	uncharacterized LOC126325548	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0050802519569594	8.591718045828626	1.0	0.0
+LOC126325800	NW_026062299.1	262043	uncharacterized LOC126325800	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0307067202373248	5.875807948750737	1.0	0.0
+LOC126325801	NW_026062299.1	262043	histone RNA hairpin-binding protein-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.890653014246232e-18	21.847097634062173	1.0	0.0
+LOC126325806	NW_026062299.1	262043	60S ribosomal protein L6-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.3788461282067076e-26	22.435996727964515	1.0	0.0
+LOC126325810	NW_026062299.1	262043	uncharacterized LOC126325810	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0430624156070164	5.417544884068338	1.0	0.0
+LOC126325813	NW_026062299.1	262043	ribonuclease H2 subunit B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.505921427825569	1.0	0.0
+LOC126325817	NW_026062299.1	262043	condensin complex subunit 3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0386934694173212	6.0256992978056365	1.0	0.0
+LOC126325822	NW_026062299.1	262043	uncharacterized LOC126325822	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.836500964615184	1.0	0.0
+LOC126325825	NW_026062299.1	262043	uncharacterized LOC126325825	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0486785826614133	5.497585793242791	1.0	0.0
+LOC126325827	NW_026062299.1	262043	uncharacterized LOC126325827	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414609472499256	5.785858833560116	1.0	0.0
+LOC126325828	NW_026062299.1	262043	epsin-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401380936682709	5.359360934473333	1.0	0.0
+LOC126325829	NW_026062299.1	262043	uncharacterized LOC126325829	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0334706608153057	5.6545858050069535	1.0	0.0
+LOC126325835	NW_026062299.1	262043	quinone oxidoreductase PIG3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479346653336872	5.98226963618661	1.0	0.0
+LOC126325836	NW_026062299.1	262043	uncharacterized LOC126325836	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438580948319292	5.882810479599456	1.0	0.0
+LOC126325837	NW_026062299.1	262043	transcription initiation factor TFIID subunit 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0306678763712175	6.490037309075909	1.0	0.0
+LOC126325840	NW_026062299.1	262043	uncharacterized LOC126325840	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0094084981146014	7.122092227934989	1.0	0.0
+LOC126325846	NW_026062299.1	262043	protein Red-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.447020472632822	1.0	0.0
+LOC126325847	NW_026062299.1	262043	uncharacterized LOC126325847	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.8218094161762302e-24	22.170856667502584	1.0	0.0
+LOC126325855	NW_026062299.1	262043	uncharacterized LOC126325855	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.4015099237734968e-23	21.945123395144293	1.0	0.0
+LOC126325860	NW_026062299.1	262043	uncharacterized LOC126325860	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0420097118865425	5.522434977565418	1.0	0.0
+LOC126325861	NW_026062299.1	262043	homeobox protein 3-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.4386731734979587e-27	23.030202641312066	1.0	0.0
+LOC126325870	NW_026062299.1	262043	3-hydroxyisobutyryl-CoA hydrolase, mitochondrial-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0444874267109956	6.6711573632768	1.0	0.0
+LOC126325873	NW_026062299.1	262043	transcription initiation factor TFIID subunit 1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	8.98925068377479e-22	21.905353044069276	1.0	0.0
+LOC126325880	NW_026062299.1	262043	GPALPP motifs-containing protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0453327570438599	5.455054375477003	1.0	0.0
+LOC126325882	NW_026062299.1	262043	uncharacterized LOC126325882	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.036403213329669	6.541734465055844	1.0	0.0
+LOC126325904	NW_026062302.1	191019	mitochondrial proton/calcium exchanger protein-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0170471316022476	7.532748161998887	1.0	0.0
+LOC126325907	NW_026062302.1	191019	ras guanine nucleotide exchange factor A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.4956081245905715	1.0	0.0
+LOC126325909	NW_026062302.1	191019	serine/arginine repetitive matrix protein 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.779766985530637	1.0	0.0
+LOC126325910	NW_026062302.1	191019	uncharacterized LOC126325910	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	5.550802413274735	1.0	0.0
+LOC126325914	NW_026062302.1	191019	phenylalanine--tRNA ligase beta subunit-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.034723943745276	6.11229386442722	1.0	0.0
+LOC126325915	NW_026062302.1	191019	anaphase-promoting complex subunit cdc20-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0274450677868388	6.5739805480172055	1.0	0.0
+LOC126325920	NW_026062302.1	191019	CYFIP-related Rac1 interactor homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0368136533370356	5.272840109963809	1.0	0.0
+LOC126325922	NW_026062302.1	191019	proteasome subunit alpha type-5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445935454522398	6.0022032971673625	1.0	0.0
+LOC126325929	NW_026062302.1	191019	uncharacterized LOC126325929	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0353486983945421	6.190292738995359	1.0	0.0
+LOC126325939	NW_026062302.1	191019	uncharacterized LOC126325939	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0170471316022476	7.513449991726305	1.0	0.0
+LOC126325943	NW_026062302.1	191019	pre-mRNA-splicing factor syf1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.084888203000997	1.0	0.0
+LOC126325946	NW_026062302.1	191019	serine/threonine-protein kinase STK11-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0485065102272896	5.394669513703407	1.0	0.0
+LOC126325947	NW_026062302.1	191019	uncharacterized LOC126325947	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	6.348381604511503	1.0	0.0
+LOC126325948	NW_026062302.1	191019	60S ribosomal export protein NMD3-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0484046129518993	5.401466266866654	1.0	0.0
+LOC126325953	NW_026062302.1	191019	sphingolipid delta(4)-desaturase DES1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.331960626721936	1.0	0.0
+LOC126325954	NW_026062302.1	191019	uncharacterized LOC126325954	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0095532778703645	7.759391164305201	1.0	0.0
+LOC126326029	NW_026062315.1	206002	uncharacterized LOC126326029	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0474356982966821	5.243782199154506	1.0	0.0
+LOC126326032	NW_026062315.1	206002	sister chromatid cohesion protein PDS5 homolog A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0344674484103032	5.811362453008855	1.0	0.0
+LOC126326034	NW_026062315.1	206002	uncharacterized LOC126326034	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.040944158965449	5.418554476274434	1.0	0.0
+LOC126326044	NW_026062315.1	206002	uncharacterized LOC126326044	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429052457793034	5.773164320087033	1.0	0.0
+LOC126326045	NW_026062315.1	206002	protein SEY1 homolog	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0215593980116681	6.777179089918154	1.0	0.0
+LOC126326050	NW_026062315.1	206002	uncharacterized LOC126326050	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.016378021197137	1.0	0.0
+LOC126326052	NW_026062315.1	206002	ATP-dependent (S)-NAD(P)H-hydrate dehydratase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349259161162311	6.28674933676657	1.0	0.0
+LOC126326053	NW_026062315.1	206002	uncharacterized LOC126326053	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349770964497535	5.989855999333015	1.0	0.0
+LOC126326057	NW_026062315.1	206002	40S ribosomal protein S4-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0046597700559326	7.908432386263162	1.0	0.0
+LOC126326060	NW_026062315.1	206002	uncharacterized LOC126326060	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390194780945143	5.230320280817296	1.0	0.0
+LOC126326061	NW_026062315.1	206002	uncharacterized LOC126326061	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0399939541563011	5.805025712891993	1.0	0.0
+LOC126326063	NW_026062315.1	206002	glutamate dehydrogenase 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.557391023607105	1.0	0.0
+LOC126326071	NW_026062315.1	206002	uncharacterized LOC126326071	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0358262935808696	5.1282485461851985	1.0000246014564065	-1.0
+LOC126326073	NW_026062315.1	206002	protein lin-28-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	5.656397289717994e-22	23.037625835560757	1.0	0.0
+LOC126326077	NW_026062315.1	206002	large subunit GTPase 1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0415799488984808	5.807483242559137	1.0	0.0
+LOC126326080	NW_026062315.1	206002	uncharacterized LOC126326080	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.090813396543991e-21	23.452623549531495	1.0	0.0
+LOC126326116	NW_026062325.1	42430	translation initiation factor eIF-2B subunit delta-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0305144922116161	6.429382487731979	1.0	0.0
+LOC126326118	NW_026062325.1	42430	nicotinate phosphoribosyltransferase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.466273867672877	1.0	0.0
+LOC126326119	NW_026062325.1	42430	uncharacterized LOC126326119	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0326878505963037	5.9029414286529605	1.0	0.0
+LOC126326120	NW_026062325.1	42430	uncharacterized LOC126326120	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0443073273629268	5.720085558365158	1.0	0.0
+LOC126326123	NW_026062325.1	42430	uncharacterized LOC126326123	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351986125474578	6.127040690502474	1.0	0.0
+LOC126326124	NW_026062325.1	42430	1,4-alpha-glucan-branching enzyme-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0370448298176062	5.813460322617046	1.0	0.0
+LOC126326198	NW_026062331.1	134788	titin homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0499793662930493	5.308947370046371	1.0	0.0
+LOC126326200	NW_026062331.1	134788	ataxin-2 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0386598925724029	6.156004256680635	1.0	0.0
+LOC126326201	NW_026062331.1	134788	GPI ethanolamine phosphate transferase 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0438300856812304	5.656607007656571	1.0	0.0
+LOC126326206	NW_026062331.1	134788	uncharacterized LOC126326206	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0120539850529127	7.128213420548334	1.0	0.0
+LOC126326207	NW_026062331.1	134788	adenylate kinase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0291605982804589	6.406835245809352	1.0	0.0
+LOC126326210	NW_026062331.1	134788	uncharacterized LOC126326210	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0400249925805896	6.299886800868221	1.0	0.0
+LOC126326212	NW_026062331.1	134788	uncharacterized LOC126326212	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479647856969422	5.42240285384143	1.0	0.0
+LOC126326218	NW_026062331.1	134788	calcium-binding protein 39-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.434573917063985	1.0	0.0
+LOC126326220	NW_026062331.1	134788	poly(A) polymerase type 3-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0307957396784762	7.07412177988377	1.0	0.0
+LOC126326243	NW_026062332.1	46418	66 kDa stress protein-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0465939656186169	5.511749339463563	1.0	0.0
+LOC126326244	NW_026062332.1	46418	GTP-binding nuclear protein Ran-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0326878505963037	7.075187246563418	1.0	0.0
+LOC126326505	NW_026062344.1	391542	kinesin-related protein 12-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.484447454696351	1.0	0.0
+LOC126326506	NW_026062344.1	391542	uncharacterized LOC126326506	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	3.3754021691219624e-26	22.75430354338917	1.0	0.0
+LOC126326507	NW_026062344.1	391542	uncharacterized LOC126326507	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0496607406165008	5.020802631834604	1.0	0.0
+LOC126326508	NW_026062344.1	391542	uncharacterized LOC126326508	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320284294124798	6.056598105481486	1.0	0.0
+LOC126326509	NW_026062344.1	391542	uncharacterized LOC126326509	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.457099801568649	1.0	0.0
+LOC126326511	NW_026062344.1	391542	protein arginine N-methyltransferase 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0333084731359573	5.450444663714888	1.0	0.0
+LOC126326513	NW_026062344.1	391542	crt homolog 1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0186970643966862	7.581349094488074	1.0013774104683195	-1.0
+LOC126326518	NW_026062344.1	391542	alkyldihydroxyacetonephosphate synthase-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0028375809160332	7.937192835499371	1.0	0.0
+LOC126326519	NW_026062344.1	391542	uncharacterized LOC126326519	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0318396536873734	6.005822832649412	1.0	0.0
+LOC126326520	NW_026062344.1	391542	exportin-1-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0095532778703645	7.9677504389993805	1.0	0.0
+LOC126326522	NW_026062344.1	391542	uncharacterized LOC126326522	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.360655824140675	1.0	0.0
+LOC126326523	NW_026062344.1	391542	uncharacterized LOC126326523	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0399939541563011	5.982208126597761	1.0	0.0
+LOC126326524	NW_026062344.1	391542	U4/U6 small nuclear ribonucleoprotein Prp4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457345536887499	5.60321913961792	1.0	0.0
+LOC126326530	NW_026062344.1	391542	ras-related C3 botulinum toxin substrate 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0353795471488059	6.461967504365103	1.0	0.0
+LOC126326531	NW_026062344.1	391542	ras-like protein rasD	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0445534431079047	5.617730608089333	1.0	0.0
+LOC126326534	NW_026062344.1	391542	uncharacterized LOC126326534	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	2.7955506450800467e-19	23.0992856004087	1.0	0.0
+LOC126326535	NW_026062344.1	391542	histone deacetylase B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449942085090109	6.11747603886457	1.0	0.0
+LOC126326537	NW_026062344.1	391542	WD repeat-containing protein 3-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0351986125474578	5.955954776860869	1.0	0.0
+LOC126326546	NW_026062344.1	391542	ribosome quality control complex subunit NEMF-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0307217240803232	6.446729536744324	1.0	0.0
+LOC126326547	NW_026062344.1	391542	dual specificity protein kinase shkC-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.041441031079122	6.308379843089157	1.0	0.0
+LOC126326551	NW_026062344.1	391542	uncharacterized LOC126326551	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0298729129428805	6.847986411984861	1.0	0.0
+LOC126326552	NW_026062344.1	391542	proteasome subunit alpha type-3-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	1.768864571117344e-20	21.626038245525823	1.0	0.0
+LOC126326553	NW_026062344.1	391542	GTP-binding protein Rheb homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0314842647526097	7.216167060960492	1.0	0.0
+LOC126326555	NW_026062344.1	391542	uncharacterized LOC126326555	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0492901416040655	5.499551003071335	1.0	0.0
+LOC126326566	NW_026062344.1	391542	uncharacterized LOC126326566	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0137381973764679	7.716927664268488	1.0	0.0
+LOC126326568	NW_026062344.1	391542	uncharacterized LOC126326568	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.995963533338187	1.0	0.0
+LOC126326570	NW_026062344.1	391542	TBC1 domain family member 8B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.875334452515413	1.0	0.0
+LOC126326571	NW_026062344.1	391542	FK506-binding protein 5-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	7.04954781129495	1.0	0.0
+LOC126326581	NW_026062344.1	391542	uncharacterized LOC126326581	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.049584537317115	4.997008826425715	1.0	0.0
+LOC126326584	NW_026062344.1	391542	uncharacterized LOC126326584	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0479647856969422	5.95357483804589	1.0	0.0
+LOC126326585	NW_026062344.1	391542	uncharacterized LOC126326585	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0464792464294665	5.0011647853707295	1.0	0.0
+LOC126326587	NW_026062344.1	391542	serine/threonine-protein kinase MARK2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	5.751987519988366	1.0	0.0
+LOC126326588	NW_026062344.1	391542	probable arginine--tRNA ligase, cytoplasmic	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0201425484917348	7.6380636790612915	1.0	0.0
+LOC126326590	NW_026062344.1	391542	uncharacterized LOC126326590	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449035785767953	6.042416350389682	1.0	0.0
+LOC126326591	NW_026062344.1	391542	uncharacterized LOC126326591	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.81939374234407	1.0	0.0
+LOC126326594	NW_026062344.1	391542	exportin-T-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0422604710187247	5.527738942217031	1.0	0.0
+LOC126326595	NW_026062344.1	391542	uncharacterized LOC126326595	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380339136452078	5.6258983077787175	1.0	0.0
+LOC126326596	NW_026062344.1	391542	uncharacterized LOC126326596	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0482026128472913	5.952557770942123	1.0	0.0
+LOC126326598	NW_026062344.1	391542	elongation factor G-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0493115827726349	5.113249037572051	1.0	0.0
+LOC126326599	NW_026062344.1	391542	uncharacterized LOC126326599	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0232415173185012	6.7446785738654835	1.0	0.0
+LOC126327187	NW_026062374.1	156446	leucine-zipper-like transcriptional regulator 1	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0393417487062535	5.936343391280142	1.0	0.0
+LOC126327188	NW_026062374.1	156446	GPI mannosyltransferase 2-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0086233631759494	7.63930933683836	1.0	0.0
+LOC126327192	NW_026062374.1	156446	integrator complex subunit 6-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0109129985706351	7.492631201728464	1.0	0.0
+LOC126327194	NW_026062374.1	156446	ATP-dependent RNA helicase dhx8-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0268778720515373	6.3354009378411735	1.0	0.0
+LOC126327195	NW_026062374.1	156446	FAS-associated factor 2-B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0351431772545874	5.987786380521316	1.0	0.0
+LOC126327201	NW_026062374.1	156446	DENN domain-containing protein 2A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0323355913244933	6.59187717046459	1.0	0.0
+LOC126327202	NW_026062374.1	156446	serine/threonine-protein kinase 4 homolog A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0320836396263404	5.941749752359915	1.0008496176720476	-1.0
+LOC126327209	NW_026062374.1	156446	cyclin-dependent kinase 5 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0413845037058324	5.518378896516734	1.0	0.0
+LOC126328044	NW_026062425.1	82666	ras guanine nucleotide exchange factor F-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	5.998858969209153	1.0	0.0
+LOC126328045	NW_026062425.1	82666	MORN repeat-containing protein 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0275088540800155	6.097925038565446	1.0	0.0
+LOC126328047	NW_026062425.1	82666	uncharacterized LOC126328047	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0334551510057822	6.064802992359234	1.0	0.0
+LOC126328048	NW_026062425.1	82666	uncharacterized LOC126328048	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0356762860154557	5.89057859884447	1.0	0.0
+LOC126328050	NW_026062425.1	82666	uncharacterized LOC126328050	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.6797220469094105	1.0	0.0
+LOC126328051	NW_026062425.1	82666	WD40 repeat-containing protein SMU1-like	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	6.113617693715738e-26	22.97509946836114	1.0	0.0
+LOC126328054	NW_026062425.1	82666	glutamate--cysteine ligase catalytic subunit-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0414609472499256	5.374654264558811	1.0	0.0
+LOC126328059	NW_026062425.1	82666	26S proteasome non-ATPase regulatory subunit 12-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0472723700109022	5.767859473790355	1.0	0.0
+LOC126328063	NW_026062425.1	82666	succinate dehydrogenase [ubiquinone] iron-sulfur subunit-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	6.01884356572444	1.0	0.0
+LOC126328065	NW_026062425.1	82666	uncharacterized LOC126328065	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0432183030178234	5.299063172232785	1.0	0.0
+LOC126328070	NW_026062425.1	82666	uncharacterized LOC126328070	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0211941259199021	6.645188010986336	1.0	0.0
+LOC126328072	NW_026062425.1	82666	uncharacterized LOC126328072	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0308670153387051	6.221282908509797	1.0	0.0
+LOC126328213	NW_026062445.1	57899	dual specificity protein kinase shkC-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0412457973385852	5.400510500626766	1.0	0.0
+LOC126328215	NW_026062445.1	57899	crustapain-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0333084731359573	6.604224096424362	1.0	0.0
+LOC126328217	NW_026062445.1	57899	uncharacterized LOC126328217	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0308670153387051	6.592978314765655	1.0	0.0
+LOC126328218	NW_026062445.1	57899	glutamine-dependent NAD(+) synthetase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.648440419408537	1.0	0.0
+LOC126328228	NW_026062445.1	57899	trimethyllysine dioxygenase, mitochondrial-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0202628312857215	7.310776852510478	1.0	0.0
+LOC126328320	NW_026062453.1	120714	metacaspase-2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.04186315996553	6.171133325454372	1.0	0.0
+LOC126328325	NW_026062453.1	120714	uncharacterized LOC126328325	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0478639801871518	6.173029610095312	1.0	0.0
+LOC126329065	NW_026062491.1	78405	elongation factor 1-alpha-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0455224570179258	6.221085115876057	1.0	0.0
+LOC126329068	NW_026062491.1	78405	uncharacterized LOC126329068	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0457762830921415	5.318991575987914	1.0	0.0
+LOC126329069	NW_026062491.1	78405	uncharacterized LOC126329069	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0434803061661199	5.39953534940434	1.0009532888465205	-1.0
+LOC126329076	NW_026062491.1	78405	integrator complex subunit 11-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0419723344029543	5.9141131338889945	1.0	0.0
+LOC126329081	NW_026062491.1	78405	uncharacterized LOC126329081	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0444141116897844	5.8842578016585225	1.0	0.0
+LOC126329082	NW_026062491.1	78405	ras-related protein rab-11.1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0304844914019882	6.650975732410774	1.0	0.0
+LOC126329092	NW_026062491.1	78405	telomerase-binding protein EST1A-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0481433380043141	5.285505205107087	1.0	0.0
+LOC126329580	NW_026062521.1	45343	uncharacterized LOC126329580	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0382255081061102	6.059610084789838	1.0	0.0
+LOC126329582	NW_026062521.1	45343	uncharacterized LOC126329582	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0380730306005511	5.602794849481759	1.0	0.0
+LOC126329584	NW_026062521.1	45343	uncharacterized LOC126329584	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	5.996655562678035	1.0	0.0
+LOC126329585	NW_026062521.1	45343	uncharacterized LOC126329585	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0325845808569807	6.272049298626546	1.0	0.0
+LOC126329586	NW_026062521.1	45343	uncharacterized LOC126329586	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0424730757297472	6.02355046287229	1.0	0.0
+LOC126329587	NW_026062521.1	45343	ankyrin repeat and death domain-containing protein 1B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.852985223467611	1.0	0.0
+LOC126329590	NW_026062521.1	45343	TELO2-interacting protein 1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0458828005210422	5.751391913518683	1.0	0.0
+LOC126329915	NW_026062549.1	81318	uncharacterized LOC126329915	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0401380936682709	5.782221623210803	1.0	0.0
+LOC126329917	NW_026062549.1	81318	uncharacterized LOC126329917	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0428031834567124	5.988464554948225	1.0	0.0
+LOC126329919	NW_026062549.1	81318	succinate--CoA ligase [ADP-forming] subunit beta, mitochondrial-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.027736732964632	1.0	0.0
+LOC126329921	NW_026062549.1	81318	ATPase ASNA1 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0407875848929355	6.2078832161423385	1.0	0.0
+LOC126329929	NW_026062549.1	81318	uncharacterized LOC126329929	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0389216610784076	5.993299912877113	1.0	0.0
+LOC126329932	NW_026062549.1	81318	phosphatidylinositol 3-kinase 1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0363211010092351	5.56899217897847	1.0	0.0
+LOC126329935	NW_026062549.1	81318	heterogeneous nuclear ribonucleoprotein A0-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	5.712379403875903	1.0	0.0
+LOC126329938	NW_026062549.1	81318	transportin-1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0371030041564031	5.493125831483513	1.0	0.0
+LOC126329970	NW_026062553.1	133558	uncharacterized LOC126329970	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.031421479980354	6.213428177873415	1.001508295625943	-1.0
+LOC126329972	NW_026062553.1	133558	riboflavin biosynthesis protein RibD-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0339546106696041	6.032731713377855	1.0	0.0
+LOC126329974	NW_026062553.1	133558	uncharacterized LOC126329974	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0351788838301088	5.679107576715418	1.0	0.0
+LOC126329976	NW_026062553.1	133558	uncharacterized LOC126329976	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.031421479980354	6.680654656212218	1.0	0.0
+LOC126329978	NW_026062553.1	133558	uncharacterized LOC126329978	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0360329958682104	6.357544325895079	1.0	0.0
+LOC126329979	NW_026062553.1	133558	clustered mitochondria protein homolog	protein_coding	Significant in both mappings	6	infected_diet33_vs50;infected_diet83_vs33;infection_average_all_diets;infection_diet33;interaction_diet33_vs50;interaction_diet83_vs33	4.351512616103792e-24	22.60327191504944	1.0	0.0
+LOC126329981	NW_026062553.1	133558	uncharacterized LOC126329981	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.595328411035255	1.0	0.0
+LOC126329983	NW_026062553.1	133558	uncharacterized LOC126329983	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0343776734881589	6.510233242625617	1.0	0.0
+LOC126329985	NW_026062553.1	133558	phosphatidylinositol-3-phosphatase SAC1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.689391486850924	1.0	0.0
+LOC126329991	NW_026062553.1	133558	probable protein phosphatase DDB_G0279461	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0420097118865425	5.543492081791965	1.0	0.0
+LOC126329994	NW_026062553.1	133558	uncharacterized LOC126329994	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0468751109780863	5.223929330418774	1.0	0.0
+LOC126329995	NW_026062553.1	133558	nuclear pore complex protein DDB_G0274915-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0363377860604687	5.635820533744338	1.0	0.0
+LOC126329997	NW_026062553.1	133558	uncharacterized LOC126329997	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0330552861755441	6.411926271755842	1.0	0.0
+LOC126330058	NW_026062566.1	85828	uncharacterized LOC126330058	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0325577855972995	5.973881062425947	1.0	0.0
+LOC126330060	NW_026062566.1	85828	protein DENND6B-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0470294434674024	5.58561409780183	1.0	0.0
+LOC126330066	NW_026062566.1	85828	uncharacterized LOC126330066	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0425021315713419	5.4462813550580265	1.0	0.0
+LOC126330068	NW_026062566.1	85828	uncharacterized LOC126330068	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.114031415285996	1.0	0.0
+LOC126330073	NW_026062566.1	85828	tRNA (guanine-N(7)-)-methyltransferase non-catalytic subunit wdr4-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0305144922116161	6.39928624580674	1.0	0.0
+LOC126330799	NW_026062667.1	51953	uncharacterized LOC126330799	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.039515809460292	6.14167384544013	1.0	0.0
+LOC126330800	NW_026062667.1	51953	uncharacterized LOC126330800	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0429096445544611	5.441249212681253	1.0	0.0
+LOC126330801	NW_026062667.1	51953	serine/threonine-protein phosphatase 2A catalytic subunit beta isoform-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0279982338777855	6.80473646552801	1.0	0.0
+LOC126330805	NW_026062667.1	51953	ras guanine nucleotide exchange factor A-like	protein_coding	Significant in both mappings	3	infected_diet33_vs50;infection_average_all_diets;infection_diet33	0.0085332706148918	7.940843750807735	1.0	0.0
+LOC126330806	NW_026062667.1	51953	uncharacterized LOC126330806	lncRNA	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0236854126160767	6.593056213080496	1.0	0.0
+LOC126330815	NW_026062667.1	51953	probable alanine aminotransferase, mitochondrial	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0202628312857215	7.562750167582166	1.0	0.0
+LOC126331440	NW_026062676.1	41897	ELMO domain-containing protein A-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0236612300580584	6.4470505510294736	1.0	0.0
+LOC126331441	NW_026062676.1	41897	dynamin-like protein A	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.049787940118829	5.798547189393737	1.0	0.0
+LOC126331442	NW_026062676.1	41897	uncharacterized LOC126331442	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.926418651395399	1.0	0.0
+LOC126331443	NW_026062676.1	41897	leucine--tRNA ligase, cytoplasmic-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0390194780945143	5.551708014497178	1.0	0.0
+LOC126331455	NW_026062676.1	41897	uncharacterized LOC126331455	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0432237163064204	5.777081467866096	1.0	0.0
+LOC126332387	NW_026062747.1	57233	uncharacterized LOC126332387	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.994752812504999	1.0	0.0
+LOC126332393	NW_026062747.1	57233	DNA-directed RNA polymerase I subunit rpa1-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0340955100526384	6.0052943521540865	1.0	0.0
+LOC126332394	NW_026062747.1	57233	uncharacterized LOC126332394	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0195546944975661	7.550442128656334	1.0	0.0
+LOC126332398	NW_026062747.1	57233	glucose-6-phosphate isomerase-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0342210450333798	5.876774844091141	1.0	0.0
+LOC126332400	NW_026062747.1	57233	nuclear pore complex protein Nup107-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0279982338777855	6.311445354811734	1.0	0.0
+LOC126332405	NW_026062750.1	50201	uncharacterized LOC126332405	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0371928674800214	5.475766815486435	1.0	0.0
+LOC126332406	NW_026062750.1	50201	uncharacterized LOC126332406	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0342210450333798	5.913111724563398	1.0	0.0
+LOC126332410	NW_026062750.1	50201	endonuclease III-like protein 1	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0349290266272099	6.378762642927935	1.0	0.0
+LOC126332412	NW_026062750.1	50201	uncharacterized LOC126332412	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0473867269112177	5.367127900781495	1.0	0.0
+LOC126332756	NW_026062795.1	43210	PAN2-PAN3 deadenylation complex subunit pan3-like	protein_coding	Host-only significant only; Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0325845808569807	6.588193645866036	1.0	0.0
+LOC126332758	NW_026062795.1	43210	uncharacterized LOC126332758	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0471550469822426	5.465179506724652	1.0	0.0
+LOC126332762	NW_026062795.1	43210	tyrosine-protein phosphatase 2-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0425021315713419	5.72808445665158	1.0	0.0
+LOC126332763	NW_026062795.1	43210	WD repeat-containing protein DDB_G0349043-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0321202567591405	6.045749603557637	1.0	0.0
+LOC126332764	NW_026062795.1	43210	transmembrane protein 104 homolog	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.041749485800631	5.603692311392664	1.0002743484224963	-1.0
+LOC126332782	NW_026062803.1	61147	peroxisomal targeting signal 2 receptor-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0410009863177951	5.6952797022620825	1.0	0.0
+LOC126332784	NW_026062803.1	61147	uncharacterized LOC126332784	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0325845808569807	6.08046345396654	1.0	0.0
+LOC126332788	NW_026062803.1	61147	uncharacterized LOC126332788	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0477936458830511	5.627558563363299	1.0	0.0
+LOC126332789	NW_026062803.1	61147	uncharacterized LOC126332789	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0275390092252584	6.484872269244874	1.0	0.0
+LOC126332792	NW_026062803.1	61147	uncharacterized LOC126332792	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0273056204064994	7.237514619749357	1.0	0.0
+LOC126332797	NW_026062803.1	61147	J domain-containing protein DDB_G0295729-like	protein_coding	Significant in both mappings	2	infected_diet33_vs50;infection_diet33	0.0280100767479561	6.650978500683899	1.0	0.0
+LOC126332799	NW_026062803.1	61147	mucin-12-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0449471807942326	5.781847815852323	1.0	0.0
+LOC126334342	NW_026062990.1	11589	phosphoribosylamine--glycine ligase-like	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0499793662930493	5.781327007609283	1.0	0.0
+LOC126334343	NW_026062990.1	11589	uncharacterized LOC126334343	protein_coding	Significant in both mappings	1	infected_diet33_vs50	0.0460263815965844	5.49320263129379	1.0	0.0
+LOC126334344	NW_026062990.1	11589	uncharacterized LOC126334344	lncRNA	Significant in both mappings	1	infected_diet33_vs50	0.0319954514525205	5.575688437744887	1.0	0.0

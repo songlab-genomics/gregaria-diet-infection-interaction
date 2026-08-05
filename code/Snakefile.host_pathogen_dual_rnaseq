@@ -1,0 +1,17 @@
+### =================================================================
+### FAT-BODY HOST-PATHOGEN DUAL RNA-SEQ
+### =================================================================
+###
+### This isolated entry point starts from the original paired FASTQs, runs
+### fastp, maps the same reads to S. gregaria alone and competitively to
+### S. gregaria plus M. robertsii, compares the host results, produces fungal
+### counts, screens unplaced scaffolds, and builds Kraken family-composition
+### figures. It never writes into historical runs.
+
+include: "config.smk"
+include: "rules/07_host_pathogen_dual_rnaseq.smk"
+
+
+rule all:
+    input:
+        dual_rnaseq_final_outputs()

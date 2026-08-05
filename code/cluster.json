@@ -10,6 +10,28 @@
     "export": "NONE"
   },
 
+  "host_pathogen_dual_all": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "2G",
+    "time": "0-00:10:00",
+    "export": "ALL"
+  },
+
+  "host_pathogen_dual_hpc_preprocessing": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "2G",
+    "time": "0-00:10:00",
+    "export": "ALL"
+  },
+
   "trimming_fastp": {
     "nodes": 1,
     "ntasks": 1,
@@ -283,5 +305,621 @@
     "mem": "40G",
     "time": "2-00:00:00",
     "export": "NONE"
+  },
+
+  "dual_run_provenance": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:20:00",
+    "export": "ALL"
+  },
+
+  "dual_fastp": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-08:00:00",
+    "export": "ALL"
+  },
+
+  "dual_build_combined_reference": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_host_only_star_index": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 20,
+    "partition": "public",
+    "qos": "public",
+    "mem": "220G",
+    "time": "2-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_competitive_star_index": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 20,
+    "partition": "public",
+    "qos": "public",
+    "mem": "220G",
+    "time": "2-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_host_only_star_align": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "160G",
+    "time": "2-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_competitive_star_align": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "160G",
+    "time": "2-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_featurecounts_host_only_exon": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_featurecounts_host_only_transcript_exon": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_featurecounts_competitive_host_exon": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_featurecounts_competitive_host_transcript_exon": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_featurecounts_fungus_exon": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 12,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_host_only_exon_counts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_host_only_transcript_exon_counts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_competitive_host_exon_counts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_competitive_host_transcript_exon_counts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_fungus_exon_counts": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_export_host_unmapped": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-08:00:00",
+    "export": "ALL"
+  },
+
+  "dual_export_competitive_unmapped": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "public",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-08:00:00",
+    "export": "ALL"
+  },
+
+  "dual_host_only_mapping_summary_sample": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_host_only_mapping_summary": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "dual_competitive_mapping_summary_sample": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "20G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_merge_competitive_mapping_summary": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "dual_kraken2_classify": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "160G",
+    "time": "1-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_bracken_family": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_taxonomy_manifest": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:20:00",
+    "export": "ALL"
+  },
+
+  "dual_prepare_local_transfer_bundle": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "16G",
+    "time": "0-02:00:00",
+    "export": "ALL"
+  },
+
+  "dual_plot_family_composition": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "20G",
+    "time": "0-02:00:00",
+    "export": "ALL"
+  },
+
+  "dual_host_only_deseq2": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_competitive_host_deseq2": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "60G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_compare_host_count_matrices": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_compare_host_deseq2": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_identify_unplaced_host_degs": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_extract_candidate_unplaced_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "dual_kraken_candidate_unplaced_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "160G",
+    "time": "1-00:00:00",
+    "export": "ALL"
+  },
+
+  "dual_summarize_candidate_unplaced_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "dual_build_host_origin_evidence_catalogue": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "dual_fungal_deseq2": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 4,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "40G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "origin_stage_inputs": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "scaffold_origin_audit_hpc": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "2G",
+    "time": "0-00:10:00",
+    "export": "ALL"
+  },
+
+  "origin_extract_candidate_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "origin_summarize_candidate_annotation": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "origin_kraken_candidate_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "160G",
+    "time": "1-00:00:00",
+    "export": "ALL"
+  },
+
+  "origin_summarize_scaffold_taxonomy": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "origin_align_cross_species": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 16,
+    "partition": "public",
+    "qos": "public",
+    "mem": "80G",
+    "time": "1-00:00:00",
+    "export": "ALL"
+  },
+
+  "origin_summarize_cross_species_homology": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "origin_build_evidence_table": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "8G",
+    "time": "0-01:00:00",
+    "export": "ALL"
+  },
+
+  "origin_prepare_local_transfer_bundle": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "12G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "scaffold_origin_homology_hpc": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "2G",
+    "time": "0-00:10:00",
+    "export": "ALL"
+  },
+
+  "homology_stage_inputs": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "4G",
+    "time": "0-00:30:00",
+    "export": "ALL"
+  },
+
+  "homology_extract_candidate_scaffolds": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "homology_prepare_gene_queries": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "24G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "homology_blastn_core_nt": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 32,
+    "partition": "public",
+    "qos": "public",
+    "mem": "240G",
+    "time": "6-23:59:00",
+    "export": "ALL"
+  },
+
+  "homology_diamond_nr_cluster_seq": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 32,
+    "partition": "public",
+    "qos": "public",
+    "mem": "240G",
+    "time": "6-23:59:00",
+    "export": "ALL"
+  },
+
+  "homology_summarize_taxonomic_hits": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 1,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "20G",
+    "time": "0-04:00:00",
+    "export": "ALL"
+  },
+
+  "homology_prepare_local_transfer_bundle": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus-per-task": 2,
+    "partition": "htc",
+    "qos": "public",
+    "mem": "16G",
+    "time": "0-04:00:00",
+    "export": "ALL"
   }
 }

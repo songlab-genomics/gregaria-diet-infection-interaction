@@ -16,8 +16,23 @@ metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts <- read.csv("data/raw_read_counts/master_counts_no_rRNA.csv",
-                   check.names = FALSE)
+counts_table <- read.delim(
+  "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv",
+  check.names = FALSE
+)
+placement <- read.delim(
+  "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv",
+  check.names = FALSE
+)
+rrna_ids <- trimws(readLines("data/excluded_loci/gregaria_rrna_list.txt"))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+all_non_rrna_ids <- setdiff(counts_table$gene_id, rrna_ids)
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+all_counts <- counts_table[counts_table$gene_id %in% all_non_rrna_ids, ]
+placed_counts <- counts_table[counts_table$gene_id %in% main_chromosome_ids, ]
 ```
 
 ```{r hero, echo=FALSE, results='asis'}
@@ -27,19 +42,20 @@ cat('
 <p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
 <h1>Fat body diet-infection RNA-seq analysis</h1>
 <p class="lede">
-This workflowR site is organized as a collaborator-facing analysis trail:
-start with the fat body experiment and DESeq2 contrasts, then move to
-candidate genes, enrichment, and reference-context overlays that ask whether
-experiment DEGs also resemble tissue or phase signatures.
+This workflowR site retains all 44 fat-body samples and presents two parallel
+views of the same experiment. The all-scaffold branch preserves the complete
+host-reference signal; the placed-chromosome branch provides the conservative
+foreground used for the current publication figures. Outlier-removal analyses
+are archived as sensitivity checks rather than treated as competing results.
 </p>
 <div class="hero-actions">
-<a href="16-all-samples-infection-within-diet-deg.html">Open fat body DEGs</a>
-<a href="19-outliers-removed-infection-within-diet-deg.html">Outliers removed</a>
-<a href="22-deg-logical-set-construction.html">Reference context</a>
+<a href="06-infection-within-diet-deg.html">All-scaffold analysis</a>
+<a href="16-all-samples-infection-within-diet-deg.html">Placed-chromosome analysis</a>
+<a href="08-publication-figures.html">Publication figures</a>
 </div>
 </div>
 <div class="hero-figure">
-<img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Fat body VST PCA with condition centroids">
+<img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Main-chromosome fat body VST PCA with condition centroids">
 </div>
 </div>
 ')
@@ -47,16 +63,19 @@ experiment DEGs also resemble tissue or phase signatures.
 
 ```{r metrics, echo=FALSE, results='asis'}
 n_samples <- nrow(metadata)
-n_genes <- nrow(counts)
+n_all_genes <- nrow(all_counts)
+n_placed_genes <- nrow(placed_counts)
 diet_levels <- paste(levels(droplevels(metadata$Diet)), collapse = " / ")
 treatment_levels <- paste(levels(droplevels(metadata$Treatment)), collapse = " / ")
 
 cat('<div class="metric-grid">')
 cat(sprintf('<div class="metric"><span>%s</span><strong>samples</strong></div>', n_samples))
-cat(sprintf('<div class="metric"><span>%s</span><strong>counted genes</strong></div>',
-            format(n_genes, big.mark = ",")))
-cat(sprintf('<div class="metric"><span>%s</span><strong>diet levels</strong></div>', diet_levels))
-cat(sprintf('<div class="metric"><span>%s</span><strong>treatments</strong></div>', treatment_levels))
+cat(sprintf('<div class="metric"><span>%s</span><strong>all non-rRNA loci</strong></div>',
+            format(n_all_genes, big.mark = ",")))
+cat(sprintf('<div class="metric"><span>%s</span><strong>placed chromosome loci</strong></div>',
+            format(n_placed_genes, big.mark = ",")))
+cat(sprintf('<div class="metric"><span>%s</span><strong>diet x treatment groups</strong></div>',
+            length(unique(interaction(metadata$Diet, metadata$Treatment)))))
 cat('</div>')
 ```
 
@@ -64,19 +83,15 @@ cat('</div>')
 
 <div class="note-panel">
 <p>
-The website now has one recommended path rather than a flat list of every page.
-Use <strong>Fat Body Experiment</strong> for the primary DESeq2 results and
-sample-filter/outlier sensitivity scenarios. Use <strong>Interpretation</strong>
-for candidate genes, GO/KEGG, and publication panels. Use
-<strong>Reference Context</strong> only after the experiment DEGs have been
-defined, to ask whether fat body DEGs also overlap tissue or phase signatures.
-Older exploratory pages remain under
-<strong>Archive</strong> for provenance, but they are no longer the main route
-through the analysis.
+Start with the shared design, workflow, and QC pages. Then choose one analysis
+scope and keep that scope consistent through DEG testing, overlap, catalogue,
+and enrichment. The placed-chromosome branch is the current manuscript-facing
+analysis; the all-scaffold branch shows how much of the signal depends on loci
+whose assembly placement is unresolved. Both retain every sample.
 </p>
 </div>
 
-## Recommended Reading Path
+## Shared Starting Point
 
 <div class="analysis-grid">
   <a class="analysis-tile" href="01-study-design-data.html">
@@ -94,125 +109,81 @@ through the analysis.
     <strong>Fat Body Count QC</strong>
     <p>Check library sizes, PCA structure, sample distances, and broad expression quality.</p>
   </a>
-  <a class="analysis-tile featured-tile" href="16-all-samples-infection-within-diet-deg.html">
-    <span>Step 4</span>
-    <strong>Fat Body Infection DEGs</strong>
-    <p>Define infected-versus-control DEGs within each diet using all fat body samples.</p>
-  </a>
-  <a class="analysis-tile" href="14-all-samples-deseq2-interaction-model.html">
-    <span>Step 5</span>
-    <strong>Diet x Infection Model</strong>
-    <p>Check the formal full-model terms for diet, treatment, and their interaction.</p>
-  </a>
-  <a class="analysis-tile" href="19-outliers-removed-infection-within-diet-deg.html">
-    <span>Step 6</span>
-    <strong>Outlier-Removed DEGs</strong>
-    <p>Repeat the key fat body DEG views after removing the current outlier set.</p>
-  </a>
-  <a class="analysis-tile" href="13-physiology-candidate-genes.html">
-    <span>Step 7</span>
-    <strong>Candidate Genes</strong>
-    <p>Focus on insect-relevant immune, energy-store, amino-acid, nutrition, and stress genes.</p>
-  </a>
-  <a class="analysis-tile" href="10-go-term-enrichment.html">
-    <span>Step 8</span>
-    <strong>GO and KEGG Enrichment</strong>
-    <p>Review eggNOG-derived enrichment after understanding the DEG foregrounds.</p>
-  </a>
-  <a class="analysis-tile" href="25-enrichment-term-gene-index.html">
-    <span>Step 9</span>
-    <strong>Term-to-Gene Index</strong>
-    <p>Search which DEG IDs contributed to each enriched GO term or KEGG pathway.</p>
-  </a>
-  <a class="analysis-tile" href="22-deg-logical-set-construction.html">
-    <span>Step 10</span>
-    <strong>Reference Context</strong>
-    <p>Ask whether fat body DEGs are shared with tissue-reference, head-phase, or thorax-phase signatures.</p>
-  </a>
-  <a class="analysis-tile" href="08-publication-figures.html">
-    <span>Step 11</span>
-    <strong>Publication Figure Exports</strong>
-    <p>Find rendered panels that can be assembled or refined for manuscripts and collaborator slides.</p>
-  </a>
 </div>
 
-## Supporting Fat Body Pages
+## Choose The Gene Universe
 
-<div class="analysis-grid compact-grid">
-  <a class="analysis-tile" href="14-all-samples-deseq2-interaction-model.html">
-    <span>All samples</span>
-    <strong>Interaction Model</strong>
-    <p>Full DESeq2 diet x infection model with all fat body samples retained.</p>
-  </a>
-  <a class="analysis-tile" href="17-outliers-removed-deseq2-interaction-model.html">
-    <span>Outliers removed</span>
-    <strong>Interaction Model</strong>
-    <p>Same model after removing the current outlier set for sensitivity.</p>
-  </a>
-  <a class="analysis-tile" href="12-deg-sample-filter-scenarios.html">
-    <span>Scenarios</span>
-    <strong>Sample Filters</strong>
-    <p>Directly compare how DEG burden changes across inclusion choices.</p>
-  </a>
-  <a class="analysis-tile" href="23-outlier-expression-signatures.html">
-    <span>All samples</span>
-    <strong>Outlier Gene Signals</strong>
-    <p>Identify genes that make flagged samples differ from same-condition peers.</p>
-  </a>
-  <a class="analysis-tile" href="24-all-deg-catalogue.html">
-    <span>All samples</span>
-    <strong>Searchable DEG Catalogue</strong>
-    <p>Search every significant DEG, contrast, annotation, log2FC, and higher-expression side.</p>
-  </a>
-  <a class="analysis-tile" href="11-outlier-sensitivity.html">
-    <span>Sensitivity</span>
-    <strong>Outlier Effects</strong>
-    <p>Check PCA shifts, retained/lost/gained DEGs, and fold-change stability.</p>
-  </a>
-  <a class="analysis-tile" href="09-outliers-load-enrichment.html">
-    <span>Sensitivity</span>
-    <strong>Quality and Inferred Load</strong>
-    <p>Earlier outlier, inferred load, annotation, and enrichment checks.</p>
-  </a>
+<div class="scope-grid">
+  <section class="scope-panel all-scope">
+    <span>Complete reference view</span>
+    <h3>All samples + all scaffolds</h3>
+    <p>All 44 samples and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
+    <div class="scope-links">
+      <a href="04-deseq2-interaction-model.html">Interaction model</a>
+      <a href="05-diet-pairwise-deg.html">Diet DEGs</a>
+      <a href="06-infection-within-diet-deg.html">Infection DEGs</a>
+      <a href="31-all-scaffolds-deg-overlap-prioritization.html">Overlap</a>
+      <a href="32-all-scaffolds-deg-catalogue.html">Catalogue</a>
+      <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG</a>
+    </div>
+  </section>
+  <section class="scope-panel placed-scope">
+    <span>Current manuscript view</span>
+    <h3>All samples + placed chromosomes</h3>
+    <p>All 44 samples are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
+    <div class="scope-links">
+      <a href="14-all-samples-deseq2-interaction-model.html">Interaction model</a>
+      <a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
+      <a href="16-all-samples-infection-within-diet-deg.html">Infection DEGs</a>
+      <a href="07-deg-overlap-prioritization.html">Overlap</a>
+      <a href="24-all-deg-catalogue.html">Catalogue</a>
+      <a href="10-go-term-enrichment.html">GO / KEGG</a>
+    </div>
+  </section>
 </div>
 
-## Reference Context and Interpretation
+## Biological Interpretation
 
-<div class="analysis-grid compact-grid">
-  <a class="analysis-tile" href="13-physiology-candidate-genes.html">
-    <span>Candidate genes</span>
-    <strong>Physiology Themes</strong>
-    <p>Immune, nutrition, storage, lipid transport, detoxification, and stress candidates.</p>
+<div class="analysis-grid">
+  <a class="analysis-tile featured-tile" href="13-physiology-candidate-genes.html">
+    <span>Both scopes</span>
+    <strong>Physiology Candidates</strong>
+    <p>Compare immune, protein storage/synthesis, lipid metabolism, and detoxification responses across diets.</p>
   </a>
-  <a class="analysis-tile" href="10-go-term-enrichment.html">
-    <span>Enrichment</span>
-    <strong>GO and KEGG</strong>
-    <p>eggNOG-derived GO terms and KEGG pathway themes for DEG foregrounds.</p>
+  <a class="analysis-tile" href="26-circled-cluster-enrichment.html">
+    <span>Placed chromosomes</span>
+    <strong>Expression Clusters</strong>
+    <p>Review the complete gene-level heatmap and cluster-specific GO/KEGG patterns used in Figure 3.</p>
   </a>
-  <a class="analysis-tile" href="25-enrichment-term-gene-index.html">
-    <span>Reverse lookup</span>
-    <strong>Enriched Term Genes</strong>
-    <p>List the LOC genes that drive each enriched GO term or KEGG pathway.</p>
-  </a>
-  <a class="analysis-tile" href="22-deg-logical-set-construction.html">
-    <span>After DEGs</span>
-    <strong>Tissue / Phase Overlap</strong>
-    <p>Overlay phase and tissue-reference signatures onto fat body experiment DEGs.</p>
-  </a>
-  <a class="analysis-tile" href="20-phase-signature-overlap.html">
-    <span>Reference samples</span>
-    <strong>Phase Overlap</strong>
-    <p>Compare the fat body experiment with head, thorax, and fat body phase references.</p>
-  </a>
-  <a class="analysis-tile" href="21-phase-signature-overlap-no-outliers.html">
-    <span>Reference samples</span>
-    <strong>Phase Overlap, Filtered</strong>
-    <p>Repeat the phase/reference comparison after removing current outliers.</p>
+  <a class="analysis-tile" href="30-curated-target-gene-figure.html">
+    <span>Placed with audit</span>
+    <strong>Curated Targets</strong>
+    <p>Recalculate the coauthor target-gene analysis while preserving excluded unplaced targets for follow-up.</p>
   </a>
   <a class="analysis-tile" href="08-publication-figures.html">
-    <span>Exports</span>
+    <span>Compiled exports</span>
     <strong>Publication Figures</strong>
-    <p>Centralized rendered panels copied from current analysis outputs.</p>
+    <p>Download manuscript-ready Figures 1-4 and supplementary figures from one page.</p>
+  </a>
+</div>
+
+## Validation and Provenance
+
+<div class="analysis-grid compact-grid">
+  <a class="analysis-tile" href="28-placed-unplaced-scaffold-analysis.html">
+    <span>Placement sensitivity</span>
+    <strong>Placed vs Unplaced</strong>
+    <p>Quantify how unplaced-scaffold genes alter DEG totals without mixing them into the paper foreground.</p>
+  </a>
+  <a class="analysis-tile" href="27-scaffold-origin-audit.html">
+    <span>Origin audit</span>
+    <strong>Unplaced Scaffolds</strong>
+    <p>Review assembly, Kraken/FCS, cross-species, BLASTn, and DIAMOND evidence.</p>
+  </a>
+  <a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_outlier-removal_sensitivity">
+    <span>Sample sensitivity</span>
+    <strong>Outlier Removal</strong>
+    <p>Document how DEG calls change under sample removal while retaining all samples as the adopted analysis.</p>
   </a>
 </div>
 
@@ -220,20 +191,19 @@ through the analysis.
 
 <div class="figure-strip">
   <figure>
-    <img src="figure/16-all-samples-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="Fat body DEG count barplot">
-    <figcaption>Fat body DEG burden</figcaption>
+    <img src="figure/16-all-samples-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="Main-chromosome infection DEG count barplot">
+    <figcaption>Infection DEGs by diet</figcaption>
   </figure>
   <figure>
-    <img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Fat body PCA with centroids">
-    <figcaption>Fat body PCA</figcaption>
+    <img src="figure/07-deg-overlap-prioritization.Rmd/deg-upsetr-current-sets.png" alt="Main-chromosome DEG overlap plot">
+    <figcaption>DEG overlap</figcaption>
   </figure>
   <figure>
-    <img src="figure/22-deg-logical-set-construction.Rmd/all-samples-final-upset-1.png" alt="Fat body DEG reference-context UpSet plot">
-    <figcaption>Reference-context overlap</figcaption>
+    <img src="figure/26-circled-cluster-enrichment.Rmd/expression-cluster-landscape-1.png" alt="Main-chromosome DEG expression clusters">
+    <figcaption>Expression clusters</figcaption>
   </figure>
 </div>
 
-The archive menu preserves the original workflowR pages and older generated
-assets as provenance. They are kept on the site so the analysis history remains
-traceable, but the recommended route above is the cleaner collaborator-facing
-version.
+The [archive](archive.html) preserves outlier-removal and superseded exploratory
+pages as provenance. They remain traceable but are no longer presented as
+current alternatives to the all-sample analysis.

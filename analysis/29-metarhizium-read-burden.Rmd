@@ -1,0 +1,952 @@
+---
+title: "Metarhizium read burden across fat body samples"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  fungal_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-fungus/metarhizium_exon_counts.tsv"
+  mapping_summary_file: "output/runs/host_pathogen_dual_20260727_000952/05-mapping-comparison/competitive_mapping_summary.tsv"
+  cluster_run_dir: ""
+  output_tag: "metarhizium-read-burden"
+---
+
+## Purpose
+
+This page quantifies the RNA-seq evidence for *Metarhizium robertsii* in each
+fat body library. It uses the competitive host-pathogen alignment, in which
+each read is aligned against a combined *Schistocerca gregaria* and
+*M. robertsii* reference. This avoids counting a read independently as both
+host and fungus.
+
+Three related measurements are reported:
+
+1. **Fungal genome-mapped reads:** primary, uniquely mapped read alignments
+   assigned by STAR anywhere on the *M. robertsii* genome.
+2. **Fungal exon-assigned fragments:** paired-end fragments assigned by
+   featureCounts to annotated *M. robertsii* exons.
+3. **Unique fungal alignment percentage:** uniquely aligned reads assigned to the
+   fungal reference, shown as a percentage of all unique alignments.
+
+The first measurement is the closest available equivalent to a general
+"mapped reads" plot because it is not restricted to annotated exons. The
+featureCounts value is instead an expression-level fungal exon count and is
+reported as fragments because the pipeline used `--countReadPairs`. Neither
+measurement is a direct measurement of fungal biomass, and matched qPCR
+validation was unavailable because no additional tissue remained.
+
+## Setup and input validation
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("dplyr", "ggplot2", "scales", "patchwork", "DT", "knitr",
+              "tidyr", "tibble", "stringr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+metadata_file <- file.path(project_dir, params$metadata_file)
+fungal_counts_file <- file.path(project_dir, params$fungal_counts_file)
+mapping_summary_file <- file.path(project_dir, params$mapping_summary_file)
+
+latest_run_dir <- function(prefix) {
+  run_root <- file.path(project_dir, "output", "rmd_runs")
+  candidates <- list.dirs(run_root, recursive = FALSE, full.names = TRUE)
+  candidates <- candidates[grepl(paste0("^", prefix, "_"), basename(candidates))]
+  if (length(candidates) == 0) {
+    stop("No completed run found for: ", prefix)
+  }
+  candidates[[which.max(file.info(candidates)$mtime)]]
+}
+
+cluster_run_dir <- if (nzchar(params$cluster_run_dir)) {
+  normalizePath(file.path(project_dir, params$cluster_run_dir), mustWork = TRUE)
+} else {
+  latest_run_dir("main-chromosome-cluster-enrichment")
+}
+cluster_matrix_file <- file.path(
+  cluster_run_dir,
+  "full_main_chromosome_deg_diagnostic_z_vst_matrix.csv.gz"
+)
+cluster_assignment_file <- file.path(
+  cluster_run_dir,
+  "figure3_k2_gene_assignments.csv"
+)
+
+input_files <- c(
+  metadata_file, fungal_counts_file, mapping_summary_file,
+  cluster_matrix_file, cluster_assignment_file
+)
+if (!all(file.exists(input_files))) {
+  stop("Missing input(s): ", paste(input_files[!file.exists(input_files)], collapse = ", "))
+}
+
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(
+  project_dir, "output", "rmd_runs",
+  paste(params$output_tag, run_stamp, sep = "_")
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata <- read.delim(metadata_file, check.names = FALSE)
+metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)), drop = FALSE] |>
+  dplyr::mutate(
+    label = as.character(label),
+    Treatment = factor(Treatment, levels = c("Control", "Infected")),
+    Diet = factor(as.character(Diet), levels = c("33", "50", "83")),
+    condition = factor(
+      paste(Treatment, Diet),
+      levels = c(
+        "Control 33", "Control 50", "Control 83",
+        "Infected 33", "Infected 50", "Infected 83"
+      )
+    )
+  )
+
+fungal_counts <- read.delim(fungal_counts_file, check.names = FALSE)
+sample_ids <- colnames(fungal_counts)[-1]
+stopifnot(setequal(sample_ids, metadata$label))
+
+mapping_summary <- read.delim(mapping_summary_file, check.names = FALSE) |>
+  dplyr::mutate(sample_id = as.character(sample_id))
+stopifnot(setequal(mapping_summary$sample_id, metadata$label))
+
+fungal_burden <- data.frame(
+  label = sample_ids,
+  fungal_exon_fragments = colSums(fungal_counts[, -1, drop = FALSE])
+) |>
+  dplyr::left_join(
+    mapping_summary |>
+      dplyr::select(sample_id, unique_fungus, pct_unique_fungus),
+    by = c("label" = "sample_id")
+  ) |>
+  dplyr::left_join(
+    metadata |>
+      dplyr::select(label, Treatment, Diet, condition),
+    by = "label"
+  ) |>
+  dplyr::mutate(
+    sample_name = as.character(label),
+    condition = factor(condition, levels = levels(metadata$condition))
+  ) |>
+  dplyr::arrange(condition, as.numeric(label))
+
+write.csv(
+  fungal_burden,
+  file.path(out_dir, "metarhizium_read_burden_by_sample.csv"),
+  row.names = FALSE
+)
+```
+
+## Fungal genome-mapped reads
+
+This is the broad mapping view most comparable to the previously generated
+"CDS alignment mapped reads" figure. Here, however, reads were aligned
+competitively against the complete locust and fungal genomes. The bars count
+primary read alignments that mapped uniquely anywhere on the fungal genome;
+they are not restricted to exons or CDS features.
+
+The values will not be identical to a direct CDS alignment because the
+reference target, competition with the host genome, alignment algorithm, and
+multimapping filters differ.
+
+```{r fungal-genome-mapped-reads, fig.width=20, fig.height=8}
+mapped_highlight_threshold <- stats::quantile(
+  fungal_burden$unique_fungus,
+  probs = 0.90,
+  na.rm = TRUE
+)
+
+fungal_genome_plot <- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = unique_fungus)
+) +
+  ggplot2::geom_col(
+    fill = "#4C78A8",
+    color = "#17202A",
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_text(
+    data = fungal_burden |>
+      dplyr::filter(unique_fungus >= mapped_highlight_threshold),
+    ggplot2::aes(label = scales::comma(unique_fungus)),
+    vjust = -0.35,
+    size = 3.8,
+    fontface = "bold"
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.12))
+  ) +
+  ggplot2::labs(
+    title = "Metarhizium robertsii genome-mapped reads",
+    subtitle = "Unique primary reads from competitive host-pathogen STAR alignment",
+    x = NULL,
+    y = "Unique fungal read alignments"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = "bold", size = 18)
+  )
+
+print(fungal_genome_plot)
+```
+
+## Full and zoomed fungal read counts
+
+The zoom retains every individual library. Bars above 7,000 reads are capped
+at the upper boundary and labeled with their complete values, so their sample
+positions remain visible. The dashed gold horizontal line gives the mean
+fungal read count across all 20 control individuals (146.5 reads).
+
+```{r fungal-genome-mapped-reads-zoom-7000, fig.width=20, fig.height=8}
+read_zoom_limit <- 7000
+control_mean_reads <- mean(
+  fungal_burden$unique_fungus[fungal_burden$Treatment == "Control"],
+  na.rm = TRUE
+)
+
+read_zoom_samples <- fungal_burden |>
+  dplyr::mutate(
+    display_value = pmin(unique_fungus, read_zoom_limit)
+  )
+
+fungal_genome_zoom_plot <- ggplot2::ggplot(
+  read_zoom_samples,
+  ggplot2::aes(x = sample_name, y = display_value)
+) +
+  ggplot2::geom_col(
+    fill = "#4C78A8",
+    color = "#17202A",
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_reads,
+    color = "#B7791F",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  ggplot2::geom_text(
+    data = read_zoom_samples |>
+      dplyr::filter(unique_fungus > read_zoom_limit),
+    ggplot2::aes(
+      x = sample_name,
+      y = read_zoom_limit * 0.94,
+      label = paste0(scales::comma(unique_fungus), " (>7k)")
+    ),
+    inherit.aes = FALSE,
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 3.3,
+    fontface = "bold",
+    color = "white"
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, read_zoom_limit),
+    breaks = seq(0, read_zoom_limit, by = 1000),
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.01))
+  ) +
+  ggplot2::labs(
+    title = "Zoomed Metarhizium robertsii alignment signal",
+    subtitle = paste0(
+      "All samples retained; bars above 7,000 are capped; dashed line = control mean (",
+      round(control_mean_reads, 1), " reads)"
+    ),
+    x = NULL,
+    y = "Unique fungal read alignments"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 8.5),
+    plot.title = ggplot2::element_text(face = "bold", size = 18)
+  )
+
+print(fungal_genome_zoom_plot)
+```
+
+```{r fungal-genome-full-and-zoom, fig.width=20, fig.height=16}
+fungal_genome_full_zoom_plot <-
+  (fungal_genome_plot / fungal_genome_zoom_plot) +
+  patchwork::plot_annotation(tag_levels = "A")
+
+print(fungal_genome_full_zoom_plot)
+```
+
+## Fungal exon-assigned fragments
+
+The bar plot mirrors the sample-level CDS alignment view while using the fresh
+competitive-mapping output. All six diet-treatment groups share the same y-axis,
+so the high fungal signal in a small number of infected libraries is not hidden
+by condition-specific scaling.
+
+```{r fungal-exon-fragments, fig.width=20, fig.height=8}
+highlight_threshold <- stats::quantile(
+  fungal_burden$fungal_exon_fragments,
+  probs = 0.90,
+  na.rm = TRUE
+)
+
+fungal_fragment_plot <- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = fungal_exon_fragments)
+) +
+  ggplot2::geom_col(
+    fill = "#4C78A8",
+    color = "#17202A",
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_text(
+    data = fungal_burden |>
+      dplyr::filter(fungal_exon_fragments >= highlight_threshold),
+    ggplot2::aes(label = scales::comma(fungal_exon_fragments)),
+    vjust = -0.35,
+    size = 3.8,
+    fontface = "bold"
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.12))
+  ) +
+  ggplot2::labs(
+    title = "Metarhizium robertsii exon-assigned fragments",
+    subtitle = "Competitive host-pathogen alignment; paired-end featureCounts",
+    x = NULL,
+    y = "Fungal exon-assigned fragments"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = "bold", size = 18)
+  )
+
+print(fungal_fragment_plot)
+```
+
+## Library-normalized fungal alignment signal
+
+The percentage view controls for differences in total unique alignment depth.
+It confirms whether samples with many fungal exon counts also devote a larger
+fraction of their sequenced library to the fungal reference.
+
+```{r fungal-alignment-percentage, fig.width=20, fig.height=8}
+fungal_percentage_plot <- ggplot2::ggplot(
+  fungal_burden,
+  ggplot2::aes(x = sample_name, y = pct_unique_fungus)
+) +
+  ggplot2::geom_col(
+    fill = "#8B1A1A",
+    color = "#17202A",
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_number(suffix = "%", accuracy = 0.01),
+    expand = ggplot2::expansion(mult = c(0, 0.08))
+  ) +
+  ggplot2::labs(
+    title = "Fraction of unique alignments assigned to M. robertsii",
+    subtitle = "Unique fungal alignments divided by all unique competitive alignments",
+    x = NULL,
+    y = "Unique fungal alignments (%)"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
+    plot.title = ggplot2::element_text(face = "bold", size = 18)
+  )
+
+print(fungal_percentage_plot)
+```
+
+## Full and zoomed fungal alignment percentages
+
+The percentage zoom also retains every sample. Values exceeding 0.1% reach
+the upper boundary and carry their complete percentages. The dashed gold line
+is the mean across controls (0.00042% of unique competitive alignments), shown
+as a common background reference.
+
+```{r fungal-alignment-percentage-zoom-0-1, fig.width=20, fig.height=8}
+percentage_zoom_limit <- 0.1
+control_mean_percentage <- mean(
+  fungal_burden$pct_unique_fungus[fungal_burden$Treatment == "Control"],
+  na.rm = TRUE
+)
+
+percentage_zoom_samples <- fungal_burden |>
+  dplyr::mutate(
+    display_value = pmin(pct_unique_fungus, percentage_zoom_limit)
+  )
+
+fungal_percentage_zoom_plot <- ggplot2::ggplot(
+  percentage_zoom_samples,
+  ggplot2::aes(x = sample_name, y = display_value)
+) +
+  ggplot2::geom_col(
+    fill = "#8B1A1A",
+    color = "#17202A",
+    linewidth = 0.35,
+    width = 0.72
+  ) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_percentage,
+    color = "#B7791F",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  ggplot2::geom_text(
+    data = percentage_zoom_samples |>
+      dplyr::filter(pct_unique_fungus > percentage_zoom_limit),
+    ggplot2::aes(
+      x = sample_name,
+      y = percentage_zoom_limit * 0.94,
+      label = paste0(
+        scales::number(pct_unique_fungus, accuracy = 0.001),
+        "% (>0.1%)"
+      )
+    ),
+    inherit.aes = FALSE,
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 3.3,
+    fontface = "bold",
+    color = "white"
+  ) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, percentage_zoom_limit),
+    breaks = seq(0, percentage_zoom_limit, by = 0.025),
+    labels = scales::label_number(suffix = "%", accuracy = 0.025),
+    expand = ggplot2::expansion(mult = c(0, 0.01))
+  ) +
+  ggplot2::labs(
+    title = "Zoomed fraction of alignments assigned to M. robertsii",
+    subtitle = paste0(
+      "All samples retained; values above 0.1% are capped; dashed line = control mean (",
+      scales::number(control_mean_percentage, accuracy = 0.00001), "%)"
+    ),
+    x = NULL,
+    y = "Unique fungal alignments (%)"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 8.5),
+    plot.title = ggplot2::element_text(face = "bold", size = 18)
+  )
+
+print(fungal_percentage_zoom_plot)
+```
+
+```{r fungal-percentage-full-and-zoom, fig.width=20, fig.height=16}
+fungal_percentage_full_zoom_plot <-
+  (fungal_percentage_plot / fungal_percentage_zoom_plot) +
+  patchwork::plot_annotation(tag_levels = "A")
+
+print(fungal_percentage_full_zoom_plot)
+```
+
+## Fungal percentage aligned above the host DEG heatmap
+
+This figure aligns the 0-0.1% fungal-percentage zoom directly above the complete
+two-cluster main-chromosome DEG heatmap. Columns are ordered first by treatment,
+then diet, and finally sample number. Values above 0.1% are capped only for the
+display and retain their complete percentage as a white label. The heatmap
+contains all significant main-chromosome DEGs used in the current Figure 3, not
+only genes annotated with GO or KEGG terms.
+
+```{r fungal-percentage-above-deg-heatmap, fig.width=22, fig.height=16}
+cluster_z <- read.csv(
+  gzfile(cluster_matrix_file),
+  check.names = FALSE,
+  row.names = 1
+)
+cluster_z <- as.matrix(cluster_z)
+storage.mode(cluster_z) <- "numeric"
+
+cluster_assignments <- read.csv(
+  cluster_assignment_file,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |>
+  dplyr::mutate(
+    expression_cluster = factor(
+      expression_cluster,
+      levels = c("DEG cluster 1", "DEG cluster 2")
+    ),
+    DEG_context_plot = dplyr::case_when(
+      DEG_context == "Diet in controls" ~ "~ diet (controls)",
+      DEG_context == "Diet in infected" ~ "~ diet (infected)",
+      DEG_context == "Infection within diet" ~ "~ diet + infection",
+      DEG_context %in% c("Infection + diet", "Diet in controls + infected") ~
+        "shared DEGs",
+      TRUE ~ "Other fat body DEG"
+    )
+  ) |>
+  dplyr::arrange(expression_cluster, within_cluster_order)
+
+sample_order_table <- fungal_burden |>
+  dplyr::arrange(condition, as.numeric(label)) |>
+  dplyr::mutate(sample_index = dplyr::row_number())
+sample_order <- sample_order_table$label
+
+if (!setequal(sample_order, colnames(cluster_z))) {
+  stop("Fungal-burden and DEG-heatmap samples do not match.")
+}
+if (!all(cluster_assignments$gene_id %in% rownames(cluster_z))) {
+  stop("One or more Figure 3 genes are absent from the VST matrix.")
+}
+
+sample_groups <- sample_order_table |>
+  dplyr::group_by(condition, Treatment, Diet) |>
+  dplyr::summarise(
+    start = min(sample_index),
+    end = max(sample_index),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(start)
+sample_gaps <- utils::head(sample_groups$end, -1) + 0.5
+treatment_gaps <- sample_groups$end[
+  which(
+    as.character(sample_groups$Treatment[-nrow(sample_groups)]) !=
+      as.character(sample_groups$Treatment[-1])
+  )
+] + 0.5
+diet_gaps <- setdiff(sample_gaps, treatment_gaps)
+sample_x_limits <- c(-1.25, length(sample_order) + 0.5)
+
+fungal_heatmap_percent <- sample_order_table |>
+  dplyr::mutate(
+    display_percentage = pmin(pct_unique_fungus, percentage_zoom_limit)
+  )
+
+fungal_percentage_track <- ggplot2::ggplot(
+  fungal_heatmap_percent,
+  ggplot2::aes(
+    x = sample_index,
+    y = display_percentage,
+    fill = Treatment
+  )
+) +
+  ggplot2::geom_col(width = 0.82, color = "#111827", linewidth = 0.25) +
+  ggplot2::geom_hline(
+    yintercept = control_mean_percentage,
+    color = "#B7791F",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  ggplot2::geom_vline(
+    xintercept = diet_gaps,
+    color = "black",
+    linewidth = 0.25
+  ) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = "black",
+    linewidth = 0.7
+  ) +
+  ggplot2::geom_text(
+    data = fungal_heatmap_percent |>
+      dplyr::filter(pct_unique_fungus > percentage_zoom_limit),
+    ggplot2::aes(
+      label = paste0(
+        scales::number(pct_unique_fungus, accuracy = 0.001),
+        "%"
+      ),
+      y = percentage_zoom_limit * 0.94
+    ),
+    color = "white",
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 5.8,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(Control = "#FAEBD7", Infected = "#8B0000"),
+    guide = "none"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_order_table$sample_index,
+    labels = sample_order,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, percentage_zoom_limit),
+    breaks = seq(0, percentage_zoom_limit, by = 0.025),
+    labels = scales::label_number(suffix = "%", accuracy = 0.025),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = "Fungal alignment percentage above host DEG expression",
+    subtitle = paste0(
+      "All samples retained; values above 0.1% are capped and labeled; ",
+      "dashed line = control mean (",
+      scales::number(control_mean_percentage, accuracy = 0.00001),
+      "%)"
+    ),
+    x = NULL,
+    y = "Unique fungal\nalignments (%)"
+  ) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks.x = ggplot2::element_blank(),
+    plot.title = ggplot2::element_text(face = "bold", size = 18),
+    plot.subtitle = ggplot2::element_text(size = 12),
+    plot.margin = ggplot2::margin(5, 5, 0, 5)
+  )
+
+sample_annotation_long <- sample_order_table |>
+  dplyr::transmute(
+    sample_index,
+    Treatment = as.character(Treatment),
+    Diet = as.character(Diet)
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Treatment, Diet),
+    names_to = "track",
+    values_to = "value"
+  ) |>
+  dplyr::mutate(
+    track = factor(track, levels = c("Diet", "Treatment")),
+    track_y = as.numeric(track),
+    annotation_key = paste(track, value, sep = ": ")
+  )
+
+sample_annotation_colors <- c(
+  "Treatment: Control" = "#FAEBD7",
+  "Treatment: Infected" = "#8B0000",
+  "Diet: 33" = "#E6862E",
+  "Diet: 50" = "#2F8F5B",
+  "Diet: 83" = "#7B4FA3"
+)
+
+fungal_heatmap_annotation <- ggplot2::ggplot(
+  sample_annotation_long,
+  ggplot2::aes(x = sample_index, y = track_y, fill = annotation_key)
+) +
+  ggplot2::geom_tile(width = 0.95, height = 0.9) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black", linewidth = 0.25) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = "black",
+    linewidth = 0.7
+  ) +
+  ggplot2::scale_fill_manual(values = sample_annotation_colors, guide = "none") +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = seq_len(2),
+    labels = c("Diet", "Treatment"),
+    limits = c(0.45, 2.55),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 11),
+    plot.margin = ggplot2::margin(0, 5, 0, 5)
+  )
+
+heatmap_matrix <- cluster_z[
+  cluster_assignments$gene_id,
+  sample_order,
+  drop = FALSE
+]
+heatmap_matrix <- pmax(pmin(heatmap_matrix, 3), -3)
+heatmap_df <- as.data.frame(heatmap_matrix, check.names = FALSE) |>
+  tibble::rownames_to_column("gene_id") |>
+  dplyr::left_join(
+    cluster_assignments |>
+      dplyr::select(
+        gene_id, expression_cluster, within_cluster_order, DEG_context_plot
+      ),
+    by = "gene_id"
+  ) |>
+  tidyr::pivot_longer(
+    cols = dplyr::all_of(sample_order),
+    names_to = "sample_id",
+    values_to = "z"
+  ) |>
+  dplyr::mutate(sample_index = match(sample_id, sample_order))
+
+context_levels <- c(
+  "~ diet (controls)", "~ diet (infected)", "~ diet + infection",
+  "shared DEGs", "Other fat body DEG"
+)
+context_colors <- c(
+  "~ diet (controls)" = "#DDE3EA",
+  "~ diet (infected)" = "#AEBBC8",
+  "~ diet + infection" = "#65788C",
+  "shared DEGs" = "#263544",
+  "Other fat body DEG" = "#F2F4F6"
+)
+cluster_assignments$DEG_context_plot <- factor(
+  cluster_assignments$DEG_context_plot,
+  levels = context_levels
+)
+present_contexts <- context_levels[
+  context_levels %in% as.character(cluster_assignments$DEG_context_plot)
+]
+
+fungal_deg_heatmap <- ggplot2::ggplot(
+  heatmap_df,
+  ggplot2::aes(x = sample_index, y = within_cluster_order, fill = z)
+) +
+  ggplot2::geom_segment(
+    data = cluster_assignments,
+    ggplot2::aes(
+      x = -1.1,
+      xend = 0.35,
+      y = within_cluster_order,
+      yend = within_cluster_order,
+      color = DEG_context_plot
+    ),
+    inherit.aes = FALSE,
+    linewidth = 1.15,
+    lineend = "butt"
+  ) +
+  ggplot2::geom_raster() +
+  ggplot2::geom_vline(xintercept = 0.5, color = "#9CA3AF", linewidth = 0.4) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black", linewidth = 0.25) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = "black",
+    linewidth = 0.7
+  ) +
+  ggplot2::facet_grid(
+    expression_cluster ~ .,
+    scales = "free_y",
+    space = "free_y",
+    switch = "y"
+  ) +
+  ggplot2::scale_fill_gradientn(
+    colors = grDevices::colorRampPalette(
+      c("#237C8E", "#F7F3E8", "#C85A54")
+    )(101),
+    limits = c(-3, 3),
+    oob = scales::squish,
+    name = "Row z-score"
+  ) +
+  ggplot2::scale_color_manual(
+    values = context_colors,
+    breaks = present_contexts,
+    labels = stringr::str_wrap(present_contexts, 24),
+    drop = TRUE,
+    name = "DEG context"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_order_table$sample_index,
+    labels = sample_order,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_reverse(expand = c(0, 0)) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(
+      angle = 90,
+      hjust = 1,
+      vjust = 0.5,
+      size = 12
+    ),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    strip.placement = "outside",
+    strip.background.y = ggplot2::element_rect(
+      fill = "#F3F4F6",
+      color = "#111827"
+    ),
+    strip.text.y.left = ggplot2::element_text(
+      angle = 90,
+      face = "bold",
+      size = 14
+    ),
+    panel.spacing.y = grid::unit(0.2, "lines"),
+    legend.position = "right",
+    legend.box = "vertical",
+    legend.title = ggplot2::element_text(face = "bold"),
+    plot.margin = ggplot2::margin(0, 5, 5, 5)
+  )
+
+fungal_percentage_deg_heatmap <-
+  fungal_percentage_track /
+  fungal_heatmap_annotation /
+  fungal_deg_heatmap +
+  patchwork::plot_layout(heights = c(2.2, 0.65, 8.5))
+
+print(fungal_percentage_deg_heatmap)
+
+write.csv(
+  fungal_heatmap_percent |>
+    dplyr::select(
+      sample_index, label, Treatment, Diet,
+      pct_unique_fungus, display_percentage
+    ),
+  file.path(out_dir, "fungal_percentage_heatmap_sample_order.csv"),
+  row.names = FALSE
+)
+```
+
+## Combined export
+
+```{r combined-export, fig.width=20, fig.height=22}
+combined_plot <- fungal_genome_plot / fungal_fragment_plot / fungal_percentage_plot +
+  patchwork::plot_annotation(
+    title = "RNA-seq evidence for Metarhizium robertsii across fat body samples",
+    tag_levels = "A"
+  )
+
+print(combined_plot)
+
+export_specs <- list(
+  "metarhizium_genome_mapped_reads" = list(
+    plot = fungal_genome_plot, width = 20, height = 8
+  ),
+  "metarhizium_genome_mapped_reads_zoom_7000_all_samples" = list(
+    plot = fungal_genome_zoom_plot, width = 20, height = 8
+  ),
+  "metarhizium_genome_mapped_reads_full_and_zoom" = list(
+    plot = fungal_genome_full_zoom_plot, width = 20, height = 16
+  ),
+  "metarhizium_exon_assigned_fragments" = list(
+    plot = fungal_fragment_plot, width = 20, height = 8
+  ),
+  "metarhizium_unique_alignment_percentage" = list(
+    plot = fungal_percentage_plot, width = 20, height = 8
+  ),
+  "metarhizium_unique_alignment_percentage_zoom_0_1_all_samples" = list(
+    plot = fungal_percentage_zoom_plot, width = 20, height = 8
+  ),
+  "metarhizium_unique_alignment_percentage_full_and_zoom" = list(
+    plot = fungal_percentage_full_zoom_plot, width = 20, height = 16
+  ),
+  "metarhizium_percentage_above_main_chromosome_deg_heatmap" = list(
+    plot = fungal_percentage_deg_heatmap, width = 22, height = 16
+  ),
+  "metarhizium_alignment_burden_combined" = list(
+    plot = combined_plot, width = 20, height = 22
+  )
+)
+
+for (export_name in names(export_specs)) {
+  spec <- export_specs[[export_name]]
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, ".png")),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    dpi = 300,
+    limitsize = FALSE
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, ".pdf")),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    limitsize = FALSE
+  )
+  if (requireNamespace("svglite", quietly = TRUE)) {
+    ggplot2::ggsave(
+      file.path(out_dir, paste0(export_name, ".svg")),
+      spec$plot,
+      width = spec$width,
+      height = spec$height,
+      limitsize = FALSE
+    )
+  }
+}
+```
+
+## Sample-level values
+
+```{r sample-table}
+DT::datatable(
+  fungal_burden |>
+    dplyr::arrange(dplyr::desc(unique_fungus)) |>
+    dplyr::select(
+      label, Treatment, Diet, fungal_exon_fragments,
+      unique_fungus, pct_unique_fungus
+    ),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 15, scrollX = TRUE),
+  caption = "Competitive-mapping evidence for M. robertsii by sample"
+)
+```
+
+## Interpretation
+
+The fungal signal is strongly heterogeneous among infected individuals rather
+than uniformly high after challenge. Samples 1029, 1058, 1025, and 1057 have
+the highest whole-genome fungal alignment counts, the highest exon-assigned
+fungal fragment counts, and the highest fungal alignment percentages. Controls
+and most infected samples have low counts. Low non-zero values should be
+treated as alignment background or weak fungal evidence, whereas agreement
+between whole-genome alignment, exon assignment, and library-normalized signal
+provides stronger RNA-seq evidence of fungal burden.

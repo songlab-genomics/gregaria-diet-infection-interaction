@@ -17,7 +17,21 @@ navbar:
     menu:
       - text: "Experiment QC"
         href: 03-count-qc-exploration.html
-      - text: "All samples retained"
+      - text: "Metarhizium read burden"
+        href: 29-metarhizium-read-burden.html
+      - text: "All samples + all scaffolds"
+        menu:
+          - text: "Diet x infection interaction"
+            href: 04-deseq2-interaction-model.html
+          - text: "Diet pairwise DEGs"
+            href: 05-diet-pairwise-deg.html
+          - text: "Infection within diet DEGs"
+            href: 06-infection-within-diet-deg.html
+          - text: "DEG overlap"
+            href: 31-all-scaffolds-deg-overlap-prioritization.html
+          - text: "Searchable DEG catalogue"
+            href: 32-all-scaffolds-deg-catalogue.html
+      - text: "All samples + placed chromosomes"
         menu:
           - text: "Diet x infection interaction"
             href: 14-all-samples-deseq2-interaction-model.html
@@ -25,58 +39,78 @@ navbar:
             href: 15-all-samples-diet-pairwise-deg.html
           - text: "Infection within diet DEGs"
             href: 16-all-samples-infection-within-diet-deg.html
-          - text: "Outlier expression signatures"
-            href: 23-outlier-expression-signatures.html
+          - text: "DEG overlap"
+            href: 07-deg-overlap-prioritization.html
           - text: "Searchable DEG catalogue"
             href: 24-all-deg-catalogue.html
-      - text: "Current outliers removed"
-        menu:
-          - text: "Diet x infection interaction"
-            href: 17-outliers-removed-deseq2-interaction-model.html
-          - text: "Diet pairwise DEGs"
-            href: 18-outliers-removed-diet-pairwise-deg.html
-          - text: "Infection within diet DEGs"
-            href: 19-outliers-removed-infection-within-diet-deg.html
-      - text: "Sensitivity and filters"
-        menu:
-          - text: "Sample-filter scenario table"
-            href: 12-deg-sample-filter-scenarios.html
-          - text: "Outlier sensitivity"
-            href: 11-outlier-sensitivity.html
-          - text: "Quality sensitivity and enrichment"
-            href: 09-outliers-load-enrichment.html
   - text: "Interpretation"
     menu:
-      - text: "Physiology candidate genes"
+      - text: "Physiology candidates - both scopes"
         href: 13-physiology-candidate-genes.html
-      - text: "GO / KEGG enrichment"
-        href: 10-go-term-enrichment.html
-      - text: "GO / KEGG term-gene index"
-        href: 25-enrichment-term-gene-index.html
-      - text: "Circled cluster enrichment"
-        href: 26-circled-cluster-enrichment.html
+      - text: "All scaffolds"
+        menu:
+          - text: "GO / KEGG enrichment"
+            href: 33-all-scaffolds-go-term-enrichment.html
+          - text: "GO / KEGG term-gene index"
+            href: 34-all-scaffolds-enrichment-term-gene-index.html
+          - text: "Scaffold origin interpretation"
+            href: 27-scaffold-origin-audit.html
+      - text: "Placed chromosomes"
+        menu:
+          - text: "GO / KEGG enrichment"
+            href: 10-go-term-enrichment.html
+          - text: "GO / KEGG term-gene index"
+            href: 25-enrichment-term-gene-index.html
+          - text: "Expression clusters and enrichment"
+            href: 26-circled-cluster-enrichment.html
+          - text: "Curated target genes"
+            href: 30-curated-target-gene-figure.html
+  - text: "Figures"
+    menu:
       - text: "Publication figure exports"
         href: 08-publication-figures.html
-  - text: "Reference Context"
+      - text: "Figure 1 - PCA"
+        href: 14-all-samples-deseq2-interaction-model.html#Publication_figure
+      - text: "Figure 2 - DEG burden and overlap"
+        href: 07-deg-overlap-prioritization.html#Publication_figure
+      - text: "Figure 3 - expression clusters"
+        href: 26-circled-cluster-enrichment.html#Publication_figure
+      - text: "Figure 4 - curated targets"
+        href: 30-curated-target-gene-figure.html#Revised_Figure_4
+  - text: "Sensitivity and Validation"
     menu:
-      - text: "Fat body DEGs vs tissue / phase"
-        href: 22-deg-logical-set-construction.html
-      - text: "Phase signature - all samples"
-        href: 20-phase-signature-overlap.html
-      - text: "Phase signature - outliers removed"
-        href: 21-phase-signature-overlap-no-outliers.html
+      - text: "Outlier filtering sensitivity"
+        href: 11-outlier-sensitivity.html
+      - text: "Placed vs unplaced scaffolds"
+        href: 28-placed-unplaced-scaffold-analysis.html
+      - text: "Unplaced scaffold origin audit"
+        href: 27-scaffold-origin-audit.html
+      - text: "Metarhizium read burden"
+        href: 29-metarhizium-read-burden.html
   - text: "Archive"
     menu:
-      - text: "Earlier current-analysis pages"
+      - text: "Archived analysis index"
+        href: archive.html
+      - text: "Outlier-removal pages"
         menu:
-          - text: "Original interaction model"
-            href: 04-deseq2-interaction-model.html
-          - text: "Original diet pairwise DEGs"
-            href: 05-diet-pairwise-deg.html
-          - text: "Original infection-within-diet DEGs"
-            href: 06-infection-within-diet-deg.html
+          - text: "Outlier-removed interaction"
+            href: 17-outliers-removed-deseq2-interaction-model.html
+          - text: "Outlier-removed diet DEGs"
+            href: 18-outliers-removed-diet-pairwise-deg.html
+          - text: "Outlier-removed infection DEGs"
+            href: 19-outliers-removed-infection-within-diet-deg.html
+          - text: "Sample-filter scenarios"
+            href: 12-deg-sample-filter-scenarios.html
+          - text: "Earlier quality and load sensitivity"
+            href: 09-outliers-load-enrichment.html
+          - text: "Earlier tissue and phase logic"
+            href: 22-deg-logical-set-construction.html
+          - text: "Earlier phase signature - all samples"
+            href: 20-phase-signature-overlap.html
+          - text: "Earlier phase signature - outliers removed"
+            href: 21-phase-signature-overlap-no-outliers.html
           - text: "Original DEG overlap and prioritization"
-            href: 07-deg-overlap-prioritization.html
+            href: overlap.html
       - text: "Original file preparation"
         href: file_prep.html
       - text: "Original DEG with rRNA"

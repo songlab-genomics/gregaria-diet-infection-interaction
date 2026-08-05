@@ -1,5 +1,5 @@
 ---
-title: "DESeq2 diet x infection interaction model"
+title: "All samples + all scaffolds: diet x infection model"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,19 +9,26 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
   reference_diet: "50"
   reference_treatment: "Control"
   min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "deseq2-interaction-model"
+  output_tag: "all-scaffolds-deseq2-interaction-model"
 ---
 
 ## Purpose
 
 This page fits the full model for the manuscript question: does infection
-response depend on diet?
+response depend on diet? It retains all 44 samples and all expression-filtered
+host loci from the fresh competitive mapping, including genes on nuclear
+chromosomes and unplaced scaffolds. Annotated rRNA loci remain excluded.
+
+Use this branch to see the complete host-reference signal. The parallel
+[placed-chromosome model](14-all-samples-deseq2-interaction-model.html) applies
+the same sample policy while restricting the tested genes to official nuclear
+chromosomes.
 
 This is the most formal model in the site because it uses all samples together
 and estimates diet, infection, and diet-by-infection terms in one DESeq2 design.
@@ -69,8 +76,12 @@ metadata$Diet <- relevel(factor(metadata$Diet), ref = params$reference_diet)
 metadata$Treatment <- relevel(factor(metadata$Treatment),
                               ref = params$reference_treatment)
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_path <- file.path(project_dir, params$counts_file)
+counts_raw <- if (grepl("[.]tsv$", counts_path, ignore.case = TRUE)) {
+  read.delim(counts_path, check.names = FALSE)
+} else {
+  read.csv(counts_path, check.names = FALSE)
+}
 counts <- as.matrix(counts_raw[, -1])
 rownames(counts) <- counts_raw[[1]]
 storage.mode(counts) <- "integer"

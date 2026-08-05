@@ -1,5 +1,5 @@
 ---
-title: "Diet pairwise DEGs - all samples"
+title: "Main-chromosome diet pairwise DEGs - all samples"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,19 +9,26 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   treatment_subset: "All"
-  min_total_count: 10
+  min_count: 10
+  min_samples: 3
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "all-samples-diet-pairwise-deg"
+  output_tag: "main-chromosome-all-samples-diet-pairwise-deg"
 ---
 
 ## Purpose
 
-This is the all-samples version of the diet pairwise DEG page. It keeps every
+This is the all-samples, main-chromosome version of the diet pairwise DEG page. It keeps every
 library in `mehreen_metadata_fixed.txt`, including the samples currently treated
 as outliers in sensitivity analyses.
+
+All tests use only non-rRNA genes assigned to nuclear chromosomes by the
+official assembly-placement table. Unplaced scaffolds are retained only in the
+separate origin-audit and sensitivity pages.
 
 This page tests pairwise diet contrasts. Set `treatment_subset` to `Control`,
 `Infected`, or `All` in the YAML header before knitting.
@@ -42,7 +49,7 @@ prefixes and suffixes.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("DESeq2", "ggplot2", "EnhancedVolcano")
+required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "readr", "dplyr")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -65,10 +72,11 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
-counts <- as.matrix(counts_raw[, -1])
-rownames(counts) <- counts_raw[[1]]
+counts_table <- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+stopifnot("gene_id" %in% names(counts_table))
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id")])
+rownames(counts) <- counts_table$gene_id
 storage.mode(counts) <- "integer"
 
 count_labels_all <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
@@ -80,13 +88,34 @@ stopifnot(identical(metadata$label, count_labels))
 rownames(metadata) <- metadata$label
 colnames(counts) <- count_labels
 
+placement <- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+counts <- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
 if (params$treatment_subset != "All") {
   keep_samples <- metadata$Treatment == params$treatment_subset
   counts <- counts[, keep_samples]
   metadata <- droplevels(metadata[keep_samples, ])
 }
 
-keep_genes <- rowSums(counts) >= params$min_total_count
+keep_genes <- rowSums(counts >= params$min_count) >= params$min_samples
+input_audit <- data.frame(
+  treatment_subset = params$treatment_subset,
+  samples_retained = ncol(counts),
+  raw_count_rows = nrow(counts_table),
+  main_chromosome_non_rRNA_rows = nrow(counts),
+  genes_entering_DESeq2 = sum(keep_genes)
+)
+knitr::kable(input_audit, caption = "Main-chromosome analysis input audit")
+write.csv(input_audit, file.path(out_dir, "main_chromosome_input_audit.csv"),
+          row.names = FALSE)
 ```
 
 ## Fit model
@@ -110,7 +139,7 @@ dds <- DESeq2::DESeqDataSetFromMatrix(
   design = design_formula
 )
 
-dds <- DESeq2::DESeq(dds)
+dds <- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
 ```
 
 ## Pairwise diet contrasts
@@ -130,7 +159,7 @@ for (pair in diet_pairs) {
   message("Running diet contrast: ", contrast_label)
 
   res <- DESeq2::results(dds, contrast = c("Diet", pair[1], pair[2]),
-                         alpha = params$alpha)
+                         alpha = params$alpha, cooksCutoff = FALSE)
   res_df <- as.data.frame(res)
   res_df$gene_id <- rownames(res_df)
   res_df$contrast <- contrast_label

@@ -409,6 +409,16 @@ write.csv(lfc_wide, file.path(out_dir, "log2fc_stability_full_vs_no_outliers.csv
           row.names = FALSE)
 ```
 
+## Publication sensitivity panel {#Publication_figure}
+
+The study retains all samples. Figure S1 summarizes the alternative
+sample-removal scenarios as a sensitivity analysis rather than a competing
+primary result.
+
+![Figure S1. Sensitivity of DEG calls to alternative sample removal.](assets/publication/figureS1_outlier_removal_sensitivity.png)
+
+The publication page contains the matching SVG and source tables.
+
 ```{r session-info}
 writeLines(capture.output(sessionInfo()),
            file.path(out_dir, "sessionInfo.txt"))

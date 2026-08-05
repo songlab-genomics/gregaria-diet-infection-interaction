@@ -1,0 +1,49 @@
+meeting_theme,diet,direction,n,theme_label
+Immune pathway,33,Higher in infected,32,"Immune
+pathway"
+Immune pathway,33,Higher in control,4,"Immune
+pathway"
+Immune pathway,50,Higher in infected,47,"Immune
+pathway"
+Immune pathway,50,Higher in control,11,"Immune
+pathway"
+Immune pathway,83,Higher in infected,29,"Immune
+pathway"
+Immune pathway,83,Higher in control,1,"Immune
+pathway"
+Protein storage and synthesis,33,Higher in infected,3,"Protein
+storage
+and synthesis"
+Protein storage and synthesis,33,Higher in control,7,"Protein
+storage
+and synthesis"
+Protein storage and synthesis,50,Higher in infected,4,"Protein
+storage
+and synthesis"
+Protein storage and synthesis,50,Higher in control,7,"Protein
+storage
+and synthesis"
+Protein storage and synthesis,83,Higher in infected,3,"Protein
+storage
+and synthesis"
+Protein storage and synthesis,83,Higher in control,4,"Protein
+storage
+and synthesis"
+Lipid metabolism,33,Higher in infected,6,"Lipid
+metabolism"
+Lipid metabolism,33,Higher in control,11,"Lipid
+metabolism"
+Lipid metabolism,50,Higher in infected,24,"Lipid
+metabolism"
+Lipid metabolism,50,Higher in control,11,"Lipid
+metabolism"
+Lipid metabolism,83,Higher in infected,2,"Lipid
+metabolism"
+Lipid metabolism,83,Higher in control,6,"Lipid
+metabolism"
+Detoxification,33,Higher in infected,21,Detoxification
+Detoxification,33,Higher in control,26,Detoxification
+Detoxification,50,Higher in infected,36,Detoxification
+Detoxification,50,Higher in control,31,Detoxification
+Detoxification,83,Higher in infected,15,Detoxification
+Detoxification,83,Higher in control,10,Detoxification

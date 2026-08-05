@@ -1,5 +1,5 @@
 ---
-title: "Diet pairwise DEGs"
+title: "All samples + all scaffolds: diet pairwise DEGs"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,18 +9,23 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
   treatment_subset: "All"
   min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "diet-pairwise-deg"
+  output_tag: "all-scaffolds-diet-pairwise-deg"
 ---
 
 ## Purpose
 
 This page tests pairwise diet contrasts. Set `treatment_subset` to `Control`,
 `Infected`, or `All` in the YAML header before knitting.
+
+All 44 samples are retained, and the fresh competitive-host count matrix keeps
+all non-rRNA loci regardless of assembly placement. The matching
+[placed-chromosome diet analysis](15-all-samples-diet-pairwise-deg.html) uses
+the same samples but a narrower gene universe.
 
 The aim is to separate the diet question from the infection question as much as
 the design allows. When all samples are used, the model includes treatment as a
@@ -61,8 +66,12 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_path <- file.path(project_dir, params$counts_file)
+counts_raw <- if (grepl("[.]tsv$", counts_path, ignore.case = TRUE)) {
+  read.delim(counts_path, check.names = FALSE)
+} else {
+  read.csv(counts_path, check.names = FALSE)
+}
 counts <- as.matrix(counts_raw[, -1])
 rownames(counts) <- counts_raw[[1]]
 storage.mode(counts) <- "integer"

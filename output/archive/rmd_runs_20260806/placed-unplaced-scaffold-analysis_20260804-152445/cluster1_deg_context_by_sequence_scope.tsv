@@ -1,0 +1,8 @@
+analysis_scope	DEG_context	genes	percent_within_scope
+Placed/host-assigned	Diet in controls	2	1.3888888888888888
+Placed/host-assigned	Diet in infected	91	63.19444444444444
+Placed/host-assigned	Infection + diet	11	7.638888888888889
+Placed/host-assigned	Infection within diet	40	27.77777777777778
+Unplaced scaffold	Diet in infected	1740	96.93593314763231
+Unplaced scaffold	Infection + diet	33	1.8384401114206128
+Unplaced scaffold	Infection within diet	22	1.2256267409470751

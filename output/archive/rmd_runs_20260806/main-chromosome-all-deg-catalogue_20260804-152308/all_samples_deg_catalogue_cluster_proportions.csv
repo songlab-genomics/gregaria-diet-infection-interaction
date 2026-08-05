@@ -1,0 +1,73 @@
+"comparison_type","comparison","signed_direction","expression_cluster","n_genes","total_DEGs","proportion"
+"Diet contrasts among control","Control 33 vs 50","Upregulated","DEG cluster 1",0,2,0
+"Diet contrasts among control","Control 33 vs 50","Upregulated","DEG cluster 2",1,2,0.5
+"Diet contrasts among control","Control 33 vs 50","Upregulated","DEG cluster 3+4",1,2,0.5
+"Diet contrasts among control","Control 83 vs 33","Downregulated","DEG cluster 1",10,22,0.454545454545455
+"Diet contrasts among control","Control 83 vs 33","Downregulated","DEG cluster 2",11,22,0.5
+"Diet contrasts among control","Control 83 vs 33","Downregulated","DEG cluster 3+4",1,22,0.0454545454545455
+"Diet contrasts among control","Control 83 vs 33","Upregulated","DEG cluster 1",17,25,0.68
+"Diet contrasts among control","Control 83 vs 33","Upregulated","DEG cluster 2",0,25,0
+"Diet contrasts among control","Control 83 vs 33","Upregulated","DEG cluster 3+4",8,25,0.32
+"Diet contrasts among control","Control 83 vs 50","Downregulated","DEG cluster 1",4,5,0.8
+"Diet contrasts among control","Control 83 vs 50","Downregulated","DEG cluster 2",0,5,0
+"Diet contrasts among control","Control 83 vs 50","Downregulated","DEG cluster 3+4",1,5,0.2
+"Diet contrasts among control","Control 83 vs 50","Upregulated","DEG cluster 1",8,18,0.444444444444444
+"Diet contrasts among control","Control 83 vs 50","Upregulated","DEG cluster 2",0,18,0
+"Diet contrasts among control","Control 83 vs 50","Upregulated","DEG cluster 3+4",10,18,0.555555555555556
+"Diet contrasts among infected","Infected 33 vs 50","Downregulated","DEG cluster 1",24,99,0.242424242424242
+"Diet contrasts among infected","Infected 33 vs 50","Downregulated","DEG cluster 2",1,99,0.0101010101010101
+"Diet contrasts among infected","Infected 33 vs 50","Downregulated","DEG cluster 3+4",74,99,0.747474747474748
+"Diet contrasts among infected","Infected 33 vs 50","Upregulated","DEG cluster 1",0,5,0
+"Diet contrasts among infected","Infected 33 vs 50","Upregulated","DEG cluster 2",4,5,0.8
+"Diet contrasts among infected","Infected 33 vs 50","Upregulated","DEG cluster 3+4",1,5,0.2
+"Diet contrasts among infected","Infected 83 vs 33","Downregulated","DEG cluster 1",3,16,0.1875
+"Diet contrasts among infected","Infected 83 vs 33","Downregulated","DEG cluster 2",13,16,0.8125
+"Diet contrasts among infected","Infected 83 vs 33","Downregulated","DEG cluster 3+4",0,16,0
+"Diet contrasts among infected","Infected 83 vs 33","Upregulated","DEG cluster 1",15,23,0.652173913043478
+"Diet contrasts among infected","Infected 83 vs 33","Upregulated","DEG cluster 2",1,23,0.0434782608695652
+"Diet contrasts among infected","Infected 83 vs 33","Upregulated","DEG cluster 3+4",7,23,0.304347826086957
+"Diet contrasts among infected","Infected 83 vs 50","Downregulated","DEG cluster 1",1,4,0.25
+"Diet contrasts among infected","Infected 83 vs 50","Downregulated","DEG cluster 2",1,4,0.25
+"Diet contrasts among infected","Infected 83 vs 50","Downregulated","DEG cluster 3+4",2,4,0.5
+"Diet contrasts among infected","Infected 83 vs 50","Upregulated","DEG cluster 1",6,11,0.545454545454545
+"Diet contrasts among infected","Infected 83 vs 50","Upregulated","DEG cluster 2",0,11,0
+"Diet contrasts among infected","Infected 83 vs 50","Upregulated","DEG cluster 3+4",5,11,0.454545454545455
+"Infection within diet","Diet 33: infected vs control","Downregulated","DEG cluster 1",380,396,0.95959595959596
+"Infection within diet","Diet 33: infected vs control","Downregulated","DEG cluster 2",15,396,0.0378787878787879
+"Infection within diet","Diet 33: infected vs control","Downregulated","DEG cluster 3+4",1,396,0.00252525252525253
+"Infection within diet","Diet 33: infected vs control","Upregulated","DEG cluster 1",0,461,0
+"Infection within diet","Diet 33: infected vs control","Upregulated","DEG cluster 2",10,461,0.0216919739696312
+"Infection within diet","Diet 33: infected vs control","Upregulated","DEG cluster 3+4",451,461,0.978308026030369
+"Infection within diet","Diet 50: infected vs control","Downregulated","DEG cluster 1",365,374,0.975935828877005
+"Infection within diet","Diet 50: infected vs control","Downregulated","DEG cluster 2",8,374,0.0213903743315508
+"Infection within diet","Diet 50: infected vs control","Downregulated","DEG cluster 3+4",1,374,0.00267379679144385
+"Infection within diet","Diet 50: infected vs control","Upregulated","DEG cluster 1",2,742,0.00269541778975741
+"Infection within diet","Diet 50: infected vs control","Upregulated","DEG cluster 2",9,742,0.0121293800539084
+"Infection within diet","Diet 50: infected vs control","Upregulated","DEG cluster 3+4",731,742,0.985175202156334
+"Infection within diet","Diet 83: infected vs control","Downregulated","DEG cluster 1",266,269,0.988847583643123
+"Infection within diet","Diet 83: infected vs control","Downregulated","DEG cluster 2",2,269,0.00743494423791822
+"Infection within diet","Diet 83: infected vs control","Downregulated","DEG cluster 3+4",1,269,0.00371747211895911
+"Infection within diet","Diet 83: infected vs control","Upregulated","DEG cluster 1",1,499,0.00200400801603206
+"Infection within diet","Diet 83: infected vs control","Upregulated","DEG cluster 2",9,499,0.0180360721442886
+"Infection within diet","Diet 83: infected vs control","Upregulated","DEG cluster 3+4",489,499,0.979959919839679
+"Overall infection","Average infected vs control","Downregulated","DEG cluster 1",675,690,0.978260869565217
+"Overall infection","Average infected vs control","Downregulated","DEG cluster 2",15,690,0.0217391304347826
+"Overall infection","Average infected vs control","Downregulated","DEG cluster 3+4",0,690,0
+"Overall infection","Average infected vs control","Upregulated","DEG cluster 1",0,732,0
+"Overall infection","Average infected vs control","Upregulated","DEG cluster 2",15,732,0.0204918032786885
+"Overall infection","Average infected vs control","Upregulated","DEG cluster 3+4",717,732,0.979508196721312
+"Diet by infection interaction","Infection response: 33 vs 50","Downregulated","DEG cluster 1",2,3,0.666666666666667
+"Diet by infection interaction","Infection response: 33 vs 50","Downregulated","DEG cluster 2",0,3,0
+"Diet by infection interaction","Infection response: 33 vs 50","Downregulated","DEG cluster 3+4",1,3,0.333333333333333
+"Diet by infection interaction","Infection response: 83 vs 33","Downregulated","DEG cluster 1",1,2,0.5
+"Diet by infection interaction","Infection response: 83 vs 33","Downregulated","DEG cluster 2",1,2,0.5
+"Diet by infection interaction","Infection response: 83 vs 33","Downregulated","DEG cluster 3+4",0,2,0
+"Diet by infection interaction","Infection response: 83 vs 33","Upregulated","DEG cluster 1",3,5,0.6
+"Diet by infection interaction","Infection response: 83 vs 33","Upregulated","DEG cluster 2",1,5,0.2
+"Diet by infection interaction","Infection response: 83 vs 33","Upregulated","DEG cluster 3+4",1,5,0.2
+"Diet by infection interaction","Infection response: 83 vs 50","Downregulated","DEG cluster 1",0,1,0
+"Diet by infection interaction","Infection response: 83 vs 50","Downregulated","DEG cluster 2",0,1,0
+"Diet by infection interaction","Infection response: 83 vs 50","Downregulated","DEG cluster 3+4",1,1,1
+"Diet by infection interaction","Infection response: 83 vs 50","Upregulated","DEG cluster 1",1,4,0.25
+"Diet by infection interaction","Infection response: 83 vs 50","Upregulated","DEG cluster 2",1,4,0.25
+"Diet by infection interaction","Infection response: 83 vs 50","Upregulated","DEG cluster 3+4",2,4,0.5

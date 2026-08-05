@@ -1,5 +1,5 @@
 ---
-title: "DESeq2 interaction model - all samples"
+title: "Main-chromosome DESeq2 interaction model - all samples"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,20 +9,28 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   reference_diet: "50"
   reference_treatment: "Control"
-  min_total_count: 10
+  min_count: 10
+  min_samples: 3
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "all-samples-deseq2-interaction-model"
+  output_tag: "main-chromosome-all-samples-deseq2-interaction-model"
 ---
 
 ## Purpose
 
-This is the all-samples version of the interaction model. It keeps every
+This is the all-samples, main-chromosome version of the interaction model. It keeps every
 library in `mehreen_metadata_fixed.txt`, including the samples currently treated
 as outliers in sensitivity analyses.
+
+Only genes assigned to a nuclear chromosome in the official assembly-placement
+table are tested. Annotated rRNA, mitochondrial genes, unplaced scaffolds, and
+count rows without a unique official gene-placement record are excluded before
+expression filtering, normalization, VST, and DESeq2.
 
 This page fits the full model for the manuscript question: does infection
 response depend on diet?
@@ -51,7 +59,7 @@ infection response.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "pheatmap")
+required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "pheatmap", "readr", "dplyr")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -73,10 +81,11 @@ metadata$Diet <- relevel(factor(metadata$Diet), ref = params$reference_diet)
 metadata$Treatment <- relevel(factor(metadata$Treatment),
                               ref = params$reference_treatment)
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
-counts <- as.matrix(counts_raw[, -1])
-rownames(counts) <- counts_raw[[1]]
+counts_table <- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+stopifnot("gene_id" %in% names(counts_table))
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id")])
+rownames(counts) <- counts_table$gene_id
 storage.mode(counts) <- "integer"
 
 count_labels_all <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
@@ -88,7 +97,28 @@ stopifnot(identical(metadata$label, count_labels))
 rownames(metadata) <- metadata$label
 colnames(counts) <- count_labels
 
-keep <- rowSums(counts) >= params$min_total_count
+placement <- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+matched_ids <- intersect(rownames(counts), main_chromosome_ids)
+counts <- counts[matched_ids, , drop = FALSE]
+
+keep <- rowSums(counts >= params$min_count) >= params$min_samples
+input_audit <- data.frame(
+  samples_retained = ncol(counts),
+  raw_count_rows = nrow(counts_table),
+  main_chromosome_non_rRNA_rows = nrow(counts),
+  genes_entering_DESeq2 = sum(keep)
+)
+knitr::kable(input_audit, caption = "Main-chromosome analysis input audit")
+write.csv(input_audit, file.path(out_dir, "main_chromosome_input_audit.csv"),
+          row.names = FALSE)
 ```
 
 ## Fit full interaction model
@@ -106,7 +136,7 @@ dds <- DESeq2::DESeqDataSetFromMatrix(
   design = ~ Diet + Treatment + Diet:Treatment
 )
 
-dds <- DESeq2::DESeq(dds)
+dds <- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
 model_coefficients <- DESeq2::resultsNames(dds)
 knitr::kable(data.frame(coefficient = model_coefficients))
 
@@ -123,7 +153,8 @@ overlap and enrichment.
 ```{r export-results}
 extract_result <- function(coef_name) {
   # Each coefficient is written as a table so it can be inspected or reused.
-  res <- DESeq2::results(dds, name = coef_name, alpha = params$alpha)
+  res <- DESeq2::results(dds, name = coef_name, alpha = params$alpha,
+                         cooksCutoff = FALSE)
   res_df <- as.data.frame(res)
   res_df$gene_id <- rownames(res_df)
   res_df$coefficient <- coef_name
@@ -284,6 +315,16 @@ p_pca
 ggplot2::ggsave(file.path(out_dir, "interaction_model_pca.png"),
                 p_pca, width = 7, height = 5, dpi = 300)
 ```
+
+## Publication figure {#Publication_figure}
+
+The manuscript-facing PCA below is generated from this placed-chromosome,
+all-sample expression matrix. It adds treatment centroids and diet-specific
+centroid shifts while leaving individual sample labels out of the panel. The
+same export is compiled with the other manuscript panels on the
+[publication figure page](08-publication-figures.html#Figure_1:_fat_body_transcriptome_PCA).
+
+![Figure 1. Fat body PCA with treatment centroids and diet-specific centroid shifts.](assets/publication/figure1_fatbody_pca_centroid_shifts.png)
 
 ```{r session-info}
 writeLines(capture.output(sessionInfo()),

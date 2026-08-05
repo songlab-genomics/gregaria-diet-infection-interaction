@@ -11,9 +11,9 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-07-15" />
+<meta name="date" content="2026-08-05" />
 
-<title>Infection within diet DEGs</title>
+<title>All samples + all scaffolds: infection within diet DEGs</title>
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -377,8 +377,31 @@ div.tocify {
     <li>
       <a href="03-count-qc-exploration.html">Experiment QC</a>
     </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples retained</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+        </li>
+        <li>
+          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+        <li>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + placed chromosomes</a>
       <ul class="dropdown-menu" role="menu">
         <li>
           <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
@@ -389,33 +412,11 @@ div.tocify {
         <li>
           <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Current outliers removed</a>
-      <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="17-outliers-removed-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
         </li>
         <li>
-          <a href="18-outliers-removed-diet-pairwise-deg.html">Diet pairwise DEGs</a>
-        </li>
-        <li>
-          <a href="19-outliers-removed-infection-within-diet-deg.html">Infection within diet DEGs</a>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sensitivity and filters</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenario table</a>
-        </li>
-        <li>
-          <a href="11-outlier-sensitivity.html">Outlier sensitivity</a>
-        </li>
-        <li>
-          <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
+          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
         </li>
       </ul>
     </li>
@@ -429,31 +430,83 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="13-physiology-candidate-genes.html">Physiology candidate genes</a>
+      <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
     </li>
-    <li>
-      <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Scaffold origin interpretation</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="08-publication-figures.html">Publication figure exports</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Placed chromosomes</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Reference Context
+    Figures
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="22-deg-logical-set-construction.html">Fat body DEGs vs tissue / phase</a>
+      <a href="08-publication-figures.html">Publication figure exports</a>
     </li>
     <li>
-      <a href="20-phase-signature-overlap.html">Phase signature - all samples</a>
+      <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
     </li>
     <li>
-      <a href="21-phase-signature-overlap-no-outliers.html">Phase signature - outliers removed</a>
+      <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+    </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sensitivity and Validation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+    </li>
+    <li>
+      <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+    </li>
+    <li>
+      <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+    </li>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
     </li>
   </ul>
 </li>
@@ -464,20 +517,38 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="archive.html">Archived analysis index</a>
+    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Earlier current-analysis pages</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Original interaction model</a>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Original diet pairwise DEGs</a>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Original infection-within-diet DEGs</a>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
         </li>
         <li>
-          <a href="07-deg-overlap-prioritization.html">Original DEG overlap and prioritization</a>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
+        </li>
+        <li>
+          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
+        </li>
+        <li>
+          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
+        </li>
+        <li>
+          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
+        </li>
+        <li>
+          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
+        </li>
+        <li>
+          <a href="overlap.html">Original DEG overlap and prioritization</a>
         </li>
       </ul>
     </li>
@@ -527,9 +598,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Infection within diet DEGs</h1>
+<h1 class="title toc-ignore">All samples + all scaffolds: infection
+within diet DEGs</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-07-15</h4>
+<h4 class="date">2026-08-05</h4>
 
 </div>
 
@@ -537,7 +609,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -548,8 +620,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -558,13 +630,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -588,18 +660,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -690,15 +765,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebd50e92af8a2f32267a03218be556c408977d858targetblankbd50e92a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -708,7 +783,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bd50e92af8a2f32267a03218be556c408977d858" target="_blank">bd50e92</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -723,266 +798,167 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
-    Ignored:    data/raw_read_counts/.DS_Store
+    Ignored:    code/scripts/__pycache__/
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-123859/
+    Ignored:    output/.DS_Store
+    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
     Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-123921/
     Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-123940/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260715-130202/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260715-123853/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260715-130115/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-124354/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260715-130936/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-124947/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-124135/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260715-130357/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-124821/
+    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
+    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
+    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
+    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
+    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
+    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
+    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
+    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
+    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
     Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-124842/
+    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
     Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-124306/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130705/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-130848/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260715-131408/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-124901/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-124646/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-130514/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-124722/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-130550/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-124024/
+    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
+    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
+    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
+    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
+    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
+    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
+    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
+    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
+    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
+    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
+    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
     Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-124040/
     Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-124056/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260715-130318/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-124605/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260715-131532/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-124523/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131105/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260715-131452/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-124250/
+    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
+    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
+    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
     Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/publication-figures_20260715-124350/
-    Ignored:    output/rmd_runs/publication-figures_20260715-130931/
-    Ignored:    output/rmd_runs/study-design-data_20260715-123844/
-    Ignored:    output/rmd_runs/study-design-data_20260715-130107/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-123846/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260715-130109/
+    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
+    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
+    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
+    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
+    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
+    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
+    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
+    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
+    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
+    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
+    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
+    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
+    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
+    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
+    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
+    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
+    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
+    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
+    Ignored:    output/runs/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  analysis/12-deg-sample-filter-scenarios.Rmd
-    Untracked:  analysis/13-physiology-candidate-genes.Rmd
-    Untracked:  analysis/14-all-samples-deseq2-interaction-model.Rmd
-    Untracked:  analysis/15-all-samples-diet-pairwise-deg.Rmd
-    Untracked:  analysis/16-all-samples-infection-within-diet-deg.Rmd
-    Untracked:  analysis/17-outliers-removed-deseq2-interaction-model.Rmd
-    Untracked:  analysis/18-outliers-removed-diet-pairwise-deg.Rmd
-    Untracked:  analysis/19-outliers-removed-infection-within-diet-deg.Rmd
-    Untracked:  analysis/20-phase-signature-overlap.Rmd
-    Untracked:  analysis/21-phase-signature-overlap-no-outliers.Rmd
-    Untracked:  analysis/22-deg-logical-set-construction.Rmd
-    Untracked:  code/README.timecourse-snakemake-source.md
-    Untracked:  code/Snakefile
-    Untracked:  code/Snakefile.eggnog_annotations
-    Untracked:  code/Snakefile.metatranscriptomics_qc
-    Untracked:  code/Snakefile.rnaseq_variants
-    Untracked:  code/__pycache__/
-    Untracked:  code/cluster.json
-    Untracked:  code/config.smk
-    Untracked:  code/pilot/
-    Untracked:  code/rules/
-    Untracked:  code/run_eggnog_desertlocustr.sh
-    Untracked:  code/scripts/
-    Untracked:  code/snakemake.eggnog.slurm
-    Untracked:  code/snakemake.fatbody_pilot.slurm
-    Untracked:  code/snakemake.metatx.slurm
-    Untracked:  code/snakemake.slurm
-    Untracked:  data/external/
-    Untracked:  data/raw_read_counts/03-FAT-DESeq2/
-    Untracked:  data/raw_read_counts/03-gregaria-DESeq2/
+    Untracked:  Rplots.pdf
+    Untracked:  analysis/27-scaffold-origin-audit.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
+    Untracked:  analysis/29-metarhizium-read-burden.Rmd
+    Untracked:  analysis/30-curated-target-gene-figure.Rmd
+    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/archive.Rmd
+    Untracked:  analysis/assets/
+    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
+    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
+    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
+    Untracked:  code/Snakefile.scaffold_origin_audit
+    Untracked:  code/Snakefile.scaffold_origin_homology
+    Untracked:  code/config/
+    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
+    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
+    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
+    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
+    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
+    Untracked:  code/rules/08_scaffold_origin_audit.smk
+    Untracked:  code/rules/09_scaffold_origin_homology.smk
+    Untracked:  code/scripts/build_combined_reference.py
+    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
+    Untracked:  code/scripts/build_scaffold_origin_audit.py
+    Untracked:  code/scripts/compare_host_count_matrices.py
+    Untracked:  code/scripts/compare_host_deseq2_results.py
+    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
+    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
+    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
+    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
+    Untracked:  code/scripts/export_scaffold_origin_candidates.py
+    Untracked:  code/scripts/extract_unplaced_scaffolds.py
+    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
+    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
+    Untracked:  code/scripts/install_scaffold_homology_env.slurm
+    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
+    Untracked:  code/scripts/merge_featurecounts.py
+    Untracked:  code/scripts/merge_tsv_rows.py
+    Untracked:  code/scripts/plot_kraken_family_composition.R
+    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
+    Untracked:  code/scripts/run_fungal_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2.R
+    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
+    Untracked:  code/scripts/select_scaffold_homology_targets.py
+    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
+    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
+    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
+    Untracked:  code/scripts/summarize_competitive_mapping.py
+    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
+    Untracked:  code/scripts/summarize_host_mapping_audit.py
+    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
+    Untracked:  code/scripts/summarize_scaffold_kraken.py
+    Untracked:  code/scripts/summarize_star_log.py
+    Untracked:  code/snakemake.host_pathogen_dual.slurm
+    Untracked:  code/snakemake.scaffold_origin_audit.slurm
+    Untracked:  code/snakemake.scaffold_origin_homology.slurm
+    Untracked:  data/external/curated_target_genes/
+    Untracked:  data/scaffold_origin/
+    Untracked:  scripts/make_diet_infection_physiology_response.R
+    Untracked:  scripts/reference/
+    Untracked:  scripts/screen_unplaced_scaffold_origin.R
 
 Unstaged changes:
-    Modified:   .DS_Store
-    Modified:   analysis/.DS_Store
+    Modified:   .gitignore
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/08-publication-figures.Rmd
     Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
     Modified:   analysis/site-style.css
     Modified:   code/README.md
-    Modified:   data/.DS_Store
-    Modified:   output/.DS_Store
-    Modified:   output/rmd_runs/.DS_Store
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/filter_summary.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/library_size.csv
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/pca_vst.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/count-qc-exploration_20260704-001530/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Control_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_50.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_33_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/DESeq2_Infected_diet_50_vs_83.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/condition_specific_diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_intersection_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_presence_absence_matrix.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_size_barplot.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_set_summary.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/genes_seen_in_two_or_more_sets.csv
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/sessionInfo.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Control_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_50.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_33_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/significant_genes_Infected_diet_50_vs_83.txt
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_diet_degs_infected.png
-    Deleted:    output/rmd_runs/deg-overlap-prioritization_20260704-001704/venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/all_model_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/deseq2_coefficients.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_coefficients.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_deg_count_barplot.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_direction_counts.csv
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/interaction_model_pca.png
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/sessionInfo.txt
-    Deleted:    output/rmd_runs/deseq2-interaction-model_20260704-001535/significant_gene_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_50.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_33_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/DESeq2_50_vs_83.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/all_diet_pairwise_results.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_deg_count_barplot.png
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_direction_counts.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/diet_pairwise_summary.csv
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/sessionInfo.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_50.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_33_vs_83.txt
-    Deleted:    output/rmd_runs/diet-pairwise-deg_All_20260704-001558/significant_genes_50_vs_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_33.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_50.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/DESeq2_infected_vs_control_diet_83.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/all_infection_within_diet_results.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_deg_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_immune_nutrition_gene_list.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_heatmap_genes.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_pca_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_by_biotype_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_deg_burden_diverging_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_deg_count_barplot.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_direction_counts.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/infection_within_diet_summary.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/pca_centroid_infection_arrows.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/sessionInfo.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_33.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_50.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/significant_genes_infection_diet_83.txt
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_condition_centroids.png
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_pca_sample_scores.csv
-    Deleted:    output/rmd_runs/infection-within-diet-deg_20260704-001618/vst_top_variable_gene_heatmap.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_burden_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/deg_retained_lost_gained.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/log2fc_stability_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_full_vs_no_outliers.png
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/pca_scores_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/removed_samples.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sample_counts_by_group.csv
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/sessionInfo.txt
-    Deleted:    output/rmd_runs/outlier-sensitivity_20260704-001847/within_diet_results_full_vs_no_outliers.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_TERM2NAME.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/GO_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_TERM2GENE.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/KEGG_pathway_enrichment_all_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/all_enrichment_results.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_source_manifest.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/annotation_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_barplot.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/coding_lncRNA_deg_counts.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_TERM2NAME.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_by_ontology.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_GO_enrichment_with_ontology.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/eggNOG_KEGG_pathway_TERM2GENE.tsv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_term_overlap_heatmap.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enriched_terms_seen_in_multiple_sets.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_deg_set_summary.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/enrichment_dotplot_by_set.png
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/lncRNA_deg_table.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/removed_outlier_samples.csv
-    Deleted:    output/rmd_runs/outliers-load-enrichment_20260704-001727/sessionInfo.txt
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_figure_inventory.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/10_diet_33_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/11_diet_50_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/12_diet_83_infection_ma_plot.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/13_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/14_pca_vst.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/15_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/16_interaction_model_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/17_diet_33_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/18_diet_50_infection_deg_pca.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/19_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/1_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/20_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/21_venn_infection_degs_by_diet.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/22_deg_upsetr_current_sets.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/23_venn_broad_deg_families.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/24_venn_diet_degs_controls.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/25_25_25_25_25_25_Volcano_33_vs_50.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/26_26_26_26_26_26_Volcano_33_vs_50.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/27_27_27_27_27_27_Volcano_33_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/28_28_28_28_28_28_Volcano_33_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/29_29_29_29_29_29_Volcano_50_vs_83.pdf
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/2_sample_distance_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/30_30_30_30_30_30_Volcano_50_vs_83.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/3_curated_infection_deg_vst_heatmap_labeled.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/4_curated_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/5_diet_33_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/6_diet_50_infection_deg_vst_heatmap.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/7_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/8_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/candidate_panels/9_deg_overlap_matrix.png
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/copied_candidate_panels.csv
-    Deleted:    output/rmd_runs/publication-figures_20260704-001920/sessionInfo.txt
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/library_size_by_sample.csv
-    Deleted:    output/rmd_runs/study-design-data_20260704-001519/sessionInfo.txt
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/hpc_to_workflowr_workflow.png
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/package_status.csv
-    Deleted:    output/rmd_runs/workflow-reproducibility_20260704-001522/sessionInfo.txt
+    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/cluster.json
+    Modified:   code/config.smk
 
 </code></pre>
 <p>
@@ -1028,6 +1004,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1b24ec222bfdfc865840eae1189c8e184a7387cd/docs/06-infection-within-diet-deg.html" target="_blank">1b24ec2</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-07-16
+</td>
+<td>
+adding phase related changes
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1142,6 +1135,12 @@ Upgrading analysis and figures DEGs
 <p>This page tests infected versus control samples separately within
 each diet. This is a simple and readable complement to the full
 interaction model.</p>
+<p>This branch retains all 44 samples and all expression-filtered,
+non-rRNA host loci from the fresh competitive mapping, including genes
+on unplaced scaffolds. The parallel <a
+href="16-all-samples-infection-within-diet-deg.html">placed-chromosome
+analysis</a> uses the same sample set and thresholds but restricts the
+tested gene universe.</p>
 <p>The reason to split by diet is biological and statistical: infection
 may not produce the same transcriptional response under every
 nutritional condition. The full interaction model tests whether diet
@@ -1189,8 +1188,12 @@ metadata$label &lt;- as.character(metadata$label)
 metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
 metadata$Treatment &lt;- relevel(factor(metadata$Treatment), ref = &quot;Control&quot;)
 
-counts_raw &lt;- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_path &lt;- file.path(project_dir, params$counts_file)
+counts_raw &lt;- if (grepl(&quot;[.]tsv$&quot;, counts_path, ignore.case = TRUE)) {
+  read.delim(counts_path, check.names = FALSE)
+} else {
+  read.csv(counts_path, check.names = FALSE)
+}
 counts &lt;- as.matrix(counts_raw[, -1])
 rownames(counts) &lt;- counts_raw[[1]]
 storage.mode(counts) &lt;- &quot;integer&quot;
@@ -3098,7 +3101,7 @@ DT::datatable(
   caption = &quot;Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap&quot;
 )</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-8e5959f7d44745aa3695" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-8e5959f7d44745aa3695">{"x":{"filter":"none","vertical":false,"caption":"<caption>Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap<\/caption>","data":[["LOC126285462","LOC126335463","LOC126267038","LOC126335468","LOC126267163","LOC126271975","LOC126335547","LOC126267162","LOC126267215","LOC126266760","LOC126268068","LOC126336578","LOC126266759","LOC126267343","LOC126365918","LOC126335467","LOC126353952","LOC126291639","LOC126336325","LOC126336416","LOC126299332","LOC126336415","LOC126336409","LOC126299533","LOC126355303","LOC126285413","LOC126355939","LOC126272336","LOC126278707","LOC126299559","LOC126285457","LOC126355684","LOC126284651","LOC126299510","LOC126297421","LOC126339755","LOC126335114","LOC126267545","LOC126356204","LOC126349011","LOC126354995","LOC126354704","LOC126266596","LOC126278232","LOC126335115","LOC126272350","LOC126299121","LOC126266677","LOC126295319","LOC126273183","LOC126277885","LOC126354270","LOC126345236","LOC126281485","LOC126267690","LOC126272138","LOC126336078","LOC126297465","LOC126273387","LOC126335616","LOC126277948","LOC126355358","LOC126335469","LOC126334876","LOC126336408","LOC126335724","LOC126298412","LOC126299565","LOC126335646","LOC126336762","LOC126323918","LOC126328322","LOC126354316","LOC126355818","LOC126332617","LOC126354457","LOC126355972","LOC126355971","LOC126332180","LOC126277939","LOC126304741","LOC126274026","LOC126278130","LOC126335006","LOC126327137","LOC126355964","LOC126278132","LOC126272474"],["","","","","","","","PGRPLC","PGRPLA","","PGRPLA","","","","PGRPLA","","CLIPC1","","","","","","","","","","","","","","","Orct","","","","","","","","","","","","","","","bt","","","stai","","","RpL5","","CLIPD2","","","","SCRASP1","","","","","","","","","","","","","","","","","","","","","bli-4","","","","","","","",""],["Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","Signal transducer and activator of transcription","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Alpha-lactalbumin / lysozyme C","Belongs to the serpin family","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immunoglobulin V-set domain","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Knottins","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","nutrient reservoir activity","Transporter activity. It is involved in the biological process described with transmembrane transport","transporter activity. It is involved in the biological process described with sodium ion transport","amino acid transporter","lipid binding","Trypsin","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","Sugar (and other) transporter","Phosphoric diester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Trypsin-like serine protease","Carboxylic ester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Vault protein inter-alpha-trypsin domain","Belongs to the type-B carboxylesterase lipase family","Trypsin-like serine protease","catalytic activity. It is involved in the biological process described with metabolic process","Trypsin-like serine protease","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Serine-type endopeptidase inhibitor activity","Transferase activity, transferring hexosyl groups. It is involved in the biological process described with carbohydrate metabolic process","Sugar proton symporter activity. It is involved in the biological process described with carbohydrate transport","Belongs to the type-B carboxylesterase lipase family","carbohydrate binding","Immunoglobulin like","Immunoglobulin","Immunoglobulin C-2 Type","It is involved in the biological process described with regulation of microtubule polymerization or depolymerization","Immunoglobulin C-2 Type","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Component of the ribosome, a large ribonucleoprotein complex responsible for the synthesis of proteins in the cell. The small ribosomal subunit (SSU) binds messenger RNAs (mRNAs) and translates the encoded message by selecting cognate aminoacyl- transfer RNA (tRNA) molecules. The large subunit (LSU) contains the ribosomal catalytic site termed the peptidyl transferase center (PTC), which catalyzes the formation of peptide bonds, thereby polymerizing the amino acids delivered by tRNAs into a polypeptide chain. The nascent polypeptides leave the ribosome through a tunnel in the LSU and interact with protein factors that function in enzymatic processing, targeting, and the membrane insertion of nascent chains at the exit of the ribosomal tunnel","Immunoglobulin","Domain of unknown function (DUF1986)","Immunoglobulin domain","Belongs to the serpin family","Legume-like lectin family","It is involved in the biological process described with","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","CD80-like C2-set immunoglobulin domain","Collagenase NC10 and Endostatin","Belongs to the serpin family","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, copper containing domain","Microsomal triglyceride transfer protein","It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","activity. It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with carbohydrate metabolic process","Proprotein convertase P-domain","It is involved in the biological process described with carbohydrate metabolic process","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with metabolic process","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Dipeptidyl peptidase IV (DPP IV) N-terminal region"],["Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism"],["DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG"],["33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","50","50","33, 50, 83","50","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33","50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],["Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],[1.488187602919542e-31,5.022130116516287e-24,3.316672995776341e-16,1.090249733661977e-15,3.877220354601891e-15,3.583958746083118e-14,2.50680880651974e-13,2.662982960185946e-13,2.10098686675823e-12,2.187236594357404e-12,1.461184593237631e-11,3.530534278973955e-11,5.658535905881999e-10,6.554676389711904e-10,1.749721062953593e-09,2.851615692251323e-09,1.871974906285001e-08,2.643472550903612e-08,6.073576703079021e-08,2.623776110630218e-13,5.681095977085196e-13,5.729642778738305e-05,0.003776994097060118,0.006772059927512675,3.275017549101291e-20,3.227700292935422e-18,3.797989306126913e-18,6.131466596025749e-17,8.196123330686172e-17,8.76372956149559e-17,2.160247687644949e-16,3.273646780074912e-16,2.721728748821012e-15,1.282319706427465e-13,2.882868434655947e-13,4.411627219198623e-13,5.681095977085196e-13,6.545496871156995e-13,9.460174007178445e-13,1.730419430959503e-12,2.426830627951155e-12,2.801226443495212e-12,9.163622581047802e-11,2.712989834122484e-10,8.158804711083966e-10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[3.798849497532762,6.993757805231753,1.187627323797608,4.991323006484674,4.410727782380262,7.499195244319904,2.977694144312415,2.155494697596648,5.535066734957939,2.820990811405765,2.349321362287764,5.197727984164628,3.175397272626118,2.347946948557903,1.69937999848552,2.464859050643734,2.376317747155013,2.759287120589964,6.713947303690562,2.10311261136104,2.106236060347341,2.289821463576982,2.213658598449683,2.822412527804175,4.368745379149719,3.191539552239849,6.535669867325421,2.012700665452439,3.839799148199968,3.135141683835453,3.521700479462783,2.54131964925491,4.747911885221292,5.309035865765937,4.891846661755467,3.785047607307905,3.782260225278736,7.434380343365635,3.984809488793387,2.746566844757483,6.80124212200908,2.207187769551948,2.359285844601591,2.08556509856239,6.739115767385497,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>gene_id<\/th>\n      <th>Preferred_name<\/th>\n      <th>Description<\/th>\n      <th>Functional_theme<\/th>\n      <th>DEG_class<\/th>\n      <th>DEG_diets<\/th>\n      <th>DEG_direction_summary<\/th>\n      <th>min_padj<\/th>\n      <th>max_abs_lfc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[7,8]},{"name":"gene_id","targets":0},{"name":"Preferred_name","targets":1},{"name":"Description","targets":2},{"name":"Functional_theme","targets":3},{"name":"DEG_class","targets":4},{"name":"DEG_diets","targets":5},{"name":"DEG_direction_summary","targets":6},{"name":"min_padj","targets":7},{"name":"max_abs_lfc","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-8e5959f7d44745aa3695">{"x":{"filter":"none","vertical":false,"caption":"<caption>Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap<\/caption>","data":[["LOC126285462","LOC126335463","LOC126267038","LOC126335468","LOC126267163","LOC126271975","LOC126335547","LOC126267162","LOC126267215","LOC126266760","LOC126268068","LOC126336578","LOC126266759","LOC126267343","LOC126365918","LOC126335467","LOC126353952","LOC126291639","LOC126336325","LOC126336416","LOC126299332","LOC126336415","LOC126336409","LOC126299533","LOC126355303","LOC126355939","LOC126285413","LOC126278707","LOC126299559","LOC126272336","LOC126285457","LOC126355684","LOC126284651","LOC126299510","LOC126339755","LOC126297421","LOC126335114","LOC126267545","LOC126356204","LOC126349011","LOC126354995","LOC126354704","LOC126278232","LOC126266596","LOC126335115","LOC126355798","LOC126278149","LOC126354620","LOC126299121","LOC126266677","LOC126295319","LOC126277885","LOC126273183","LOC126354270","LOC126281485","LOC126345236","LOC126267690","LOC126272138","LOC126336078","LOC126297465","LOC126273387","LOC126335616","LOC126314451","LOC126277948","LOC126298901","LOC126335469","LOC126334876","LOC126336408","LOC126335724","LOC126298412","LOC126335646","LOC126299565","LOC126336762","LOC126323918","LOC126328322","LOC126354316","LOC126355818","LOC126355972","LOC126354457","LOC126332617","LOC126332180","LOC126355971","LOC126277939","LOC126304741","LOC126274026","LOC126278130","LOC126335006","LOC126327137","LOC126355964","LOC126278132","LOC126268026"],["","","","","","","","PGRPLC","PGRPLA","","PGRPLA","","","","PGRPLA","","CLIPC1","","","","","","","","","","","","","","","Orct","","","","","","","","","","","","","","","","","bt","","","","stai","","","RpL5","CLIPD2","","","","SCRASP1","","Cbp20","","SRPN12","","","","","","","","","","","","","","","","","","bli-4","","","","","","","",""],["Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","Signal transducer and activator of transcription","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Alpha-lactalbumin / lysozyme C","Belongs to the serpin family","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Immunoglobulin V-set domain","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Knottins","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","nutrient reservoir activity","Transporter activity. It is involved in the biological process described with transmembrane transport","amino acid transporter","transporter activity. It is involved in the biological process described with sodium ion transport","Trypsin","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","lipid binding","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","Sugar (and other) transporter","Phosphoric diester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Trypsin-like serine protease","Vault protein inter-alpha-trypsin domain","Carboxylic ester hydrolase activity. It is involved in the biological process described with lipid metabolic process","Belongs to the type-B carboxylesterase lipase family","Trypsin-like serine protease","catalytic activity. It is involved in the biological process described with metabolic process","Trypsin-like serine protease","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Serine-type endopeptidase inhibitor activity","Sugar proton symporter activity. It is involved in the biological process described with carbohydrate transport","Transferase activity, transferring hexosyl groups. It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the major facilitator superfamily. Sugar transporter (TC 2.A.1.1) family","Carboxylic ester hydrolase activity","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","Immunoglobulin like","Immunoglobulin","Immunoglobulin C-2 Type","Immunoglobulin C-2 Type","It is involved in the biological process described with regulation of microtubule polymerization or depolymerization","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Immunoglobulin","Component of the ribosome, a large ribonucleoprotein complex responsible for the synthesis of proteins in the cell. The small ribosomal subunit (SSU) binds messenger RNAs (mRNAs) and translates the encoded message by selecting cognate aminoacyl- transfer RNA (tRNA) molecules. The large subunit (LSU) contains the ribosomal catalytic site termed the peptidyl transferase center (PTC), which catalyzes the formation of peptide bonds, thereby polymerizing the amino acids delivered by tRNAs into a polypeptide chain. The nascent polypeptides leave the ribosome through a tunnel in the LSU and interact with protein factors that function in enzymatic processing, targeting, and the membrane insertion of nascent chains at the exit of the ribosomal tunnel","Domain of unknown function (DUF1986)","Immunoglobulin domain","Belongs to the serpin family","Legume-like lectin family","It is involved in the biological process described with","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Component of the cap-binding complex (CBC), which binds co-transcriptionally to the 5' cap of pre-mRNAs and is involved in various processes such as pre-mRNA splicing and RNA-mediated gene silencing (RNAi). The CBC complex is involved in miRNA-mediated RNA interference and is required for primary microRNAs (miRNAs) processing. Also involved in innate immunity via the short interfering RNAs (siRNAs) processing machinery by restricting the viral RNA production. In the CBC complex, Cbp20 recognizes and binds capped RNAs (m7GpppG-capped RNA) but requires Cbp80 to stabilize the movement of its N-terminal loop and lock the CBC into a high affinity cap-binding state with the cap structure","CD80-like C2-set immunoglobulin domain","Belongs to the serpin family","Belongs to the serpin family","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, copper containing domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Microsomal triglyceride transfer protein","It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Proprotein convertase P-domain","It is involved in the biological process described with carbohydrate metabolic process","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with metabolic process","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Belongs to the type-B carboxylesterase lipase family"],["Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism"],["DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG"],["33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","50","50","33, 50, 83","50","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33","50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50","33, 50, 83","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50","33, 50","33","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],["Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in control","Higher in control","Higher in control","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],[2.390568391013603e-31,5.906341812477699e-24,2.651786683916384e-16,1.039967347918805e-15,4.281839981410748e-15,4.611928668432317e-14,3.045344822274369e-13,4.01783301985942e-13,2.726146817997436e-12,3.020828256386923e-12,1.592135345113552e-11,2.587567260138031e-11,5.785065371419094e-10,6.741849647475865e-10,1.567553868922278e-09,4.562303735296851e-09,1.984036992118426e-08,2.778504718540281e-08,6.331969217149463e-08,2.750237955910874e-13,5.782987164525048e-13,4.983930613363181e-05,0.003655600256600579,0.006769160498638665,2.775791297536037e-20,2.983676316827555e-18,3.072978164469223e-18,7.851535479650241e-17,8.36866980118832e-17,1.052762040636686e-16,2.34415924812127e-16,3.377077619747748e-16,2.52748814103326e-15,1.112648388203412e-13,2.412922348558506e-13,2.750237955910874e-13,5.549415229366444e-13,6.788505943419499e-13,8.857349131253697e-13,1.2776503106781e-12,2.5557192568301e-12,2.985336984838529e-12,2.52224283997825e-10,5.367340454283477e-10,7.731485903861769e-10,5.728159997889696e-09,7.787657582851717e-08,1.978362102908718e-07,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[3.793711720943974,6.989120076506347,1.185964506765998,4.992834584548836,4.405431963641729,7.496353500009945,2.972497805964396,2.151828726008624,5.531702040584219,2.816034508357395,2.341858451771681,5.197011891385799,3.17463907975191,2.346299883191918,1.70067577469231,2.468995663097074,2.37463987389209,2.799546911533678,6.699915497332046,2.100560833915784,2.105718907131477,2.29067058122926,2.22695180407845,2.82032469767489,4.354123192775776,6.541329899712857,3.196136030840678,3.838906113356526,3.140557154913421,2.016508620443584,3.52107341676124,2.542884618286643,4.742065748688039,5.304839412836467,3.809112675513604,4.896881098435856,3.783046088009648,7.42792319797798,3.97973887327159,2.751357814016385,6.78987288019321,2.208428729299132,2.083290870894872,2.350219035830189,6.753511482065851,2.194400271165431,1.657382528716699,2.372248753605574,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>gene_id<\/th>\n      <th>Preferred_name<\/th>\n      <th>Description<\/th>\n      <th>Functional_theme<\/th>\n      <th>DEG_class<\/th>\n      <th>DEG_diets<\/th>\n      <th>DEG_direction_summary<\/th>\n      <th>min_padj<\/th>\n      <th>max_abs_lfc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[7,8]},{"name":"gene_id","targets":0},{"name":"Preferred_name","targets":1},{"name":"Description","targets":2},{"name":"Functional_theme","targets":3},{"name":"DEG_class","targets":4},{"name":"DEG_diets","targets":5},{"name":"DEG_direction_summary","targets":6},{"name":"min_padj","targets":7},{"name":"max_abs_lfc","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>write.csv(curated_gene_list,
           file.path(out_dir, &quot;curated_immune_nutrition_gene_list.csv&quot;),
           row.names = FALSE)</code></pre>
@@ -3122,15 +3125,15 @@ knitr::kable(summary_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">33</td>
-<td align="right">898</td>
+<td align="right">904</td>
 </tr>
 <tr class="even">
 <td align="left">50</td>
-<td align="right">1312</td>
+<td align="right">1319</td>
 </tr>
 <tr class="odd">
 <td align="left">83</td>
-<td align="right">519</td>
+<td align="right">522</td>
 </tr>
 </tbody>
 </table>
@@ -3141,7 +3144,7 @@ knitr::kable(summary_table)</code></pre>
 sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -3213,7 +3216,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.4.1
+Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 

@@ -1,5 +1,5 @@
 ---
-title: "DEG overlap and prioritization"
+title: "Main-chromosome DEG overlap and prioritization"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -9,17 +9,21 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   results_root: "output/rmd_runs"
-  min_total_count: 10
+  min_count: 10
+  min_samples: 3
   alpha: 0.05
   lfc_threshold: 1
-  output_tag: "deg-overlap-prioritization"
+  output_tag: "main-chromosome-deg-overlap-prioritization"
 ---
 
 ## Purpose
 
-This page compares significant DEG lists from the model pages. It also runs the
+This page compares significant main-chromosome DEG lists from the all-samples
+model pages. It also runs the
 small condition-specific diet contrasts needed for targeted Venn diagrams:
 diet-to-diet DEGs among control samples and diet-to-diet DEGs among infected
 samples.
@@ -39,7 +43,7 @@ header.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("DESeq2", "ggplot2", "UpSetR", "ggVennDiagram")
+required <- c("DESeq2", "ggplot2", "UpSetR", "ggVennDiagram", "readr", "dplyr")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -57,6 +61,13 @@ out_dir <- file.path(project_dir, "output", "rmd_runs",
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 results_root <- file.path(project_dir, params$results_root)
+
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) stop("No run folder matched: ", pattern)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
 ```
 
 ## Find result files
@@ -66,10 +77,21 @@ is shown so the reader can see exactly which run outputs contributed to the
 overlap analysis.
 
 ```{r find-files}
-all_result_files <- list.files(results_root, pattern = "\\.csv$", recursive = TRUE,
-                               full.names = TRUE)
-all_result_files <- all_result_files[grepl("DESeq2_|all_.*results|coefficients",
-                                           basename(all_result_files))]
+current_run_dirs <- c(
+  latest_dir("^main-chromosome-all-samples-deseq2-interaction-model_"),
+  latest_dir("^main-chromosome-all-samples-diet-pairwise-deg_All_"),
+  latest_dir("^main-chromosome-all-samples-infection-within-diet-deg_")
+)
+all_result_files <- unlist(lapply(
+  current_run_dirs,
+  list.files,
+  pattern = "\\.csv$",
+  full.names = TRUE
+))
+all_result_files <- all_result_files[grepl(
+  "DESeq2_|all_.*results|coefficients",
+  basename(all_result_files)
+)]
 
 file_info <- data.frame(
   file = all_result_files,
@@ -393,10 +415,10 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
-counts <- as.matrix(counts_raw[, -1])
-rownames(counts) <- counts_raw[[1]]
+counts_table <- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id")])
+rownames(counts) <- counts_table$gene_id
 storage.mode(counts) <- "integer"
 
 count_labels <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
@@ -405,18 +427,29 @@ stopifnot(identical(metadata$label, count_labels))
 rownames(metadata) <- metadata$label
 colnames(counts) <- count_labels
 
+placement <- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+counts <- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
 run_treatment_diet_degs <- function(treatment_label) {
   keep_samples <- metadata$Treatment == treatment_label
   metadata_sub <- droplevels(metadata[keep_samples, ])
   counts_sub <- counts[, metadata_sub$label, drop = FALSE]
-  keep_genes <- rowSums(counts_sub) >= params$min_total_count
+  keep_genes <- rowSums(counts_sub >= params$min_count) >= params$min_samples
 
   dds <- DESeq2::DESeqDataSetFromMatrix(
     countData = counts_sub[keep_genes, ],
     colData = metadata_sub,
     design = ~ Diet
   )
-  dds <- DESeq2::DESeq(dds)
+  dds <- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
 
   diet_pairs <- combn(levels(droplevels(metadata_sub$Diet)), 2,
                       simplify = FALSE)
@@ -426,7 +459,7 @@ run_treatment_diet_degs <- function(treatment_label) {
   for (pair in diet_pairs) {
     contrast_label <- paste(pair[1], "vs", pair[2], sep = "_")
     res <- DESeq2::results(dds, contrast = c("Diet", pair[1], pair[2]),
-                           alpha = params$alpha)
+                           alpha = params$alpha, cooksCutoff = FALSE)
     res_df <- as.data.frame(res)
     res_df$gene_id <- rownames(res_df)
     res_df$treatment_subset <- treatment_label
@@ -582,6 +615,17 @@ p_overlap
 ggplot2::ggsave(file.path(out_dir, "deg_overlap_matrix.png"),
                 p_overlap, width = 10, height = 8, dpi = 300)
 ```
+
+## Publication figure {#Publication_figure}
+
+Figure 2 combines the exact placed-chromosome DEG burden with overlap among
+the diet, infection, and shared phase-reference contexts. Its underlying gene
+sets are built on this page and in the linked all-sample DEG catalogue.
+
+![Figure 2. DEG burden and overlap among experimental and phase-reference contexts.](assets/publication/figure2_deg_burden_context_phase_venns.png)
+
+The full-size PNG/SVG exports and the membership tables are collected on the
+[publication figure page](08-publication-figures.html#Figure_2:_DEG_burden,_context_overlap,_and_phase-reference_overlap).
 
 ```{r session-info}
 writeLines(capture.output(sessionInfo()),

@@ -1,0 +1,2 @@
+##[["FCS genome report", 2, 1], {"git-rev": "v0.4.0", "run-date": "Thu Mar 23 10:57:22 2023", "db": {"build-date": "2023-01-24", "seqs": 3025824, "Gbp": 709.264}, "run-info": {"agg-cvg": 0.022223, "asserted-div": "anml:insects", "inferred-primary-divs": ["anml:insects"], "corrected-primary-divs": ["anml:insects"]}}]
+#seq_id	start_pos	end_pos	seq_len	action	contam_type	coverage	contam_details

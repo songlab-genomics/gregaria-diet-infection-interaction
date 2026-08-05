@@ -1,0 +1,8 @@
+"source_class","n_genes"
+"Tissue reference pattern only",505
+"Phase signature only",1003
+"Diet/infection DEG only",3094
+"Tissue + phase",126
+"Tissue + diet/infection",206
+"Phase + diet/infection",231
+"Tissue + phase + diet/infection",89
