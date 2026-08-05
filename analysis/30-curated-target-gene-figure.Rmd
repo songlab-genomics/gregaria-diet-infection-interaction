@@ -12,6 +12,7 @@ params:
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   latest_results_root: "output/rmd_runs"
   results_pattern: "^placed-unplaced-scaffold-analysis_"
+  homology_results_pattern: "^scaffold-origin-audit_"
   alpha: 0.05
   lfc_threshold: 1
   output_tag: "curated-target-gene-figure"
@@ -96,6 +97,7 @@ page_defaults <- list(
   ),
   latest_results_root = "output/rmd_runs",
   results_pattern = "^placed-unplaced-scaffold-analysis_",
+  homology_results_pattern = "^scaffold-origin-audit_",
   alpha = 0.05,
   lfc_threshold = 1,
   output_tag = "curated-target-gene-figure"
@@ -178,13 +180,23 @@ source_results_dir <- latest_matching_dir(
   page_params$latest_results_root,
   page_params$results_pattern
 )
+homology_results_dir <- latest_matching_dir(
+  page_params$latest_results_root,
+  page_params$homology_results_pattern
+)
 results_file <- file.path(
   source_results_dir,
   "placed_unplaced_all_deseq2_results.csv"
 )
+homology_evidence_file <- file.path(
+  homology_results_dir,
+  "corrected_gene_homology_evidence.tsv"
+)
 out_dir <- make_run_dir(page_params$latest_results_root, page_params$output_tag)
 
-required_files <- c(workbook_file, placement_file, results_file)
+required_files <- c(
+  workbook_file, placement_file, results_file, homology_evidence_file
+)
 missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
   stop("Missing required input files: ", paste(missing_files, collapse = ", "))
@@ -249,6 +261,14 @@ if (anyDuplicated(curated_targets$gene_id)) {
 placement <- readr::read_tsv(placement_file, show_col_types = FALSE)
 all_results <- readr::read_csv(results_file, show_col_types = FALSE) |>
   dplyr::filter(.data$mapping_branch == "Competitive host")
+homology_evidence <- readr::read_tsv(
+  homology_evidence_file,
+  show_col_types = FALSE
+)
+
+if (anyDuplicated(homology_evidence$gene_id)) {
+  stop("The scaffold-origin homology audit contains duplicated gene IDs.")
+}
 
 contrast_map <- tibble::tribble(
   ~contrast_id, ~contrast_label, ~figure_scope, ~x_label, ~x_order,
@@ -867,6 +887,106 @@ write_csv_out(
   "figure4_unplaced_exploratory_chisquare_tests.csv"
 )
 
+# Use the same three review classes defined on the scaffold-origin audit page.
+# These classes flag provenance uncertainty; they do not establish contamination.
+homology_review_classes <- c(
+  "Concordant non-metazoan nucleotide and protein hits",
+  "Conflicting nucleotide and protein evidence",
+  "Non-metazoan-only protein hits without nucleotide corroboration"
+)
+
+homology_review_targets <- homology_evidence |>
+  dplyr::filter(.data$integrated_evidence %in% homology_review_classes) |>
+  dplyr::transmute(
+    gene_id,
+    homology_evidence = .data$integrated_evidence,
+    evidence_tier = dplyr::case_when(
+      .data$integrated_evidence ==
+        "Concordant non-metazoan nucleotide and protein hits" ~
+        "Concordant nucleotide and protein flag",
+      .data$integrated_evidence ==
+        "Conflicting nucleotide and protein evidence" ~
+        "Conflicting nucleotide and protein evidence",
+      TRUE ~ "Protein-only non-metazoan flag"
+    ),
+    nucleotide_groups,
+    nucleotide_taxa,
+    nucleotide_max_identity,
+    nucleotide_max_query_coverage,
+    protein_support
+  )
+
+homology_flag_analysis <- target_analysis |>
+  dplyr::inner_join(homology_review_targets, by = "gene_id") |>
+  dplyr::filter(.data$show_in_figure)
+
+homology_flag_gene_audit <- gene_audit |>
+  dplyr::inner_join(homology_review_targets, by = "gene_id") |>
+  dplyr::arrange(
+    factor(
+      .data$evidence_tier,
+      levels = c(
+        "Concordant nucleotide and protein flag",
+        "Conflicting nucleotide and protein evidence",
+        "Protein-only non-metazoan flag"
+      )
+    ),
+    .data$source_sheet,
+    .data$umbrella,
+    .data$gene_id
+  )
+
+homology_flag_counts <- homology_flag_analysis |>
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order, .data$status,
+    name = "n_genes"
+  ) |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order
+  ) |>
+  dplyr::mutate(percentage = 100 * .data$n_genes / sum(.data$n_genes)) |>
+  dplyr::ungroup()
+
+homology_flag_category_n <- homology_flag_gene_audit |>
+  dplyr::count(.data$source_sheet, .data$umbrella, name = "n_targets")
+
+homology_flag_tests <- calculate_figure_tests(homology_flag_counts)
+homology_flag_status_counts <- homology_flag_counts |>
+  dplyr::left_join(
+    homology_flag_category_n,
+    by = c("source_sheet", "umbrella")
+  ) |>
+  dplyr::left_join(
+    homology_flag_tests,
+    by = c("source_sheet", "umbrella", "figure_scope")
+  )
+
+write_csv_out(
+  homology_flag_gene_audit,
+  "figure4_non_grasshopper_homology_flag_gene_audit.csv"
+)
+write_csv_out(
+  homology_flag_analysis |>
+    dplyr::select(
+      .data$gene_id, .data$description_gff, .data$source_sheet,
+      .data$umbrella, .data$subcategory, .data$seqid,
+      .data$homology_evidence, .data$evidence_tier,
+      .data$nucleotide_groups, .data$nucleotide_taxa,
+      .data$nucleotide_max_identity,
+      .data$nucleotide_max_query_coverage,
+      .data$protein_support, .data$contrast_label,
+      .data$oriented_log2FC, .data$padj, .data$status,
+      .data$higher_expression_condition
+    ),
+  "figure4_non_grasshopper_homology_flag_contrasts.csv"
+)
+write_csv_out(
+  homology_flag_status_counts,
+  "figure4_non_grasshopper_homology_flag_status_counts.csv"
+)
+
 category_display <- c(
   "Innate Immune Recognition & Signaling" =
     "Innate immune\nrecognition &\nsignaling",
@@ -1167,6 +1287,56 @@ save_figure(
   15,
   11.5
 )
+
+flag_a <- build_figure4_panel(
+  homology_flag_status_counts, "Immune",
+  "Within-diet infection response", "A", TRUE, FALSE
+)
+flag_b <- build_figure4_panel(
+  homology_flag_status_counts, "Immune",
+  "Diet comparison among infected", "B", FALSE
+)
+flag_c <- build_figure4_panel(
+  homology_flag_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE
+)
+flag_d <- build_figure4_panel(
+  homology_flag_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE
+)
+
+homology_flag_target_n <- dplyr::n_distinct(homology_flag_analysis$gene_id)
+homology_concordant_n <- sum(
+  homology_flag_gene_audit$evidence_tier ==
+    "Concordant nucleotide and protein flag"
+)
+
+figure4_homology_flags <- (
+  (flag_a | flag_b) /
+  (flag_c | flag_d) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+  patchwork::plot_annotation(
+    title = "Curated targets with non-grasshopper homology review flags",
+    subtitle = paste0(
+      homology_flag_target_n,
+      " unplaced-scaffold targets; only ", homology_concordant_n,
+      " have concordant non-metazoan nucleotide and protein hits"
+    ),
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+save_figure(
+  figure4_homology_flags,
+  "figure4_curated_targets_non_grasshopper_homology_flags",
+  15,
+  11.5
+)
 ```
 
 ### Figure 4 views {.tabset}
@@ -1183,6 +1353,12 @@ figure4_main_chromosome
 figure4_all_scaffolds
 ```
 
+#### Homology review flags
+
+```{r display-figure4-homology-flags, echo=FALSE, fig.width=15, fig.height=11.5}
+figure4_homology_flags
+```
+
 The first composite is the conservative host-chromosome view used for the main
 paper interpretation. The second restores all 163 genes from the original
 curated workbook, including the 64 targets on unplaced scaffolds, so its target
@@ -1191,6 +1367,71 @@ current DESeq2 model, contrasts, thresholds, colors, and panel geometry. The
 left panels summarize infection responses within each diet; the right panels
 compare infected locusts across diets. The exploratory chi-square labels
 summarize category composition and do not replace the gene-level DESeq2 tests.
+
+The third composite isolates the `r homology_flag_target_n` curated targets that
+meet the scaffold-origin page's predefined homology-review rule. Of these,
+`r homology_concordant_n` have non-metazoan top hits in both BLASTn and DIAMOND;
+the remainder have conflicting evidence or protein-only support. These are
+**provenance-review flags, not confirmed non-locust genes**. Conserved proteins,
+incomplete reference representation, and short or divergent alignments can all
+produce a non-grasshopper top hit.
+
+### Genes behind the homology-flagged figure
+
+```{r homology-flagged-curated-table, echo=FALSE}
+homology_flag_table <- homology_flag_analysis |>
+  dplyr::select(
+    .data$gene_id, description = .data$description_gff,
+    functional_group = .data$umbrella, .data$subcategory,
+    scaffold = .data$seqid, .data$evidence_tier,
+    .data$nucleotide_groups, .data$nucleotide_taxa,
+    .data$contrast_label, log2FC = .data$oriented_log2FC,
+    adjusted_p_value = .data$padj, .data$status,
+    higher_in = .data$higher_expression_condition
+  ) |>
+  dplyr::mutate(
+    log2FC = round(.data$log2FC, 3),
+    adjusted_p_value = signif(.data$adjusted_p_value, 3)
+  ) |>
+  dplyr::arrange(
+    factor(
+      .data$evidence_tier,
+      levels = c(
+        "Concordant nucleotide and protein flag",
+        "Conflicting nucleotide and protein evidence",
+        "Protein-only non-metazoan flag"
+      )
+    ),
+    .data$functional_group,
+    .data$gene_id,
+    .data$contrast_label
+  )
+
+DT::datatable(
+  homology_flag_table,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 15,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  ),
+  caption = paste0(
+    "Curated Figure 4 targets carrying scaffold-origin homology review flags. ",
+    "Positive log2FC follows the condition order printed in the contrast."
+  )
+) |>
+  DT::formatStyle(
+    "status",
+    color = DT::styleEqual(
+      c("Downregulated", "N.S.", "Upregulated"),
+      c("#244A9B", "#555555", "#8B1018")
+    ),
+    fontWeight = "bold"
+  )
+```
 
 ## Comparison with the earlier workbook
 
@@ -1331,12 +1572,14 @@ manifest <- tibble::tibble(
     "Frozen curated workbook",
     "Official placement table",
     "Current DESeq2 result table",
+    "Corrected BLASTn/DIAMOND homology evidence",
     "Output directory"
   ),
   path = c(
     workbook_file,
     placement_file,
     results_file,
+    homology_evidence_file,
     out_dir
   )
 )
@@ -1348,8 +1591,10 @@ knitr::kable(manifest, col.names = c("Item", "Path"), align = c("l", "l"))
 Each knit creates a new timestamped output folder. Matched composites are
 exported as `figure4_curated_targets_main_chromosomes` and
 `figure4_curated_targets_all_scaffolds` in PNG, SVG, and PDF formats. The
-unplaced-only composite, placement-impact figure, and all gene-level audit
-tables are exported beside them for sensitivity review.
+standalone homology-review composite is exported as
+`figure4_curated_targets_non_grasshopper_homology_flags`. The unplaced-only
+composite, placement-impact figure, and all gene-level audit tables are exported
+beside them for sensitivity review.
 
 ## Session information
 
