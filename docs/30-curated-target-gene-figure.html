@@ -774,15 +774,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreea9ad296988a994e29a36276810efba6ed3e49881targetblanka9ad296a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree6ca3fd4444bc09f2fc6b6fb50693bde84925790dtargetblank6ca3fd4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/a9ad296988a994e29a36276810efba6ed3e49881" target="_blank">a9ad296</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/6ca3fd4444bc09f2fc6b6fb50693bde84925790d" target="_blank">6ca3fd4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreea9ad296988a994e29a36276810efba6ed3e49881targetblanka9ad296a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree6ca3fd4444bc09f2fc6b6fb50693bde84925790dtargetblank6ca3fd4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -792,7 +792,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/a9ad296988a994e29a36276810efba6ed3e49881" target="_blank">a9ad296</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/6ca3fd4444bc09f2fc6b6fb50693bde84925790d" target="_blank">6ca3fd4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -820,7 +820,6 @@ Ignored files:
     Ignored:    scripts/.Rhistory
 
 Unstaged changes:
-    Modified:   analysis/08-publication-figures.Rmd
     Modified:   analysis/30-curated-target-gene-figure.Rmd
 
 </code></pre>
@@ -867,6 +866,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/6ca3fd4444bc09f2fc6b6fb50693bde84925790d/analysis/30-curated-target-gene-figure.Rmd" target="_blank">6ca3fd4</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+adding flag scaffolds genes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/6ca3fd4444bc09f2fc6b6fb50693bde84925790d/docs/30-curated-target-gene-figure.html" target="_blank">6ca3fd4</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+adding flag scaffolds genes
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2670,6 +2703,11 @@ homology_flag_status_counts &lt;- homology_flag_counts |&gt;
   dplyr::left_join(
     homology_flag_tests,
     by = c(&quot;source_sheet&quot;, &quot;umbrella&quot;, &quot;figure_scope&quot;)
+  ) |&gt;
+  dplyr::mutate(
+    # This review subset was selected from one DEG contrast, so a composition
+    # test across the same contrasts would not be an independent inference.
+    p_label = &quot;&quot;
   )
 
 write_csv_out(
@@ -3030,7 +3068,8 @@ figure4_homology_flags &lt;- (
     title = &quot;Curated targets with non-grasshopper homology review flags&quot;,
     subtitle = paste0(
       homology_flag_target_n,
-      &quot; unplaced-scaffold targets; only &quot;, homology_concordant_n,
+      &quot; targets selected from unresolved infected diet 33 vs 50 DEGs; only &quot;,
+      homology_concordant_n,
       &quot; have concordant non-metazoan nucleotide and protein hits&quot;
     ),
     theme = theme(
@@ -3133,6 +3172,43 @@ Maeva TECHER
 <div id="homology-review-flags" class="section level4">
 <h4>Homology review flags</h4>
 <p><img src="figure/30-curated-target-gene-figure.Rmd/display-figure4-homology-flags-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-display-figure4-homology-flags-1">
+Past versions of display-figure4-homology-flags-1.png
+</button>
+</p>
+<div id="fig-display-figure4-homology-flags-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/6ca3fd4444bc09f2fc6b6fb50693bde84925790d/docs/figure/30-curated-target-gene-figure.Rmd/display-figure4-homology-flags-1.png" target="_blank">6ca3fd4</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The first composite is the conservative host-chromosome view used for
 the main paper interpretation. The second restores all 163 genes from
 the original curated workbook, including the 64 targets on unplaced
@@ -3150,6 +3226,13 @@ conflicting evidence or protein-only support. These are
 genes</strong>. Conserved proteins, incomplete reference representation,
 and short or divergent alignments can all produce a non-grasshopper top
 hit.</p>
+<p>All 23 targets are significant for infected diet 50 versus infected
+diet 33 because the scaffold-origin homology audit was itself
+constructed from the unresolved genes driving that contrast. That column
+documents the selection rule; it is not an independent confirmation. For
+this reason, the audit-only composite does not display the exploratory
+chi-square labels used for the fixed main and all-scaffold target
+sets.</p>
 </div>
 </div>
 <div id="genes-behind-the-homology-flagged-figure"
@@ -3385,7 +3468,7 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">Output directory</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260806-020956</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260806-021426</td>
 </tr>
 </tbody>
 </table>

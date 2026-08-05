@@ -961,6 +961,11 @@ homology_flag_status_counts <- homology_flag_counts |>
   dplyr::left_join(
     homology_flag_tests,
     by = c("source_sheet", "umbrella", "figure_scope")
+  ) |>
+  dplyr::mutate(
+    # This review subset was selected from one DEG contrast, so a composition
+    # test across the same contrasts would not be an independent inference.
+    p_label = ""
   )
 
 write_csv_out(
@@ -1321,7 +1326,8 @@ figure4_homology_flags <- (
     title = "Curated targets with non-grasshopper homology review flags",
     subtitle = paste0(
       homology_flag_target_n,
-      " unplaced-scaffold targets; only ", homology_concordant_n,
+      " targets selected from unresolved infected diet 33 vs 50 DEGs; only ",
+      homology_concordant_n,
       " have concordant non-metazoan nucleotide and protein hits"
     ),
     theme = theme(
@@ -1375,6 +1381,13 @@ the remainder have conflicting evidence or protein-only support. These are
 **provenance-review flags, not confirmed non-locust genes**. Conserved proteins,
 incomplete reference representation, and short or divergent alignments can all
 produce a non-grasshopper top hit.
+
+All 23 targets are significant for infected diet 50 versus infected diet 33
+because the scaffold-origin homology audit was itself constructed from the
+unresolved genes driving that contrast. That column documents the selection
+rule; it is not an independent confirmation. For this reason, the audit-only
+composite does not display the exploratory chi-square labels used for the fixed
+main and all-scaffold target sets.
 
 ### Genes behind the homology-flagged figure
 
