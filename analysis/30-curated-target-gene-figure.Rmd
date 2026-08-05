@@ -48,6 +48,12 @@ A target is shown as `N.S.` when it does not meet both `padj < alpha` and
 category percentages directly comparable across contrasts and placement
 classes.
 
+The label below each facet reports the number of **curated target genes in the
+denominator**, not the number of DEGs. Differential-expression status is
+recalculated from the current transcript-plus-exon model, so a target can move
+into or out of significance even though restricting the target list to main
+chromosomes can only reduce its size.
+
 ## Setup
 
 ```{r setup}
@@ -375,6 +381,99 @@ target_analysis <- target_analysis |>
     original_status_long,
     by = c("gene_id", "contrast_id")
   )
+
+if (nrow(target_analysis) != dplyr::n_distinct(target_analysis$gene_id) *
+    dplyr::n_distinct(target_analysis$contrast_id)) {
+  stop("The curated audit is not one row per gene and contrast.")
+}
+
+gene_audit <- target_analysis |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$subcategory,
+    .data$gene_id, .data$description_workbook, .data$description_gff,
+    .data$gene_biotype, .data$seqid, .data$sequence_name,
+    .data$sequence_role, .data$sequence_class
+  ) |>
+  dplyr::summarise(
+    original_significant_contrasts = sum(.data$original_status != "N.S."),
+    current_significant_contrasts = sum(.data$status != "N.S."),
+    newly_significant_contrasts = sum(
+      .data$original_status == "N.S." & .data$status != "N.S."
+    ),
+    no_longer_significant_contrasts = sum(
+      .data$original_status != "N.S." & .data$status == "N.S."
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    figure_scope = dplyr::if_else(
+      .data$sequence_class == "Nuclear chromosome",
+      "Main chromosome",
+      "Unplaced scaffold"
+    )
+  )
+
+summarize_reconciliation <- function(data, sequence_scope) {
+  data |>
+    dplyr::filter(.data$show_in_figure) |>
+    dplyr::group_by(
+      .data$source_sheet, .data$umbrella, .data$figure_scope
+    ) |>
+    dplyr::summarise(
+      sequence_scope = sequence_scope,
+      target_genes = dplyr::n_distinct(.data$gene_id),
+      gene_contrast_cells = dplyr::n(),
+      original_significant_cells = sum(.data$original_status != "N.S."),
+      current_significant_cells = sum(.data$status != "N.S."),
+      newly_significant_cells = sum(
+        .data$original_status == "N.S." & .data$status != "N.S."
+      ),
+      no_longer_significant_cells = sum(
+        .data$original_status != "N.S." & .data$status == "N.S."
+      ),
+      net_change = .data$current_significant_cells -
+        .data$original_significant_cells,
+      .groups = "drop"
+    ) |>
+    dplyr::relocate(.data$sequence_scope)
+}
+
+count_reconciliation <- dplyr::bind_rows(
+  summarize_reconciliation(target_analysis, "All curated targets"),
+  summarize_reconciliation(
+    dplyr::filter(target_analysis, .data$primary_figure),
+    "Main chromosome"
+  ),
+  summarize_reconciliation(
+    dplyr::filter(target_analysis, !.data$primary_figure),
+    "Unplaced scaffold"
+  )
+)
+
+contrast_audit <- target_analysis |>
+  dplyr::select(
+    .data$source_sheet, .data$umbrella, .data$subcategory,
+    .data$gene_id, .data$description_workbook, .data$description_gff,
+    .data$gene_biotype, .data$seqid, .data$sequence_class,
+    .data$contrast_id, .data$contrast_label, .data$figure_scope,
+    .data$positive_condition, .data$negative_condition,
+    .data$baseMean, .data$log2FoldChange, .data$oriented_log2FC,
+    .data$padj, .data$status, .data$higher_expression_condition,
+    .data$original_status, .data$original_value,
+    .data$show_in_figure
+  )
+
+write_csv_out(gene_audit, "figure4_curated_gene_audit.csv")
+write_csv_out(count_reconciliation, "figure4_count_reconciliation.csv")
+write_csv_out(contrast_audit, "figure4_contrast_audit.csv")
+write_csv_out(
+  dplyr::filter(contrast_audit, .data$sequence_class == "Nuclear chromosome"),
+  "figure4_main_chromosome_contrast_audit.csv"
+)
+write_csv_out(
+  dplyr::filter(contrast_audit, .data$sequence_class == "Unplaced scaffold"),
+  "figure4_unplaced_scaffold_contrast_audit.csv"
+)
 ```
 
 ## Effect of the chromosome restriction
@@ -427,6 +526,11 @@ chromosomes** and enter the revised primary figure. The remaining
 targets, `r main_targets_significant` are currently significant in at least one
 of the nine reconstructed contrasts.
 
+There is no double counting: the workbook contains `r total_targets` unique gene
+IDs, and the audit contains exactly one row per gene and contrast. For the six
+contrasts displayed in Figure 4, the main-chromosome subset contains exactly
+`r main_targets * 6` gene-by-contrast cells.
+
 The largest change is Protein Synthesis & Translation: only
 `r protein_row$main_chromosome_targets` of its
 `r protein_row$original_targets` targets are retained, while
@@ -446,6 +550,40 @@ knitr::kable(
     "Unplaced", "Retained", "Main-chromosome targets significant now"
   ),
   align = c("l", "l", "r", "r", "r", "r", "r")
+)
+```
+
+## DEG count reconciliation
+
+This table separates three quantities that can otherwise be confused. Target
+genes are the curated denominator; significant cells count one gene in one
+contrast; newly significant and no-longer-significant cells describe changes
+caused by recalculating the model. A strict placement filter reduces the target
+list from 163 to 99 genes. The recalculated main-chromosome Figure 4 has fewer
+significant gene-by-contrast cells overall than the earlier workbook, although
+some individual categories gain one or two calls while others lose calls.
+
+[Download the gene-level Figure 4 audit workbook](assets/downloads/figure4_curated_DEG_audit.xlsx).
+
+```{r count-reconciliation-table}
+knitr::kable(
+  count_reconciliation |>
+    dplyr::arrange(
+      factor(
+        .data$sequence_scope,
+        levels = c(
+          "All curated targets", "Main chromosome", "Unplaced scaffold"
+        )
+      ),
+      .data$source_sheet, .data$umbrella, .data$figure_scope
+    ),
+  col.names = c(
+    "Sequence scope", "Group", "Category", "Comparison group",
+    "Target genes", "Gene-contrast cells", "Earlier significant",
+    "Current significant", "Newly significant", "No longer significant",
+    "Net change"
+  ),
+  align = c("l", "l", "l", "l", rep("r", 7))
 )
 ```
 
@@ -784,7 +922,7 @@ build_figure4_panel <- function(
     ) +
     geom_text(
       data = panel_annotations,
-      aes(x = x_label, y = -13, label = paste0("n = ", n_targets)),
+      aes(x = x_label, y = -13, label = paste0("targets = ", n_targets)),
       inherit.aes = FALSE,
       size = 3.2
     ) +

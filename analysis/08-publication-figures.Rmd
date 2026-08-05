@@ -474,9 +474,14 @@ primary_results_file <- file.path(
   placed_dir,
   "placed_unplaced_all_deseq2_results.csv"
 )
-logical_dir <- latest_dir("^deg-logical-set-construction_")
-head_phase_file <- file.path(logical_dir, "step3_head_phase_degs.csv")
-thorax_phase_file <- file.path(logical_dir, "step4_thorax_phase_degs.csv")
+head_phase_file <- file.path(
+  project_dir,
+  "data/external/phase_reference/gregaria_head_phase_degs.csv"
+)
+thorax_phase_file <- file.path(
+  project_dir,
+  "data/external/phase_reference/gregaria_thorax_phase_degs.csv"
+)
 circled_cluster_dir <- latest_dir("^main-chromosome-cluster-enrichment_")
 figure3_composite_source <- file.path(
   circled_cluster_dir,
