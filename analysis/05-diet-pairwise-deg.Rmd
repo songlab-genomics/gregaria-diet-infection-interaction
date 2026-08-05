@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   treatment_subset: "All"
   min_total_count: 10
   alpha: 0.05
@@ -18,6 +18,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Separate treatment**
+
+Model diet contrasts within control and infected samples.
+:::
+::: {.walkthrough-step}
+**Step 2 - Count DEGs**
+
+Apply one adjusted-P-value and fold-change rule to each diet pair.
+:::
+::: {.walkthrough-step}
+**Step 3 - Compare contexts**
+
+Identify diet differences that depend on infection status.
+:::
+:::
 
 This page tests pairwise diet contrasts. Set `treatment_subset` to `Control`,
 `Infected`, or `All` in the YAML header before knitting.

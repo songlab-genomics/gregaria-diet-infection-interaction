@@ -1,5 +1,5 @@
 ---
-title: "Curated target-gene Figure 4"
+title: "Curated target genes by sequence placement"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -19,18 +19,34 @@ params:
 
 ## Purpose
 
-This page updates the coauthor-curated target-gene figure after the primary
-analysis was restricted to genes on the main *Schistocerca gregaria*
-chromosomes. The biological categories are preserved exactly from the supplied
-workbook, but every plotted differential-expression status is recalculated from
-the current competitive-host DESeq2 results.
+This page follows a fixed set of immune and protein-anabolism genes through two
+matched views: genes on the main *Schistocerca gregaria* chromosomes and genes
+on unplaced scaffolds. The biological categories come from the supplied
+workbook, while every differential-expression status is recalculated from the
+current competitive-host DESeq2 results.
 
-The primary Figure 4 contains all curated targets that map to a nuclear
-chromosome. A retained target is shown as `N.S.` when it does not meet both
-`padj < alpha` and `|log2FC| >= lfc_threshold` in a particular contrast. This
-keeps the target set fixed rather than selecting a new subset separately for
-each comparison. Curated targets on unplaced scaffolds are documented below and
-exported for follow-up, but they are not included in the primary percentages.
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Match genes**
+
+Join the curated IDs to the GFF annotation and official assembly placement.
+:::
+::: {.walkthrough-step}
+**Step 2 - Recalculate status**
+
+Apply the same DEG thresholds to every target and contrast.
+:::
+::: {.walkthrough-step}
+**Step 3 - Compare scopes**
+
+Read the matched chromosome and unplaced-scaffold panels side by side.
+:::
+:::
+
+A target is shown as `N.S.` when it does not meet both `padj < alpha` and
+`|log2FC| >= lfc_threshold`. Keeping the target set fixed makes changes in the
+category percentages directly comparable across contrasts and placement
+classes.
 
 ## Setup
 
@@ -537,7 +553,7 @@ placement_impact_plot
 save_figure(placement_impact_plot, "curated_target_placement_impact", 12, 7.5)
 ```
 
-## Revised Figure 4
+## Curated target figures {#Curated_target_figures}
 
 ```{r build-revised-figure4, fig.width=15, fig.height=11.5}
 figure_contrasts <- contrast_map |>
@@ -573,54 +589,57 @@ format_test_label <- function(p) {
   paste0("p = ", formatC(p, digits = 3, format = "f"))
 }
 
-set.seed(20260805)
-test_rows <- list()
-row_i <- 0L
-for (sheet_name in unique(figure_counts$source_sheet)) {
-  for (category_name in unique(
-    figure_counts$umbrella[figure_counts$source_sheet == sheet_name]
-  )) {
-    for (scope_name in unique(figure_counts$figure_scope)) {
-      test_df <- figure_counts |>
-        dplyr::filter(
-          .data$source_sheet == sheet_name,
-          .data$umbrella == category_name,
-          .data$figure_scope == scope_name
-        ) |>
-        tidyr::complete(
-          x_order = 1:3,
-          status = c("Upregulated", "N.S.", "Downregulated"),
-          fill = list(n_genes = 0)
-        ) |>
-        dplyr::arrange(.data$x_order, match(
-          .data$status,
-          c("Upregulated", "N.S.", "Downregulated")
-        ))
+calculate_figure_tests <- function(count_data) {
+  set.seed(20260805)
+  test_rows <- list()
+  row_i <- 0L
+  for (sheet_name in unique(count_data$source_sheet)) {
+    for (category_name in unique(
+      count_data$umbrella[count_data$source_sheet == sheet_name]
+    )) {
+      for (scope_name in unique(count_data$figure_scope)) {
+        test_df <- count_data |>
+          dplyr::filter(
+            .data$source_sheet == sheet_name,
+            .data$umbrella == category_name,
+            .data$figure_scope == scope_name
+          ) |>
+          tidyr::complete(
+            x_order = 1:3,
+            status = c("Upregulated", "N.S.", "Downregulated"),
+            fill = list(n_genes = 0)
+          ) |>
+          dplyr::arrange(.data$x_order, match(
+            .data$status,
+            c("Upregulated", "N.S.", "Downregulated")
+          ))
 
-      count_matrix <- matrix(test_df$n_genes, nrow = 3, byrow = TRUE)
-      count_matrix <- count_matrix[, colSums(count_matrix) > 0, drop = FALSE]
+        count_matrix <- matrix(test_df$n_genes, nrow = 3, byrow = TRUE)
+        count_matrix <- count_matrix[, colSums(count_matrix) > 0, drop = FALSE]
+        p_value <- NA_real_
+        if (ncol(count_matrix) >= 2 && nrow(count_matrix) >= 2) {
+          p_value <- suppressWarnings(stats::chisq.test(
+            count_matrix,
+            simulate.p.value = any(count_matrix < 5),
+            B = 20000
+          )$p.value)
+        }
 
-      p_value <- NA_real_
-      if (ncol(count_matrix) >= 2 && nrow(count_matrix) >= 2) {
-        p_value <- suppressWarnings(stats::chisq.test(
-          count_matrix,
-          simulate.p.value = any(count_matrix < 5),
-          B = 20000
-        )$p.value)
+        row_i <- row_i + 1L
+        test_rows[[row_i]] <- tibble::tibble(
+          source_sheet = sheet_name,
+          umbrella = category_name,
+          figure_scope = scope_name,
+          p_value = p_value,
+          p_label = format_test_label(p_value)
+        )
       }
-
-      row_i <- row_i + 1L
-      test_rows[[row_i]] <- tibble::tibble(
-        source_sheet = sheet_name,
-        umbrella = category_name,
-        figure_scope = scope_name,
-        p_value = p_value,
-        p_label = format_test_label(p_value)
-      )
     }
   }
+  dplyr::bind_rows(test_rows)
 }
-figure_tests <- dplyr::bind_rows(test_rows)
+
+figure_tests <- calculate_figure_tests(figure_counts)
 
 figure_status_counts <- figure_counts |>
   dplyr::left_join(category_n, by = c("source_sheet", "umbrella")) |>
@@ -631,6 +650,47 @@ figure_status_counts <- figure_counts |>
 
 write_csv_out(figure_status_counts, "figure4_main_chromosome_status_counts.csv")
 write_csv_out(figure_tests, "figure4_exploratory_chisquare_tests.csv")
+
+unplaced_counts <- target_analysis |>
+  dplyr::filter(
+    .data$sequence_class == "Unplaced scaffold",
+    .data$show_in_figure
+  ) |>
+  dplyr::count(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order, .data$status,
+    name = "n_genes"
+  ) |>
+  dplyr::group_by(
+    .data$source_sheet, .data$umbrella, .data$figure_scope,
+    .data$x_label, .data$x_order
+  ) |>
+  dplyr::mutate(percentage = 100 * .data$n_genes / sum(.data$n_genes)) |>
+  dplyr::ungroup()
+
+unplaced_category_n <- target_gene_summary |>
+  dplyr::filter(.data$sequence_class == "Unplaced scaffold") |>
+  dplyr::count(.data$source_sheet, .data$umbrella, name = "n_targets")
+
+unplaced_tests <- calculate_figure_tests(unplaced_counts)
+unplaced_status_counts <- unplaced_counts |>
+  dplyr::left_join(
+    unplaced_category_n,
+    by = c("source_sheet", "umbrella")
+  ) |>
+  dplyr::left_join(
+    unplaced_tests,
+    by = c("source_sheet", "umbrella", "figure_scope")
+  )
+
+write_csv_out(
+  unplaced_status_counts,
+  "figure4_unplaced_scaffold_status_counts.csv"
+)
+write_csv_out(
+  unplaced_tests,
+  "figure4_unplaced_exploratory_chisquare_tests.csv"
+)
 
 category_display <- c(
   "Innate Immune Recognition & Signaling" =
@@ -656,8 +716,9 @@ status_colors <- c(
 diet_colors <- c("33" = "#C8641A", "50" = "#1B6B3A", "83" = "#5A2A82")
 
 build_figure4_panel <- function(
-    sheet_name, scope_name, tag, show_y = TRUE, show_legend = FALSE) {
-  panel_data <- figure_status_counts |>
+    status_count_data, sheet_name, scope_name, tag,
+    show_y = TRUE, show_legend = FALSE) {
+  panel_data <- status_count_data |>
     dplyr::filter(
       .data$source_sheet == sheet_name,
       .data$figure_scope == scope_name
@@ -779,16 +840,19 @@ build_figure4_panel <- function(
 }
 
 p_a <- build_figure4_panel(
-  "Immune", "Within-diet infection response", "A", TRUE, FALSE
+  figure_status_counts, "Immune", "Within-diet infection response", "A",
+  TRUE, FALSE
 )
 p_b <- build_figure4_panel(
-  "Immune", "Diet comparison among infected", "B", FALSE
+  figure_status_counts, "Immune", "Diet comparison among infected", "B", FALSE
 )
 p_c <- build_figure4_panel(
-  "Protein-Anabolism", "Within-diet infection response", "C", TRUE
+  figure_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE
 )
 p_d <- build_figure4_panel(
-  "Protein-Anabolism", "Diet comparison among infected", "D", FALSE
+  figure_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE
 )
 
 legend_data <- tibble::tibble(
@@ -840,17 +904,61 @@ save_figure(
   15,
   11.5
 )
+
+u_a <- build_figure4_panel(
+  unplaced_status_counts, "Immune", "Within-diet infection response", "A",
+  TRUE, FALSE
+)
+u_b <- build_figure4_panel(
+  unplaced_status_counts, "Immune", "Diet comparison among infected", "B",
+  FALSE
+)
+u_c <- build_figure4_panel(
+  unplaced_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE
+)
+u_d <- build_figure4_panel(
+  unplaced_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE
+)
+
+figure4_unplaced_scaffolds <- (
+  (u_a | u_b) /
+  (u_c | u_d) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+  patchwork::plot_annotation(
+    title = "Curated immune and protein-anabolism targets on unplaced scaffolds",
+    subtitle = paste0(
+      "Competitive-host DESeq2; ", unplaced_targets_n,
+      " audit targets; padj < ", alpha,
+      " and |log2FC| >= ", lfc_threshold
+    ),
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+figure4_unplaced_scaffolds
+save_figure(
+  figure4_unplaced_scaffolds,
+  "figure4_curated_targets_unplaced_scaffolds",
+  15,
+  11.5
+)
 ```
 
-The left panels summarize infection responses within each diet. The right
-panels summarize expression differences among infected locusts, with all signs
-oriented toward the higher-protein diet. The `N.S.` portion includes retained
-targets that do not meet the current thresholds for that contrast. The
-chi-square labels reproduce the exploratory comparison used in the coauthor
-figure; they should not be interpreted as a replacement for the gene-level
-DESeq2 tests.
+The first composite is the conservative host-chromosome view used for the main
+paper interpretation. The second uses the same target categories, contrasts,
+thresholds, colors, and panel geometry for the unplaced-scaffold genes. The
+left panels summarize infection responses within each diet; the right panels
+compare infected locusts across diets. The exploratory chi-square labels
+summarize category composition and do not replace the gene-level DESeq2 tests.
 
-## What changed from the coauthor workbook?
+## Comparison with the earlier workbook
 
 ```{r old-new-comparison}
 status_transition <- target_analysis |>
@@ -884,7 +992,7 @@ comparison separates two effects: removal of unplaced targets changes the
 category denominator, while remapping and re-fitting DESeq2 can change the
 status of targets that remain on main chromosomes.
 
-## Unplaced targets retained for follow-up
+## Unplaced target details
 
 ```{r unplaced-targets}
 unplaced_followup <- target_analysis |>
@@ -1003,10 +1111,11 @@ write_csv_out(manifest, "figure4_input_manifest.csv")
 knitr::kable(manifest, col.names = c("Item", "Path"), align = c("l", "l"))
 ```
 
-Each knit creates a new timestamped output folder. The principal figure is
-exported as `figure4_curated_targets_main_chromosomes` in PNG, SVG, and PDF
-formats. The placement-impact figure and all gene-level audit tables are
-exported beside it.
+Each knit creates a new timestamped output folder. Matched composites are
+exported as `figure4_curated_targets_main_chromosomes` and
+`figure4_curated_targets_unplaced_scaffolds` in PNG, SVG, and PDF formats. The
+placement-impact figure and all gene-level audit tables are exported beside
+them.
 
 ## Session information
 

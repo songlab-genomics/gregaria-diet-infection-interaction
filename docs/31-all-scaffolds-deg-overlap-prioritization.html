@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-05" />
+<meta name="date" content="2026-08-06" />
 
 <title>All samples + all scaffolds: DEG overlap and prioritization</title>
 
@@ -423,6 +423,9 @@ div.tocify {
     <li>
       <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
     </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html">Curated target genes - both scopes</a>
+    </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
       <ul class="dropdown-menu" role="menu">
@@ -449,9 +452,6 @@ div.tocify {
         <li>
           <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
         </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -476,7 +476,7 @@ div.tocify {
       <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
     </li>
     <li>
-      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+      <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
     </li>
   </ul>
 </li>
@@ -592,7 +592,7 @@ div.tocify {
 <h1 class="title toc-ignore">All samples + all scaffolds: DEG overlap
 and prioritization</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-05</h4>
+<h4 class="date">2026-08-06</h4>
 
 </div>
 
@@ -621,7 +621,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-05
+<strong>Last updated:</strong> 2026-08-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -660,10 +660,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -756,15 +756,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -774,7 +774,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -796,140 +796,19 @@ Ignored files:
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
     Ignored:    output/.DS_Store
-    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
-    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
-    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
-    Ignored:    output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/
-    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
-    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
-    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
-    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
-    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
-    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
-    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
-    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
-    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
-    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
-    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
-    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
-    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
-    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
-    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
-    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
-    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
-    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
-    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
-    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
-    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
+    Ignored:    output/rmd_runs/
     Ignored:    output/runs/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  Rplots.pdf
-    Untracked:  analysis/27-scaffold-origin-audit.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
-    Untracked:  analysis/29-metarhizium-read-burden.Rmd
-    Untracked:  analysis/30-curated-target-gene-figure.Rmd
-    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
-    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
-    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
-    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
-    Untracked:  analysis/archive.Rmd
-    Untracked:  analysis/assets/
-    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
-    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
-    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
-    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
-    Untracked:  code/Snakefile.scaffold_origin_audit
-    Untracked:  code/Snakefile.scaffold_origin_homology
-    Untracked:  code/config/
-    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
-    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
-    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
-    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
-    Untracked:  code/rules/08_scaffold_origin_audit.smk
-    Untracked:  code/rules/09_scaffold_origin_homology.smk
-    Untracked:  code/scripts/build_combined_reference.py
-    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
-    Untracked:  code/scripts/build_scaffold_origin_audit.py
-    Untracked:  code/scripts/compare_host_count_matrices.py
-    Untracked:  code/scripts/compare_host_deseq2_results.py
-    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
-    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
-    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
-    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
-    Untracked:  code/scripts/export_scaffold_origin_candidates.py
-    Untracked:  code/scripts/extract_unplaced_scaffolds.py
-    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
-    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
-    Untracked:  code/scripts/install_scaffold_homology_env.slurm
-    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
-    Untracked:  code/scripts/merge_featurecounts.py
-    Untracked:  code/scripts/merge_tsv_rows.py
-    Untracked:  code/scripts/plot_kraken_family_composition.R
-    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
-    Untracked:  code/scripts/run_fungal_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
-    Untracked:  code/scripts/select_scaffold_homology_targets.py
-    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
-    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
-    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
-    Untracked:  code/scripts/summarize_competitive_mapping.py
-    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
-    Untracked:  code/scripts/summarize_host_mapping_audit.py
-    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
-    Untracked:  code/scripts/summarize_scaffold_kraken.py
-    Untracked:  code/scripts/summarize_star_log.py
-    Untracked:  code/snakemake.host_pathogen_dual.slurm
-    Untracked:  code/snakemake.scaffold_origin_audit.slurm
-    Untracked:  code/snakemake.scaffold_origin_homology.slurm
-    Untracked:  data/external/curated_target_genes/
-    Untracked:  data/scaffold_origin/
-    Untracked:  scripts/make_diet_infection_physiology_response.R
-    Untracked:  scripts/reference/
-    Untracked:  scripts/screen_unplaced_scaffold_origin.R
+    Untracked:  output/archive/rmd_runs_20260806/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
+    Untracked:  output/archive/site_build_artifacts_20260806/28-placed-unplaced-scaffold-analysis_cache/html/run-deseq2_a47470e453bd1a12bb9fca9d052eda43.rdb
 
 Unstaged changes:
-    Modified:   .gitignore
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
     Modified:   analysis/04-deseq2-interaction-model.Rmd
     Modified:   analysis/05-diet-pairwise-deg.Rmd
     Modified:   analysis/06-infection-within-diet-deg.Rmd
@@ -944,13 +823,21 @@ Unstaged changes:
     Modified:   analysis/24-all-deg-catalogue.Rmd
     Modified:   analysis/25-enrichment-term-gene-index.Rmd
     Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/27-scaffold-origin-audit.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
     Modified:   analysis/site-style.css
-    Modified:   code/README.md
-    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
     Modified:   code/cluster.json
-    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_progress.sh
+    Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
 
 </code></pre>
 <p>
@@ -966,15 +853,96 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd</code>)
+and HTML
+(<code>docs/31-all-scaffolds-deg-overlap-prioritization.html</code>)
+files. If you’ve configured a remote Git repository (see
+<code>?wflow_git_remote</code>), click on the hyperlinks in the table
+below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+changes analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/31-all-scaffolds-deg-overlap-prioritization.html" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+changes analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
+<div class="walkthrough-grid">
+<div class="walkthrough-step">
+<p><strong>Step 1 - Build DEG sets</strong></p>
+<p>Collect exact contrast-level all-scaffold gene lists.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 2 - Measure overlap</strong></p>
+<p>Use Venn, UpSet, and presence-absence summaries to show shared
+calls.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 3 - Prioritize genes</strong></p>
+<p>Trace recurrent genes back to the contrasts in which they are
+significant.</p>
+</div>
+</div>
 <p>This page compares significant DEG lists from the all-samples,
 all-scaffold model pages. All 44 samples and every expression-filtered
 non-rRNA host locus from the fresh competitive mapping are retained. It
@@ -1078,63 +1046,63 @@ knitr::kable(file_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/all_diet_pairwise_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260806-010845/all_diet_pairwise_results.csv</td>
 <td align="left">all_diet_pairwise_results.csv</td>
-<td align="left">2026-08-05 23:43:10</td>
+<td align="left">2026-08-06 01:09:02</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/all_infection_within_diet_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260806-010907/all_infection_within_diet_results.csv</td>
 <td align="left">all_infection_within_diet_results.csv</td>
-<td align="left">2026-08-05 23:43:33</td>
+<td align="left">2026-08-06 01:09:29</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/all_model_coefficients.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260806-010820/all_model_coefficients.csv</td>
 <td align="left">all_model_coefficients.csv</td>
-<td align="left">2026-08-05 23:42:47</td>
+<td align="left">2026-08-06 01:08:39</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/DESeq2_33_vs_50.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260806-010845/DESeq2_33_vs_50.csv</td>
 <td align="left">DESeq2_33_vs_50.csv</td>
-<td align="left">2026-08-05 23:43:08</td>
+<td align="left">2026-08-06 01:09:00</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/DESeq2_33_vs_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260806-010845/DESeq2_33_vs_83.csv</td>
 <td align="left">DESeq2_33_vs_83.csv</td>
-<td align="left">2026-08-05 23:43:09</td>
+<td align="left">2026-08-06 01:09:01</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/DESeq2_50_vs_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260806-010845/DESeq2_50_vs_83.csv</td>
 <td align="left">DESeq2_50_vs_83.csv</td>
-<td align="left">2026-08-05 23:43:09</td>
+<td align="left">2026-08-06 01:09:02</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/DESeq2_infected_vs_control_diet_33.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260806-010907/DESeq2_infected_vs_control_diet_33.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_33.csv</td>
-<td align="left">2026-08-05 23:43:21</td>
+<td align="left">2026-08-06 01:09:16</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/DESeq2_infected_vs_control_diet_50.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260806-010907/DESeq2_infected_vs_control_diet_50.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_50.csv</td>
-<td align="left">2026-08-05 23:43:29</td>
+<td align="left">2026-08-06 01:09:24</td>
 </tr>
 <tr class="odd">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/DESeq2_infected_vs_control_diet_83.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260806-010907/DESeq2_infected_vs_control_diet_83.csv</td>
 <td align="left">DESeq2_infected_vs_control_diet_83.csv</td>
-<td align="left">2026-08-05 23:43:33</td>
+<td align="left">2026-08-06 01:09:29</td>
 </tr>
 <tr class="even">
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/interaction_coefficients.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260806-010820/interaction_coefficients.csv</td>
 <td align="left">interaction_coefficients.csv</td>
-<td align="left">2026-08-05 23:42:49</td>
+<td align="left">2026-08-06 01:08:40</td>
 </tr>
 </tbody>
 </table>
@@ -1195,52 +1163,52 @@ knitr::kable(set_summary)</code></pre>
 <tr class="odd">
 <td align="left">all_infection_within_diet_results</td>
 <td align="left">all_infection_within_diet_results</td>
-<td align="right">1732</td>
+<td align="right">2399</td>
 </tr>
 <tr class="even">
-<td align="left">DESeq2_infected_vs_control_diet_50</td>
-<td align="left">DESeq2_infected_vs_control_diet_50</td>
-<td align="right">1319</td>
+<td align="left">all_model_coefficients</td>
+<td align="left">all_model_coefficients</td>
+<td align="right">2057</td>
 </tr>
 <tr class="odd">
-<td align="left">all_model_coefficients</td>
-<td align="left">all_model_coefficients</td>
-<td align="right">1127</td>
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="right">1810</td>
 </tr>
 <tr class="even">
 <td align="left">DESeq2_infected_vs_control_diet_33</td>
 <td align="left">DESeq2_infected_vs_control_diet_33</td>
-<td align="right">904</td>
+<td align="right">1216</td>
 </tr>
 <tr class="odd">
 <td align="left">DESeq2_infected_vs_control_diet_83</td>
 <td align="left">DESeq2_infected_vs_control_diet_83</td>
-<td align="right">522</td>
+<td align="right">737</td>
 </tr>
 <tr class="even">
 <td align="left">all_diet_pairwise_results</td>
 <td align="left">all_diet_pairwise_results</td>
-<td align="right">123</td>
-</tr>
-<tr class="odd">
-<td align="left">DESeq2_33_vs_83</td>
-<td align="left">DESeq2_33_vs_83</td>
-<td align="right">68</td>
-</tr>
-<tr class="even">
-<td align="left">interaction_coefficients</td>
-<td align="left">interaction_coefficients</td>
-<td align="right">60</td>
+<td align="right">281</td>
 </tr>
 <tr class="odd">
 <td align="left">DESeq2_33_vs_50</td>
 <td align="left">DESeq2_33_vs_50</td>
-<td align="right">54</td>
+<td align="right">182</td>
+</tr>
+<tr class="even">
+<td align="left">interaction_coefficients</td>
+<td align="left">interaction_coefficients</td>
+<td align="right">125</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq2_33_vs_83</td>
+<td align="left">DESeq2_33_vs_83</td>
+<td align="right">107</td>
 </tr>
 <tr class="even">
 <td align="left">DESeq2_50_vs_83</td>
 <td align="left">DESeq2_50_vs_83</td>
-<td align="right">28</td>
+<td align="right">47</td>
 </tr>
 </tbody>
 </table>
@@ -1267,6 +1235,43 @@ p_set_size &lt;- ggplot(set_summary, aes(x = set, y = n_genes)) +
 
 p_set_size</code></pre>
 <p><img src="figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/deg-set-size-plot-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-deg-set-size-plot-1">
+Past versions of deg-set-size-plot-1.png
+</button>
+</p>
+<div id="fig-deg-set-size-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/deg-set-size-plot-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(file.path(out_dir, &quot;deg_set_size_barplot.png&quot;),
        p_set_size, width = 9, height = 5.8, dpi = 300)</code></pre>
 </div>
@@ -1304,7 +1309,7 @@ knitr::kable(head(priority_genes, 25))</code></pre>
 <col width="5%" />
 <col width="5%" />
 <col width="2%" />
-<col width="86%" />
+<col width="87%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1316,227 +1321,228 @@ knitr::kable(head(priority_genes, 25))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">LOC126282167</td>
-<td align="left">LOC126282167</td>
+<td align="left">LOC126278485</td>
+<td align="left">LOC126278485</td>
+<td align="right">8</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_50; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126293368</td>
+<td align="left">LOC126293368</td>
+<td align="right">8</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126294950</td>
+<td align="left">LOC126294950</td>
+<td align="right">8</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126267222</td>
+<td align="left">LOC126267222</td>
 <td align="right">7</td>
 <td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126267535</td>
+<td align="left">LOC126267535</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
 DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126272510</td>
+<td align="left">LOC126272510</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_50; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126272850</td>
+<td align="left">LOC126272850</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
 <td align="left">LOC126282181</td>
 <td align="left">LOC126282181</td>
 <td align="right">7</td>
 <td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
 all_diet_pairwise_results; DESeq2_33_vs_83</td>
 </tr>
 <tr class="odd">
-<td align="left">LOC126293368</td>
-<td align="left">LOC126293368</td>
+<td align="left">LOC126297886</td>
+<td align="left">LOC126297886</td>
 <td align="right">7</td>
 <td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_50_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126324953</td>
-<td align="left">LOC126324953</td>
-<td align="right">7</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126335309</td>
-<td align="left">LOC126335309</td>
-<td align="right">7</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336538</td>
-<td align="left">LOC126336538</td>
-<td align="right">7</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126344004</td>
-<td align="left">LOC126344004</td>
-<td align="right">7</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126354934</td>
-<td align="left">LOC126354934</td>
-<td align="right">7</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83; DESeq2_33_vs_50</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126267545</td>
-<td align="left">LOC126267545</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+all_diet_pairwise_results; DESeq2_33_vs_50; interaction_coefficients;
 DESeq2_33_vs_83</td>
 </tr>
 <tr class="even">
+<td align="left">LOC126299510</td>
+<td align="left">LOC126299510</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126325353</td>
+<td align="left">LOC126325353</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126333408</td>
+<td align="left">LOC126333408</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
+DESeq2_33_vs_50; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126336286</td>
+<td align="left">LOC126336286</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+all_diet_pairwise_results; DESeq2_33_vs_50; interaction_coefficients;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126336538</td>
+<td align="left">LOC126336538</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126336688</td>
+<td align="left">LOC126336688</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126344004</td>
+<td align="left">LOC126344004</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126354934</td>
+<td align="left">LOC126354934</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
+DESeq2_33_vs_50; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126266590</td>
+<td align="left">LOC126266590</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+all_diet_pairwise_results; DESeq2_33_vs_50;
+interaction_coefficients</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126267449</td>
+<td align="left">LOC126267449</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126267545</td>
+<td align="left">LOC126267545</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126268174</td>
+<td align="left">LOC126268174</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126272144</td>
+<td align="left">LOC126272144</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+all_diet_pairwise_results; DESeq2_33_vs_50;
+interaction_coefficients</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126272992</td>
+<td align="left">LOC126272992</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
 <td align="left">LOC126277896</td>
 <td align="left">LOC126277896</td>
 <td align="right">6</td>
 <td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
 DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
 DESeq2_33_vs_83</td>
 </tr>
 <tr class="odd">
-<td align="left">LOC126278220</td>
-<td align="left">LOC126278220</td>
+<td align="left">LOC126282167</td>
+<td align="left">LOC126282167</td>
 <td align="right">6</td>
 <td align="left">all_infection_within_diet_results;
 all_model_coefficients; DESeq2_infected_vs_control_diet_33;
-all_diet_pairwise_results; interaction_coefficients;
-DESeq2_33_vs_50</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126278485</td>
-<td align="left">LOC126278485</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_50_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126295405</td>
-<td align="left">LOC126295405</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
 all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336532</td>
-<td align="left">LOC126336532</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126336533</td>
-<td align="left">LOC126336533</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336534</td>
-<td align="left">LOC126336534</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126336535</td>
-<td align="left">LOC126336535</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126336541</td>
-<td align="left">LOC126336541</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126336625</td>
-<td align="left">LOC126336625</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126354907</td>
-<td align="left">LOC126354907</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-all_model_coefficients; DESeq2_infected_vs_control_diet_83;
-all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126355485</td>
-<td align="left">LOC126355485</td>
-<td align="right">6</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
-DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126266593</td>
-<td align="left">LOC126266593</td>
-<td align="right">5</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33;
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126266596</td>
-<td align="left">LOC126266596</td>
-<td align="right">5</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33;
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="even">
-<td align="left">LOC126266728</td>
-<td align="left">LOC126266728</td>
-<td align="right">5</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33;
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="odd">
-<td align="left">LOC126266759</td>
-<td align="left">LOC126266759</td>
-<td align="right">5</td>
-<td align="left">all_infection_within_diet_results;
-DESeq2_infected_vs_control_diet_50; all_model_coefficients;
-DESeq2_infected_vs_control_diet_33;
-DESeq2_infected_vs_control_diet_83</td>
 </tr>
 </tbody>
 </table>
@@ -1588,6 +1594,43 @@ p_intersections &lt;- ggplot(intersection_summary,
 
 p_intersections</code></pre>
 <p><img src="figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/intersection-size-plot-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-intersection-size-plot-1">
+Past versions of intersection-size-plot-1.png
+</button>
+</p>
+<div id="fig-intersection-size-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/intersection-size-plot-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(file.path(out_dir, &quot;deg_intersection_size_barplot.png&quot;),
        p_intersections, width = 9, height = 6.5, dpi = 300)
 write.csv(intersection_summary,
@@ -1617,171 +1660,171 @@ knitr::kable(intersection_summary[, c(&quot;intersection_id&quot;, &quot;n_genes
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">23</td>
+<td align="left">14</td>
 <td align="left">I01</td>
-<td align="right">372</td>
+<td align="right">619</td>
 <td align="right">3</td>
 <td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 + all_model_coefficients</td>
+all_model_coefficients + DESeq2_infected_vs_control_diet_50</td>
 </tr>
 <tr class="even">
-<td align="left">33</td>
+<td align="left">20</td>
 <td align="left">I02</td>
-<td align="right">282</td>
+<td align="right">370</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="odd">
+<td align="left">26</td>
+<td align="left">I03</td>
+<td align="right">362</td>
 <td align="right">5</td>
 <td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
 DESeq2_infected_vs_control_diet_33 +
 DESeq2_infected_vs_control_diet_83</td>
 </tr>
+<tr class="even">
+<td align="left">64</td>
+<td align="left">I04</td>
+<td align="right">300</td>
+<td align="right">1</td>
+<td align="left">all_model_coefficients</td>
+</tr>
 <tr class="odd">
-<td align="left">19</td>
-<td align="left">I03</td>
-<td align="right">250</td>
+<td align="left">43</td>
+<td align="left">I05</td>
+<td align="right">291</td>
+<td align="right">2</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="even">
+<td align="left">50</td>
+<td align="left">I06</td>
+<td align="right">235</td>
 <td align="right">2</td>
 <td align="left">all_infection_within_diet_results +
 DESeq2_infected_vs_control_diet_50</td>
 </tr>
-<tr class="even">
-<td align="left">28</td>
-<td align="left">I04</td>
-<td align="right">242</td>
-<td align="right">4</td>
-<td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
-DESeq2_infected_vs_control_diet_33</td>
-</tr>
 <tr class="odd">
-<td align="left">13</td>
-<td align="left">I05</td>
-<td align="right">231</td>
-<td align="right">2</td>
-<td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_33</td>
-</tr>
-<tr class="even">
-<td align="left">43</td>
-<td align="left">I06</td>
-<td align="right">115</td>
-<td align="right">2</td>
-<td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="odd">
-<td align="left">36</td>
+<td align="left">59</td>
 <td align="left">I07</td>
-<td align="right">63</td>
-<td align="right">4</td>
+<td align="right">151</td>
+<td align="right">2</td>
 <td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
 DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="even">
-<td align="left">39</td>
+<td align="left">32</td>
 <td align="left">I08</td>
-<td align="right">62</td>
-<td align="right">3</td>
+<td align="right">111</td>
+<td align="right">4</td>
 <td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 +
-DESeq2_infected_vs_control_diet_33</td>
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="odd">
-<td align="left">45</td>
+<td align="left">74</td>
 <td align="left">I09</td>
-<td align="right">52</td>
-<td align="right">1</td>
-<td align="left">all_model_coefficients</td>
-</tr>
-<tr class="even">
-<td align="left">50</td>
-<td align="left">I10</td>
-<td align="right">50</td>
+<td align="right">97</td>
 <td align="right">2</td>
 <td align="left">all_model_coefficients + interaction_coefficients</td>
 </tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">I10</td>
+<td align="right">65</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_50</td>
+</tr>
 <tr class="odd">
-<td align="left">17</td>
+<td align="left">48</td>
 <td align="left">I11</td>
-<td align="right">33</td>
+<td align="right">46</td>
 <td align="right">3</td>
 <td align="left">all_infection_within_diet_results +
 DESeq2_infected_vs_control_diet_33 +
 DESeq2_infected_vs_control_diet_83</td>
 </tr>
 <tr class="even">
-<td align="left">1</td>
+<td align="left">65</td>
 <td align="left">I12</td>
-<td align="right">24</td>
-<td align="right">2</td>
-<td align="left">all_diet_pairwise_results + DESeq2_33_vs_50</td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="left">I13</td>
-<td align="right">14</td>
-<td align="right">2</td>
-<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83</td>
-</tr>
-<tr class="even">
-<td align="left">42</td>
-<td align="left">I14</td>
-<td align="right">13</td>
-<td align="right">3</td>
-<td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 +
-DESeq2_infected_vs_control_diet_83</td>
-</tr>
-<tr class="odd">
-<td align="left">46</td>
-<td align="left">I15</td>
-<td align="right">10</td>
+<td align="right">45</td>
 <td align="right">3</td>
 <td align="left">all_model_coefficients + all_diet_pairwise_results +
 DESeq2_33_vs_50</td>
 </tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="left">I16</td>
-<td align="right">9</td>
+<tr class="odd">
+<td align="left">54</td>
+<td align="left">I13</td>
+<td align="right">41</td>
 <td align="right">3</td>
-<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83 +
-DESeq2_50_vs_83</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">I14</td>
+<td align="right">20</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83</td>
 </tr>
 <tr class="odd">
-<td align="left">29</td>
-<td align="left">I17</td>
-<td align="right">8</td>
-<td align="right">6</td>
+<td align="left">44</td>
+<td align="left">I15</td>
+<td align="right">18</td>
+<td align="right">4</td>
 <td align="left">all_infection_within_diet_results +
-DESeq2_infected_vs_control_diet_50 + all_model_coefficients +
 DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
-DESeq2_33_vs_83</td>
+DESeq2_33_vs_50</td>
 </tr>
 <tr class="even">
 <td align="left">7</td>
-<td align="left">I18</td>
-<td align="right">7</td>
+<td align="left">I16</td>
+<td align="right">17</td>
 <td align="right">3</td>
 <td align="left">all_infection_within_diet_results +
 all_model_coefficients + DESeq2_infected_vs_control_diet_33</td>
 </tr>
 <tr class="odd">
-<td align="left">11</td>
-<td align="left">I19</td>
-<td align="right">6</td>
+<td align="left">38</td>
+<td align="left">I17</td>
+<td align="right">14</td>
+<td align="right">3</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">I18</td>
+<td align="right">12</td>
 <td align="right">4</td>
 <td align="left">all_infection_within_diet_results +
 all_model_coefficients + DESeq2_infected_vs_control_diet_33 +
 interaction_coefficients</td>
 </tr>
-<tr class="even">
-<td align="left">14</td>
-<td align="left">I20</td>
-<td align="right">6</td>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">I19</td>
+<td align="right">11</td>
 <td align="right">4</td>
 <td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_33 +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="even">
+<td align="left">23</td>
+<td align="left">I20</td>
+<td align="right">10</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
 DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
-DESeq2_33_vs_50</td>
+DESeq2_33_vs_83</td>
 </tr>
 </tbody>
 </table>
@@ -1908,6 +1951,43 @@ if (length(plots) == 0) {
   }
 }</code></pre>
 <p><img src="figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/venn-diagrams-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-venn-diagrams-1">
+Past versions of venn-diagrams-1.png
+</button>
+</p>
+<div id="fig-venn-diagrams-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/venn-diagrams-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="diet-deg-venns-within-controls-and-infected-samples"
 class="section level2">
@@ -2041,49 +2121,49 @@ samples</caption>
 <td align="left">33_vs_50</td>
 <td align="left">Control</td>
 <td align="left">33_vs_50</td>
-<td align="right">2</td>
-<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">3</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">33_vs_83</td>
 <td align="left">Control</td>
 <td align="left">33_vs_83</td>
-<td align="right">72</td>
-<td align="right">28</td>
-<td align="right">44</td>
+<td align="right">80</td>
+<td align="right">27</td>
+<td align="right">53</td>
 </tr>
 <tr class="odd">
 <td align="left">50_vs_83</td>
 <td align="left">Control</td>
 <td align="left">50_vs_83</td>
-<td align="right">44</td>
-<td align="right">5</td>
-<td align="right">39</td>
+<td align="right">61</td>
+<td align="right">11</td>
+<td align="right">50</td>
 </tr>
 <tr class="even">
 <td align="left">33_vs_501</td>
 <td align="left">Infected</td>
 <td align="left">33_vs_50</td>
-<td align="right">1592</td>
-<td align="right">12</td>
-<td align="right">1580</td>
+<td align="right">1875</td>
+<td align="right">24</td>
+<td align="right">1851</td>
 </tr>
 <tr class="odd">
 <td align="left">33_vs_831</td>
 <td align="left">Infected</td>
 <td align="left">33_vs_83</td>
-<td align="right">25</td>
-<td align="right">11</td>
-<td align="right">14</td>
+<td align="right">72</td>
+<td align="right">22</td>
+<td align="right">50</td>
 </tr>
 <tr class="even">
 <td align="left">50_vs_831</td>
 <td align="left">Infected</td>
 <td align="left">50_vs_83</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">1</td>
+<td align="right">26</td>
+<td align="right">7</td>
+<td align="right">19</td>
 </tr>
 </tbody>
 </table>
@@ -2138,6 +2218,43 @@ if (length(condition_venn_plots) == 0) {
   }
 }</code></pre>
 <p><img src="figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/condition-specific-diet-venns-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-condition-specific-diet-venns-1">
+Past versions of condition-specific-diet-venns-1.png
+</button>
+</p>
+<div id="fig-condition-specific-diet-venns-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/condition-specific-diet-venns-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="overlap-plot" class="section level2">
 <h2>Overlap plot</h2>
@@ -2187,6 +2304,43 @@ p_overlap &lt;- ggplot2::ggplot(plot_df,
 
 p_overlap</code></pre>
 <p><img src="figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/overlap-plot-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-overlap-plot-1">
+Past versions of overlap-plot-1.png
+</button>
+</p>
+<div id="fig-overlap-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/31-all-scaffolds-deg-overlap-prioritization.Rmd/overlap-plot-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;deg_overlap_matrix.png&quot;),
                 p_overlap, width = 10, height = 8, dpi = 300)</code></pre>
 <pre class="r"><code>writeLines(capture.output(sessionInfo()),

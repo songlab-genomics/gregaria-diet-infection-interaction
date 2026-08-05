@@ -103,10 +103,15 @@ fungal proxy.
 Both mappings use the same two-pass STAR settings, unique-read MAPQ convention,
 paired featureCounts settings, and reverse-stranded library assumption.
 
-For each host branch, the workflow retains:
+For each host branch and for the competitive fungal branch, featureCounts uses
+one active counting definition:
 
-1. exon-only counts as the primary matrix;
-2. `transcript,exon` counts as a sensitivity matrix.
+```text
+-t transcript,exon -g gene_id
+```
+
+This keeps transcript-span and exon features together under their gene ID. The
+pipeline does not generate a parallel exon-only matrix.
 
 Before DESeq2, loci listed in
 `data/excluded_loci/gregaria_rrna_list.txt` are removed. All biological samples
@@ -329,9 +334,9 @@ process against a locked, active run.
 02-competitive-star/
   fresh competitive BAMs, CSI indexes, STAR logs, and competitive-unmapped FASTQs
 03-featurecounts/
-  host-only exon and transcript+exon tables
-  competitive host exon and transcript+exon tables
-  competitive fungal exon tables
+  host-only transcript+exon tables
+  competitive host transcript+exon tables
+  competitive fungal transcript+exon tables
 04-count-matrices/
   host-only/
   competitive-host/

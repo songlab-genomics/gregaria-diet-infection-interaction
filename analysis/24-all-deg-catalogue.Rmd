@@ -19,6 +19,24 @@ params:
 
 ## Purpose
 
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Collect contrasts**
+
+Gather every significant main-chromosome DEG call from the joint model.
+:::
+::: {.walkthrough-step}
+**Step 2 - Add annotation**
+
+Join exact GFF descriptions, biotype, effect size, direction, and functional IDs.
+:::
+::: {.walkthrough-step}
+**Step 3 - Search genes**
+
+Filter the table by gene, contrast, description, direction, or expression cluster.
+:::
+:::
+
 This page is a searchable catalogue of all significant DEGs from the primary
 all-samples retained, main-chromosome analysis. It uses the joint competitive
 host DESeq2 model from page 28 and restricts the catalogue to genes assigned to

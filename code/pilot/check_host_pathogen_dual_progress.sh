@@ -84,11 +84,9 @@ if [ -s "${RUN_DIR}/00-reference/STAR-competitive/Genome" ] \
 fi
 
 matrix_count=$(count_paths \
-  "${RUN_DIR}/04-count-matrices/host-only/host_exon_counts.tsv" \
-  "${RUN_DIR}/04-count-matrices/host-only/host_transcript_exon_sensitivity_counts.tsv" \
-  "${RUN_DIR}/04-count-matrices/competitive-host/host_exon_counts.tsv" \
-  "${RUN_DIR}/04-count-matrices/competitive-host/host_transcript_exon_sensitivity_counts.tsv" \
-  "${RUN_DIR}/04-count-matrices/competitive-fungus/metarhizium_exon_counts.tsv")
+  "${RUN_DIR}/04-count-matrices/host-only/host_transcript_exon_counts.tsv" \
+  "${RUN_DIR}/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv" \
+  "${RUN_DIR}/04-count-matrices/competitive-fungus/metarhizium_transcript_exon_counts.tsv")
 
 mapping_count=$(count_paths \
   "${RUN_DIR}/05-mapping-comparison/host_only_mapping_summary.tsv" \
@@ -116,17 +114,13 @@ report_stage "STAR host-only BAMs" \
   "$(count_nonempty "${RUN_DIR}/02-host-only-star" "*_Aligned.sortedByCoord.out.bam")" "${SAMPLES}"
 report_stage "STAR competitive BAMs" \
   "$(count_nonempty "${RUN_DIR}/02-competitive-star" "*_Aligned.sortedByCoord.out.bam")" "${SAMPLES}"
-report_stage "featureCounts: host-only exon" \
-  "$(count_nonempty "${RUN_DIR}/03-featurecounts/host-only-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "featureCounts: host-only transcript+exon" \
+report_stage "featureCounts: host-only transcript+exon (primary)" \
   "$(count_nonempty "${RUN_DIR}/03-featurecounts/host-only-transcript-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "featureCounts: competitive host exon" \
-  "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-host-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "featureCounts: competitive host transcript+exon" \
+report_stage "featureCounts: competitive host transcript+exon (primary)" \
   "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-host-transcript-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "featureCounts: competitive fungus exon" \
-  "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-fungus-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "Merged count matrices" "${matrix_count}" 5
+report_stage "featureCounts: competitive fungus transcript+exon (primary)" \
+  "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-fungus-transcript-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
+report_stage "Merged count matrices" "${matrix_count}" 3
 report_stage "Mapping comparison tables" "${mapping_count}" 4
 report_stage "Kraken2 reports" \
   "$(count_nonempty "${RUN_DIR}/08-taxonomy" "*.kraken2.report")" "${TAXONOMY_EXPECTED}"

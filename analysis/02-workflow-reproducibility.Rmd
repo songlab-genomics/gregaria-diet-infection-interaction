@@ -9,11 +9,29 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   output_tag: "workflow-reproducibility"
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Process reads**
+
+Follow fastp, STAR, and competitive host-pathogen mapping on the HPC.
+:::
+::: {.walkthrough-step}
+**Step 2 - Count genes**
+
+Use `-t transcript,exon -g gene_id` as the single active featureCounts definition.
+:::
+::: {.walkthrough-step}
+**Step 3 - Reproduce reports**
+
+Run the visible R Markdown code into new timestamped output folders.
+:::
+:::
 
 This page is the reproducibility map for the project. It explains where inputs
 live, where new results are written, and how to rerun the workflowR pages
@@ -54,7 +72,7 @@ knitr::kable(layout)
 This project starts from gene-level count files that were produced upstream on
 the HPC. The diagram below separates the HPC preprocessing steps from the
 workflowR analyses in this repository, so it is clear which part maps reads to
-the *Schistocerca piceifrons* reference and which part tests diet, infection,
+the *Schistocerca gregaria* reference and which part tests diet, infection,
 and diet-by-infection expression patterns.
 
 ```{r hpc-workflow-figure, fig.width=12, fig.height=6}
@@ -78,7 +96,7 @@ workflow_nodes <- data.frame(
   detail = c(
     "fat body; RiboZero", "read quality reports",
     "genome + GFF", "reads to genome",
-    "mapping summaries", "per-sample count files",
+    "mapping summaries", "transcript + exon; gene_id",
     "master count matrix", "gregaria rRNA list",
     "depth, VST, PCA", "diet and infection",
     "GO and KEGG themes", "curated panels"
@@ -165,9 +183,10 @@ ggsave(file.path(out_dir, "hpc_to_workflowr_workflow.png"),
        p_workflow, width = 12, height = 6, dpi = 300)
 ```
 
-The important handoff for this repository is the count matrix. The original
-STAR alignment and gene-counting steps produce per-sample count files; the
-workflowR pages then merge and check those counts, remove the loci listed in
+The important handoff for this repository is the count matrix. STAR produces
+the alignments and featureCounts assigns paired fragments with
+`-t transcript,exon -g gene_id`. The workflowR pages then merge and check those
+counts, remove the loci listed in
 `gregaria_rrna_list.txt`, and use the rRNA-filtered matrix for QC,
 differential expression, annotation enrichment, and publication figures.
 

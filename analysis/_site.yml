@@ -47,6 +47,8 @@ navbar:
     menu:
       - text: "Physiology candidates - both scopes"
         href: 13-physiology-candidate-genes.html
+      - text: "Curated target genes - both scopes"
+        href: 30-curated-target-gene-figure.html
       - text: "All scaffolds"
         menu:
           - text: "GO / KEGG enrichment"
@@ -63,8 +65,6 @@ navbar:
             href: 25-enrichment-term-gene-index.html
           - text: "Expression clusters and enrichment"
             href: 26-circled-cluster-enrichment.html
-          - text: "Curated target genes"
-            href: 30-curated-target-gene-figure.html
   - text: "Figures"
     menu:
       - text: "Publication figure exports"
@@ -76,7 +76,7 @@ navbar:
       - text: "Figure 3 - expression clusters"
         href: 26-circled-cluster-enrichment.html#Publication_figure
       - text: "Figure 4 - curated targets"
-        href: 30-curated-target-gene-figure.html#Revised_Figure_4
+        href: 30-curated-target-gene-figure.html#Curated_target_figures
   - text: "Sensitivity and Validation"
     menu:
       - text: "Outlier filtering sensitivity"

@@ -9,12 +9,30 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   reference_gff: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   output_tag: "study-design-data"
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Inspect inputs**
+
+Check that metadata, transcript-plus-exon counts, and annotation files are present.
+:::
+::: {.walkthrough-step}
+**Step 2 - Match samples**
+
+Confirm every count column has one diet and infection label.
+:::
+::: {.walkthrough-step}
+**Step 3 - Confirm design**
+
+Review group sizes and assigned-count depth before modeling.
+:::
+:::
 
 This page records the input files, sample labels, experimental groups, and
 basic count-table checks used by downstream analyses. It is meant to be
@@ -77,7 +95,7 @@ knitr::kable(summary_table)
 ## Count matrix
 
 ```{r counts-check}
-counts <- read.csv(counts_file, check.names = FALSE)
+counts <- read.delim(counts_file, check.names = FALSE)
 gene_ids <- counts[[1]]
 count_matrix <- counts[, -1, drop = FALSE]
 rownames(count_matrix) <- gene_ids

@@ -14,11 +14,29 @@ params:
   latest_results_root: "output/rmd_runs"
   alpha: 0.05
   lfc_threshold: 1
-  all_results_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_deseq2_all_contrasts.csv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
   output_tag: "all-scaffolds-all-deg-catalogue"
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Collect contrasts**
+
+Gather every significant all-scaffold DEG call from the joint model.
+:::
+::: {.walkthrough-step}
+**Step 2 - Add annotation**
+
+Join GFF description, biotype, effect size, direction, functional IDs, and placement.
+:::
+::: {.walkthrough-step}
+**Step 3 - Search genes**
+
+Filter the table by gene, contrast, description, direction, cluster, or scaffold class.
+:::
+:::
 
 This page is a searchable catalogue of all significant DEGs from the
 all-samples retained, all-scaffold analysis. It uses the fresh joint

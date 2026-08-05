@@ -17,7 +17,7 @@ metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
 counts_table <- read.delim(
-  "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv",
+  "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv",
   check.names = FALSE
 )
 placement <- read.delim(
@@ -85,7 +85,7 @@ cat('</div>')
 <p>
 Start with the shared design, workflow, and QC pages. Then choose one analysis
 scope and keep that scope consistent through DEG testing, overlap, catalogue,
-and enrichment. The placed-chromosome branch is the current manuscript-facing
+and enrichment. The placed-chromosome branch is the current primary paper
 analysis; the all-scaffold branch shows how much of the signal depends on loci
 whose assembly placement is unresolved. Both retain every sample.
 </p>
@@ -156,9 +156,9 @@ whose assembly placement is unresolved. Both retain every sample.
     <p>Review the complete gene-level heatmap and cluster-specific GO/KEGG patterns used in Figure 3.</p>
   </a>
   <a class="analysis-tile" href="30-curated-target-gene-figure.html">
-    <span>Placed with audit</span>
+    <span>Both placement scopes</span>
     <strong>Curated Targets</strong>
-    <p>Recalculate the coauthor target-gene analysis while preserving excluded unplaced targets for follow-up.</p>
+    <p>Follow the curated immune and protein-anabolism genes through matched main-chromosome and unplaced-scaffold views.</p>
   </a>
   <a class="analysis-tile" href="08-publication-figures.html">
     <span>Compiled exports</span>

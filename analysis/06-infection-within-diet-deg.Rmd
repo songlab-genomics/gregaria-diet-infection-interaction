@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   min_total_count: 10
@@ -22,6 +22,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Test each diet**
+
+Compare infected and control fat body samples separately for diets 33, 50, and 83.
+:::
+::: {.walkthrough-step}
+**Step 2 - Visualize response**
+
+Read PCA, MA plots, DEG burden, and full or curated VST heatmaps.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret diet effects**
+
+Compare the size, direction, and physiology of infection responses across diets.
+:::
+:::
 
 This page tests infected versus control samples separately within each diet.
 This is a simple and readable complement to the full interaction model.

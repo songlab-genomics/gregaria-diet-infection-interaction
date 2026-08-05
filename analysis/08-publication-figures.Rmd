@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
@@ -24,17 +24,6 @@ params:
 ---
 
 <style>
-table.table {
-  width: 100% !important;
-  max-width: 100%;
-  table-layout: fixed;
-}
-table.table th,
-table.table td {
-  white-space: normal !important;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
 img {
   max-width: 100%;
   height: auto;
@@ -53,6 +42,24 @@ primary paper figures.
 Every knit writes to a new folder under `output/rmd_runs`, so previous figure
 drafts remain available for comparison.
 
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Verify inputs**
+
+Confirm the count definition, sample set, placement table, and source reports.
+:::
+::: {.walkthrough-step}
+**Step 2 - Assemble panels**
+
+Copy or rebuild each panel from its analysis page without changing the statistics.
+:::
+::: {.walkthrough-step}
+**Step 3 - Export**
+
+Write publication-ready PNG, SVG, PDF, and source-table files together.
+:::
+:::
+
 ## Setup
 
 ```{r setup}
@@ -61,8 +68,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 publication_default_params <- list(
   metadata_file = "data/metadata/mehreen_metadata_fixed.txt",
   counts_file = paste0(
-    "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/",
-    "competitive-host/host_exon_counts.tsv"
+    "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/",
+    "host_counts_no_rrna.tsv"
   ),
   placement_file = paste0(
     "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
@@ -456,8 +463,8 @@ copy_publication_asset <- function(source, file_base) {
 ## Current main-chromosome figure inputs
 
 Every figure below is regenerated from the same main-chromosome contract. The
-table is included so a collaborator can verify the exact count matrix, official
-placement source, and current DESeq2/cluster outputs used for the export.
+input table records the exact count matrix, official placement source, and
+current DESeq2 or cluster output used for each export.
 
 ### Input data
 
@@ -496,12 +503,17 @@ figure4_placement_source <- file.path(
   curated_target_dir,
   "curated_target_placement_impact.png"
 )
+figure4_unplaced_source <- file.path(
+  curated_target_dir,
+  "figure4_curated_targets_unplaced_scaffolds.png"
+)
 
 base_inputs <- c(
   metadata_file, counts_file, placement_file, rrna_file, gff_file, eggnog_file,
   primary_results_file, head_phase_file, thorax_phase_file,
   figure3_composite_source, figure3_lollipop_source, figure3_insect_source,
-  figure3_reference_source, figure4_curated_source, figure4_placement_source
+  figure3_reference_source, figure4_curated_source, figure4_unplaced_source,
+  figure4_placement_source
 )
 if (!all(file.exists(base_inputs))) {
   stop("Missing publication input(s): ",
@@ -1783,8 +1795,8 @@ if (file.exists(figure3_lollipop_png)) {
 
 ## Figure 4: curated immune and protein-anabolism targets
 
-Figure 4 preserves the coauthor-curated biological categories but recalculates
-every DEG status from the current competitive-host, main-chromosome analysis.
+Figure 4 preserves the curated biological categories and recalculates every
+DEG status from the current competitive-host analysis.
 The 99 retained target genes stay in the denominator for every contrast; a gene
 is shown as `N.S.` when it does not meet the current adjusted-P-value and fold-
 change thresholds. The 64 curated targets on unplaced scaffolds are excluded
@@ -1800,15 +1812,27 @@ figure4_placement_png <- copy_publication_asset(
   figure4_placement_source,
   "figure4_curated_target_placement_impact"
 )
+figure4_unplaced_png <- copy_publication_asset(
+  figure4_unplaced_source,
+  "figure4_curated_targets_unplaced_scaffolds"
+)
 
 figure4_exports <- data.frame(
   figure = c(
     "Figure 4 main-chromosome curated targets",
+    "Figure 4 unplaced-scaffold curated targets",
     "Figure 4 placement-impact audit"
   ),
-  source = basename(c(figure4_curated_source, figure4_placement_source)),
-  copied_to = basename(c(figure4_png, figure4_placement_png)),
-  present = file.exists(c(figure4_png, figure4_placement_png))
+  source = basename(c(
+    figure4_curated_source, figure4_unplaced_source,
+    figure4_placement_source
+  )),
+  copied_to = basename(c(
+    figure4_png, figure4_unplaced_png, figure4_placement_png
+  )),
+  present = file.exists(c(
+    figure4_png, figure4_unplaced_png, figure4_placement_png
+  ))
 )
 knitr::kable(figure4_exports, caption = "Figure 4 copied exports")
 ```
@@ -1821,6 +1845,15 @@ knitr::kable(figure4_exports, caption = "Figure 4 copied exports")
 if (file.exists(figure4_png)) {
   grid::grid.newpage()
   grid::grid.raster(png::readPNG(figure4_png))
+}
+```
+
+#### Unplaced-scaffold comparison
+
+```{r figure-4-unplaced-display, echo=FALSE, fig.width=15, fig.height=11.5}
+if (file.exists(figure4_unplaced_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure4_unplaced_png))
 }
 ```
 

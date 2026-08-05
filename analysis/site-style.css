@@ -60,8 +60,113 @@ pre, code {
   border-radius: 6px;
 }
 
-table {
+/* Keep static kable tables readable without requiring page-specific CSS. */
+.main-container table.table:not(.dataTable) {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  margin: 18px 0 28px;
+  overflow-x: auto;
   background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 6px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 5px 16px rgba(31, 41, 51, 0.07);
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.main-container table.table:not(.dataTable) caption {
+  color: #334e68;
+  font-weight: 750;
+  padding: 0 0 9px;
+  text-align: left;
+}
+
+.main-container table.table:not(.dataTable) thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: #ffffff;
+  background: #334e68;
+  border-bottom: 0;
+  font-weight: 750;
+  padding: 10px 12px;
+  vertical-align: bottom;
+  white-space: normal;
+}
+
+.main-container table.table:not(.dataTable) tbody td {
+  color: #243b53;
+  border-top: 1px solid #e6edf3;
+  padding: 8px 12px;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.main-container table.table:not(.dataTable) tbody tr:nth-child(even) td {
+  background: #f6f8fa;
+}
+
+.main-container table.table:not(.dataTable) tbody tr:hover td {
+  background: #eef6f4;
+}
+
+.main-container .dataTables_wrapper {
+  max-width: 100%;
+  margin: 18px 0 28px;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 5px 16px rgba(31, 41, 51, 0.07);
+}
+
+.main-container .dataTables_wrapper table.dataTable thead th {
+  color: #ffffff;
+  background: #334e68;
+  border-bottom: 0;
+  font-weight: 750;
+}
+
+.main-container .dataTables_wrapper table.dataTable tbody tr:nth-child(even) {
+  background: #f6f8fa;
+}
+
+.main-container .dataTables_wrapper .dataTables_filter input,
+.main-container .dataTables_wrapper .dataTables_length select {
+  border: 1px solid #bcccdc;
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+
+.walkthrough-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 28px;
+}
+
+.walkthrough-step {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-top: 4px solid #0f766e;
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.walkthrough-step strong {
+  display: block;
+  color: #102a43;
+  margin-bottom: 6px;
+}
+
+.walkthrough-step p {
+  color: #52606d;
+  margin: 0;
 }
 
 .hero-panel {
@@ -339,14 +444,14 @@ img {
   contain: inline-size;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .html-widget.datatables {
   contain: inline-size;
   width: 100% !important;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .dataTables_scrollHead,
@@ -376,6 +481,7 @@ img {
   .metric-grid,
   .analysis-grid,
   .scope-grid,
+  .walkthrough-grid,
   .figure-strip {
     grid-template-columns: 1fr 1fr;
   }

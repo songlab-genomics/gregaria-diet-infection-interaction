@@ -16,10 +16,28 @@ params:
 
 ## Purpose
 
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Gather evidence**
+
+Combine assembly placement, Kraken, BLASTn, DIAMOND, and cross-locust homology.
+:::
+::: {.walkthrough-step}
+**Step 2 - Classify support**
+
+Separate host-supported, ambiguous, and unresolved unplaced loci.
+:::
+::: {.walkthrough-step}
+**Step 3 - Plan follow-up**
+
+Preserve uncertain candidates for validation without mixing them into the primary host set.
+:::
+:::
+
 This page asks whether the unplaced *Schistocerca gregaria* assembly scaffolds
 carrying many differentially expressed genes (DEGs) have independent evidence
 of locust origin. The audit itself does not relabel an unresolved scaffold as a
-contaminant. Following this review, the manuscript-facing analysis now uses
+contaminant. Following this review, the primary analysis now uses
 chromosome-assigned genes as its primary hypothesis family and preserves
 unplaced genes as an explicit sensitivity analysis on the
 [placed/unplaced analysis page](28-placed-unplaced-scaffold-analysis.html).

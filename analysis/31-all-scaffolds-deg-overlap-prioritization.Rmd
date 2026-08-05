@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   results_root: "output/rmd_runs"
   min_count: 10
   min_samples: 3
@@ -19,6 +19,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Build DEG sets**
+
+Collect exact contrast-level all-scaffold gene lists.
+:::
+::: {.walkthrough-step}
+**Step 2 - Measure overlap**
+
+Use Venn, UpSet, and presence-absence summaries to show shared calls.
+:::
+::: {.walkthrough-step}
+**Step 3 - Prioritize genes**
+
+Trace recurrent genes back to the contrasts in which they are significant.
+:::
+:::
 
 This page compares significant DEG lists from the all-samples, all-scaffold
 model pages. All 44 samples and every expression-filtered non-rRNA host locus

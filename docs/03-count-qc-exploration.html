@@ -423,6 +423,9 @@ div.tocify {
     <li>
       <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
     </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html">Curated target genes - both scopes</a>
+    </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
       <ul class="dropdown-menu" role="menu">
@@ -449,9 +452,6 @@ div.tocify {
         <li>
           <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
         </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -476,7 +476,7 @@ div.tocify {
       <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
     </li>
     <li>
-      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+      <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
     </li>
   </ul>
 </li>
@@ -599,7 +599,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -610,8 +610,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -624,9 +624,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -650,18 +650,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -752,15 +755,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -770,7 +773,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -792,162 +795,19 @@ Ignored files:
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
     Ignored:    output/.DS_Store
-    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
-    Ignored:    output/rmd_runs/all-scaffolds-all-deg-catalogue_20260805-234450/
-    Ignored:    output/rmd_runs/all-scaffolds-deg-overlap-prioritization_20260805-234426/
-    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
-    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
-    Ignored:    output/rmd_runs/all-scaffolds-enrichment-term-gene-index_20260805-234619/
-    Ignored:    output/rmd_runs/all-scaffolds-go-term-enrichment_20260805-234526/
-    Ignored:    output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/
-    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-235850/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
-    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
-    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
-    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260805-235654/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260805-235606/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
-    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
-    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260805-235540/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-234916/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-235722/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-234815/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-235528/
-    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
-    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-235857/
-    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260805-234829/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260805-234651/
-    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
-    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260805-235135/
-    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
-    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
-    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
-    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
-    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
-    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
-    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
-    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
-    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
-    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
-    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
-    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
-    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
-    Ignored:    output/rmd_runs/publication-figures_20260805-235924/
-    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
-    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
-    Ignored:    output/rmd_runs/study-design-data_20260806-000104/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260806-000106/
+    Ignored:    output/rmd_runs/
     Ignored:    output/runs/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  Rplots.pdf
-    Untracked:  analysis/27-scaffold-origin-audit.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
-    Untracked:  analysis/29-metarhizium-read-burden.Rmd
-    Untracked:  analysis/30-curated-target-gene-figure.Rmd
-    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
-    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
-    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
-    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
-    Untracked:  analysis/archive.Rmd
-    Untracked:  analysis/assets/
-    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
-    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
-    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
-    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
-    Untracked:  code/Snakefile.scaffold_origin_audit
-    Untracked:  code/Snakefile.scaffold_origin_homology
-    Untracked:  code/config/
-    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
-    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
-    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
-    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
-    Untracked:  code/rules/08_scaffold_origin_audit.smk
-    Untracked:  code/rules/09_scaffold_origin_homology.smk
-    Untracked:  code/scripts/build_combined_reference.py
-    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
-    Untracked:  code/scripts/build_scaffold_origin_audit.py
-    Untracked:  code/scripts/compare_host_count_matrices.py
-    Untracked:  code/scripts/compare_host_deseq2_results.py
-    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
-    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
-    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
-    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
-    Untracked:  code/scripts/export_scaffold_origin_candidates.py
-    Untracked:  code/scripts/extract_unplaced_scaffolds.py
-    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
-    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
-    Untracked:  code/scripts/install_scaffold_homology_env.slurm
-    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
-    Untracked:  code/scripts/merge_featurecounts.py
-    Untracked:  code/scripts/merge_tsv_rows.py
-    Untracked:  code/scripts/plot_kraken_family_composition.R
-    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
-    Untracked:  code/scripts/run_fungal_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
-    Untracked:  code/scripts/select_scaffold_homology_targets.py
-    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
-    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
-    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
-    Untracked:  code/scripts/summarize_competitive_mapping.py
-    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
-    Untracked:  code/scripts/summarize_host_mapping_audit.py
-    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
-    Untracked:  code/scripts/summarize_scaffold_kraken.py
-    Untracked:  code/scripts/summarize_star_log.py
-    Untracked:  code/snakemake.host_pathogen_dual.slurm
-    Untracked:  code/snakemake.scaffold_origin_audit.slurm
-    Untracked:  code/snakemake.scaffold_origin_homology.slurm
-    Untracked:  data/external/curated_target_genes/
-    Untracked:  data/scaffold_origin/
-    Untracked:  scripts/make_diet_infection_physiology_response.R
-    Untracked:  scripts/reference/
-    Untracked:  scripts/screen_unplaced_scaffold_origin.R
+    Untracked:  output/archive/rmd_runs_20260806/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
+    Untracked:  output/archive/site_build_artifacts_20260806/28-placed-unplaced-scaffold-analysis_cache/html/run-deseq2_a47470e453bd1a12bb9fca9d052eda43.rdb
 
 Unstaged changes:
-    Modified:   .gitignore
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
     Modified:   analysis/04-deseq2-interaction-model.Rmd
     Modified:   analysis/05-diet-pairwise-deg.Rmd
     Modified:   analysis/06-infection-within-diet-deg.Rmd
@@ -962,13 +822,21 @@ Unstaged changes:
     Modified:   analysis/24-all-deg-catalogue.Rmd
     Modified:   analysis/25-enrichment-term-gene-index.Rmd
     Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/27-scaffold-origin-audit.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
     Modified:   analysis/site-style.css
-    Modified:   code/README.md
-    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
     Modified:   code/cluster.json
-    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_progress.sh
+    Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
 
 </code></pre>
 <p>
@@ -1014,6 +882,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/03-count-qc-exploration.html" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+changes analysis
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1142,6 +1027,23 @@ Upgrading analysis and figures DEGs
 </div>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
+<div class="walkthrough-grid">
+<div class="walkthrough-step">
+<p><strong>Step 1 - Filter counts</strong></p>
+<p>Remove rRNA and uninformative low-count rows while retaining every
+sample.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 2 - Explore samples</strong></p>
+<p>Use library depth, PCA, and sample distances to describe
+variation.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 3 - Interpret QC</strong></p>
+<p>Identify unusual libraries without excluding them from the main
+analysis.</p>
+</div>
+</div>
 <p>This page checks count depth, low-count filtering, sample clustering,
 and PCA before differential expression models are interpreted. These
 checks are not a separate biological result; they are the audit trail
@@ -1175,8 +1077,8 @@ metadata$label &lt;- as.character(metadata$label)
 metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
 metadata$Treatment &lt;- factor(metadata$Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;))
 
-counts_raw &lt;- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_raw &lt;- read.delim(file.path(project_dir, params$counts_file),
+                         check.names = FALSE)
 counts &lt;- as.matrix(counts_raw[, -1])
 rownames(counts) &lt;- counts_raw[[1]]
 storage.mode(counts) &lt;- &quot;integer&quot;
@@ -1296,9 +1198,9 @@ knitr::kable(filter_summary)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">10</td>
-<td align="right">23279</td>
-<td align="right">16892</td>
-<td align="right">6387</td>
+<td align="right">83204</td>
+<td align="right">19915</td>
+<td align="right">63289</td>
 </tr>
 </tbody>
 </table>

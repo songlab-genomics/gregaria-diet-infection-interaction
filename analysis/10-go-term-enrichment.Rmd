@@ -19,25 +19,6 @@ params:
 
 ## Purpose
 
-<style>
-.main-container table.table:not(.dataTable) {
-  display: block;
-  width: 100% !important;
-  max-width: 100%;
-  table-layout: fixed;
-  overflow-x: auto;
-}
-.main-container table.table:not(.dataTable) th,
-.main-container table.table:not(.dataTable) td {
-  overflow-wrap: anywhere;
-  white-space: normal;
-}
-.main-container .dataTables_wrapper {
-  max-width: 100%;
-  overflow-x: auto;
-}
-</style>
-
 This page keeps the eggNOG-based functional enrichment with the conservative
 main-nuclear-chromosome differential-expression results. It uses the newest
 completed placed/unplaced analysis table on disk, retains only genes whose
@@ -54,7 +35,7 @@ available on the placement-sensitivity page.
 
 The first enrichment section keeps the infection response non-directional,
 which asks what functions are over-represented among infection DEGs regardless
-of whether genes increase or decrease. A later section adds the requested
+of whether genes increase or decrease. A later section adds the
 direction-aware contrasts: infected-versus-control within each diet, diet
 contrasts among controls only, and diet contrasts among infected samples only.
 
@@ -65,6 +46,24 @@ Insecta-only organism pathways. Some enriched labels can therefore be broad
 cross-domain maps or microbial/prokaryote-associated KEGG reference labels,
 even though the genes tested here are locust gene IDs. The pathway-scope table
 below flags those cases for interpretation.
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Define DEG sets**
+
+Keep the chromosome-only foregrounds and their matching expressed background.
+:::
+::: {.walkthrough-step}
+**Step 2 - Test annotations**
+
+Run GO and KEGG over-representation tests with eggNOG-derived mappings.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret terms**
+
+Compare ontologies, pathway themes, direction, and KEGG biological scope.
+:::
+:::
 
 ## Setup
 
@@ -657,10 +656,10 @@ write.csv(infection_deg_long, file.path(out_dir, "infection_DEGs_long.csv"),
           row.names = FALSE)
 ```
 
-## Collect requested direction-aware DEG sets
+## Collect direction-aware DEG sets
 
-These foregrounds match the extra comparisons requested for discussion. The
-requested figures use one column per contrast and use color/shape to show which
+These foregrounds cover the full set of infection and diet comparisons. The
+figures use one column per contrast and use color/shape to show which
 side of the contrast carries the enriched genes. For infection contrasts, red
 means higher in infected samples and blue means higher in controls. For diet
 contrasts, red means higher in the first diet named in the column and blue means
@@ -980,7 +979,7 @@ if (nrow(all_enrichment) == 0) {
 }
 
 if (nrow(directional_all_enrichment) == 0) {
-  cat("No requested direction-aware sets produced enriched terms at the current cutoffs.")
+  cat("No direction-aware sets produced enriched terms at the current cutoffs.")
 } else {
   DT::datatable(
     directional_all_enrichment |>
@@ -1197,7 +1196,7 @@ if (nrow(requested_kegg_scope_summary) > 0) {
     ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
                                breaks = scope_levels, drop = FALSE) +
     ggplot2::labs(
-      title = "KEGG pathway scope counts in requested direction-aware enrichments",
+      title = "KEGG pathway scope counts in direction-aware enrichments",
       subtitle = "Zero means that scope category is not enriched in any requested contrast at the current cutoff",
       x = NULL,
       y = NULL,
@@ -1223,7 +1222,7 @@ if (nrow(requested_kegg_scope_summary) > 0) {
     ggplot2::scale_fill_manual(values = kegg_scope_colors, limits = scope_levels,
                                breaks = scope_levels, drop = FALSE) +
     ggplot2::labs(
-      title = "KEGG pathway scope among requested direction-aware enrichments",
+      title = "KEGG pathway scope among direction-aware enrichments",
       subtitle = "Counts are unique enriched KEGG pathway IDs per contrast and direction",
       x = NULL,
       y = "Enriched KEGG pathway IDs",
@@ -1250,7 +1249,7 @@ if (nrow(requested_kegg_scope_summary) > 0) {
   print(requested_kegg_scope_matrix_plot)
   print(requested_kegg_scope_plot)
 } else {
-  cat("No requested direction-aware KEGG enrichment rows were available for scope plotting.")
+  cat("No direction-aware KEGG enrichment rows were available for scope plotting.")
 }
 ```
 
@@ -1428,7 +1427,7 @@ if (nrow(go_enrichment_ontology) > 0) {
 
 ## Directional GO terms by ontology
 
-These panels show the requested direction-aware foregrounds. The same annotated
+These panels show the direction-aware foregrounds. The same annotated
 background is used as above. Empty facets mean that no term passed the
 enrichment cutoffs for that particular contrast. Colored panel frames mark GO
 ontology, while the enrichment dots mark the side of the contrast carrying the
@@ -1838,7 +1837,7 @@ if (nrow(kegg_enrichment_df) > 0) {
 
 ## Directional KEGG pathways by biological theme
 
-These panels repeat the requested direction-aware contrasts for KEGG pathways.
+These panels repeat the direction-aware contrasts for KEGG pathways.
 The pathway descriptions are shown alongside IDs, and pathways are grouped by
 the same broad biological themes used in the non-directional overview. The
 colored panel frames mark pathway theme, and the enrichment dots mark the side

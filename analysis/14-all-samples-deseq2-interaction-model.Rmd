@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   reference_diet: "50"
@@ -22,6 +22,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Restrict placement**
+
+Keep non-rRNA genes assigned to the main nuclear chromosomes.
+:::
+::: {.walkthrough-step}
+**Step 2 - Fit interaction**
+
+Test diet, infection, and diet-by-infection effects with all 44 samples.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret structure**
+
+Use coefficients and PCA to summarize the conservative host signal.
+:::
+:::
 
 This is the all-samples, main-chromosome version of the interaction model. It keeps every
 library in `mehreen_metadata_fixed.txt`, including the samples currently treated
@@ -318,7 +336,7 @@ ggplot2::ggsave(file.path(out_dir, "interaction_model_pca.png"),
 
 ## Publication figure {#Publication_figure}
 
-The manuscript-facing PCA below is generated from this placed-chromosome,
+The primary PCA below is generated from this placed-chromosome,
 all-sample expression matrix. It adds treatment centroids and diet-specific
 centroid shifts while leaving individual sample labels out of the panel. The
 same export is compiled with the other manuscript panels on the

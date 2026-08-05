@@ -9,13 +9,31 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   min_total_count: 10
   top_variable_genes: 500
   output_tag: "count-qc-exploration"
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Filter counts**
+
+Remove rRNA and uninformative low-count rows while retaining every sample.
+:::
+::: {.walkthrough-step}
+**Step 2 - Explore samples**
+
+Use library depth, PCA, and sample distances to describe variation.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret QC**
+
+Identify unusual libraries without excluding them from the main analysis.
+:::
+:::
 
 This page checks count depth, low-count filtering, sample clustering, and PCA
 before differential expression models are interpreted. These checks are not a
@@ -51,8 +69,8 @@ metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
-counts_raw <- read.csv(file.path(project_dir, params$counts_file),
-                       check.names = FALSE)
+counts_raw <- read.delim(file.path(project_dir, params$counts_file),
+                         check.names = FALSE)
 counts <- as.matrix(counts_raw[, -1])
 rownames(counts) <- counts_raw[[1]]
 storage.mode(counts) <- "integer"

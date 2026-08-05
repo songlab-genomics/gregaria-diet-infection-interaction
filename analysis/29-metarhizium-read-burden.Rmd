@@ -9,7 +9,6 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  fungal_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-fungus/metarhizium_exon_counts.tsv"
   mapping_summary_file: "output/runs/host_pathogen_dual_20260727_000952/05-mapping-comparison/competitive_mapping_summary.tsv"
   cluster_run_dir: ""
   output_tag: "metarhizium-read-burden"
@@ -17,27 +16,42 @@ params:
 
 ## Purpose
 
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Count fungal alignments**
+
+Read the competitive STAR summary for each fat body library.
+:::
+::: {.walkthrough-step}
+**Step 2 - Normalize signal**
+
+Compare absolute fungal reads and their percentage of unique alignments.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret burden**
+
+Use fungal RNA as supporting infection evidence, not as a direct biomass measurement.
+:::
+:::
+
 This page quantifies the RNA-seq evidence for *Metarhizium robertsii* in each
 fat body library. It uses the competitive host-pathogen alignment, in which
 each read is aligned against a combined *Schistocerca gregaria* and
 *M. robertsii* reference. This avoids counting a read independently as both
 host and fungus.
 
-Three related measurements are reported:
+Two related measurements are reported:
 
 1. **Fungal genome-mapped reads:** primary, uniquely mapped read alignments
    assigned by STAR anywhere on the *M. robertsii* genome.
-2. **Fungal exon-assigned fragments:** paired-end fragments assigned by
-   featureCounts to annotated *M. robertsii* exons.
-3. **Unique fungal alignment percentage:** uniquely aligned reads assigned to the
+2. **Unique fungal alignment percentage:** uniquely aligned reads assigned to the
    fungal reference, shown as a percentage of all unique alignments.
 
 The first measurement is the closest available equivalent to a general
 "mapped reads" plot because it is not restricted to annotated exons. The
-featureCounts value is instead an expression-level fungal exon count and is
-reported as fragments because the pipeline used `--countReadPairs`. Neither
-measurement is a direct measurement of fungal biomass, and matched qPCR
-validation was unavailable because no additional tissue remained.
+percentage provides a library-normalized view of the same alignment evidence.
+Neither measurement is a direct measurement of fungal biomass, and matched
+qPCR validation was unavailable because no additional tissue remained.
 
 ## Setup and input validation
 
@@ -53,7 +67,6 @@ if (length(missing) > 0) {
 
 project_dir <- normalizePath(".", mustWork = TRUE)
 metadata_file <- file.path(project_dir, params$metadata_file)
-fungal_counts_file <- file.path(project_dir, params$fungal_counts_file)
 mapping_summary_file <- file.path(project_dir, params$mapping_summary_file)
 
 latest_run_dir <- function(prefix) {
@@ -81,7 +94,7 @@ cluster_assignment_file <- file.path(
 )
 
 input_files <- c(
-  metadata_file, fungal_counts_file, mapping_summary_file,
+  metadata_file, mapping_summary_file,
   cluster_matrix_file, cluster_assignment_file
 )
 if (!all(file.exists(input_files))) {
@@ -110,23 +123,13 @@ metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)), drop =
     )
   )
 
-fungal_counts <- read.delim(fungal_counts_file, check.names = FALSE)
-sample_ids <- colnames(fungal_counts)[-1]
-stopifnot(setequal(sample_ids, metadata$label))
-
 mapping_summary <- read.delim(mapping_summary_file, check.names = FALSE) |>
   dplyr::mutate(sample_id = as.character(sample_id))
 stopifnot(setequal(mapping_summary$sample_id, metadata$label))
 
-fungal_burden <- data.frame(
-  label = sample_ids,
-  fungal_exon_fragments = colSums(fungal_counts[, -1, drop = FALSE])
-) |>
-  dplyr::left_join(
-    mapping_summary |>
-      dplyr::select(sample_id, unique_fungus, pct_unique_fungus),
-    by = c("label" = "sample_id")
-  ) |>
+fungal_burden <- mapping_summary |>
+  dplyr::select(sample_id, unique_fungus, pct_unique_fungus) |>
+  dplyr::rename(label = sample_id) |>
   dplyr::left_join(
     metadata |>
       dplyr::select(label, Treatment, Diet, condition),
@@ -302,70 +305,10 @@ fungal_genome_full_zoom_plot <-
 print(fungal_genome_full_zoom_plot)
 ```
 
-## Fungal exon-assigned fragments
-
-The bar plot mirrors the sample-level CDS alignment view while using the fresh
-competitive-mapping output. All six diet-treatment groups share the same y-axis,
-so the high fungal signal in a small number of infected libraries is not hidden
-by condition-specific scaling.
-
-```{r fungal-exon-fragments, fig.width=20, fig.height=8}
-highlight_threshold <- stats::quantile(
-  fungal_burden$fungal_exon_fragments,
-  probs = 0.90,
-  na.rm = TRUE
-)
-
-fungal_fragment_plot <- ggplot2::ggplot(
-  fungal_burden,
-  ggplot2::aes(x = sample_name, y = fungal_exon_fragments)
-) +
-  ggplot2::geom_col(
-    fill = "#4C78A8",
-    color = "#17202A",
-    linewidth = 0.35,
-    width = 0.72
-  ) +
-  ggplot2::geom_text(
-    data = fungal_burden |>
-      dplyr::filter(fungal_exon_fragments >= highlight_threshold),
-    ggplot2::aes(label = scales::comma(fungal_exon_fragments)),
-    vjust = -0.35,
-    size = 3.8,
-    fontface = "bold"
-  ) +
-  ggplot2::facet_grid(
-    cols = ggplot2::vars(condition),
-    scales = "free_x",
-    space = "free_x"
-  ) +
-  ggplot2::scale_y_continuous(
-    labels = scales::label_comma(),
-    expand = ggplot2::expansion(mult = c(0, 0.12))
-  ) +
-  ggplot2::labs(
-    title = "Metarhizium robertsii exon-assigned fragments",
-    subtitle = "Competitive host-pathogen alignment; paired-end featureCounts",
-    x = NULL,
-    y = "Fungal exon-assigned fragments"
-  ) +
-  ggplot2::theme_bw(base_size = 13) +
-  ggplot2::theme(
-    panel.grid.minor = ggplot2::element_blank(),
-    panel.grid.major.x = ggplot2::element_blank(),
-    strip.background = ggplot2::element_rect(fill = "#E5E7EB", color = "#374151"),
-    strip.text = ggplot2::element_text(face = "bold", size = 12),
-    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
-    plot.title = ggplot2::element_text(face = "bold", size = 18)
-  )
-
-print(fungal_fragment_plot)
-```
-
 ## Library-normalized fungal alignment signal
 
 The percentage view controls for differences in total unique alignment depth.
-It confirms whether samples with many fungal exon counts also devote a larger
+It confirms whether samples with many fungal alignments also devote a larger
 fraction of their sequenced library to the fungal reference.
 
 ```{r fungal-alignment-percentage, fig.width=20, fig.height=8}
@@ -855,8 +798,8 @@ write.csv(
 
 ## Combined export
 
-```{r combined-export, fig.width=20, fig.height=22}
-combined_plot <- fungal_genome_plot / fungal_fragment_plot / fungal_percentage_plot +
+```{r combined-export, fig.width=20, fig.height=16}
+combined_plot <- fungal_genome_plot / fungal_percentage_plot +
   patchwork::plot_annotation(
     title = "RNA-seq evidence for Metarhizium robertsii across fat body samples",
     tag_levels = "A"
@@ -874,9 +817,6 @@ export_specs <- list(
   "metarhizium_genome_mapped_reads_full_and_zoom" = list(
     plot = fungal_genome_full_zoom_plot, width = 20, height = 16
   ),
-  "metarhizium_exon_assigned_fragments" = list(
-    plot = fungal_fragment_plot, width = 20, height = 8
-  ),
   "metarhizium_unique_alignment_percentage" = list(
     plot = fungal_percentage_plot, width = 20, height = 8
   ),
@@ -890,7 +830,7 @@ export_specs <- list(
     plot = fungal_percentage_deg_heatmap, width = 22, height = 16
   ),
   "metarhizium_alignment_burden_combined" = list(
-    plot = combined_plot, width = 20, height = 22
+    plot = combined_plot, width = 20, height = 16
   )
 )
 
@@ -930,8 +870,7 @@ DT::datatable(
   fungal_burden |>
     dplyr::arrange(dplyr::desc(unique_fungus)) |>
     dplyr::select(
-      label, Treatment, Diet, fungal_exon_fragments,
-      unique_fungus, pct_unique_fungus
+      label, Treatment, Diet, unique_fungus, pct_unique_fungus
     ),
   rownames = FALSE,
   filter = "top",
@@ -944,9 +883,8 @@ DT::datatable(
 
 The fungal signal is strongly heterogeneous among infected individuals rather
 than uniformly high after challenge. Samples 1029, 1058, 1025, and 1057 have
-the highest whole-genome fungal alignment counts, the highest exon-assigned
-fungal fragment counts, and the highest fungal alignment percentages. Controls
-and most infected samples have low counts. Low non-zero values should be
-treated as alignment background or weak fungal evidence, whereas agreement
-between whole-genome alignment, exon assignment, and library-normalized signal
+the highest whole-genome fungal alignment counts and fungal alignment
+percentages. Controls and most infected samples have low counts. Low non-zero
+values should be treated as alignment background or weak fungal evidence,
+whereas agreement between absolute and library-normalized alignment signal
 provides stronger RNA-seq evidence of fungal burden.

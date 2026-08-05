@@ -8,7 +8,7 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -16,6 +16,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Read enrichment**
+
+Load the current all-scaffold GO and KEGG result tables.
+:::
+::: {.walkthrough-step}
+**Step 2 - Reverse the mapping**
+
+Expand every enriched term into its contributing DEG IDs and placement classes.
+:::
+::: {.walkthrough-step}
+**Step 3 - Inspect genes**
+
+Search terms and descriptions to move from a pathway back to individual genes.
+:::
+:::
 
 This page reverses the GO/KEGG enrichment output. Instead of starting from a
 gene and asking which annotations it has, it starts from each enriched GO term
@@ -350,7 +368,8 @@ write.csv(summary_by_context,
 ## Compact term-to-gene list
 
 This table has one row per enriched term per DEG set. The `DEG_gene_IDs` column
-is the reverse list requested by collaborators.
+is the reverse list used to trace each enriched term back to its contributing
+DEGs.
 
 ```{r compact-table}
 compact_display <- term_gene_compact |>

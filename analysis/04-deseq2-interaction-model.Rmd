@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   reference_diet: "50"
   reference_treatment: "Control"
   min_total_count: 10
@@ -19,6 +19,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Build model**
+
+Fit diet, infection, and diet-by-infection terms using all non-rRNA host loci.
+:::
+::: {.walkthrough-step}
+**Step 2 - Test effects**
+
+Export coefficients and summarize the number and direction of significant genes.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret interaction**
+
+Ask whether the infection response changes across diets.
+:::
+:::
 
 This page fits the full model for the manuscript question: does infection
 response depend on diet? It retains all 44 samples and all expression-filtered

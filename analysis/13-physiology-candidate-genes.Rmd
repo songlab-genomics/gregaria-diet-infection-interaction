@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_counts_no_rrna.tsv"
-  all_results_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_deseq2_all_contrasts.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -20,7 +20,7 @@ params:
 
 ## Purpose
 
-This page tests the co-author hypothesis in a targeted way using all 44 samples.
+This page tests the biological hypothesis in a targeted way using all 44 samples.
 Instead of starting
 from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
 genes plausibly involved in insect-relevant immune and fat-body processes. The
@@ -34,6 +34,24 @@ universes so the effect of assembly placement remains visible.
 This is a candidate-gene screen, not a formal enrichment test. It is designed to
 produce an interpretable gene list that can be checked manually and refined as
 we agree on more insect-specific marker genes.
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Define functions**
+
+Search insect-relevant immune, protein, lipid, carbohydrate, and detoxification terms.
+:::
+::: {.walkthrough-step}
+**Step 2 - Join DEGs**
+
+Match those annotations to current all-scaffold and chromosome-only contrasts.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret diets**
+
+Compare how diet changes the infection response within each physiological theme.
+:::
+:::
 
 ## Setup
 

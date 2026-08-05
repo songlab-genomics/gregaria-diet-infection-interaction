@@ -10,7 +10,7 @@ output:
 params:
   metadata_full_file: "data/metadata/mehreen_metadata_fixed.txt"
   metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers.txt"
-  counts_file: "data/raw_read_counts/master_counts_no_rRNA.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
   min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1
@@ -18,6 +18,24 @@ params:
 ---
 
 ## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Define scenarios**
+
+Keep the all-sample analysis primary and define the reduced sample set only as a check.
+:::
+::: {.walkthrough-step}
+**Step 2 - Repeat contrasts**
+
+Apply the same transcript-plus-exon counts and DEG thresholds to both scenarios.
+:::
+::: {.walkthrough-step}
+**Step 3 - Assess stability**
+
+Compare PCA, DEG burden, retained calls, and fold changes.
+:::
+:::
 
 The main analysis pages currently use the full metadata file
 `mehreen_metadata_fixed.txt`. They do **not** remove the samples listed only in
@@ -103,7 +121,7 @@ is called significant when `padj < alpha` and `abs(log2FoldChange) >=
 lfc_threshold`.
 
 ```{r run-contrasts}
-counts_raw <- read.csv(counts_file, check.names = FALSE)
+counts_raw <- read.delim(counts_file, check.names = FALSE)
 counts_all <- as.matrix(counts_raw[, -1])
 rownames(counts_all) <- counts_raw[[1]]
 storage.mode(counts_all) <- "integer"

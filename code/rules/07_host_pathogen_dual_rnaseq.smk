@@ -72,22 +72,17 @@ DUAL_SEQUENCE_MAP = DUAL_REFERENCE_DIR + "/combined_sequence_id_map.tsv"
 DUAL_GENE_MAP = DUAL_REFERENCE_DIR + "/combined_gene_id_map.tsv"
 DUAL_PROVENANCE = DUAL_DIR + "/run_provenance.tsv"
 
-DUAL_HOST_ONLY_EXON_MATRIX = (
-    DUAL_DIR + "/04-count-matrices/host-only/host_exon_counts.tsv"
-)
-DUAL_HOST_ONLY_SENSITIVITY_MATRIX = (
+DUAL_HOST_ONLY_PRIMARY_MATRIX = (
     DUAL_DIR
-    + "/04-count-matrices/host-only/host_transcript_exon_sensitivity_counts.tsv"
+    + "/04-count-matrices/host-only/host_transcript_exon_counts.tsv"
 )
-DUAL_COMPETITIVE_HOST_EXON_MATRIX = (
-    DUAL_DIR + "/04-count-matrices/competitive-host/host_exon_counts.tsv"
-)
-DUAL_COMPETITIVE_HOST_SENSITIVITY_MATRIX = (
+DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX = (
     DUAL_DIR
-    + "/04-count-matrices/competitive-host/host_transcript_exon_sensitivity_counts.tsv"
+    + "/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv"
 )
-DUAL_FUNGUS_EXON_MATRIX = (
-    DUAL_DIR + "/04-count-matrices/competitive-fungus/metarhizium_exon_counts.tsv"
+DUAL_FUNGUS_PRIMARY_MATRIX = (
+    DUAL_DIR
+    + "/04-count-matrices/competitive-fungus/metarhizium_transcript_exon_counts.tsv"
 )
 DUAL_HOST_ONLY_MAPPING_QC = (
     DUAL_DIR + "/05-mapping-comparison/host_only_mapping_summary.tsv"
@@ -246,11 +241,9 @@ def dual_local_transfer_files():
     featurecounts_summaries = [
         DUAL_DIR + f"/03-featurecounts/{count_type}/{sample}.featureCounts.txt.summary"
         for count_type in [
-            "host-only-exon",
             "host-only-transcript-exon",
-            "competitive-host-exon",
             "competitive-host-transcript-exon",
-            "competitive-fungus-exon",
+            "competitive-fungus-transcript-exon",
         ]
         for sample in DUAL_SAMPLES
     ]
@@ -259,11 +252,9 @@ def dual_local_transfer_files():
             DUAL_PROVENANCE,
             DUAL_SEQUENCE_MAP,
             DUAL_GENE_MAP,
-            DUAL_HOST_ONLY_EXON_MATRIX,
-            DUAL_HOST_ONLY_SENSITIVITY_MATRIX,
-            DUAL_COMPETITIVE_HOST_EXON_MATRIX,
-            DUAL_COMPETITIVE_HOST_SENSITIVITY_MATRIX,
-            DUAL_FUNGUS_EXON_MATRIX,
+            DUAL_HOST_ONLY_PRIMARY_MATRIX,
+            DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
+            DUAL_FUNGUS_PRIMARY_MATRIX,
             DUAL_HOST_ONLY_MAPPING_QC,
             DUAL_COMPETITIVE_MAPPING_QC,
             DUAL_COUNT_RECONCILIATION_SAMPLE,
@@ -299,11 +290,9 @@ def dual_rnaseq_final_outputs():
             DUAL_COMBINED_FASTA,
             DUAL_SEQUENCE_MAP,
             DUAL_GENE_MAP,
-            DUAL_HOST_ONLY_EXON_MATRIX,
-            DUAL_HOST_ONLY_SENSITIVITY_MATRIX,
-            DUAL_COMPETITIVE_HOST_EXON_MATRIX,
-            DUAL_COMPETITIVE_HOST_SENSITIVITY_MATRIX,
-            DUAL_FUNGUS_EXON_MATRIX,
+            DUAL_HOST_ONLY_PRIMARY_MATRIX,
+            DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
+            DUAL_FUNGUS_PRIMARY_MATRIX,
             DUAL_HOST_ONLY_MAPPING_QC,
             DUAL_COMPETITIVE_MAPPING_QC,
             DUAL_COUNT_RECONCILIATION_SAMPLE,
@@ -336,11 +325,9 @@ def dual_hpc_preprocessing_outputs():
             DUAL_COMBINED_FASTA,
             DUAL_SEQUENCE_MAP,
             DUAL_GENE_MAP,
-            DUAL_HOST_ONLY_EXON_MATRIX,
-            DUAL_HOST_ONLY_SENSITIVITY_MATRIX,
-            DUAL_COMPETITIVE_HOST_EXON_MATRIX,
-            DUAL_COMPETITIVE_HOST_SENSITIVITY_MATRIX,
-            DUAL_FUNGUS_EXON_MATRIX,
+            DUAL_HOST_ONLY_PRIMARY_MATRIX,
+            DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
+            DUAL_FUNGUS_PRIMARY_MATRIX,
             DUAL_HOST_ONLY_MAPPING_QC,
             DUAL_COMPETITIVE_MAPPING_QC,
             DUAL_COUNT_RECONCILIATION_SAMPLE,
@@ -610,36 +597,6 @@ rule dual_competitive_star_align:
         """
 
 
-rule dual_featurecounts_host_only_exon:
-    input:
-        bam=DUAL_DIR + "/02-host-only-star/{sample}_Aligned.sortedByCoord.out.bam",
-        gtf=DUAL_HOST_GTF
-    output:
-        counts=DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt",
-        summary=DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt.summary"
-    threads: 12
-    shell:
-        r"""
-        set -euo pipefail
-        module purge
-        module load mamba
-        source activate subread
-        mkdir -p $(dirname {output.counts})
-        featureCounts \
-          -p --countReadPairs -B -C \
-          -s {DUAL_FEATURECOUNTS_STRAND} \
-          -t exon \
-          -g gene_id \
-          --extraAttributes gene_name \
-          --primary \
-          -Q 10 \
-          -T {threads} \
-          -a {input.gtf} \
-          -o {output.counts} \
-          {input.bam}
-        """
-
-
 rule dual_featurecounts_host_only_transcript_exon:
     input:
         bam=DUAL_DIR + "/02-host-only-star/{sample}_Aligned.sortedByCoord.out.bam",
@@ -659,36 +616,6 @@ rule dual_featurecounts_host_only_transcript_exon:
           -p --countReadPairs -B -C \
           -s {DUAL_FEATURECOUNTS_STRAND} \
           -t transcript,exon \
-          -g gene_id \
-          --extraAttributes gene_name \
-          --primary \
-          -Q 10 \
-          -T {threads} \
-          -a {input.gtf} \
-          -o {output.counts} \
-          {input.bam}
-        """
-
-
-rule dual_featurecounts_competitive_host_exon:
-    input:
-        bam=DUAL_DIR + "/02-competitive-star/{sample}_Aligned.sortedByCoord.out.bam",
-        gtf=DUAL_HOST_PREFIXED_GTF
-    output:
-        counts=DUAL_DIR + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt",
-        summary=DUAL_DIR + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt.summary"
-    threads: 12
-    shell:
-        r"""
-        set -euo pipefail
-        module purge
-        module load mamba
-        source activate subread
-        mkdir -p $(dirname {output.counts})
-        featureCounts \
-          -p --countReadPairs -B -C \
-          -s {DUAL_FEATURECOUNTS_STRAND} \
-          -t exon \
           -g gene_id \
           --extraAttributes gene_name \
           --primary \
@@ -730,13 +657,13 @@ rule dual_featurecounts_competitive_host_transcript_exon:
         """
 
 
-rule dual_featurecounts_fungus_exon:
+rule dual_featurecounts_fungus_transcript_exon:
     input:
         bam=DUAL_DIR + "/02-competitive-star/{sample}_Aligned.sortedByCoord.out.bam",
         gtf=DUAL_FUNGUS_PREFIXED_GTF
     output:
-        counts=DUAL_DIR + "/03-featurecounts/competitive-fungus-exon/{sample}.featureCounts.txt",
-        summary=DUAL_DIR + "/03-featurecounts/competitive-fungus-exon/{sample}.featureCounts.txt.summary"
+        counts=DUAL_DIR + "/03-featurecounts/competitive-fungus-transcript-exon/{sample}.featureCounts.txt",
+        summary=DUAL_DIR + "/03-featurecounts/competitive-fungus-transcript-exon/{sample}.featureCounts.txt.summary"
     threads: 12
     shell:
         r"""
@@ -748,7 +675,7 @@ rule dual_featurecounts_fungus_exon:
         featureCounts \
           -p --countReadPairs -B -C \
           -s {DUAL_FEATURECOUNTS_STRAND} \
-          -t exon \
+          -t transcript,exon \
           -g gene_id \
           --extraAttributes gene_name \
           --primary \
@@ -760,30 +687,6 @@ rule dual_featurecounts_fungus_exon:
         """
 
 
-rule dual_merge_host_only_exon_counts:
-    input:
-        dual_featurecounts(
-            DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt"
-        )
-    output:
-        DUAL_HOST_ONLY_EXON_MATRIX
-    params:
-        sample_args=" ".join(
-            "--sample-file "
-            + sample
-            + "="
-            + DUAL_DIR
-            + f"/03-featurecounts/host-only-exon/{sample}.featureCounts.txt"
-            for sample in DUAL_SAMPLES
-        )
-    shell:
-        r"""
-        python3 scripts/merge_featurecounts.py \
-          {params.sample_args} \
-          --output {output}
-        """
-
-
 rule dual_merge_host_only_transcript_exon_counts:
     input:
         dual_featurecounts(
@@ -791,7 +694,7 @@ rule dual_merge_host_only_transcript_exon_counts:
             + "/03-featurecounts/host-only-transcript-exon/{sample}.featureCounts.txt"
         )
     output:
-        DUAL_HOST_ONLY_SENSITIVITY_MATRIX
+        DUAL_HOST_ONLY_PRIMARY_MATRIX
     params:
         sample_args=" ".join(
             "--sample-file "
@@ -809,32 +712,6 @@ rule dual_merge_host_only_transcript_exon_counts:
         """
 
 
-rule dual_merge_competitive_host_exon_counts:
-    input:
-        dual_featurecounts(
-            DUAL_DIR
-            + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt"
-        )
-    output:
-        DUAL_COMPETITIVE_HOST_EXON_MATRIX
-    params:
-        sample_args=" ".join(
-            "--sample-file "
-            + sample
-            + "="
-            + DUAL_DIR
-            + f"/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt"
-            for sample in DUAL_SAMPLES
-        )
-    shell:
-        r"""
-        python3 scripts/merge_featurecounts.py \
-          {params.sample_args} \
-          --strip-prefix '{DUAL_HOST_PREFIX}' \
-          --output {output}
-        """
-
-
 rule dual_merge_competitive_host_transcript_exon_counts:
     input:
         dual_featurecounts(
@@ -842,7 +719,7 @@ rule dual_merge_competitive_host_transcript_exon_counts:
             + "/03-featurecounts/competitive-host-transcript-exon/{sample}.featureCounts.txt"
         )
     output:
-        DUAL_COMPETITIVE_HOST_SENSITIVITY_MATRIX
+        DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX
     params:
         sample_args=" ".join(
             "--sample-file "
@@ -861,21 +738,21 @@ rule dual_merge_competitive_host_transcript_exon_counts:
         """
 
 
-rule dual_merge_fungus_exon_counts:
+rule dual_merge_fungus_transcript_exon_counts:
     input:
         dual_featurecounts(
             DUAL_DIR
-            + "/03-featurecounts/competitive-fungus-exon/{sample}.featureCounts.txt"
+            + "/03-featurecounts/competitive-fungus-transcript-exon/{sample}.featureCounts.txt"
         )
     output:
-        DUAL_FUNGUS_EXON_MATRIX
+        DUAL_FUNGUS_PRIMARY_MATRIX
     params:
         sample_args=" ".join(
             "--sample-file "
             + sample
             + "="
             + DUAL_DIR
-            + f"/03-featurecounts/competitive-fungus-exon/{sample}.featureCounts.txt"
+            + f"/03-featurecounts/competitive-fungus-transcript-exon/{sample}.featureCounts.txt"
             for sample in DUAL_SAMPLES
         )
     shell:
@@ -1230,7 +1107,7 @@ rule dual_plot_family_composition:
 
 rule dual_host_only_deseq2:
     input:
-        counts=DUAL_HOST_ONLY_EXON_MATRIX,
+        counts=DUAL_HOST_ONLY_PRIMARY_MATRIX,
         metadata=DUAL_SAMPLE_TABLE,
         rrna=DUAL_RRNA_LIST
     output:
@@ -1260,7 +1137,7 @@ rule dual_host_only_deseq2:
 
 rule dual_competitive_host_deseq2:
     input:
-        counts=DUAL_COMPETITIVE_HOST_EXON_MATRIX,
+        counts=DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
         metadata=DUAL_SAMPLE_TABLE,
         rrna=DUAL_RRNA_LIST
     output:
@@ -1290,9 +1167,9 @@ rule dual_competitive_host_deseq2:
 
 rule dual_compare_host_count_matrices:
     input:
-        host_only=DUAL_HOST_ONLY_EXON_MATRIX,
-        competitive_host=DUAL_COMPETITIVE_HOST_EXON_MATRIX,
-        competitive_fungus=DUAL_FUNGUS_EXON_MATRIX
+        host_only=DUAL_HOST_ONLY_PRIMARY_MATRIX,
+        competitive_host=DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
+        competitive_fungus=DUAL_FUNGUS_PRIMARY_MATRIX
     output:
         sample=DUAL_COUNT_RECONCILIATION_SAMPLE,
         gene=DUAL_COUNT_RECONCILIATION_GENE
@@ -1437,7 +1314,7 @@ rule dual_build_host_origin_evidence_catalogue:
 
 rule dual_fungal_deseq2:
     input:
-        counts=DUAL_FUNGUS_EXON_MATRIX,
+        counts=DUAL_FUNGUS_PRIMARY_MATRIX,
         metadata=DUAL_SAMPLE_TABLE
     output:
         DUAL_FUNGAL_DE_OUTPUTS

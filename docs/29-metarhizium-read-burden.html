@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-05" />
+<meta name="date" content="2026-08-06" />
 
 <title>Metarhizium read burden across fat body samples</title>
 
@@ -436,6 +436,9 @@ div.tocify {
     <li>
       <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
     </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html">Curated target genes - both scopes</a>
+    </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
       <ul class="dropdown-menu" role="menu">
@@ -462,9 +465,6 @@ div.tocify {
         <li>
           <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
         </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html">Curated target genes</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -489,7 +489,7 @@ div.tocify {
       <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
     </li>
     <li>
-      <a href="30-curated-target-gene-figure.html#Revised_Figure_4">Figure 4 - curated targets</a>
+      <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
     </li>
   </ul>
 </li>
@@ -605,7 +605,7 @@ div.tocify {
 <h1 class="title toc-ignore">Metarhizium read burden across fat body
 samples</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-05</h4>
+<h4 class="date">2026-08-06</h4>
 
 </div>
 
@@ -634,7 +634,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-05
+<strong>Last updated:</strong> 2026-08-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -673,10 +673,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -769,15 +769,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeea28407488dadacd9cff57e5e956b6c6ba8202fdtargetblankea28407a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -787,7 +787,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ea28407488dadacd9cff57e5e956b6c6ba8202fd" target="_blank">ea28407</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -809,158 +809,19 @@ Ignored files:
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
     Ignored:    output/.DS_Store
-    Ignored:    output/rmd_runs/all-deg-catalogue_20260723-164715/
-    Ignored:    output/rmd_runs/all-samples-deseq2-interaction-model_20260715-130121/
-    Ignored:    output/rmd_runs/all-samples-diet-pairwise-deg_All_20260715-130143/
-    Ignored:    output/rmd_runs/all-samples-infection-within-diet-deg_20260722-235632/
-    Ignored:    output/rmd_runs/all-scaffolds-all-deg-catalogue_20260805-234450/
-    Ignored:    output/rmd_runs/all-scaffolds-deg-overlap-prioritization_20260805-234426/
-    Ignored:    output/rmd_runs/all-scaffolds-deseq2-interaction-model_20260805-234231/
-    Ignored:    output/rmd_runs/all-scaffolds-diet-pairwise-deg_All_20260805-234255/
-    Ignored:    output/rmd_runs/all-scaffolds-enrichment-term-gene-index_20260805-234619/
-    Ignored:    output/rmd_runs/all-scaffolds-go-term-enrichment_20260805-234526/
-    Ignored:    output/rmd_runs/all-scaffolds-infection-within-diet-deg_20260805-234314/
-    Ignored:    output/rmd_runs/circled-cluster-enrichment_20260724-004440/
-    Ignored:    output/rmd_runs/count-qc-exploration_20260804-151956/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230618/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-230945/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231113/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-231220/
-    Ignored:    output/rmd_runs/curated-target-gene-figure_20260805-235850/
-    Ignored:    output/rmd_runs/deg-logical-set-construction_20260722-230917/
-    Ignored:    output/rmd_runs/deg-overlap-prioritization_20260715-131731/
-    Ignored:    output/rmd_runs/deg-sample-filter-scenarios_20260722-230637/
-    Ignored:    output/rmd_runs/deseq2-interaction-model_20260715-131611/
-    Ignored:    output/rmd_runs/diet-infection-physiology-response_20260724-031243/
-    Ignored:    output/rmd_runs/diet-pairwise-deg_All_20260715-131631/
-    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260804-152333/
-    Ignored:    output/rmd_runs/enrichment-term-gene-index_20260805-235654/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260804-152115/
-    Ignored:    output/rmd_runs/go-term-enrichment_20260805-235606/
-    Ignored:    output/rmd_runs/infection-within-diet-deg_20260715-131650/
-    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260804-152308/
-    Ignored:    output/rmd_runs/main-chromosome-all-deg-catalogue_20260805-235540/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260804-152207/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-deseq2-interaction-model_20260805-234902/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260804-152220/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-diet-pairwise-deg_All_20260805-235244/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260804-152234/
-    Ignored:    output/rmd_runs/main-chromosome-all-samples-infection-within-diet-deg_20260805-235258/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-171903/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-234916/
-    Ignored:    output/rmd_runs/main-chromosome-cluster-enrichment_20260805-235722/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260804-152003/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-234815/
-    Ignored:    output/rmd_runs/main-chromosome-deg-overlap-prioritization_20260805-235528/
-    Ignored:    output/rmd_runs/metarhizium-read-burden_20260805-170635/
-    Ignored:    output/rmd_runs/outlier-expression-signatures_20260722-180805/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260715-131934/
-    Ignored:    output/rmd_runs/outlier-sensitivity_20260805-234829/
-    Ignored:    output/rmd_runs/outliers-load-enrichment_20260715-131837/
-    Ignored:    output/rmd_runs/outliers-removed-deseq2-interaction-model_20260715-130246/
-    Ignored:    output/rmd_runs/outliers-removed-diet-pairwise-deg_All_20260715-130302/
-    Ignored:    output/rmd_runs/outliers-removed-infection-within-diet-deg_20260723-001457/
-    Ignored:    output/rmd_runs/phase-signature-overlap-no-outliers_20260723-001557/
-    Ignored:    output/rmd_runs/phase-signature-overlap_20260722-235730/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260715-130650/
-    Ignored:    output/rmd_runs/physiology-candidate-genes_20260805-234651/
-    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/
-    Ignored:    output/rmd_runs/placed-unplaced-scaffold-analysis_20260805-235135/
-    Ignored:    output/rmd_runs/presentation-labeled-infection-deg-pca_20260724-020436/
-    Ignored:    output/rmd_runs/publication-figures_20260805-014737/
-    Ignored:    output/rmd_runs/publication-figures_20260805-132450/
-    Ignored:    output/rmd_runs/publication-figures_20260805-134013/
-    Ignored:    output/rmd_runs/publication-figures_20260805-135151/
-    Ignored:    output/rmd_runs/publication-figures_20260805-140100/
-    Ignored:    output/rmd_runs/publication-figures_20260805-155843/
-    Ignored:    output/rmd_runs/publication-figures_20260805-160612/
-    Ignored:    output/rmd_runs/publication-figures_20260805-164712/
-    Ignored:    output/rmd_runs/publication-figures_20260805-170527/
-    Ignored:    output/rmd_runs/publication-figures_20260805-171500/
-    Ignored:    output/rmd_runs/publication-figures_20260805-172127/
-    Ignored:    output/rmd_runs/publication-figures_20260805-231240/
-    Ignored:    output/rmd_runs/scaffold-origin-audit_20260804-152436/
-    Ignored:    output/rmd_runs/study-design-data_20260804-151947/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720/
-    Ignored:    output/rmd_runs/unplaced-scaffold-origin-workflow_20260724-024903/
-    Ignored:    output/rmd_runs/workflow-reproducibility_20260804-151949/
+    Ignored:    output/rmd_runs/
     Ignored:    output/runs/
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Untracked files:
-    Untracked:  Rplots.pdf
-    Untracked:  analysis/27-scaffold-origin-audit.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis.Rmd
-    Untracked:  analysis/28-placed-unplaced-scaffold-analysis_cache/
-    Untracked:  analysis/29-metarhizium-read-burden.Rmd
-    Untracked:  analysis/30-curated-target-gene-figure.Rmd
-    Untracked:  analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
-    Untracked:  analysis/32-all-scaffolds-deg-catalogue.Rmd
-    Untracked:  analysis/33-all-scaffolds-go-term-enrichment.Rmd
-    Untracked:  analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
-    Untracked:  analysis/archive.Rmd
-    Untracked:  analysis/assets/
-    Untracked:  code/HOST_PATHOGEN_DUAL_RNASEQ.md
-    Untracked:  code/SCAFFOLD_ORIGIN_AUDIT.md
-    Untracked:  code/SCAFFOLD_ORIGIN_HOMOLOGY.md
-    Untracked:  code/Snakefile.host_pathogen_dual_rnaseq
-    Untracked:  code/Snakefile.scaffold_origin_audit
-    Untracked:  code/Snakefile.scaffold_origin_homology
-    Untracked:  code/config/
-    Untracked:  code/pilot/check_host_pathogen_dual_hpc.sh
-    Untracked:  code/pilot/check_host_pathogen_dual_progress.sh
-    Untracked:  code/pilot/check_scaffold_homology_databases_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_audit_progress.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_hpc.sh
-    Untracked:  code/pilot/check_scaffold_origin_homology_progress.sh
-    Untracked:  code/rules/07_host_pathogen_dual_rnaseq.smk
-    Untracked:  code/rules/08_scaffold_origin_audit.smk
-    Untracked:  code/rules/09_scaffold_origin_homology.smk
-    Untracked:  code/scripts/build_combined_reference.py
-    Untracked:  code/scripts/build_host_origin_evidence_catalogue.py
-    Untracked:  code/scripts/build_scaffold_origin_audit.py
-    Untracked:  code/scripts/compare_host_count_matrices.py
-    Untracked:  code/scripts/compare_host_deseq2_results.py
-    Untracked:  code/scripts/download_gregaria_protein_fasta_hpc.sh
-    Untracked:  code/scripts/download_kraken_pluspf_20260626.slurm
-    Untracked:  code/scripts/download_metarhizium_arsef23_hpc.sh
-    Untracked:  code/scripts/download_scaffold_homology_databases.slurm
-    Untracked:  code/scripts/export_scaffold_origin_candidates.py
-    Untracked:  code/scripts/extract_unplaced_scaffolds.py
-    Untracked:  code/scripts/identify_unplaced_deg_scaffolds.py
-    Untracked:  code/scripts/install_metatranscriptomics_qc_env.slurm
-    Untracked:  code/scripts/install_scaffold_homology_env.slurm
-    Untracked:  code/scripts/make_scaffold_origin_transfer_bundle.py
-    Untracked:  code/scripts/merge_featurecounts.py
-    Untracked:  code/scripts/merge_tsv_rows.py
-    Untracked:  code/scripts/plot_kraken_family_composition.R
-    Untracked:  code/scripts/prepare_scaffold_homology_queries.py
-    Untracked:  code/scripts/run_fungal_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2.R
-    Untracked:  code/scripts/run_host_deseq2_legacy_contrasts.R
-    Untracked:  code/scripts/select_scaffold_homology_targets.py
-    Untracked:  code/scripts/stage_scaffold_homology_inputs.py
-    Untracked:  code/scripts/stage_scaffold_origin_inputs.py
-    Untracked:  code/scripts/summarize_candidate_scaffold_annotation.py
-    Untracked:  code/scripts/summarize_competitive_mapping.py
-    Untracked:  code/scripts/summarize_cross_species_scaffold_homology.py
-    Untracked:  code/scripts/summarize_host_mapping_audit.py
-    Untracked:  code/scripts/summarize_scaffold_homology_hits.py
-    Untracked:  code/scripts/summarize_scaffold_kraken.py
-    Untracked:  code/scripts/summarize_star_log.py
-    Untracked:  code/snakemake.host_pathogen_dual.slurm
-    Untracked:  code/snakemake.scaffold_origin_audit.slurm
-    Untracked:  code/snakemake.scaffold_origin_homology.slurm
-    Untracked:  data/external/curated_target_genes/
-    Untracked:  data/scaffold_origin/
-    Untracked:  scripts/make_diet_infection_physiology_response.R
-    Untracked:  scripts/reference/
-    Untracked:  scripts/screen_unplaced_scaffold_origin.R
+    Untracked:  output/archive/rmd_runs_20260806/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
+    Untracked:  output/archive/site_build_artifacts_20260806/28-placed-unplaced-scaffold-analysis_cache/html/run-deseq2_a47470e453bd1a12bb9fca9d052eda43.rdb
 
 Unstaged changes:
-    Modified:   .gitignore
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
     Modified:   analysis/04-deseq2-interaction-model.Rmd
     Modified:   analysis/05-diet-pairwise-deg.Rmd
     Modified:   analysis/06-infection-within-diet-deg.Rmd
@@ -975,13 +836,21 @@ Unstaged changes:
     Modified:   analysis/24-all-deg-catalogue.Rmd
     Modified:   analysis/25-enrichment-term-gene-index.Rmd
     Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/27-scaffold-origin-audit.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
     Modified:   analysis/site-style.css
-    Modified:   code/README.md
-    Modified:   code/__pycache__/config.cpython-313.pyc
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
     Modified:   code/cluster.json
-    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_progress.sh
+    Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
 
 </code></pre>
 <p>
@@ -997,40 +866,116 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/29-metarhizium-read-burden.Rmd</code>) and HTML
+(<code>docs/29-metarhizium-read-burden.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/analysis/29-metarhizium-read-burden.Rmd" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+changes analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/29-metarhizium-read-burden.html" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+changes analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
+<div class="walkthrough-grid">
+<div class="walkthrough-step">
+<p><strong>Step 1 - Count fungal alignments</strong></p>
+<p>Read the competitive STAR summary for each fat body library.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 2 - Normalize signal</strong></p>
+<p>Compare absolute fungal reads and their percentage of unique
+alignments.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 3 - Interpret burden</strong></p>
+<p>Use fungal RNA as supporting infection evidence, not as a direct
+biomass measurement.</p>
+</div>
+</div>
 <p>This page quantifies the RNA-seq evidence for <em>Metarhizium
 robertsii</em> in each fat body library. It uses the competitive
 host-pathogen alignment, in which each read is aligned against a
 combined <em>Schistocerca gregaria</em> and <em>M. robertsii</em>
 reference. This avoids counting a read independently as both host and
 fungus.</p>
-<p>Three related measurements are reported:</p>
+<p>Two related measurements are reported:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Fungal genome-mapped reads:</strong> primary, uniquely
 mapped read alignments assigned by STAR anywhere on the <em>M.
 robertsii</em> genome.</li>
-<li><strong>Fungal exon-assigned fragments:</strong> paired-end
-fragments assigned by featureCounts to annotated <em>M. robertsii</em>
-exons.</li>
 <li><strong>Unique fungal alignment percentage:</strong> uniquely
 aligned reads assigned to the fungal reference, shown as a percentage of
 all unique alignments.</li>
 </ol>
 <p>The first measurement is the closest available equivalent to a
 general “mapped reads” plot because it is not restricted to annotated
-exons. The featureCounts value is instead an expression-level fungal
-exon count and is reported as fragments because the pipeline used
-<code>--countReadPairs</code>. Neither measurement is a direct
-measurement of fungal biomass, and matched qPCR validation was
-unavailable because no additional tissue remained.</p>
+exons. The percentage provides a library-normalized view of the same
+alignment evidence. Neither measurement is a direct measurement of
+fungal biomass, and matched qPCR validation was unavailable because no
+additional tissue remained.</p>
 </div>
 <div id="setup-and-input-validation" class="section level2">
 <h2>Setup and input validation</h2>
@@ -1045,7 +990,6 @@ if (length(missing) &gt; 0) {
 
 project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
 metadata_file &lt;- file.path(project_dir, params$metadata_file)
-fungal_counts_file &lt;- file.path(project_dir, params$fungal_counts_file)
 mapping_summary_file &lt;- file.path(project_dir, params$mapping_summary_file)
 
 latest_run_dir &lt;- function(prefix) {
@@ -1073,7 +1017,7 @@ cluster_assignment_file &lt;- file.path(
 )
 
 input_files &lt;- c(
-  metadata_file, fungal_counts_file, mapping_summary_file,
+  metadata_file, mapping_summary_file,
   cluster_matrix_file, cluster_assignment_file
 )
 if (!all(file.exists(input_files))) {
@@ -1102,23 +1046,13 @@ metadata &lt;- metadata[, !is.na(names(metadata)) &amp; nzchar(names(metadata)),
     )
   )
 
-fungal_counts &lt;- read.delim(fungal_counts_file, check.names = FALSE)
-sample_ids &lt;- colnames(fungal_counts)[-1]
-stopifnot(setequal(sample_ids, metadata$label))
-
 mapping_summary &lt;- read.delim(mapping_summary_file, check.names = FALSE) |&gt;
   dplyr::mutate(sample_id = as.character(sample_id))
 stopifnot(setequal(mapping_summary$sample_id, metadata$label))
 
-fungal_burden &lt;- data.frame(
-  label = sample_ids,
-  fungal_exon_fragments = colSums(fungal_counts[, -1, drop = FALSE])
-) |&gt;
-  dplyr::left_join(
-    mapping_summary |&gt;
-      dplyr::select(sample_id, unique_fungus, pct_unique_fungus),
-    by = c(&quot;label&quot; = &quot;sample_id&quot;)
-  ) |&gt;
+fungal_burden &lt;- mapping_summary |&gt;
+  dplyr::select(sample_id, unique_fungus, pct_unique_fungus) |&gt;
+  dplyr::rename(label = sample_id) |&gt;
   dplyr::left_join(
     metadata |&gt;
       dplyr::select(label, Treatment, Diet, condition),
@@ -1197,6 +1131,43 @@ fungal_genome_plot &lt;- ggplot2::ggplot(
 
 print(fungal_genome_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-genome-mapped-reads-1">
+Past versions of fungal-genome-mapped-reads-1.png
+</button>
+</p>
+<div id="fig-fungal-genome-mapped-reads-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="full-and-zoomed-fungal-read-counts" class="section level2">
 <h2>Full and zoomed fungal read counts</h2>
@@ -1280,78 +1251,94 @@ fungal_genome_zoom_plot &lt;- ggplot2::ggplot(
 
 print(fungal_genome_zoom_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-zoom-7000-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-genome-mapped-reads-zoom-7000-1">
+Past versions of fungal-genome-mapped-reads-zoom-7000-1.png
+</button>
+</p>
+<div id="fig-fungal-genome-mapped-reads-zoom-7000-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-zoom-7000-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fungal_genome_full_zoom_plot &lt;-
   (fungal_genome_plot / fungal_genome_zoom_plot) +
   patchwork::plot_annotation(tag_levels = &quot;A&quot;)
 
 print(fungal_genome_full_zoom_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-genome-full-and-zoom-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-genome-full-and-zoom-1">
+Past versions of fungal-genome-full-and-zoom-1.png
+</button>
+</p>
+<div id="fig-fungal-genome-full-and-zoom-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-full-and-zoom-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="fungal-exon-assigned-fragments" class="section level2">
-<h2>Fungal exon-assigned fragments</h2>
-<p>The bar plot mirrors the sample-level CDS alignment view while using
-the fresh competitive-mapping output. All six diet-treatment groups
-share the same y-axis, so the high fungal signal in a small number of
-infected libraries is not hidden by condition-specific scaling.</p>
-<pre class="r"><code>highlight_threshold &lt;- stats::quantile(
-  fungal_burden$fungal_exon_fragments,
-  probs = 0.90,
-  na.rm = TRUE
-)
-
-fungal_fragment_plot &lt;- ggplot2::ggplot(
-  fungal_burden,
-  ggplot2::aes(x = sample_name, y = fungal_exon_fragments)
-) +
-  ggplot2::geom_col(
-    fill = &quot;#4C78A8&quot;,
-    color = &quot;#17202A&quot;,
-    linewidth = 0.35,
-    width = 0.72
-  ) +
-  ggplot2::geom_text(
-    data = fungal_burden |&gt;
-      dplyr::filter(fungal_exon_fragments &gt;= highlight_threshold),
-    ggplot2::aes(label = scales::comma(fungal_exon_fragments)),
-    vjust = -0.35,
-    size = 3.8,
-    fontface = &quot;bold&quot;
-  ) +
-  ggplot2::facet_grid(
-    cols = ggplot2::vars(condition),
-    scales = &quot;free_x&quot;,
-    space = &quot;free_x&quot;
-  ) +
-  ggplot2::scale_y_continuous(
-    labels = scales::label_comma(),
-    expand = ggplot2::expansion(mult = c(0, 0.12))
-  ) +
-  ggplot2::labs(
-    title = &quot;Metarhizium robertsii exon-assigned fragments&quot;,
-    subtitle = &quot;Competitive host-pathogen alignment; paired-end featureCounts&quot;,
-    x = NULL,
-    y = &quot;Fungal exon-assigned fragments&quot;
-  ) +
-  ggplot2::theme_bw(base_size = 13) +
-  ggplot2::theme(
-    panel.grid.minor = ggplot2::element_blank(),
-    panel.grid.major.x = ggplot2::element_blank(),
-    strip.background = ggplot2::element_rect(fill = &quot;#E5E7EB&quot;, color = &quot;#374151&quot;),
-    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
-    axis.text.x = ggplot2::element_text(angle = 58, hjust = 1, size = 9),
-    plot.title = ggplot2::element_text(face = &quot;bold&quot;, size = 18)
-  )
-
-print(fungal_fragment_plot)</code></pre>
-<p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-exon-fragments-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 <div id="library-normalized-fungal-alignment-signal"
 class="section level2">
 <h2>Library-normalized fungal alignment signal</h2>
 <p>The percentage view controls for differences in total unique
-alignment depth. It confirms whether samples with many fungal exon
-counts also devote a larger fraction of their sequenced library to the
-fungal reference.</p>
+alignment depth. It confirms whether samples with many fungal alignments
+also devote a larger fraction of their sequenced library to the fungal
+reference.</p>
 <pre class="r"><code>fungal_percentage_plot &lt;- ggplot2::ggplot(
   fungal_burden,
   ggplot2::aes(x = sample_name, y = pct_unique_fungus)
@@ -1389,6 +1376,43 @@ fungal reference.</p>
 
 print(fungal_percentage_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-alignment-percentage-1">
+Past versions of fungal-alignment-percentage-1.png
+</button>
+</p>
+<div id="fig-fungal-alignment-percentage-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="full-and-zoomed-fungal-alignment-percentages"
 class="section level2">
@@ -1475,12 +1499,86 @@ fungal_percentage_zoom_plot &lt;- ggplot2::ggplot(
 
 print(fungal_percentage_zoom_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-zoom-0-1-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-alignment-percentage-zoom-0-1-1">
+Past versions of fungal-alignment-percentage-zoom-0-1-1.png
+</button>
+</p>
+<div id="fig-fungal-alignment-percentage-zoom-0-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-zoom-0-1-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fungal_percentage_full_zoom_plot &lt;-
   (fungal_percentage_plot / fungal_percentage_zoom_plot) +
   patchwork::plot_annotation(tag_levels = &quot;A&quot;)
 
 print(fungal_percentage_full_zoom_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-percentage-full-and-zoom-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-percentage-full-and-zoom-1">
+Past versions of fungal-percentage-full-and-zoom-1.png
+</button>
+</p>
+<div id="fig-fungal-percentage-full-and-zoom-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-full-and-zoom-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="fungal-percentage-aligned-above-the-host-deg-heatmap"
 class="section level2">
@@ -1822,6 +1920,43 @@ fungal_percentage_deg_heatmap &lt;-
 
 print(fungal_percentage_deg_heatmap)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/fungal-percentage-above-deg-heatmap-1.png" alt="" width="2112" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fungal-percentage-above-deg-heatmap-1">
+Past versions of fungal-percentage-above-deg-heatmap-1.png
+</button>
+</p>
+<div id="fig-fungal-percentage-above-deg-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-above-deg-heatmap-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>write.csv(
   fungal_heatmap_percent |&gt;
     dplyr::select(
@@ -1834,7 +1969,7 @@ print(fungal_percentage_deg_heatmap)</code></pre>
 </div>
 <div id="combined-export" class="section level2">
 <h2>Combined export</h2>
-<pre class="r"><code>combined_plot &lt;- fungal_genome_plot / fungal_fragment_plot / fungal_percentage_plot +
+<pre class="r"><code>combined_plot &lt;- fungal_genome_plot / fungal_percentage_plot +
   patchwork::plot_annotation(
     title = &quot;RNA-seq evidence for Metarhizium robertsii across fat body samples&quot;,
     tag_levels = &quot;A&quot;
@@ -1842,6 +1977,43 @@ print(fungal_percentage_deg_heatmap)</code></pre>
 
 print(combined_plot)</code></pre>
 <p><img src="figure/29-metarhizium-read-burden.Rmd/combined-export-1.png" alt="" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-combined-export-1">
+Past versions of combined-export-1.png
+</button>
+</p>
+<div id="fig-combined-export-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/29-metarhizium-read-burden.Rmd/combined-export-1.png" target="_blank">5ebe940</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>export_specs &lt;- list(
   &quot;metarhizium_genome_mapped_reads&quot; = list(
     plot = fungal_genome_plot, width = 20, height = 8
@@ -1851,9 +2023,6 @@ print(combined_plot)</code></pre>
   ),
   &quot;metarhizium_genome_mapped_reads_full_and_zoom&quot; = list(
     plot = fungal_genome_full_zoom_plot, width = 20, height = 16
-  ),
-  &quot;metarhizium_exon_assigned_fragments&quot; = list(
-    plot = fungal_fragment_plot, width = 20, height = 8
   ),
   &quot;metarhizium_unique_alignment_percentage&quot; = list(
     plot = fungal_percentage_plot, width = 20, height = 8
@@ -1868,7 +2037,7 @@ print(combined_plot)</code></pre>
     plot = fungal_percentage_deg_heatmap, width = 22, height = 16
   ),
   &quot;metarhizium_alignment_burden_combined&quot; = list(
-    plot = combined_plot, width = 20, height = 22
+    plot = combined_plot, width = 20, height = 16
   )
 )
 
@@ -1906,8 +2075,7 @@ for (export_name in names(export_specs)) {
   fungal_burden |&gt;
     dplyr::arrange(dplyr::desc(unique_fungus)) |&gt;
     dplyr::select(
-      label, Treatment, Diet, fungal_exon_fragments,
-      unique_fungus, pct_unique_fungus
+      label, Treatment, Diet, unique_fungus, pct_unique_fungus
     ),
   rownames = FALSE,
   filter = &quot;top&quot;,
@@ -1915,19 +2083,18 @@ for (export_name in names(export_specs)) {
   caption = &quot;Competitive-mapping evidence for M. robertsii by sample&quot;
 )</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-11f791fcfaca4190eb8e" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Control&quot;,&quot;Infected&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;33&quot;,&quot;50&quot;,&quot;83&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"302890\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"8\" data-max=\"965784\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"4.359439254e-05\" data-max=\"3.12975903737515\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Competitive-mapping evidence for M. robertsii by sample<\/caption>","data":[["1029","1058","1025","1057","1054","1016","1023","1027","1049","1030","1018","1015","1046","1051","1055","1009","1039","1024","1028","1007","1050","1021","1045","1033","1003","1043","1052","1002","1035","1042","1031","1004","1020","1014","1005","1037","1040","1011","1036","1034","1041","1032","1038","1006"],["Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Control","Infected","Infected","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Control","Infected","Control","Control","Infected","Infected","Control","Control","Control","Control","Control","Control","Control","Control","Control","Control"],["83","50","50","33","33","50","83","33","50","33","33","33","50","33","50","33","33","83","50","50","83","33","33","33","33","50","50","83","83","33","50","50","83","83","83","50","50","83","33","50","83","83","83","33"],[302890,129925,93895,64832,5408,1913,1356,1305,496,193,8,74,22,7,27,4,8,2,1,7,4,6,21,4,2,5,3,0,3,12,3,0,2,2,2,19,4,5,6,2,3,1,4,4],[965784,478026,286680,225150,19262,6742,4584,4156,2346,996,692,456,286,276,264,256,238,222,214,212,194,182,174,160,158,150,134,132,126,114,102,100,98,90,84,72,70,60,46,32,32,30,16,8],[2.78622245847903,3.129759037375147,0.7836073540024944,0.6380475987192685,0.06354109697426348,0.04841599204202526,0.0274488158027575,0.01881957264536173,0.006720191781554924,0.001836109391858079,0.001384423439753283,0.001778736561859816,0.0009732001437477864,0.0008744790512840141,0.0008395402334233496,0.0007898220080570483,0.0005618368495664366,0.001085225071280222,0.0006609811783756239,0.0007874603623283421,0.0006031970875903424,0.0005204810434512446,0.0005040479832822927,0.0003504028274704954,0.0007519586022993275,0.0003912912446731893,0.0005098259826952886,0.0007478518380866778,0.0003403697301311061,0.0003344074069011246,0.0003030851753136768,0.0003282830056882909,0.0003681702539473111,0.0004690065612454563,0.000352236570131622,0.000190327588938298,0.0001965283050312454,0.0002570132600422898,0.000124930938313095,9.649444137739544e-05,0.0001343855441470161,8.106591737259092e-05,5.223207573076428e-05,4.35943925404763e-05]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>Treatment<\/th>\n      <th>Diet<\/th>\n      <th>fungal_exon_fragments<\/th>\n      <th>unique_fungus<\/th>\n      <th>pct_unique_fungus<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"name":"label","targets":0},{"name":"Treatment","targets":1},{"name":"Diet","targets":2},{"name":"fungal_exon_fragments","targets":3},{"name":"unique_fungus","targets":4},{"name":"pct_unique_fungus","targets":5}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Control&quot;,&quot;Infected&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;33&quot;,&quot;50&quot;,&quot;83&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"8\" data-max=\"965784\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"4.359439254e-05\" data-max=\"3.12975903737515\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Competitive-mapping evidence for M. robertsii by sample<\/caption>","data":[["1029","1058","1025","1057","1054","1016","1023","1027","1049","1030","1018","1015","1046","1051","1055","1009","1039","1024","1028","1007","1050","1021","1045","1033","1003","1043","1052","1002","1035","1042","1031","1004","1020","1014","1005","1037","1040","1011","1036","1034","1041","1032","1038","1006"],["Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Control","Infected","Infected","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Control","Infected","Control","Control","Infected","Infected","Control","Control","Control","Control","Control","Control","Control","Control","Control","Control"],["83","50","50","33","33","50","83","33","50","33","33","33","50","33","50","33","33","83","50","50","83","33","33","33","33","50","50","83","83","33","50","50","83","83","83","50","50","83","33","50","83","83","83","33"],[965784,478026,286680,225150,19262,6742,4584,4156,2346,996,692,456,286,276,264,256,238,222,214,212,194,182,174,160,158,150,134,132,126,114,102,100,98,90,84,72,70,60,46,32,32,30,16,8],[2.78622245847903,3.129759037375147,0.7836073540024944,0.6380475987192685,0.06354109697426348,0.04841599204202526,0.0274488158027575,0.01881957264536173,0.006720191781554924,0.001836109391858079,0.001384423439753283,0.001778736561859816,0.0009732001437477864,0.0008744790512840141,0.0008395402334233496,0.0007898220080570483,0.0005618368495664366,0.001085225071280222,0.0006609811783756239,0.0007874603623283421,0.0006031970875903424,0.0005204810434512446,0.0005040479832822927,0.0003504028274704954,0.0007519586022993275,0.0003912912446731893,0.0005098259826952886,0.0007478518380866778,0.0003403697301311061,0.0003344074069011246,0.0003030851753136768,0.0003282830056882909,0.0003681702539473111,0.0004690065612454563,0.000352236570131622,0.000190327588938298,0.0001965283050312454,0.0002570132600422898,0.000124930938313095,9.649444137739544e-05,0.0001343855441470161,8.106591737259092e-05,5.223207573076428e-05,4.35943925404763e-05]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>Treatment<\/th>\n      <th>Diet<\/th>\n      <th>unique_fungus<\/th>\n      <th>pct_unique_fungus<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"name":"label","targets":0},{"name":"Treatment","targets":1},{"name":"Diet","targets":2},{"name":"unique_fungus","targets":3},{"name":"pct_unique_fungus","targets":4}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="interpretation" class="section level2">
 <h2>Interpretation</h2>
 <p>The fungal signal is strongly heterogeneous among infected
 individuals rather than uniformly high after challenge. Samples 1029,
 1058, 1025, and 1057 have the highest whole-genome fungal alignment
-counts, the highest exon-assigned fungal fragment counts, and the
-highest fungal alignment percentages. Controls and most infected samples
-have low counts. Low non-zero values should be treated as alignment
-background or weak fungal evidence, whereas agreement between
-whole-genome alignment, exon assignment, and library-normalized signal
-provides stronger RNA-seq evidence of fungal burden.</p>
+counts and fungal alignment percentages. Controls and most infected
+samples have low counts. Low non-zero values should be treated as
+alignment background or weak fungal evidence, whereas agreement between
+absolute and library-normalized alignment signal provides stronger
+RNA-seq evidence of fungal burden.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

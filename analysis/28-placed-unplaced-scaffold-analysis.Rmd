@@ -8,12 +8,12 @@ output:
     toc: true
     toc_float: true
 params:
-  primary_counts: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
-  host_only_counts: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/host-only/host_exon_counts.tsv"
+  primary_counts: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  host_only_counts: "output/rmd_runs/transcript-exon-host-only-deseq2_20260806-004951/host_counts_no_rrna.tsv"
   metadata: "data/metadata/mehreen_metadata_fixed.txt"
   rrna_list: "data/excluded_loci/gregaria_rrna_list.txt"
   placement: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
-  previous_fresh_results: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/competitive-host/host_deseq2_all_contrasts.csv"
+  previous_fresh_results: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
   cluster_assignments: "output/rmd_runs/circled-cluster-enrichment_20260724-004440/full_heatmap_expression_cluster_assignments.csv"
   homology_evidence: "output/rmd_runs/scaffold-origin-audit_20260804-152436/corrected_gene_homology_evidence.tsv"
   alpha: 0.05
@@ -25,22 +25,23 @@ params:
 
 ## Why this rerun is needed
 
-<style>
-.main-container table.table:not(.dataTable) {
-  width: 100% !important;
-  max-width: 100%;
-  table-layout: fixed;
-}
-.main-container table.table:not(.dataTable) th,
-.main-container table.table:not(.dataTable) td {
-  overflow-wrap: anywhere;
-  white-space: normal;
-}
-.main-container .dataTables_wrapper {
-  max-width: 100%;
-  overflow-x: auto;
-}
-</style>
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Classify loci**
+
+Use the official assembly report to separate main chromosomes and unplaced scaffolds.
+:::
+::: {.walkthrough-step}
+**Step 2 - Refit models**
+
+Run matched all-sample DESeq2 analyses for the full and conservative gene universes.
+:::
+::: {.walkthrough-step}
+**Step 3 - Compare results**
+
+Quantify which DEG patterns depend on unresolved sequence placement.
+:::
+:::
 
 The primary biological question concerns the *Schistocerca gregaria* fat body,
 but the reference assembly contains both chromosome-assigned genes and genes on
@@ -1062,7 +1063,7 @@ DT::datatable(
   )
 ```
 
-## Manuscript-facing interpretation
+## Primary interpretation
 
 The conservative analysis supports three distinct statements:
 
@@ -1090,7 +1091,8 @@ A concise Methods addition consistent with this page is:
 
 The exact numerical claims in the Abstract, Results, Discussion, and figure
 captions should be updated together from
-`manuscript_within_diet_deg_count_update.tsv` after collaborator approval.
+`manuscript_within_diet_deg_count_update.tsv` after the inclusion rule is
+finalized.
 
 ## Publication localization panel {#Publication_figure}
 
