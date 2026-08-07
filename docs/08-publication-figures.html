@@ -488,6 +488,9 @@ div.tocify {
       <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
     </li>
     <li>
+      <a href="35-count-definition-sensitivity.html">Exon vs transcript+exon counts</a>
+    </li>
+    <li>
       <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
     </li>
     <li>
@@ -752,15 +755,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeffab67e755bf2f280e9776cd74c32ea5f26a3277targetblankffab67ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree0942a37175d9dc7fd261589dbc58f3d9cad0a9f5targetblank0942a37a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ffab67e755bf2f280e9776cd74c32ea5f26a3277" target="_blank">ffab67e</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5" target="_blank">0942a37</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeffab67e755bf2f280e9776cd74c32ea5f26a3277targetblankffab67ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree0942a37175d9dc7fd261589dbc58f3d9cad0a9f5targetblank0942a37a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -770,7 +773,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ffab67e755bf2f280e9776cd74c32ea5f26a3277" target="_blank">ffab67e</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5" target="_blank">0942a37</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -798,15 +801,12 @@ Ignored files:
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
+Untracked files:
+    Untracked:  analysis/35-count-definition-sensitivity.Rmd
+
 Unstaged changes:
     Modified:   analysis/08-publication-figures.Rmd
-    Modified:   analysis/26-circled-cluster-enrichment.Rmd
-    Modified:   analysis/30-curated-target-gene-figure.Rmd
     Modified:   analysis/_site.yml
-    Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-a-1.png
-    Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-b-1.png
-    Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-c-1.png
-    Deleted:    analysis/figure/08-publication-figures.Rmd/figure-2-overlap-composition-1.png
 
 </code></pre>
 <p>
@@ -852,6 +852,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/analysis/08-publication-figures.Rmd" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+<td>
+update publication
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/docs/08-publication-figures.html" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+<td>
+update publication
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1294,7 +1328,7 @@ find_publication_project &lt;- function() {
   normalizePath(matches[1], mustWork = TRUE)
 }
 
-required &lt;- c(&quot;DESeq2&quot;, &quot;SummarizedExperiment&quot;, &quot;dplyr&quot;, &quot;tidyr&quot;, &quot;stringr&quot;,
+required &lt;- c(&quot;DESeq2&quot;, &quot;SummarizedExperiment&quot;, &quot;dplyr&quot;, &quot;tidyr&quot;, &quot;tibble&quot;, &quot;stringr&quot;,
               &quot;ggplot2&quot;, &quot;ggrepel&quot;, &quot;patchwork&quot;, &quot;scales&quot;,
               &quot;ggVennDiagram&quot;, &quot;UpSetR&quot;, &quot;ggplotify&quot;, &quot;png&quot;, &quot;grid&quot;)
 missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
@@ -1924,19 +1958,19 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">main-chromosome DESeq2 scenario table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_sample_filter_scenario_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/main_chromosome_sample_filter_scenario_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">sample-filter scenario counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_sample_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/main_chromosome_sample_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">main-chromosome average infection results</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_average_infection_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/main_chromosome_average_infection_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
@@ -2150,7 +2184,7 @@ p_pca &lt;- ggplot2::ggplot() +
   ggplot2::geom_point(
     data = pca_scores,
     ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
-    size = 3.7,
+    size = 5,
     stroke = 0.2,
     alpha = 0.9
   ) +
@@ -2159,7 +2193,7 @@ p_pca &lt;- ggplot2::ggplot() +
     ggplot2::aes(x = PC1_control, y = PC2_control,
                  xend = PC1_infected, yend = PC2_infected,
                  color = Diet),
-    linewidth = 1.05,
+    linewidth = 0.8,
     arrow = grid::arrow(length = grid::unit(0.16, &quot;cm&quot;), type = &quot;closed&quot;)
   ) +
   ggplot2::geom_point(
@@ -2168,7 +2202,7 @@ p_pca &lt;- ggplot2::ggplot() +
     shape = 21,
     fill = &quot;white&quot;,
     stroke = 1.2,
-    size = 5.6
+    size = 5
   ) +
   ggrepel::geom_label_repel(
     data = pca_centroids,
@@ -2184,7 +2218,7 @@ p_pca &lt;- ggplot2::ggplot() +
     min.segment.length = 0,
     segment.color = &quot;#4B5563&quot;,
     segment.size = 0.3,
-    size = 4.1,
+    size = 5,
     show.legend = FALSE,
     seed = 20260807
   ) +
@@ -2197,8 +2231,8 @@ p_pca &lt;- ggplot2::ggplot() +
     legend.box = &quot;vertical&quot;,
     legend.text = ggplot2::element_text(size = 11.5),
     legend.title = ggplot2::element_text(size = 12, face = &quot;bold&quot;),
-    axis.title = ggplot2::element_text(size = 14),
-    axis.text = ggplot2::element_text(size = 12, color = &quot;#111827&quot;),
+    axis.title = ggplot2::element_text(size = 18),
+    axis.text = ggplot2::element_text(size = 14, color = &quot;#111827&quot;),
     panel.grid = ggplot2::element_blank()
   ) +
   ggplot2::guides(
@@ -2257,6 +2291,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/docs/figure/08-publication-figures.Rmd/figure-1-panel-b-1.png" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8faef87a6de2275e0ac6b7f92089d61e85cd6051/docs/figure/08-publication-figures.Rmd/figure-1-panel-b-1.png" target="_blank">8faef87</a>
@@ -2827,6 +2872,36 @@ phase_overlap_sets &lt;- list(
   &quot;Thorax phase DEGs&quot; = thorax_phase_genes
 )
 
+# Verify the exact gene sets displayed anywhere in Figure 2, including panel A.
+figure2_gene_sets_for_rrna_audit &lt;- c(
+  list(&quot;Panel A: directional DEG burden&quot; = unique(deg_raw$gene_id)),
+  stats::setNames(exact_deg_sets, paste0(&quot;Exact contrast: &quot;, names(exact_deg_sets))),
+  stats::setNames(broad_deg_sets, paste0(&quot;Broad context: &quot;, names(broad_deg_sets))),
+  stats::setNames(infection_diet_sets,
+                  paste0(&quot;Infection Venn: &quot;, names(infection_diet_sets))),
+  stats::setNames(phase_overlap_sets,
+                  paste0(&quot;Phase Venn: &quot;, names(phase_overlap_sets)))
+)
+figure2_rrna_audit &lt;- dplyr::bind_rows(lapply(
+  names(figure2_gene_sets_for_rrna_audit),
+  function(set_name) {
+    ids &lt;- unique(figure2_gene_sets_for_rrna_audit[[set_name]])
+    tibble::tibble(
+      figure2_set = set_name,
+      genes_plotted = length(ids),
+      listed_rRNA_genes = sum(ids %in% rrna_ids)
+    )
+  }
+))
+write.csv(
+  figure2_rrna_audit,
+  file.path(out_dir, &quot;figure2_rrna_exclusion_audit.csv&quot;),
+  row.names = FALSE
+)
+if (any(figure2_rrna_audit$listed_rRNA_genes &gt; 0)) {
+  stop(&quot;Figure 2 rRNA audit failed: at least one plotted set contains a listed rRNA gene.&quot;)
+}
+
 phase_overlap_genes &lt;- sort(unique(unlist(phase_overlap_sets,
                                           use.names = FALSE)))
 phase_overlap_membership &lt;- data.frame(gene_id = phase_overlap_genes)
@@ -3149,7 +3224,8 @@ Maeva TECHER
              &quot;Alternative exact-contrast UpSet SVG&quot;,
              &quot;Alternative exact membership table&quot;,
              &quot;Standalone physiology composition PNG&quot;,
-             &quot;Standalone candidate category gene table&quot;),
+             &quot;Standalone candidate category gene table&quot;,
+             &quot;Figure 2 rRNA exclusion audit&quot;),
   path = c(
     file.path(out_dir, &quot;figure2_deg_burden_context_phase_venns.png&quot;),
     file.path(out_dir, &quot;figure2_deg_burden_context_phase_venns.svg&quot;),
@@ -3168,7 +3244,8 @@ Maeva TECHER
               &quot;figure2_panel_B_exact_contrast_upset_membership.csv&quot;),
     file.path(out_dir,
               &quot;figure2_panel_C_candidate_physiology_phase_composition.png&quot;),
-    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;)
+    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;),
+    file.path(out_dir, &quot;figure2_rrna_exclusion_audit.csv&quot;)
   ),
   present = file.exists(c(
     file.path(out_dir, &quot;figure2_deg_burden_context_phase_venns.png&quot;),
@@ -3188,7 +3265,8 @@ Maeva TECHER
               &quot;figure2_panel_B_exact_contrast_upset_membership.csv&quot;),
     file.path(out_dir,
               &quot;figure2_panel_C_candidate_physiology_phase_composition.png&quot;),
-    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;)
+    file.path(out_dir, &quot;figure2_deg_family_candidate_theme_gene_table.csv&quot;),
+    file.path(out_dir, &quot;figure2_rrna_exclusion_audit.csv&quot;)
   ))
 )
 knitr::kable(figure2_exports, caption = &quot;Figure 2 and standalone overlap exports&quot;)</code></pre>
@@ -3210,97 +3288,103 @@ knitr::kable(figure2_exports, caption = &quot;Figure 2 and standalone overlap ex
 <tr class="odd">
 <td align="left">Figure 2 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_burden_context_phase_venns.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_deg_burden_context_phase_venns.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_burden_context_phase_venns.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_deg_burden_context_phase_venns.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2A DEG burden PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_A_deg_biotype_burden.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_panel_A_deg_biotype_burden.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection DEGs by diet Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_degs_by_diet_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_infection_degs_by_diet_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2B infection DEGs by diet Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_degs_by_diet_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_infection_degs_by_diet_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection-by-diet membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_diet_venn_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_infection_diet_venn_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2C infection-phase Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_phase_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_infection_phase_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2C infection-phase Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_phase_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_infection_phase_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_broad_context_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_broad_context_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative broad-context Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_broad_context_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_broad_context_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_family_overlap_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_deg_family_overlap_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact-contrast UpSet PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_panel_B_exact_contrast_upset.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative exact-contrast UpSet SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_panel_B_exact_contrast_upset.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_panel_B_exact_contrast_upset_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Standalone physiology composition PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_C_candidate_physiology_phase_composition.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_panel_C_candidate_physiology_phase_composition.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Standalone candidate category gene table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_family_candidate_theme_gene_table.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_deg_family_candidate_theme_gene_table.csv</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Figure 2 rRNA exclusion audit</td>
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figure2_rrna_exclusion_audit.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -3330,17 +3414,19 @@ complete figure is provided in two matched versions: one with KEGG
 lollipops and one with the locust pathway map. The strict insect-focused
 version remains as a secondary export. The complete pathway-scope and
 pathway-gene audits remain available.</p>
-<table style="width:100%;">
+<table>
 <caption>Figure 3 copied exports</caption>
 <colgroup>
 <col width="26%" />
-<col width="32%" />
-<col width="37%" />
+<col width="3%" />
+<col width="30%" />
+<col width="36%" />
 <col width="3%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">figure</th>
+<th align="left">format</th>
 <th align="left">source</th>
 <th align="left">copied_to</th>
 <th align="left">present</th>
@@ -3348,8 +3434,9 @@ pathway-gene audits remain available.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Figure 3 eukaryote-inclusive KEGG pathway
+<td align="left">Composite: eukaryote-inclusive KEGG pathway
 illustration</td>
+<td align="left">png</td>
 <td
 align="left">expression_cluster_gene_level_GO_KEGG_pathway_illustration.png</td>
 <td
@@ -3357,15 +3444,34 @@ align="left">figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
-<td align="left">Figure 3 eukaryote-inclusive KEGG lollipop
-alternative</td>
+<td align="left">Composite: eukaryote-inclusive KEGG pathway
+illustration</td>
+<td align="left">svg</td>
+<td
+align="left">expression_cluster_gene_level_GO_KEGG_pathway_illustration.svg</td>
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Composite: eukaryote-inclusive KEGG lollipops</td>
+<td align="left">png</td>
 <td align="left">expression_cluster_gene_level_GO_KEGG_lollipop.png</td>
 <td
 align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png</td>
 <td align="left">TRUE</td>
 </tr>
+<tr class="even">
+<td align="left">Composite: eukaryote-inclusive KEGG lollipops</td>
+<td align="left">svg</td>
+<td align="left">expression_cluster_gene_level_GO_KEGG_lollipop.svg</td>
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.svg</td>
+<td align="left">TRUE</td>
+</tr>
 <tr class="odd">
-<td align="left">Figure 3 insect-focused KEGG composite</td>
+<td align="left">Composite: insect-focused KEGG lollipops</td>
+<td align="left">png</td>
 <td
 align="left">expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.png</td>
 <td
@@ -3373,11 +3479,100 @@ align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focus
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
-<td align="left">Figure 3 reference-context companion</td>
+<td align="left">Composite: insect-focused KEGG lollipops</td>
+<td align="left">svg</td>
+<td
+align="left">expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.svg</td>
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Composite: reference-context companion</td>
+<td align="left">png</td>
 <td
 align="left">expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
 <td
 align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Composite: reference-context companion</td>
+<td align="left">svg</td>
+<td
+align="left">expression_cluster_gene_level_GO_KEGG_lollipop_with_references.svg</td>
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Panel A: fungal percentage and two-cluster heatmap</td>
+<td align="left">png</td>
+<td align="left">figure3_panel_A_two_cluster_heatmap.png</td>
+<td
+align="left">figure3_panel_A_fungal_percentage_two_cluster_heatmap.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Panel A: fungal percentage and two-cluster heatmap</td>
+<td align="left">svg</td>
+<td align="left">figure3_panel_A_two_cluster_heatmap.svg</td>
+<td
+align="left">figure3_panel_A_fungal_percentage_two_cluster_heatmap.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Panel B: two-cluster GO enrichment</td>
+<td align="left">png</td>
+<td align="left">figure3_panel_B_two_cluster_GO.png</td>
+<td align="left">figure3_panel_B_two_cluster_GO.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Panel B: two-cluster GO enrichment</td>
+<td align="left">svg</td>
+<td align="left">figure3_panel_B_two_cluster_GO.svg</td>
+<td align="left">figure3_panel_B_two_cluster_GO.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Panel C: eukaryote-inclusive KEGG pathway
+illustration</td>
+<td align="left">png</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.png</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Panel C: eukaryote-inclusive KEGG pathway
+illustration</td>
+<td align="left">svg</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.svg</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.svg</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">Panel C alternative: eukaryote-inclusive KEGG
+lollipops</td>
+<td align="left">png</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.png</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.png</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">Panel C alternative: eukaryote-inclusive KEGG
+lollipops</td>
+<td align="left">svg</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.svg</td>
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.svg</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -3409,6 +3604,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/docs/figure/08-publication-figures.Rmd/figure-3-locust-map-display-1.png" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8faef87a6de2275e0ac6b7f92089d61e85cd6051/docs/figure/08-publication-figures.Rmd/figure-3-locust-map-display-1.png" target="_blank">8faef87</a>
@@ -3461,6 +3667,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/docs/figure/08-publication-figures.Rmd/figure-3-kegg-lollipop-display-1.png" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8faef87a6de2275e0ac6b7f92089d61e85cd6051/docs/figure/08-publication-figures.Rmd/figure-3-kegg-lollipop-display-1.png" target="_blank">8faef87</a>
@@ -4070,31 +4287,31 @@ knitr::kable(figure_s1_exports,
 <tr class="odd">
 <td align="left">Figure S1 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_outlier_removal_sensitivity.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS1_outlier_removal_sensitivity.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S1 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_outlier_removal_sensitivity.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS1_outlier_removal_sensitivity.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S1 sample counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_sample_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS1_sample_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S1 DEG counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_deg_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS1_deg_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S1 retained/lost/gained counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_retained_lost_gained_degs.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS1_retained_lost_gained_degs.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -4418,37 +4635,37 @@ knitr::kable(figure_s2_exports,
 <tr class="odd">
 <td align="left">Figure S2 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_chromosome_localization.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_deg_chromosome_localization.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S2 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_chromosome_localization.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_deg_chromosome_localization.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S2 DEG coordinates</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_coordinates_by_context.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_deg_coordinates_by_context.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Chromosome density table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_chromosome_deg_density.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_chromosome_deg_density.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S2 coordinate class counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_coordinate_class_counts.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_coordinate_class_counts.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S2 unplaced/missing summary</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_unplaced_or_missing_deg_summary.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528/figureS2_unplaced_or_missing_deg_summary.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -4476,7 +4693,7 @@ knitr::kable(tibble::tibble(file = exports),
              caption = paste(&quot;Files written to&quot;, out_dir))</code></pre>
 <table>
 <caption>Files written to
-/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413</caption>
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-162528</caption>
 <colgroup>
 <col width="100%" />
 </colgroup>
@@ -4590,8 +4807,15 @@ align="left">figure2_panel_C_candidate_physiology_phase_composition.png</td>
 align="left">figure2_panel_C_candidate_physiology_phase_composition.svg</td>
 </tr>
 <tr class="even">
+<td align="left">figure2_rrna_exclusion_audit.csv</td>
+</tr>
+<tr class="odd">
 <td
 align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.svg</td>
 </tr>
 <tr class="odd">
 <td
@@ -4599,65 +4823,107 @@ align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focus
 </tr>
 <tr class="even">
 <td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.svg</td>
+</tr>
+<tr class="odd">
+<td
 align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references.svg</td>
 </tr>
 <tr class="odd">
 <td
 align="left">figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.png</td>
 </tr>
 <tr class="even">
-<td align="left">figure4_curated_target_placement_impact.png</td>
-</tr>
-<tr class="odd">
-<td align="left">figure4_curated_targets_all_scaffolds.png</td>
-</tr>
-<tr class="even">
-<td align="left">figure4_curated_targets_main_chromosomes.png</td>
+<td
+align="left">figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.svg</td>
 </tr>
 <tr class="odd">
 <td
+align="left">figure3_panel_A_fungal_percentage_two_cluster_heatmap.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_panel_A_fungal_percentage_two_cluster_heatmap.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure3_panel_B_two_cluster_GO.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure3_panel_B_two_cluster_GO.svg</td>
+</tr>
+<tr class="odd">
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive.svg</td>
+</tr>
+<tr class="odd">
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.png</td>
+</tr>
+<tr class="even">
+<td
+align="left">figure3_panel_C_two_cluster_KEGG_pathway_illustration.svg</td>
+</tr>
+<tr class="odd">
+<td align="left">figure4_curated_target_placement_impact.png</td>
+</tr>
+<tr class="even">
+<td align="left">figure4_curated_targets_all_scaffolds.png</td>
+</tr>
+<tr class="odd">
+<td align="left">figure4_curated_targets_main_chromosomes.png</td>
+</tr>
+<tr class="even">
+<td
 align="left">figure4_curated_targets_non_grasshopper_homology_flags.png</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS1_deg_counts_by_scenario.csv</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">figureS1_outlier_removal_sensitivity.png</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS1_outlier_removal_sensitivity.svg</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">figureS1_retained_lost_gained_degs.csv</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS1_sample_counts_by_scenario.csv</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">figureS2_chromosome_deg_density.csv</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS2_coordinate_class_counts.csv</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">figureS2_deg_chromosome_localization.png</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS2_deg_chromosome_localization.svg</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">figureS2_deg_coordinates_by_context.csv</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">figureS2_unplaced_or_missing_deg_summary.csv</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">main_chromosome_average_infection_results.csv</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">main_chromosome_sample_counts_by_scenario.csv</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">main_chromosome_sample_filter_scenario_results.csv</td>
 </tr>
 </tbody>

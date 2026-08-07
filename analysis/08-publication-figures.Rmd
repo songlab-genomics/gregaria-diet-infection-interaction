@@ -155,7 +155,7 @@ find_publication_project <- function() {
   normalizePath(matches[1], mustWork = TRUE)
 }
 
-required <- c("DESeq2", "SummarizedExperiment", "dplyr", "tidyr", "stringr",
+required <- c("DESeq2", "SummarizedExperiment", "dplyr", "tidyr", "tibble", "stringr",
               "ggplot2", "ggrepel", "patchwork", "scales",
               "ggVennDiagram", "UpSetR", "ggplotify", "png", "grid")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
@@ -881,7 +881,7 @@ p_pca <- ggplot2::ggplot() +
   ggplot2::geom_point(
     data = pca_scores,
     ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
-    size = 3.7,
+    size = 5,
     stroke = 0.2,
     alpha = 0.9
   ) +
@@ -890,7 +890,7 @@ p_pca <- ggplot2::ggplot() +
     ggplot2::aes(x = PC1_control, y = PC2_control,
                  xend = PC1_infected, yend = PC2_infected,
                  color = Diet),
-    linewidth = 1.05,
+    linewidth = 0.8,
     arrow = grid::arrow(length = grid::unit(0.16, "cm"), type = "closed")
   ) +
   ggplot2::geom_point(
@@ -899,7 +899,7 @@ p_pca <- ggplot2::ggplot() +
     shape = 21,
     fill = "white",
     stroke = 1.2,
-    size = 5.6
+    size = 5
   ) +
   ggrepel::geom_label_repel(
     data = pca_centroids,
@@ -915,7 +915,7 @@ p_pca <- ggplot2::ggplot() +
     min.segment.length = 0,
     segment.color = "#4B5563",
     segment.size = 0.3,
-    size = 4.1,
+    size = 5,
     show.legend = FALSE,
     seed = 20260807
   ) +
@@ -928,8 +928,8 @@ p_pca <- ggplot2::ggplot() +
     legend.box = "vertical",
     legend.text = ggplot2::element_text(size = 11.5),
     legend.title = ggplot2::element_text(size = 12, face = "bold"),
-    axis.title = ggplot2::element_text(size = 14),
-    axis.text = ggplot2::element_text(size = 12, color = "#111827"),
+    axis.title = ggplot2::element_text(size = 18),
+    axis.text = ggplot2::element_text(size = 14, color = "#111827"),
     panel.grid = ggplot2::element_blank()
   ) +
   ggplot2::guides(
@@ -1438,6 +1438,36 @@ phase_overlap_sets <- list(
   "Thorax phase DEGs" = thorax_phase_genes
 )
 
+# Verify the exact gene sets displayed anywhere in Figure 2, including panel A.
+figure2_gene_sets_for_rrna_audit <- c(
+  list("Panel A: directional DEG burden" = unique(deg_raw$gene_id)),
+  stats::setNames(exact_deg_sets, paste0("Exact contrast: ", names(exact_deg_sets))),
+  stats::setNames(broad_deg_sets, paste0("Broad context: ", names(broad_deg_sets))),
+  stats::setNames(infection_diet_sets,
+                  paste0("Infection Venn: ", names(infection_diet_sets))),
+  stats::setNames(phase_overlap_sets,
+                  paste0("Phase Venn: ", names(phase_overlap_sets)))
+)
+figure2_rrna_audit <- dplyr::bind_rows(lapply(
+  names(figure2_gene_sets_for_rrna_audit),
+  function(set_name) {
+    ids <- unique(figure2_gene_sets_for_rrna_audit[[set_name]])
+    tibble::tibble(
+      figure2_set = set_name,
+      genes_plotted = length(ids),
+      listed_rRNA_genes = sum(ids %in% rrna_ids)
+    )
+  }
+))
+write.csv(
+  figure2_rrna_audit,
+  file.path(out_dir, "figure2_rrna_exclusion_audit.csv"),
+  row.names = FALSE
+)
+if (any(figure2_rrna_audit$listed_rRNA_genes > 0)) {
+  stop("Figure 2 rRNA audit failed: at least one plotted set contains a listed rRNA gene.")
+}
+
 phase_overlap_genes <- sort(unique(unlist(phase_overlap_sets,
                                           use.names = FALSE)))
 phase_overlap_membership <- data.frame(gene_id = phase_overlap_genes)
@@ -1701,7 +1731,8 @@ figure2_exports <- data.frame(
              "Alternative exact-contrast UpSet SVG",
              "Alternative exact membership table",
              "Standalone physiology composition PNG",
-             "Standalone candidate category gene table"),
+             "Standalone candidate category gene table",
+             "Figure 2 rRNA exclusion audit"),
   path = c(
     file.path(out_dir, "figure2_deg_burden_context_phase_venns.png"),
     file.path(out_dir, "figure2_deg_burden_context_phase_venns.svg"),
@@ -1720,7 +1751,8 @@ figure2_exports <- data.frame(
               "figure2_panel_B_exact_contrast_upset_membership.csv"),
     file.path(out_dir,
               "figure2_panel_C_candidate_physiology_phase_composition.png"),
-    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv")
+    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv"),
+    file.path(out_dir, "figure2_rrna_exclusion_audit.csv")
   ),
   present = file.exists(c(
     file.path(out_dir, "figure2_deg_burden_context_phase_venns.png"),
@@ -1740,7 +1772,8 @@ figure2_exports <- data.frame(
               "figure2_panel_B_exact_contrast_upset_membership.csv"),
     file.path(out_dir,
               "figure2_panel_C_candidate_physiology_phase_composition.png"),
-    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv")
+    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv"),
+    file.path(out_dir, "figure2_rrna_exclusion_audit.csv")
   ))
 )
 knitr::kable(figure2_exports, caption = "Figure 2 and standalone overlap exports")
@@ -1769,48 +1802,75 @@ remains as a secondary export. The complete pathway-scope and pathway-gene
 audits remain available.
 
 ```{r figure-3-composite, echo=FALSE, fig.width=16, fig.height=12}
-figure3_png <- copy_publication_asset(
-  figure3_composite_source,
-  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration"
-)
-figure3_lollipop_png <- copy_publication_asset(
-  figure3_lollipop_source,
-  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive"
-)
-figure3_insect_png <- copy_publication_asset(
-  figure3_insect_source,
-  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused"
-)
-figure3_reference_png <- copy_publication_asset(
-  figure3_reference_source,
-  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references"
+figure3_asset_specs <- tibble::tribble(
+  ~figure, ~source_base, ~target_base,
+  "Composite: eukaryote-inclusive KEGG pathway illustration",
+  tools::file_path_sans_ext(figure3_composite_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration",
+  "Composite: eukaryote-inclusive KEGG lollipops",
+  tools::file_path_sans_ext(figure3_lollipop_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive",
+  "Composite: insect-focused KEGG lollipops",
+  tools::file_path_sans_ext(figure3_insect_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused",
+  "Composite: reference-context companion",
+  tools::file_path_sans_ext(figure3_reference_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references",
+  "Panel A: fungal percentage and two-cluster heatmap",
+  file.path(circled_cluster_dir, "figure3_panel_A_two_cluster_heatmap"),
+  "figure3_panel_A_fungal_percentage_two_cluster_heatmap",
+  "Panel B: two-cluster GO enrichment",
+  file.path(circled_cluster_dir, "figure3_panel_B_two_cluster_GO"),
+  "figure3_panel_B_two_cluster_GO",
+  "Panel C: eukaryote-inclusive KEGG pathway illustration",
+  file.path(circled_cluster_dir,
+            "figure3_panel_C_two_cluster_KEGG_pathway_illustration"),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration",
+  "Panel C alternative: eukaryote-inclusive KEGG lollipops",
+  file.path(circled_cluster_dir,
+            "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive"),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive"
 )
 
-figure3_exports <- data.frame(
-  figure = c(
-    "Figure 3 eukaryote-inclusive KEGG pathway illustration",
-    "Figure 3 eukaryote-inclusive KEGG lollipop alternative",
-    "Figure 3 insect-focused KEGG composite",
-    "Figure 3 reference-context companion"
-  ),
-  source = basename(c(
-    figure3_composite_source,
-    figure3_lollipop_source,
-    figure3_insect_source,
-    figure3_reference_source
-  )),
-  copied_to = basename(c(
-    figure3_png,
-    figure3_lollipop_png,
-    figure3_insect_png,
-    figure3_reference_png
-  )),
-  present = file.exists(c(
-    figure3_png,
-    figure3_lollipop_png,
-    figure3_insect_png,
-    figure3_reference_png
-  ))
+figure3_exports <- tidyr::crossing(
+  asset_index = seq_len(nrow(figure3_asset_specs)),
+  format = c("png", "svg")
+) |>
+  dplyr::mutate(
+    figure = figure3_asset_specs$figure[asset_index],
+    source = paste0(figure3_asset_specs$source_base[asset_index], ".", format),
+    target_base = figure3_asset_specs$target_base[asset_index]
+  )
+
+missing_figure3_assets <- figure3_exports$source[
+  !file.exists(figure3_exports$source)
+]
+if (length(missing_figure3_assets) > 0) {
+  stop("Missing Figure 3 publication asset(s): ",
+       paste(missing_figure3_assets, collapse = ", "))
+}
+
+figure3_exports$copied_path <- mapply(
+  copy_publication_asset,
+  source = figure3_exports$source,
+  file_base = figure3_exports$target_base,
+  USE.NAMES = FALSE
+)
+figure3_exports <- figure3_exports |>
+  dplyr::mutate(
+    source = basename(source),
+    copied_to = basename(copied_path),
+    present = file.exists(copied_path)
+  ) |>
+  dplyr::select(figure, format, source, copied_to, present)
+
+figure3_png <- file.path(
+  out_dir,
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.png"
+)
+figure3_lollipop_png <- file.path(
+  out_dir,
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png"
 )
 knitr::kable(figure3_exports, caption = "Figure 3 copied exports")
 

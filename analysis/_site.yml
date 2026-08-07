@@ -79,6 +79,8 @@ navbar:
     menu:
       - text: "Outlier filtering sensitivity"
         href: 11-outlier-sensitivity.html
+      - text: "Exon vs transcript+exon counts"
+        href: 35-count-definition-sensitivity.html
       - text: "Placed vs unplaced scaffolds"
         href: 28-placed-unplaced-scaffold-analysis.html
       - text: "Unplaced scaffold origin audit"

@@ -1,0 +1,617 @@
+---
+title: "Exon-only versus transcript-plus-exon counting"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  exon_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  transcript_exon_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_transcript_exon_sensitivity_counts.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
+  min_count: 10
+  min_samples: 3
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "count-definition-sensitivity"
+---
+
+## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Hold the experiment constant**
+
+Retain all 44 samples, the competitive host alignment, the same chromosome
+scope, and the same rRNA exclusion list.
+:::
+::: {.walkthrough-step}
+**Step 2 - Change only counting mode**
+
+Compare featureCounts using `-t exon -g gene_id` with
+`-t transcript,exon -g gene_id`.
+:::
+::: {.walkthrough-step}
+**Step 3 - Compare DEG calls**
+
+Run identical DESeq2 models and report shared and counting-mode-specific DEGs.
+:::
+:::
+
+The transcript-plus-exon definition can assign reads that overlap the span of
+annotated transcript features, including intronic sequence. This makes the
+additional signal **consistent with unspliced or nascent pre-mRNA**, but it does
+not prove that every added read is pre-mRNA. Annotation structure, overlapping
+features, and retained introns can also contribute.
+
+This page is a sensitivity analysis. The manuscript analysis continues to use
+transcript-plus-exon counts, while this comparison shows how strongly that
+choice changes the tested genes and DEG calls.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "dplyr", "tidyr", "tibble", "ggplot2", "scales",
+              "patchwork", "DT")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(
+  project_dir, "output", "rmd_runs",
+  paste(params$output_tag, run_stamp, sep = "_")
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+input_paths <- c(
+  exon_counts = file.path(project_dir, params$exon_counts_file),
+  transcript_exon_counts = file.path(project_dir, params$transcript_exon_counts_file),
+  metadata = file.path(project_dir, params$metadata_file),
+  placement = file.path(project_dir, params$placement_file),
+  rrna = file.path(project_dir, params$rrna_file)
+)
+if (!all(file.exists(input_paths))) {
+  stop("Missing input(s): ", paste(input_paths[!file.exists(input_paths)], collapse = ", "))
+}
+
+mode_colors <- c(
+  "Exon only" = "#4C78A8",
+  "Transcript + exon" = "#B85C38"
+)
+membership_colors <- c(
+  "Exon only" = "#4C78A8",
+  "Shared" = "#6B7280",
+  "Transcript + exon only" = "#B85C38"
+)
+
+theme_report <- function(base_size = 15) {
+  ggplot2::theme_classic(base_size = base_size) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = base_size + 3),
+      plot.subtitle = ggplot2::element_text(size = base_size),
+      strip.text = ggplot2::element_text(face = "bold", size = base_size),
+      axis.text = ggplot2::element_text(size = base_size - 1),
+      axis.title = ggplot2::element_text(face = "bold", size = base_size),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(face = "bold")
+    )
+}
+
+save_png_svg <- function(plot, stem, width, height) {
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(stem, ".png")), plot,
+    width = width, height = height, dpi = 300, limitsize = FALSE
+  )
+  if (requireNamespace("svglite", quietly = TRUE)) {
+    ggplot2::ggsave(
+      file.path(out_dir, paste0(stem, ".svg")), plot,
+      width = width, height = height, limitsize = FALSE
+    )
+  }
+}
+```
+
+## Step 1: prepare matched matrices
+
+```{r prepare-inputs}
+read_count_matrix <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  if (!"gene_id" %in% names(tab)) stop("Count matrix lacks gene_id: ", path)
+  if (anyDuplicated(tab$gene_id)) stop("Duplicated gene IDs in: ", path)
+  mat <- as.matrix(tab[, setdiff(names(tab), "gene_id"), drop = FALSE])
+  storage.mode(mat) <- "integer"
+  rownames(mat) <- as.character(tab$gene_id)
+  mat
+}
+
+raw_counts <- list(
+  "Exon only" = read_count_matrix(input_paths[["exon_counts"]]),
+  "Transcript + exon" = read_count_matrix(input_paths[["transcript_exon_counts"]])
+)
+
+metadata <- read.delim(input_paths[["metadata"]], check.names = FALSE)
+metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)), drop = FALSE]
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+metadata$group <- factor(
+  paste0("diet", metadata$Diet, "_", tolower(as.character(metadata$Treatment))),
+  levels = c(
+    "diet33_control", "diet50_control", "diet83_control",
+    "diet33_infected", "diet50_infected", "diet83_infected"
+  )
+)
+
+sample_ids <- metadata$label
+if (!all(vapply(raw_counts, function(x) setequal(colnames(x), sample_ids), logical(1)))) {
+  stop("Count matrices and metadata do not contain the same sample IDs.")
+}
+raw_counts <- lapply(raw_counts, function(x) x[, sample_ids, drop = FALSE])
+rownames(metadata) <- metadata$label
+
+rrna_ids <- trimws(readLines(input_paths[["rrna"]], warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+placement <- read.delim(input_paths[["placement"]], check.names = FALSE) |>
+  dplyr::distinct(.data$gene_id, .keep_all = TRUE)
+nuclear_ids <- unique(placement$gene_id[placement$sequence_class == "Nuclear chromosome"])
+
+rrna_filtered_counts <- lapply(raw_counts, function(x) {
+  x[!rownames(x) %in% rrna_ids, , drop = FALSE]
+})
+nuclear_counts <- lapply(rrna_filtered_counts, function(x) {
+  x[rownames(x) %in% nuclear_ids, , drop = FALSE]
+})
+
+input_audit <- dplyr::bind_rows(lapply(names(raw_counts), function(mode) {
+  raw <- raw_counts[[mode]]
+  no_rrna <- rrna_filtered_counts[[mode]]
+  nuclear <- nuclear_counts[[mode]]
+  keep <- rowSums(nuclear >= params$min_count) >= params$min_samples
+  tibble::tibble(
+    counting_mode = mode,
+    samples = ncol(raw),
+    input_gene_rows = nrow(raw),
+    listed_rRNA_rows_removed = sum(rownames(raw) %in% rrna_ids),
+    genes_after_rRNA_removal = nrow(no_rrna),
+    nuclear_chromosome_genes = nrow(nuclear),
+    rRNA_rows_remaining = sum(rownames(nuclear) %in% rrna_ids),
+    median_assigned_counts_per_sample = median(colSums(nuclear)),
+    genes_entering_DESeq2 = sum(keep)
+  )
+}))
+
+write.csv(input_audit, file.path(out_dir, "count_definition_input_audit.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  input_audit,
+  rownames = FALSE,
+  options = list(pageLength = 5, scrollX = TRUE),
+  caption = "Matched count-definition and rRNA audit"
+)
+```
+
+Both matrices must report zero in `rRNA_rows_remaining`. This is a direct check
+against `gregaria_rrna_list`, rather than an inference from the featureCounts
+labels.
+
+```{r input-summary-figure, fig.width=13, fig.height=5.5}
+p_reads <- input_audit |>
+  dplyr::mutate(
+    counting_mode = factor(.data$counting_mode, levels = names(mode_colors)),
+    median_millions = .data$median_assigned_counts_per_sample / 1e6
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = .data$counting_mode, y = .data$median_millions,
+    fill = .data$counting_mode
+  )) +
+  ggplot2::geom_col(width = 0.62, color = "#111827") +
+  ggplot2::geom_text(
+    ggplot2::aes(label = sprintf("%.2f M", .data$median_millions)),
+    vjust = -0.35, size = 5.2, fontface = "bold"
+  ) +
+  ggplot2::scale_fill_manual(values = mode_colors, guide = "none") +
+  ggplot2::scale_y_continuous(
+    expand = ggplot2::expansion(mult = c(0, 0.14))
+  ) +
+  ggplot2::labs(
+    title = "A. Assigned nuclear-chromosome counts",
+    subtitle = "Median per sample after rRNA removal",
+    x = NULL, y = "Assigned counts (millions)"
+  ) +
+  theme_report()
+
+p_tested <- input_audit |>
+  dplyr::mutate(counting_mode = factor(.data$counting_mode,
+                                        levels = names(mode_colors))) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = .data$counting_mode, y = .data$genes_entering_DESeq2,
+    fill = .data$counting_mode
+  )) +
+  ggplot2::geom_col(width = 0.62, color = "#111827") +
+  ggplot2::geom_text(
+    ggplot2::aes(label = scales::comma(.data$genes_entering_DESeq2)),
+    vjust = -0.35, size = 5.2, fontface = "bold"
+  ) +
+  ggplot2::scale_fill_manual(values = mode_colors, guide = "none") +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.14))
+  ) +
+  ggplot2::labs(
+    title = "B. Genes entering DESeq2",
+    subtitle = paste0("Count >= ", params$min_count, " in >= ",
+                      params$min_samples, " samples"),
+    x = NULL, y = "Genes"
+  ) +
+  theme_report()
+
+p_input_summary <- p_reads | p_tested
+save_png_svg(p_input_summary, "count_definition_input_summary", 13, 5.5)
+p_input_summary
+```
+
+## Step 2: run identical DESeq2 contrasts
+
+```{r deseq2-comparison}
+pair_contrast <- function(id, family, numerator, denominator,
+                          numerator_label, denominator_label) {
+  list(
+    id = id,
+    family = family,
+    numerator = numerator_label,
+    denominator = denominator_label,
+    weights = stats::setNames(c(1, -1), c(numerator, denominator))
+  )
+}
+
+contrast_definitions <- list(
+  pair_contrast("infection_diet33", "Infection within diet", "diet33_infected", "diet33_control", "Infected diet 33", "Control diet 33"),
+  pair_contrast("infection_diet50", "Infection within diet", "diet50_infected", "diet50_control", "Infected diet 50", "Control diet 50"),
+  pair_contrast("infection_diet83", "Infection within diet", "diet83_infected", "diet83_control", "Infected diet 83", "Control diet 83"),
+  pair_contrast("control_diet33_vs50", "Diet among controls", "diet33_control", "diet50_control", "Control diet 33", "Control diet 50"),
+  pair_contrast("control_diet83_vs50", "Diet among controls", "diet83_control", "diet50_control", "Control diet 83", "Control diet 50"),
+  pair_contrast("control_diet83_vs33", "Diet among controls", "diet83_control", "diet33_control", "Control diet 83", "Control diet 33"),
+  pair_contrast("infected_diet33_vs50", "Diet among infected", "diet33_infected", "diet50_infected", "Infected diet 33", "Infected diet 50"),
+  pair_contrast("infected_diet83_vs50", "Diet among infected", "diet83_infected", "diet50_infected", "Infected diet 83", "Infected diet 50"),
+  pair_contrast("infected_diet83_vs33", "Diet among infected", "diet83_infected", "diet33_infected", "Infected diet 83", "Infected diet 33"),
+  list(
+    id = "infection_average_all_diets",
+    family = "Average infection response",
+    numerator = "Average infected",
+    denominator = "Average control",
+    weights = c(
+      diet33_infected = 1 / 3, diet50_infected = 1 / 3,
+      diet83_infected = 1 / 3, diet33_control = -1 / 3,
+      diet50_control = -1 / 3, diet83_control = -1 / 3
+    )
+  ),
+  list(
+    id = "interaction_diet33_vs50",
+    family = "Diet by infection interaction",
+    numerator = "Infection response diet 33",
+    denominator = "Infection response diet 50",
+    weights = c(
+      diet33_infected = 1, diet33_control = -1,
+      diet50_infected = -1, diet50_control = 1
+    )
+  ),
+  list(
+    id = "interaction_diet83_vs50",
+    family = "Diet by infection interaction",
+    numerator = "Infection response diet 83",
+    denominator = "Infection response diet 50",
+    weights = c(
+      diet83_infected = 1, diet83_control = -1,
+      diet50_infected = -1, diet50_control = 1
+    )
+  ),
+  list(
+    id = "interaction_diet83_vs33",
+    family = "Diet by infection interaction",
+    numerator = "Infection response diet 83",
+    denominator = "Infection response diet 33",
+    weights = c(
+      diet83_infected = 1, diet83_control = -1,
+      diet33_infected = -1, diet33_control = 1
+    )
+  )
+)
+
+fit_count_mode <- function(counts, counting_mode) {
+  keep <- rowSums(counts >= params$min_count) >= params$min_samples
+  analysis_counts <- counts[keep, , drop = FALSE]
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = analysis_counts,
+    colData = as.data.frame(metadata[sample_ids, , drop = FALSE]),
+    design = ~ 0 + group
+  )
+  dds <- DESeq2::DESeq(
+    dds, minReplicatesForReplace = Inf, quiet = TRUE
+  )
+  coefficient_names <- DESeq2::resultsNames(dds)
+
+  results <- dplyr::bind_rows(lapply(contrast_definitions, function(definition) {
+    contrast_vector <- stats::setNames(
+      rep(0, length(coefficient_names)), coefficient_names
+    )
+    requested <- paste0("group", names(definition$weights))
+    if (!all(requested %in% coefficient_names)) {
+      stop("Missing coefficient(s) for ", definition$id)
+    }
+    contrast_vector[requested] <- unname(definition$weights)
+    as.data.frame(DESeq2::results(
+      dds,
+      contrast = contrast_vector,
+      alpha = params$alpha,
+      cooksCutoff = FALSE
+    )) |>
+      tibble::rownames_to_column("gene_id") |>
+      tibble::as_tibble() |>
+      dplyr::mutate(
+        counting_mode = counting_mode,
+        contrast_id = definition$id,
+        contrast_family = definition$family,
+        numerator = definition$numerator,
+        denominator = definition$denominator,
+        significant = !is.na(.data$padj) &
+          .data$padj < params$alpha &
+          abs(.data$log2FoldChange) >= params$lfc_threshold,
+        direction = dplyr::case_when(
+          !.data$significant ~ "Not significant",
+          .data$log2FoldChange > 0 ~ "Higher in numerator",
+          TRUE ~ "Higher in denominator"
+        )
+      )
+  }))
+  list(dds = dds, results = results)
+}
+
+mode_fits <- lapply(names(nuclear_counts), function(mode) {
+  fit_count_mode(nuclear_counts[[mode]], mode)
+})
+names(mode_fits) <- names(nuclear_counts)
+all_results <- dplyr::bind_rows(lapply(mode_fits, `[[`, "results"))
+
+deg_counts <- all_results |>
+  dplyr::filter(.data$significant) |>
+  dplyr::count(
+    .data$counting_mode, .data$contrast_family, .data$contrast_id,
+    .data$direction, name = "n_DEGs"
+  ) |>
+  tidyr::complete(
+    counting_mode = names(mode_colors),
+    tidyr::nesting(contrast_family, contrast_id),
+    direction = c("Higher in numerator", "Higher in denominator"),
+    fill = list(n_DEGs = 0)
+  ) |>
+  dplyr::group_by(.data$counting_mode, .data$contrast_family, .data$contrast_id) |>
+  dplyr::mutate(total_DEGs = sum(.data$n_DEGs)) |>
+  dplyr::ungroup()
+
+write.csv(all_results, file.path(out_dir, "count_definition_all_deseq2_results.csv"),
+          row.names = FALSE)
+write.csv(deg_counts, file.path(out_dir, "count_definition_deg_counts.csv"),
+          row.names = FALSE)
+```
+
+## Step 3: compare DEG numbers
+
+```{r deg-count-figure, fig.width=18, fig.height=10}
+contrast_labels <- c(
+  infection_diet33 = "Diet 33: infected vs control",
+  infection_diet50 = "Diet 50: infected vs control",
+  infection_diet83 = "Diet 83: infected vs control",
+  control_diet33_vs50 = "Controls: diet 33 vs 50",
+  control_diet83_vs50 = "Controls: diet 83 vs 50",
+  control_diet83_vs33 = "Controls: diet 83 vs 33",
+  infected_diet33_vs50 = "Infected: diet 33 vs 50",
+  infected_diet83_vs50 = "Infected: diet 83 vs 50",
+  infected_diet83_vs33 = "Infected: diet 83 vs 33",
+  infection_average_all_diets = "Average infected vs control",
+  interaction_diet33_vs50 = "Interaction: diet 33 vs 50",
+  interaction_diet83_vs50 = "Interaction: diet 83 vs 50",
+  interaction_diet83_vs33 = "Interaction: diet 83 vs 33"
+)
+
+deg_totals <- deg_counts |>
+  dplyr::distinct(
+    .data$counting_mode, .data$contrast_family,
+    .data$contrast_id, .data$total_DEGs
+  ) |>
+  dplyr::mutate(
+    counting_mode = factor(.data$counting_mode, levels = names(mode_colors)),
+    contrast_label = factor(
+      unname(contrast_labels[.data$contrast_id]),
+      levels = rev(unname(contrast_labels))
+    )
+  )
+
+p_deg_counts <- ggplot2::ggplot(
+  deg_totals,
+  ggplot2::aes(
+    x = .data$total_DEGs, y = .data$contrast_label,
+    fill = .data$counting_mode
+  )
+) +
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge(width = 0.76),
+    width = 0.68, color = "#111827", linewidth = 0.25
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = scales::comma(.data$total_DEGs)),
+    position = ggplot2::position_dodge(width = 0.76),
+    hjust = -0.12, size = 4.5, fontface = "bold"
+  ) +
+  ggplot2::scale_fill_manual(values = mode_colors) +
+  ggplot2::scale_x_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.16))
+  ) +
+  ggplot2::labs(
+    title = "DEG totals under exon-only and transcript-plus-exon counting",
+    subtitle = paste0(
+      "All 44 samples; nuclear chromosomes; rRNA removed; padj < ",
+      params$alpha, "; |log2FC| >= ", params$lfc_threshold
+    ),
+    x = "Significant genes", y = NULL, fill = "Counting mode"
+  ) +
+  theme_report(16) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(face = "bold", size = 14)
+  )
+
+save_png_svg(p_deg_counts, "count_definition_deg_totals", 18, 10)
+p_deg_counts
+```
+
+```{r deg-overlap}
+significant_long <- all_results |>
+  dplyr::filter(.data$significant) |>
+  dplyr::distinct(.data$counting_mode, .data$contrast_id, .data$gene_id)
+
+overlap_membership <- dplyr::bind_rows(lapply(names(contrast_labels), function(id) {
+  exon_ids <- significant_long$gene_id[
+    significant_long$contrast_id == id &
+      significant_long$counting_mode == "Exon only"
+  ]
+  transcript_ids <- significant_long$gene_id[
+    significant_long$contrast_id == id &
+      significant_long$counting_mode == "Transcript + exon"
+  ]
+  union_ids <- union(exon_ids, transcript_ids)
+  tibble::tibble(
+    contrast_id = id,
+    gene_id = union_ids,
+    exon_only_DEG = union_ids %in% exon_ids,
+    transcript_exon_DEG = union_ids %in% transcript_ids,
+    membership = dplyr::case_when(
+      exon_only_DEG & transcript_exon_DEG ~ "Shared",
+      exon_only_DEG ~ "Exon only",
+      TRUE ~ "Transcript + exon only"
+    )
+  )
+}))
+
+overlap_summary <- overlap_membership |>
+  dplyr::count(.data$contrast_id, .data$membership, name = "n_genes") |>
+  tidyr::complete(
+    contrast_id = names(contrast_labels),
+    membership = names(membership_colors),
+    fill = list(n_genes = 0)
+  ) |>
+  dplyr::mutate(
+    membership = factor(.data$membership, levels = names(membership_colors)),
+    contrast_label = factor(
+      unname(contrast_labels[.data$contrast_id]),
+      levels = rev(unname(contrast_labels))
+    )
+  )
+
+write.csv(overlap_membership,
+          file.path(out_dir, "count_definition_deg_membership.csv"),
+          row.names = FALSE)
+write.csv(overlap_summary,
+          file.path(out_dir, "count_definition_deg_overlap_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r deg-overlap-figure, fig.width=18, fig.height=8.5}
+p_overlap <- ggplot2::ggplot(
+  overlap_summary,
+  ggplot2::aes(
+    x = .data$n_genes, y = .data$contrast_label,
+    fill = .data$membership
+  )
+) +
+  ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.2) +
+  ggplot2::scale_fill_manual(values = membership_colors) +
+  ggplot2::scale_x_continuous(labels = scales::label_comma()) +
+  ggplot2::labs(
+    title = "How counting mode changes DEG membership",
+    subtitle = "Shared and mode-specific calls are reported independently for each contrast",
+    x = "Genes in the union of both DEG sets", y = NULL,
+    fill = "DEG membership"
+  ) +
+  theme_report(16) +
+  ggplot2::theme(axis.text.y = ggplot2::element_text(face = "bold", size = 14))
+
+save_png_svg(p_overlap, "count_definition_deg_membership", 18, 8.5)
+p_overlap
+```
+
+## Results table
+
+```{r searchable-results-table}
+comparison_table <- deg_totals |>
+  dplyr::select(
+    .data$contrast_family, .data$contrast_id,
+    contrast = .data$contrast_label,
+    .data$counting_mode, .data$total_DEGs
+  ) |>
+  tidyr::pivot_wider(
+    names_from = .data$counting_mode,
+    values_from = .data$total_DEGs
+  ) |>
+  dplyr::rename(
+    exon_only_DEGs = `Exon only`,
+    transcript_exon_DEGs = `Transcript + exon`
+  ) |>
+  dplyr::left_join(
+    overlap_summary |>
+      dplyr::mutate(membership = as.character(.data$membership)) |>
+      tidyr::pivot_wider(
+        id_cols = .data$contrast_id,
+        names_from = .data$membership,
+        values_from = .data$n_genes,
+        values_fill = 0
+      ) |>
+      dplyr::rename(
+        exon_only_unique = `Exon only`,
+        shared_DEGs = Shared,
+        transcript_exon_unique = `Transcript + exon only`
+      ),
+    by = "contrast_id"
+  ) |>
+  dplyr::arrange(.data$contrast_family, .data$contrast_id)
+
+write.csv(comparison_table,
+          file.path(out_dir, "count_definition_contrast_comparison.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  comparison_table,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = "DEG totals and overlap by counting mode"
+)
+```
+
+## Interpretation
+
+The difference between modes should be described as a **count-definition
+sensitivity**, not solely as a pre-mRNA effect. Transcript-plus-exon counting
+captures substantially more signal and allows more genes to pass the expression
+filter. The overlap plot then distinguishes genes supported by both definitions
+from genes whose statistical call depends on including transcript-span signal.
+
+The rRNA audit above applies before DESeq2 in both branches. A non-zero
+`rRNA_rows_remaining` value would stop the biological interpretation and require
+the exclusion list or count-matrix provenance to be corrected.
+
+## Reproducibility
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()), file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

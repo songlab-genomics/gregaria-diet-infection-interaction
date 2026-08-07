@@ -88,7 +88,66 @@ if (length(missing) > 0) {
 library(ggplot2)
 library(patchwork)
 
-project_dir <- normalizePath(".", mustWork = TRUE)
+figure3_path_ancestors <- function(path) {
+  path <- normalizePath(path, mustWork = FALSE)
+  ancestors <- path
+  repeat {
+    parent <- dirname(path)
+    if (identical(parent, path)) break
+    ancestors <- c(ancestors, parent)
+    path <- parent
+  }
+  ancestors
+}
+
+is_figure3_project <- function(path) {
+  file.exists(file.path(path, "analysis", "26-circled-cluster-enrichment.Rmd")) &&
+    dir.exists(file.path(path, "data")) &&
+    dir.exists(file.path(path, "output"))
+}
+
+find_figure3_project <- function() {
+  starts <- character()
+
+  explicit_root <- Sys.getenv("GREGARIA_DIET_PROJECT_DIR", unset = "")
+  if (nzchar(explicit_root)) starts <- c(starts, explicit_root)
+
+  input_file <- tryCatch(knitr::current_input(dir = TRUE),
+                         error = function(e) "")
+  if (length(input_file) == 1 && nzchar(input_file)) {
+    starts <- c(starts, dirname(input_file))
+  }
+
+  if (requireNamespace("rstudioapi", quietly = TRUE) &&
+      rstudioapi::isAvailable()) {
+    active_file <- tryCatch(
+      rstudioapi::getSourceEditorContext()$path,
+      error = function(e) ""
+    )
+    if (length(active_file) == 1 && nzchar(active_file)) {
+      starts <- c(starts, dirname(active_file))
+    }
+  }
+
+  starts <- unique(c(starts, getwd()))
+  candidates <- unique(unlist(
+    lapply(starts, figure3_path_ancestors),
+    use.names = FALSE
+  ))
+  matches <- candidates[vapply(candidates, is_figure3_project, logical(1))]
+
+  if (length(matches) == 0) {
+    stop(
+      "Could not locate gregaria-diet-infection-interaction. ",
+      "Open this Rmd from that project, set the working directory to the ",
+      "repository root, or set GREGARIA_DIET_PROJECT_DIR explicitly."
+    )
+  }
+
+  normalizePath(matches[1], mustWork = TRUE)
+}
+
+project_dir <- find_figure3_project()
 run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
 out_dir <- file.path(project_dir, "output", "rmd_runs",
                      paste(params$output_tag, run_stamp, sep = "_"))
