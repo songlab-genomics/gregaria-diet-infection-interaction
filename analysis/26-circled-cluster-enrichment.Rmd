@@ -3769,8 +3769,8 @@ figure3_fungal_percentage_plot <- ggplot2::ggplot(
   ) +
   ggplot2::scale_y_continuous(
     limits = c(0, figure3_percentage_limit),
-    breaks = seq(0, figure3_percentage_limit, by = 0.025),
-    labels = scales::label_number(suffix = "%", accuracy = 0.025),
+    breaks = seq(0, figure3_percentage_limit, by = 0.02),
+    labels = scales::label_number(suffix = "%", accuracy = 0.01),
     expand = c(0, 0)
   ) +
   ggplot2::labs(
@@ -3791,8 +3791,8 @@ figure3_fungal_percentage_plot <- ggplot2::ggplot(
   ggplot2::theme(
     axis.text.x = ggplot2::element_blank(),
     axis.ticks.x = ggplot2::element_blank(),
-    axis.text.y = ggplot2::element_text(size = 14),
-    axis.title.y = ggplot2::element_text(size = 17),
+    axis.text.y = ggplot2::element_text(size = 18),
+    axis.title.y = ggplot2::element_text(face = "bold", size = 27),
     plot.title = ggplot2::element_text(face = "bold", size = 21),
     plot.subtitle = ggplot2::element_text(size = 14),
     plot.margin = ggplot2::margin(5, 4, 0, 4)
@@ -3855,16 +3855,16 @@ figure3_panel_a <- ggplot2::ggplot(
     strip.background.y = ggplot2::element_rect(fill = "#F3F4F6",
                                                color = "#111827"),
     strip.text.y.left = ggplot2::element_text(angle = 90, face = "bold",
-                                              size = 18),
+                                              size = 30),
     panel.spacing.y = grid::unit(0.25, "lines"),
     legend.position = "bottom",
-    legend.box = "horizontal",
+    legend.box = "vertical",
     legend.direction = "horizontal",
     legend.box.just = "center",
-    legend.title = ggplot2::element_text(face = "bold", size = 17),
-    legend.text = ggplot2::element_text(size = 15),
-    legend.spacing.x = grid::unit(0.55, "cm"),
-    legend.margin = ggplot2::margin(4, 4, 2, 4),
+    legend.title = ggplot2::element_text(face = "bold", size = 30),
+    legend.text = ggplot2::element_text(size = 30),
+    legend.spacing.x = grid::unit(0.9, "cm"),
+    legend.margin = ggplot2::margin(6, 6, 4, 6),
     plot.margin = ggplot2::margin(0, 4, 1, 4)
   ) +
   ggplot2::guides(
@@ -3873,15 +3873,15 @@ figure3_panel_a <- ggplot2::ggplot(
       title.position = "left",
       title.hjust = 0.5,
       direction = "horizontal",
-      barheight = grid::unit(0.38, "cm"),
-      barwidth = grid::unit(4.2, "cm")
+      barheight = grid::unit(0.58, "cm"),
+      barwidth = grid::unit(9, "cm")
     ),
     color = ggplot2::guide_legend(
       order = 2,
       title.position = "left",
       nrow = 1,
       byrow = TRUE,
-      override.aes = list(linewidth = 4.2)
+      override.aes = list(linewidth = 6)
     )
   )
 
@@ -4046,13 +4046,30 @@ figure3_panel_b <- ggplot2::ggplot(
                                                linewidth = 0.45),
     strip.background = ggplot2::element_rect(fill = "#F3F4F6",
                                              color = "#111827"),
-    strip.text = ggplot2::element_text(face = "bold", size = 18),
+    strip.text = ggplot2::element_text(face = "bold", size = 30),
     legend.position = "bottom",
-    legend.title = ggplot2::element_text(face = "bold", size = 17),
-    legend.text = ggplot2::element_text(size = 15),
-    legend.key.height = grid::unit(0.6, "cm"),
-    legend.key.width = grid::unit(0.9, "cm"),
+    legend.box = "vertical",
+    legend.box.just = "center",
+    legend.title = ggplot2::element_text(face = "bold", size = 30),
+    legend.text = ggplot2::element_text(size = 30),
+    legend.key.height = grid::unit(0.9, "cm"),
+    legend.key.width = grid::unit(1.3, "cm"),
+    legend.margin = ggplot2::margin(5, 5, 5, 5),
     plot.title = ggplot2::element_text(face = "bold", size = 19)
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(
+      order = 1,
+      nrow = 1,
+      byrow = TRUE,
+      title.position = "left"
+    ),
+    size = ggplot2::guide_legend(
+      order = 2,
+      nrow = 1,
+      byrow = TRUE,
+      title.position = "left"
+    )
   )
 
 figure3_within_kegg_enrichment <- dplyr::bind_rows(lapply(
@@ -4314,13 +4331,24 @@ build_figure3_kegg_panel <- function(kegg_df, panel_title) {
                                                  linewidth = 0.45),
       strip.background = ggplot2::element_rect(fill = "#F3F4F6",
                                                color = "#111827"),
-      strip.text = ggplot2::element_text(face = "bold", size = 18),
+      strip.text = ggplot2::element_text(face = "bold", size = 30),
       legend.position = "bottom",
-      legend.title = ggplot2::element_text(face = "bold", size = 17),
-      legend.text = ggplot2::element_text(size = 15),
-      legend.key.height = grid::unit(0.6, "cm"),
-      legend.key.width = grid::unit(0.9, "cm"),
+      legend.box = "vertical",
+      legend.box.just = "center",
+      legend.title = ggplot2::element_text(face = "bold", size = 30),
+      legend.text = ggplot2::element_text(size = 30),
+      legend.key.height = grid::unit(0.9, "cm"),
+      legend.key.width = grid::unit(1.3, "cm"),
+      legend.margin = ggplot2::margin(5, 5, 5, 5),
       plot.title = ggplot2::element_text(face = "bold", size = 19)
+    ) +
+    ggplot2::guides(
+      size = ggplot2::guide_legend(
+        order = 1,
+        nrow = 1,
+        byrow = TRUE,
+        title.position = "left"
+      )
     )
 }
 
@@ -4473,7 +4501,7 @@ build_figure3_pathway_illustration <- function(kegg_df, cluster_level,
       x = 0.5, y = 0.96,
       label = cluster_level,
       fontface = "bold",
-      size = 6.5
+      size = 9
     ) +
     ggplot2::coord_cartesian(
       xlim = c(0, 1), ylim = c(0, 1),
@@ -4512,6 +4540,26 @@ figure3_panel_c_illustration <-
     )
   )
 
+# Title-free variants keep the scientific labels and legends while leaving
+# panel lettering and descriptive headings available for external assembly.
+figure3_fungal_percentage_plot_title_free <-
+  figure3_fungal_percentage_plot +
+  ggplot2::labs(title = NULL, subtitle = NULL)
+figure3_panel_b_title_free <- figure3_panel_b + ggplot2::labs(title = NULL)
+figure3_panel_c_eukaryote_title_free <-
+  figure3_panel_c_eukaryote + ggplot2::labs(title = NULL)
+figure3_panel_c_illustration_title_free <-
+  build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 1",
+    "#9A5A14"
+  ) |
+  build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 2",
+    "#2F6F72"
+  )
+
 figure3_panel_a_widths <- c(0.80, 0.20)
 
 figure3_panel_a_heatmap_only_content <-
@@ -4531,6 +4579,16 @@ figure3_panel_a_content <-
 
 figure3_panel_a_composite <-
   (figure3_panel_a_content | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
+
+figure3_panel_a_content_title_free <-
+  figure3_fungal_percentage_plot_title_free /
+  figure3_sample_annotation_plot /
+  figure3_panel_a +
+  patchwork::plot_layout(heights = c(2.4, 1.1, 8.0))
+
+figure3_panel_a_composite_title_free <-
+  (figure3_panel_a_content_title_free | patchwork::plot_spacer()) +
   patchwork::plot_layout(widths = figure3_panel_a_widths)
 
 figure3_k2_composite <-
@@ -4578,6 +4636,18 @@ figure3_k2_composite_eukaryote <-
     )
   )
 
+figure3_k2_composite_eukaryote_lollipop_title_free <-
+  figure3_panel_a_composite_title_free /
+  figure3_panel_b_title_free /
+  figure3_panel_c_eukaryote_title_free +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 4.4))
+
+figure3_k2_composite_eukaryote_title_free <-
+  figure3_panel_a_composite_title_free /
+  figure3_panel_b_title_free /
+  figure3_panel_c_illustration_title_free +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 7.2))
+
 print(figure3_k2_composite_eukaryote)
 print(figure3_k2_composite)
 print(figure3_k2_composite_eukaryote_lollipop)
@@ -4587,13 +4657,19 @@ figure3_export_specs <- list(
     plot = figure3_fungal_percentage_plot, width = 24, height = 4
   ),
   "figure3_panel_A_two_cluster_heatmap" = list(
-    plot = figure3_panel_a_composite, width = 24, height = 15.2
+    plot = figure3_panel_a_composite, width = 24, height = 17
+  ),
+  "figure3_panel_A_two_cluster_heatmap_title_free" = list(
+    plot = figure3_panel_a_composite_title_free, width = 24, height = 16.2
   ),
   "figure3_panel_A_two_cluster_heatmap_without_fungal_track" = list(
     plot = figure3_panel_a_heatmap_only, width = 24, height = 11
   ),
   "figure3_panel_B_two_cluster_GO" = list(
-    plot = figure3_panel_b, width = 24, height = 9.5
+    plot = figure3_panel_b, width = 24, height = 11.2
+  ),
+  "figure3_panel_B_two_cluster_GO_title_free" = list(
+    plot = figure3_panel_b_title_free, width = 24, height = 10.7
   ),
   "figure3_panel_C_two_cluster_KEGG" = list(
     plot = figure3_panel_c_illustration, width = 24, height = 9.5
@@ -4601,29 +4677,45 @@ figure3_export_specs <- list(
   "figure3_panel_C_two_cluster_KEGG_pathway_illustration" = list(
     plot = figure3_panel_c_illustration, width = 24, height = 9.5
   ),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free" = list(
+    plot = figure3_panel_c_illustration_title_free, width = 24, height = 8.7
+  ),
   "figure3_panel_C_two_cluster_KEGG_insect_focused" = list(
     plot = figure3_panel_c, width = 24, height = 4
   ),
   "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive" = list(
     plot = figure3_panel_c_eukaryote, width = 24, height = 6.5
   ),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free" = list(
+    plot = figure3_panel_c_eukaryote_title_free, width = 24, height = 6
+  ),
   "expression_cluster_gene_level_GO_KEGG_lollipop" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
   ),
   "expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused" = list(
     plot = figure3_k2_composite, width = 24, height = 27.3
   ),
   "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
   ),
   "expression_cluster_gene_level_GO_KEGG_pathway_illustration" = list(
-    plot = figure3_k2_composite_eukaryote, width = 24, height = 31.8
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 33.5
+  ),
+  "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free" = list(
+    plot = figure3_k2_composite_eukaryote_lollipop_title_free,
+    width = 24,
+    height = 30.2
+  ),
+  "expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free" = list(
+    plot = figure3_k2_composite_eukaryote_title_free,
+    width = 24,
+    height = 32.3
   ),
   "figure3_with_fungal_percentage_KEGG_lollipop" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
   ),
   "figure3_with_fungal_percentage_KEGG_locust_map" = list(
-    plot = figure3_k2_composite_eukaryote, width = 24, height = 31.8
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 33.5
   )
 )
 

@@ -1810,6 +1810,18 @@ figure3_asset_specs <- tibble::tribble(
   "Composite: eukaryote-inclusive KEGG lollipops",
   tools::file_path_sans_ext(figure3_lollipop_source),
   "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive",
+  "Composite without panel titles: KEGG pathway illustration",
+  file.path(
+    circled_cluster_dir,
+    "expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free"
+  ),
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free",
+  "Composite without panel titles: eukaryote-inclusive KEGG lollipops",
+  file.path(
+    circled_cluster_dir,
+    "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free"
+  ),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free",
   "Composite: insect-focused KEGG lollipops",
   tools::file_path_sans_ext(figure3_insect_source),
   "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused",
@@ -1819,17 +1831,38 @@ figure3_asset_specs <- tibble::tribble(
   "Panel A: fungal percentage and two-cluster heatmap",
   file.path(circled_cluster_dir, "figure3_panel_A_two_cluster_heatmap"),
   "figure3_panel_A_fungal_percentage_two_cluster_heatmap",
+  "Panel A without title: fungal percentage and two-cluster heatmap",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_A_two_cluster_heatmap_title_free"
+  ),
+  "figure3_panel_A_fungal_percentage_two_cluster_heatmap_title_free",
   "Panel B: two-cluster GO enrichment",
   file.path(circled_cluster_dir, "figure3_panel_B_two_cluster_GO"),
   "figure3_panel_B_two_cluster_GO",
+  "Panel B without title: two-cluster GO enrichment",
+  file.path(circled_cluster_dir, "figure3_panel_B_two_cluster_GO_title_free"),
+  "figure3_panel_B_two_cluster_GO_title_free",
   "Panel C: eukaryote-inclusive KEGG pathway illustration",
   file.path(circled_cluster_dir,
             "figure3_panel_C_two_cluster_KEGG_pathway_illustration"),
   "figure3_panel_C_two_cluster_KEGG_pathway_illustration",
+  "Panel C without title: KEGG pathway illustration",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free"
+  ),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free",
   "Panel C alternative: eukaryote-inclusive KEGG lollipops",
   file.path(circled_cluster_dir,
             "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive"),
-  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive"
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive",
+  "Panel C without title: eukaryote-inclusive KEGG lollipops",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free"
+  ),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free"
 )
 
 figure3_exports <- tidyr::crossing(
