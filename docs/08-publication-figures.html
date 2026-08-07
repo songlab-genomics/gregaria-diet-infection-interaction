@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-06" />
+<meta name="date" content="2026-08-07" />
 
 <title>Publication figure exports</title>
 
@@ -368,9 +368,6 @@ div.tocify {
     <li>
       <a href="03-count-qc-exploration.html">Experiment QC</a>
     </li>
-    <li>
-      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
-    </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
       <ul class="dropdown-menu" role="menu">
@@ -591,7 +588,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Publication figure exports</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-06</h4>
+<h4 class="date">2026-08-07</h4>
 
 </div>
 
@@ -599,7 +596,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -610,8 +607,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -620,13 +617,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-06
+<strong>Last updated:</strong> 2026-08-07
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -650,18 +647,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -752,15 +752,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree6ca3fd4444bc09f2fc6b6fb50693bde84925790dtargetblank6ca3fd4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeffab67e755bf2f280e9776cd74c32ea5f26a3277targetblankffab67ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/6ca3fd4444bc09f2fc6b6fb50693bde84925790d" target="_blank">6ca3fd4</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ffab67e755bf2f280e9776cd74c32ea5f26a3277" target="_blank">ffab67e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree6ca3fd4444bc09f2fc6b6fb50693bde84925790dtargetblank6ca3fd4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeffab67e755bf2f280e9776cd74c32ea5f26a3277targetblankffab67ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -770,7 +770,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/6ca3fd4444bc09f2fc6b6fb50693bde84925790d" target="_blank">6ca3fd4</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ffab67e755bf2f280e9776cd74c32ea5f26a3277" target="_blank">ffab67e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -794,11 +794,15 @@ Ignored files:
     Ignored:    output/.DS_Store
     Ignored:    output/rmd_runs/
     Ignored:    output/runs/
+    Ignored:    outputs/.DS_Store
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
 
 Unstaged changes:
+    Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
     Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/_site.yml
     Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-a-1.png
     Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-b-1.png
     Deleted:    analysis/figure/08-publication-figures.Rmd/figure-1-panel-c-1.png
@@ -848,6 +852,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/ffab67e755bf2f280e9776cd74c32ea5f26a3277/docs/08-publication-figures.html" target="_blank">ffab67e</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+update homology
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1903,19 +1924,19 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">main-chromosome DESeq2 scenario table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/main_chromosome_sample_filter_scenario_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_sample_filter_scenario_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">sample-filter scenario counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/main_chromosome_sample_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_sample_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">main-chromosome average infection results</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/main_chromosome_average_infection_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/main_chromosome_average_infection_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
@@ -1933,7 +1954,7 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="even">
 <td align="left">Figure 3 composite source</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-cluster-enrichment_20260806-010350/expression_cluster_gene_level_GO_KEGG_pathway_illustration.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-cluster-enrichment_20260807-144148/expression_cluster_gene_level_GO_KEGG_pathway_illustration.png</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -2064,8 +2085,9 @@ Maeva TECHER
 <h2>Figure 1: fat body transcriptome PCA</h2>
 <p>Figure 1 shows the VST PCA from all expressed, chromosome-assigned,
 rRNA-filtered genes. Pale hulls show the spread of each
-diet-by-treatment group, black crosses mark centroids, and arrows show
-the shift from control to infected samples within each diet.</p>
+diet-by-treatment group. Sample color identifies diet, shape identifies
+treatment, and the hollow centroids are connected within each diet to
+show the control-to-infected shift.</p>
 <pre class="r"><code>counts &lt;- main_chromosome_counts
 count_labels_all &lt;- colnames(counts)
 keep_samples &lt;- count_labels_all %in% metadata$label
@@ -2103,6 +2125,10 @@ pca_scores$Condition &lt;- factor(
 
 pca_centroids &lt;- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
                            pca_scores, mean)
+pca_centroids$centroid_label &lt;- paste(
+  pca_centroids$Diet,
+  pca_centroids$Treatment
+)
 pca_hulls &lt;- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
                                    make_condition_hull))
 centroid_shift &lt;- merge(
@@ -2123,49 +2149,78 @@ p_pca &lt;- ggplot2::ggplot() +
   ) +
   ggplot2::geom_point(
     data = pca_scores,
-    ggplot2::aes(x = PC1, y = PC2, fill = Condition, shape = Treatment),
-    color = &quot;#111827&quot;,
-    size = 3.3,
-    stroke = 0.35,
-    alpha = 0.92
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3.7,
+    stroke = 0.2,
+    alpha = 0.9
   ) +
   ggplot2::geom_segment(
     data = centroid_shift,
     ggplot2::aes(x = PC1_control, y = PC2_control,
                  xend = PC1_infected, yend = PC2_infected,
                  color = Diet),
-    linewidth = 0.9,
-    arrow = grid::arrow(length = grid::unit(0.18, &quot;cm&quot;))
+    linewidth = 1.05,
+    arrow = grid::arrow(length = grid::unit(0.16, &quot;cm&quot;), type = &quot;closed&quot;)
   ) +
   ggplot2::geom_point(
     data = pca_centroids,
-    ggplot2::aes(x = PC1, y = PC2),
-    shape = 4,
-    color = &quot;#111827&quot;,
-    stroke = 1.25,
-    size = 5.2
+    ggplot2::aes(x = PC1, y = PC2, color = Diet),
+    shape = 21,
+    fill = &quot;white&quot;,
+    stroke = 1.2,
+    size = 5.6
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(
+      x = PC1, y = PC2, label = centroid_label,
+      color = Diet
+    ),
+    fill = &quot;white&quot;,
+    label.size = 0.25,
+    label.padding = grid::unit(0.18, &quot;lines&quot;),
+    box.padding = 0.45,
+    point.padding = 0.55,
+    min.segment.length = 0,
+    segment.color = &quot;#4B5563&quot;,
+    segment.size = 0.3,
+    size = 4.1,
+    show.legend = FALSE,
+    seed = 20260807
   ) +
   ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
   ggplot2::scale_color_manual(values = diet_colors, drop = FALSE) +
-  ggplot2::scale_shape_manual(values = c(&quot;Control&quot; = 21, &quot;Infected&quot; = 24)) +
+  ggplot2::scale_shape_manual(values = c(&quot;Control&quot; = 16, &quot;Infected&quot; = 17)) +
   theme_pub(base_size = 12) +
   ggplot2::theme(
     legend.position = &quot;bottom&quot;,
     legend.box = &quot;vertical&quot;,
-    panel.grid.major = ggplot2::element_line(color = &quot;#E5E7EB&quot;,
-                                             linewidth = 0.25)
+    legend.text = ggplot2::element_text(size = 11.5),
+    legend.title = ggplot2::element_text(size = 12, face = &quot;bold&quot;),
+    axis.title = ggplot2::element_text(size = 14),
+    axis.text = ggplot2::element_text(size = 12, color = &quot;#111827&quot;),
+    panel.grid = ggplot2::element_blank()
   ) +
   ggplot2::guides(
-    fill = ggplot2::guide_legend(nrow = 2, title.position = &quot;top&quot;),
-    color = ggplot2::guide_legend(nrow = 1, title.position = &quot;top&quot;),
-    shape = ggplot2::guide_legend(nrow = 1, title.position = &quot;top&quot;)
+    fill = ggplot2::guide_legend(
+      nrow = 2, title.position = &quot;top&quot;, order = 3,
+      override.aes = list(alpha = 0.22, color = NA)
+    ),
+    color = ggplot2::guide_legend(
+      nrow = 1, title.position = &quot;top&quot;, order = 2,
+      override.aes = list(shape = 21, fill = &quot;white&quot;, size = 4.2)
+    ),
+    shape = ggplot2::guide_legend(
+      nrow = 1, title.position = &quot;top&quot;, order = 1,
+      override.aes = list(color = &quot;#111827&quot;, size = 3.8)
+    )
   ) +
   ggplot2::labs(
-    title = &quot;Fat body VST PCA with centroid shifts&quot;,
+    title = &quot;VST PCA with diet-by-treatment centroids&quot;,
     x = paste0(&quot;PC1: &quot;, percent_var[1], &quot;% variance&quot;),
     y = paste0(&quot;PC2: &quot;, percent_var[2], &quot;% variance&quot;),
-    fill = &quot;Diet and treatment&quot;,
-    color = &quot;Centroid shift&quot;,
+    fill = &quot;Condition polygon&quot;,
+    color = &quot;Diet&quot;,
     shape = &quot;Treatment&quot;
   )
 
@@ -3155,97 +3210,97 @@ knitr::kable(figure2_exports, caption = &quot;Figure 2 and standalone overlap ex
 <tr class="odd">
 <td align="left">Figure 2 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_deg_burden_context_phase_venns.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_burden_context_phase_venns.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_deg_burden_context_phase_venns.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_burden_context_phase_venns.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2A DEG burden PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_panel_A_deg_biotype_burden.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_A_deg_biotype_burden.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection DEGs by diet Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_infection_degs_by_diet_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_degs_by_diet_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2B infection DEGs by diet Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_infection_degs_by_diet_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_degs_by_diet_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection-by-diet membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_infection_diet_venn_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_diet_venn_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2C infection-phase Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_infection_phase_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_phase_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2C infection-phase Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_infection_phase_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_infection_phase_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_broad_context_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_broad_context_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative broad-context Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_broad_context_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_broad_context_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_deg_family_overlap_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_family_overlap_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact-contrast UpSet PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_panel_B_exact_contrast_upset.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative exact-contrast UpSet SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_panel_B_exact_contrast_upset.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_panel_B_exact_contrast_upset_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_B_exact_contrast_upset_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Standalone physiology composition PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_panel_C_candidate_physiology_phase_composition.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_panel_C_candidate_physiology_phase_composition.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Standalone candidate category gene table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figure2_deg_family_candidate_theme_gene_table.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figure2_deg_family_candidate_theme_gene_table.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -3615,6 +3670,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/ffab67e755bf2f280e9776cd74c32ea5f26a3277/docs/figure/08-publication-figures.Rmd/figure-4-homology-flags-display-1.png" target="_blank">ffab67e</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/6ca3fd4444bc09f2fc6b6fb50693bde84925790d/docs/figure/08-publication-figures.Rmd/figure-4-homology-flags-display-1.png" target="_blank">6ca3fd4</a>
@@ -4004,31 +4070,31 @@ knitr::kable(figure_s1_exports,
 <tr class="odd">
 <td align="left">Figure S1 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS1_outlier_removal_sensitivity.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_outlier_removal_sensitivity.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S1 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS1_outlier_removal_sensitivity.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_outlier_removal_sensitivity.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S1 sample counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS1_sample_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_sample_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S1 DEG counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS1_deg_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_deg_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S1 retained/lost/gained counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS1_retained_lost_gained_degs.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS1_retained_lost_gained_degs.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -4352,37 +4418,37 @@ knitr::kable(figure_s2_exports,
 <tr class="odd">
 <td align="left">Figure S2 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_deg_chromosome_localization.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_chromosome_localization.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S2 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_deg_chromosome_localization.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_chromosome_localization.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S2 DEG coordinates</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_deg_coordinates_by_context.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_deg_coordinates_by_context.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Chromosome density table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_chromosome_deg_density.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_chromosome_deg_density.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure S2 coordinate class counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_coordinate_class_counts.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_coordinate_class_counts.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure S2 unplaced/missing summary</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457/figureS2_unplaced_or_missing_deg_summary.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413/figureS2_unplaced_or_missing_deg_summary.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -4410,7 +4476,7 @@ knitr::kable(tibble::tibble(file = exports),
              caption = paste(&quot;Files written to&quot;, out_dir))</code></pre>
 <table>
 <caption>Files written to
-/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260806-021457</caption>
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260807-144413</caption>
 <colgroup>
 <col width="100%" />
 </colgroup>

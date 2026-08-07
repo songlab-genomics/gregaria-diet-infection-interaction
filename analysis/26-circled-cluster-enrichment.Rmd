@@ -3468,6 +3468,10 @@ The publication composite uses the two primary expression clusters. Panel A
 aligns the 0-0.1% fungal-alignment zoom, treatment and diet annotations, and the
 complete main-chromosome DEG heatmap by sample. Values above 0.1% are capped
 only for display and retain their full percentage as enlarged white labels.
+The row z-score and DEG-context guides sit in a horizontal legend strip below
+panel A so the heatmap keeps its full width and the right side remains free for
+an external graphical annotation. Panel A uses 80% of the exported canvas;
+the remaining 20% is intentionally blank on the right for later figure assembly.
 Panels B and C use only genes called differentially expressed for infected
 versus control within at least one diet, then test cluster 1 and cluster 2
 separately against the expressed, rRNA-filtered main-chromosome background. The
@@ -3794,23 +3798,31 @@ figure3_panel_a <- ggplot2::ggplot(
     strip.text.y.left = ggplot2::element_text(angle = 90, face = "bold",
                                               size = 18),
     panel.spacing.y = grid::unit(0.25, "lines"),
-    legend.position = "right",
-    legend.box = "vertical",
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    legend.direction = "horizontal",
+    legend.box.just = "center",
     legend.title = ggplot2::element_text(face = "bold", size = 17),
     legend.text = ggplot2::element_text(size = 15),
-    plot.margin = ggplot2::margin(0, 4, 3, 4)
+    legend.spacing.x = grid::unit(0.55, "cm"),
+    legend.margin = ggplot2::margin(4, 4, 2, 4),
+    plot.margin = ggplot2::margin(0, 4, 1, 4)
   ) +
   ggplot2::guides(
     fill = ggplot2::guide_colorbar(
       order = 1,
-      title.position = "top",
-      barheight = grid::unit(3.4, "cm"),
-      barwidth = grid::unit(0.38, "cm")
+      title.position = "left",
+      title.hjust = 0.5,
+      direction = "horizontal",
+      barheight = grid::unit(0.38, "cm"),
+      barwidth = grid::unit(4.2, "cm")
     ),
     color = ggplot2::guide_legend(
       order = 2,
-      title.position = "top",
-      override.aes = list(linewidth = 3.5)
+      title.position = "left",
+      nrow = 1,
+      byrow = TRUE,
+      override.aes = list(linewidth = 4.2)
     )
   )
 
@@ -4441,24 +4453,32 @@ figure3_panel_c_illustration <-
     )
   )
 
-figure3_panel_a_heatmap_only <-
+figure3_panel_a_widths <- c(0.80, 0.20)
+
+figure3_panel_a_heatmap_only_content <-
   figure3_sample_annotation_plot /
   figure3_panel_a +
   patchwork::plot_layout(heights = c(0.95, 6.8))
 
-figure3_panel_a_composite <-
+figure3_panel_a_heatmap_only <-
+  (figure3_panel_a_heatmap_only_content | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
+
+figure3_panel_a_content <-
   figure3_fungal_percentage_plot /
   figure3_sample_annotation_plot /
   figure3_panel_a +
-  patchwork::plot_layout(heights = c(2.4, 1.1, 7.2))
+  patchwork::plot_layout(heights = c(2.4, 1.1, 8.0))
+
+figure3_panel_a_composite <-
+  (figure3_panel_a_content | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
 
 figure3_k2_composite <-
-  figure3_fungal_percentage_plot /
-  figure3_sample_annotation_plot /
-  figure3_panel_a /
+  figure3_panel_a_composite /
   figure3_panel_b /
   figure3_panel_c +
-  patchwork::plot_layout(heights = c(2.4, 1.1, 7.2, 6.5, 3.5)) +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 3.5)) +
   patchwork::plot_annotation(
     title = paste(
       "Main-chromosome DEG expression programs and functional enrichment",
@@ -4470,12 +4490,10 @@ figure3_k2_composite <-
   )
 
 figure3_k2_composite_eukaryote_lollipop <-
-  figure3_fungal_percentage_plot /
-  figure3_sample_annotation_plot /
-  figure3_panel_a /
+  figure3_panel_a_composite /
   figure3_panel_b /
   figure3_panel_c_eukaryote +
-  patchwork::plot_layout(heights = c(2.4, 1.1, 7.2, 6.5, 4.4)) +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 4.4)) +
   patchwork::plot_annotation(
     title = paste(
       "Main-chromosome DEG expression programs and functional enrichment",
@@ -4487,12 +4505,10 @@ figure3_k2_composite_eukaryote_lollipop <-
   )
 
 figure3_k2_composite_eukaryote <-
-  figure3_fungal_percentage_plot /
-  figure3_sample_annotation_plot /
-  figure3_panel_a /
+  figure3_panel_a_composite /
   figure3_panel_b /
   figure3_panel_c_illustration +
-  patchwork::plot_layout(heights = c(2.4, 1.1, 7.2, 6.5, 7.2)) +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 7.2)) +
   patchwork::plot_annotation(
     title = paste(
       "Main-chromosome DEG expression programs and functional enrichment",
@@ -4512,7 +4528,7 @@ figure3_export_specs <- list(
     plot = figure3_fungal_percentage_plot, width = 24, height = 4
   ),
   "figure3_panel_A_two_cluster_heatmap" = list(
-    plot = figure3_panel_a_composite, width = 24, height = 14.5
+    plot = figure3_panel_a_composite, width = 24, height = 15.2
   ),
   "figure3_panel_A_two_cluster_heatmap_without_fungal_track" = list(
     plot = figure3_panel_a_heatmap_only, width = 24, height = 11
@@ -4533,22 +4549,22 @@ figure3_export_specs <- list(
     plot = figure3_panel_c_eukaryote, width = 24, height = 6.5
   ),
   "expression_cluster_gene_level_GO_KEGG_lollipop" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 28.5
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
   ),
   "expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused" = list(
-    plot = figure3_k2_composite, width = 24, height = 26.5
+    plot = figure3_k2_composite, width = 24, height = 27.3
   ),
   "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 28.5
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
   ),
   "expression_cluster_gene_level_GO_KEGG_pathway_illustration" = list(
-    plot = figure3_k2_composite_eukaryote, width = 24, height = 31
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 31.8
   ),
   "figure3_with_fungal_percentage_KEGG_lollipop" = list(
-    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 28.5
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 29.3
   ),
   "figure3_with_fungal_percentage_KEGG_locust_map" = list(
-    plot = figure3_k2_composite_eukaryote, width = 24, height = 31
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 31.8
   )
 )
 

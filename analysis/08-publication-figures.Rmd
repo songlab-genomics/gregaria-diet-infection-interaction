@@ -815,8 +815,8 @@ p_design
 
 Figure 1 shows the VST PCA from all expressed, chromosome-assigned,
 rRNA-filtered genes. Pale hulls show the spread of each diet-by-treatment
-group, black crosses mark centroids, and arrows show the shift from control to
-infected samples within each diet.
+group. Sample color identifies diet, shape identifies treatment, and the hollow
+centroids are connected within each diet to show the control-to-infected shift.
 
 ```{r figure-1-panel-b, fig.width=7.2, fig.height=5.2}
 counts <- main_chromosome_counts
@@ -856,6 +856,10 @@ pca_scores$Condition <- factor(
 
 pca_centroids <- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
                            pca_scores, mean)
+pca_centroids$centroid_label <- paste(
+  pca_centroids$Diet,
+  pca_centroids$Treatment
+)
 pca_hulls <- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
                                    make_condition_hull))
 centroid_shift <- merge(
@@ -876,49 +880,78 @@ p_pca <- ggplot2::ggplot() +
   ) +
   ggplot2::geom_point(
     data = pca_scores,
-    ggplot2::aes(x = PC1, y = PC2, fill = Condition, shape = Treatment),
-    color = "#111827",
-    size = 3.3,
-    stroke = 0.35,
-    alpha = 0.92
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 3.7,
+    stroke = 0.2,
+    alpha = 0.9
   ) +
   ggplot2::geom_segment(
     data = centroid_shift,
     ggplot2::aes(x = PC1_control, y = PC2_control,
                  xend = PC1_infected, yend = PC2_infected,
                  color = Diet),
-    linewidth = 0.9,
-    arrow = grid::arrow(length = grid::unit(0.18, "cm"))
+    linewidth = 1.05,
+    arrow = grid::arrow(length = grid::unit(0.16, "cm"), type = "closed")
   ) +
   ggplot2::geom_point(
     data = pca_centroids,
-    ggplot2::aes(x = PC1, y = PC2),
-    shape = 4,
-    color = "#111827",
-    stroke = 1.25,
-    size = 5.2
+    ggplot2::aes(x = PC1, y = PC2, color = Diet),
+    shape = 21,
+    fill = "white",
+    stroke = 1.2,
+    size = 5.6
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(
+      x = PC1, y = PC2, label = centroid_label,
+      color = Diet
+    ),
+    fill = "white",
+    label.size = 0.25,
+    label.padding = grid::unit(0.18, "lines"),
+    box.padding = 0.45,
+    point.padding = 0.55,
+    min.segment.length = 0,
+    segment.color = "#4B5563",
+    segment.size = 0.3,
+    size = 4.1,
+    show.legend = FALSE,
+    seed = 20260807
   ) +
   ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
   ggplot2::scale_color_manual(values = diet_colors, drop = FALSE) +
-  ggplot2::scale_shape_manual(values = c("Control" = 21, "Infected" = 24)) +
+  ggplot2::scale_shape_manual(values = c("Control" = 16, "Infected" = 17)) +
   theme_pub(base_size = 12) +
   ggplot2::theme(
     legend.position = "bottom",
     legend.box = "vertical",
-    panel.grid.major = ggplot2::element_line(color = "#E5E7EB",
-                                             linewidth = 0.25)
+    legend.text = ggplot2::element_text(size = 11.5),
+    legend.title = ggplot2::element_text(size = 12, face = "bold"),
+    axis.title = ggplot2::element_text(size = 14),
+    axis.text = ggplot2::element_text(size = 12, color = "#111827"),
+    panel.grid = ggplot2::element_blank()
   ) +
   ggplot2::guides(
-    fill = ggplot2::guide_legend(nrow = 2, title.position = "top"),
-    color = ggplot2::guide_legend(nrow = 1, title.position = "top"),
-    shape = ggplot2::guide_legend(nrow = 1, title.position = "top")
+    fill = ggplot2::guide_legend(
+      nrow = 2, title.position = "top", order = 3,
+      override.aes = list(alpha = 0.22, color = NA)
+    ),
+    color = ggplot2::guide_legend(
+      nrow = 1, title.position = "top", order = 2,
+      override.aes = list(shape = 21, fill = "white", size = 4.2)
+    ),
+    shape = ggplot2::guide_legend(
+      nrow = 1, title.position = "top", order = 1,
+      override.aes = list(color = "#111827", size = 3.8)
+    )
   ) +
   ggplot2::labs(
-    title = "Fat body VST PCA with centroid shifts",
+    title = "VST PCA with diet-by-treatment centroids",
     x = paste0("PC1: ", percent_var[1], "% variance"),
     y = paste0("PC2: ", percent_var[2], "% variance"),
-    fill = "Diet and treatment",
-    color = "Centroid shift",
+    fill = "Condition polygon",
+    color = "Diet",
     shape = "Treatment"
   )
 

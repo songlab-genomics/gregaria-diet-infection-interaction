@@ -17,8 +17,6 @@ navbar:
     menu:
       - text: "Experiment QC"
         href: 03-count-qc-exploration.html
-      - text: "Metarhizium read burden"
-        href: 29-metarhizium-read-burden.html
       - text: "All samples + all scaffolds"
         menu:
           - text: "Diet x infection interaction"
