@@ -1,5 +1,40 @@
 # Fat-body host-pathogen dual RNA-seq
 
+## Metadata correction and missing library 1044
+
+The original RNA-seq datasheet contains 45 libraries. Sample `1024` is an
+infected diet-33 library, not diet 83, and sample `1044` is an infected diet-83
+library that was absent from the first 44-library run. The corrected inputs are:
+
+- `../data/metadata/mehreen_metadata_corrected_45.txt` for local R analyses;
+- `config/fatbody_dual_rnaseq_samples_corrected_45.tsv` for the final design;
+- `config/fatbody_dual_rnaseq_sample_1044.tsv` for the one-library HPC add-on.
+
+The add-on run writes to a new run directory and reuses only the immutable
+reference products and STAR indexes from `host_pathogen_dual_20260727_000952`.
+It does not modify the completed 44-library run. If the uploaded delivery still
+contains separate L1/L2 files, merge it first with:
+
+```bash
+export SOURCE_DIR=/path/to/uploaded/mehreen_1044
+sbatch --export=ALL pilot/merge_fatbody_1044_lanes.slurm
+```
+
+After the two protected `mehreen_1044_MERGE_*.fq.gz` files exist in the raw-read
+directory, launch only sample 1044:
+
+```bash
+module purge
+module load mamba
+source activate myENV
+bash pilot/submit_fatbody_1044_addon_hpc.sh
+```
+
+After its transfer bundle is copied locally, combine its count column with the
+frozen 44-sample matrices in a new 45-sample run folder. Then rerun DESeq2 and
+all report pages using the corrected metadata; do not reinterpret the existing
+44-sample pages as corrected results.
+
 This workflow reruns the fat-body libraries from the original FASTQs and maps
 the same freshly trimmed reads in two independent ways:
 

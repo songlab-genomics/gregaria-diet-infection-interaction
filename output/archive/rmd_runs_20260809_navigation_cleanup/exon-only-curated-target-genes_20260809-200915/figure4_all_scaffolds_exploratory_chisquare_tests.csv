@@ -1,0 +1,15 @@
+source_sheet,umbrella,figure_scope,p_value,p_label
+Immune,Cellular Immunity,Diet comparison among infected,,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,0.20373981300934954,N.S.D.
+Immune,Humoral Immunity,Diet comparison among infected,,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,0.48027598620068995,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,1,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,0.15704214789260537,N.S.D.
+Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Diet comparison among infected,1,N.S.D.
+Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Within-diet infection response,0.47147642617869107,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,1,N.S.D.
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,,N.S.D.
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,1,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,0.7244637768111595,N.S.D.

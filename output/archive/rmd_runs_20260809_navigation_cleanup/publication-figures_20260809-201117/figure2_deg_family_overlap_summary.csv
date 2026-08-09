@@ -1,0 +1,15 @@
+"intersection","n_genes"
+"Infection within diets + Infection vs control",1275
+"Infection within diets",805
+"Infection within diets + Diet DEGs in infected",326
+"Infection vs control",269
+"Infection within diets + Diet DEGs in infected + Infection vs control",244
+"Diet DEGs in infected",145
+"Infection within diets + Diet DEGs in controls + Infection vs control",27
+"Infection within diets + Diet DEGs in controls",24
+"Diet DEGs in controls",13
+"Diet DEGs in controls + Diet DEGs in infected",13
+"Infection within diets + Diet DEGs in controls + Diet DEGs in infected + Infection vs control",8
+"Diet DEGs in infected + Infection vs control",5
+"Infection within diets + Diet DEGs in controls + Diet DEGs in infected",5
+"Diet DEGs in controls + Diet DEGs in infected + Infection vs control",2

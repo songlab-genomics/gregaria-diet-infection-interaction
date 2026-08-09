@@ -11,7 +11,7 @@ params:
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
-  all_results_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_deseq2_all_contrasts.csv"
   alpha: 0.05
   lfc_threshold: 1
   top_terms: 8
@@ -91,7 +91,7 @@ results_root <- file.path(project_dir, params$latest_results_root)
 
 primary_results_file <- file.path(project_dir, params$all_results_file)
 all_results <- read.csv(primary_results_file, check.names = FALSE) |>
-  dplyr::filter(mapping_branch == "competitive-host")
+  dplyr::filter(stringr::str_starts(mapping_branch, "competitive-host"))
 if (nrow(all_results) == 0) {
   stop("The all-scaffold result file has no competitive-host rows.")
 }

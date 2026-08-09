@@ -1,0 +1,9 @@
+source_sheet,umbrella,original_targets,main_chromosome_targets,unplaced_targets,retained_percent,main_chromosome_targets_significant_now
+Immune,Cellular Immunity,8,5,3,62.5,4
+Immune,Detoxification,8,5,3,62.5,3
+Immune,Humoral Immunity,11,11,0,100,11
+Immune,Innate Immune Recognition & Signaling,45,43,2,95.55555555555556,37
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,18,10,8,55.55555555555556,9
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,17,11,6,64.70588235294117,9
+Protein-Anabolism,Protein Synthesis & Translation,51,9,42,17.647058823529413,4
+Protein-Anabolism,Storage Hexamerins & Reserves,5,5,0,100,4

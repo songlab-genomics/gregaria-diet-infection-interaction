@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-metadata <- read.delim("data/metadata/mehreen_metadata_fixed.txt",
+metadata <- read.delim("data/metadata/mehreen_metadata_corrected_45.txt",
                        check.names = FALSE)
 metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
                      drop = FALSE]
@@ -17,7 +17,7 @@ metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
 counts_table <- read.delim(
-  "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv",
+  "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv",
   check.names = FALSE
 )
 placement <- read.delim(
@@ -42,15 +42,16 @@ cat('
 <p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
 <h1>Fat body diet-infection RNA-seq analysis</h1>
 <p class="lede">
-This workflowR site retains all 44 fat-body samples and presents two parallel
-views of the same experiment. The all-scaffold branch preserves the complete
-host-reference signal; the placed-chromosome branch provides the conservative
-foreground used for the current publication figures. Outlier-removal analyses
-are archived as sensitivity checks rather than treated as competing results.
+This workflowR site retains all 45 fat-body samples and presents two parallel
+count definitions for the same experiment. Within each, the all-scaffold view
+preserves the complete host-reference signal and the placed-chromosome view
+provides the conservative foreground used for publication. Outlier-removal
+analyses are archived as sensitivity checks rather than treated as competing
+results.
 </p>
 <div class="hero-actions">
-<a href="06-infection-within-diet-deg.html">All-scaffold analysis</a>
-<a href="16-all-samples-infection-within-diet-deg.html">Placed-chromosome analysis</a>
+<a href="04-deseq2-interaction-model.html">Transcript + exon</a>
+<a href="36-exon-only-deseq2-analysis.html">Exon only</a>
 <a href="08-publication-figures.html">Publication figures</a>
 </div>
 </div>
@@ -83,11 +84,11 @@ cat('</div>')
 
 <div class="note-panel">
 <p>
-Start with the shared design, workflow, and QC pages. Then choose one analysis
-scope and keep that scope consistent through DEG testing, overlap, catalogue,
-and enrichment. The placed-chromosome branch is the current primary paper
-analysis; the all-scaffold branch shows how much of the signal depends on loci
-whose assembly placement is unresolved. Both retain every sample.
+Start with the shared design and workflow pages. In each main menu, first choose
+either **Transcript + exon** or **Exon only**, then follow that definition
+consistently through DEG testing, overlap, catalogue, enrichment, and figures.
+Page labels state whether a result uses all scaffolds or placed chromosomes.
+Both count definitions retain every sample and remove annotated rRNA loci.
 </p>
 </div>
 
@@ -111,35 +112,60 @@ whose assembly placement is unresolved. Both retain every sample.
   </a>
 </div>
 
+## Choose The Count Definition
+
+<div class="scope-grid">
+<section class="scope-panel all-scope">
+<span>Primary count definition</span>
+<h3>Transcript + exon</h3>
+<p>Gene counts use featureCounts <code>-t transcript,exon -g gene_id</code>. This is the primary branch used for the current manuscript figures.</p>
+<div class="scope-links">
+<a href="04-deseq2-interaction-model.html">Fat body analysis</a>
+<a href="31-all-scaffolds-deg-overlap-prioritization.html">Interpretation</a>
+<a href="08-publication-figures.html">Figures</a>
+</div>
+</section>
+<section class="scope-panel placed-scope">
+<span>Parallel sensitivity definition</span>
+<h3>Exon only</h3>
+<p>Gene counts use featureCounts <code>-t exon -g gene_id</code>, with the same 45 samples, rRNA exclusion, models, contrasts, and thresholds.</p>
+<div class="scope-links">
+<a href="36-exon-only-deseq2-analysis.html">Fat body analysis</a>
+<a href="40-exon-only-deg-overlap.html">Interpretation</a>
+<a href="46-exon-only-publication-figures.html">Figures</a>
+</div>
+</section>
+</div>
+
 ## Choose The Gene Universe
 
 <div class="scope-grid">
-  <section class="scope-panel all-scope">
-    <span>Complete reference view</span>
-    <h3>All samples + all scaffolds</h3>
-    <p>All 44 samples and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
-    <div class="scope-links">
-      <a href="04-deseq2-interaction-model.html">Interaction model</a>
-      <a href="05-diet-pairwise-deg.html">Diet DEGs</a>
-      <a href="06-infection-within-diet-deg.html">Infection DEGs</a>
-      <a href="31-all-scaffolds-deg-overlap-prioritization.html">Overlap</a>
-      <a href="32-all-scaffolds-deg-catalogue.html">Catalogue</a>
-      <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG</a>
-    </div>
-  </section>
-  <section class="scope-panel placed-scope">
-    <span>Current manuscript view</span>
-    <h3>All samples + placed chromosomes</h3>
-    <p>All 44 samples are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
-    <div class="scope-links">
-      <a href="14-all-samples-deseq2-interaction-model.html">Interaction model</a>
-      <a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
-      <a href="16-all-samples-infection-within-diet-deg.html">Infection DEGs</a>
-      <a href="07-deg-overlap-prioritization.html">Overlap</a>
-      <a href="24-all-deg-catalogue.html">Catalogue</a>
-      <a href="10-go-term-enrichment.html">GO / KEGG</a>
-    </div>
-  </section>
+<section class="scope-panel all-scope">
+<span>Complete reference view</span>
+<h3>All samples + all scaffolds</h3>
+<p>All 45 samples and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
+<div class="scope-links">
+<a href="04-deseq2-interaction-model.html">Interaction model</a>
+<a href="05-diet-pairwise-deg.html">Diet DEGs</a>
+<a href="06-infection-within-diet-deg.html">Infection DEGs</a>
+<a href="31-all-scaffolds-deg-overlap-prioritization.html">Overlap</a>
+<a href="32-all-scaffolds-deg-catalogue.html">Catalogue</a>
+<a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG</a>
+</div>
+</section>
+<section class="scope-panel placed-scope">
+<span>Current manuscript view</span>
+<h3>All samples + placed chromosomes</h3>
+<p>All 45 samples are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
+<div class="scope-links">
+<a href="14-all-samples-deseq2-interaction-model.html">Interaction model</a>
+<a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
+<a href="16-all-samples-infection-within-diet-deg.html">Infection DEGs</a>
+<a href="07-deg-overlap-prioritization.html">Overlap</a>
+<a href="24-all-deg-catalogue.html">Catalogue</a>
+<a href="10-go-term-enrichment.html">GO / KEGG</a>
+</div>
+</section>
 </div>
 
 ## Biological Interpretation

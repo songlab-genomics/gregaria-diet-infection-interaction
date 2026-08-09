@@ -8,9 +8,9 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_full_file: "data/metadata/mehreen_metadata_fixed.txt"
-  metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_full_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1
@@ -38,7 +38,7 @@ Compare PCA, DEG burden, retained calls, and fold changes.
 :::
 
 The main analysis pages currently use the full metadata file
-`mehreen_metadata_fixed.txt`. They do **not** remove the samples listed only in
+`mehreen_metadata_corrected_45.txt`. They do **not** remove the samples listed only in
 the no-outlier metadata file. This page reruns the same within-diet infection
 contrasts with and without those samples so we can see whether the biological
 patterns are robust to outlier removal.

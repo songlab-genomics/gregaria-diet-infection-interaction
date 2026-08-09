@@ -1,0 +1,8 @@
+original_status,current_status,gene_contrast_cells
+Downregulated,Downregulated,32
+Downregulated,N.S.,10
+N.S.,Downregulated,3
+N.S.,N.S.,765
+N.S.,Upregulated,10
+Upregulated,N.S.,9
+Upregulated,Upregulated,170

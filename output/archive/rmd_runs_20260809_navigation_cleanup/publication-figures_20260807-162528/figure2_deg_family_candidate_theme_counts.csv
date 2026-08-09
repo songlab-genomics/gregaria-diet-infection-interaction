@@ -1,0 +1,33 @@
+"DEG_family","physiology_theme","n_genes","total_genes","proportion"
+"Infection within diets","Phase-related changes",102,2594,0.0393215111796453
+"Infection within diets","Antimicrobial peptides",25,2594,0.00963762528912876
+"Infection within diets","Immune-related",74,2594,0.0285273708558211
+"Infection within diets","Glycogen synthesis / storage",2,2594,0.000771010023130301
+"Infection within diets","Lipid synthesis / metabolism",118,2594,0.0454895913646877
+"Infection within diets","Protein synthesis / storage",14,2594,0.0053970701619121
+"Infection within diets","Detoxification / stress",124,2594,0.0478026214340786
+"Infection within diets","Other / unannotated genes",2135,2594,0.823053199691596
+"Diet DEGs in controls","Phase-related changes",9,110,0.0818181818181818
+"Diet DEGs in controls","Antimicrobial peptides",1,110,0.00909090909090909
+"Diet DEGs in controls","Immune-related",2,110,0.0181818181818182
+"Diet DEGs in controls","Glycogen synthesis / storage",0,110,0
+"Diet DEGs in controls","Lipid synthesis / metabolism",10,110,0.0909090909090909
+"Diet DEGs in controls","Protein synthesis / storage",0,110,0
+"Diet DEGs in controls","Detoxification / stress",5,110,0.0454545454545455
+"Diet DEGs in controls","Other / unannotated genes",83,110,0.754545454545455
+"Diet DEGs in infected","Phase-related changes",14,398,0.0351758793969849
+"Diet DEGs in infected","Antimicrobial peptides",1,398,0.00251256281407035
+"Diet DEGs in infected","Immune-related",11,398,0.0276381909547739
+"Diet DEGs in infected","Glycogen synthesis / storage",0,398,0
+"Diet DEGs in infected","Lipid synthesis / metabolism",14,398,0.0351758793969849
+"Diet DEGs in infected","Protein synthesis / storage",2,398,0.0050251256281407
+"Diet DEGs in infected","Detoxification / stress",19,398,0.0477386934673367
+"Diet DEGs in infected","Other / unannotated genes",337,398,0.846733668341708
+"Infection vs control","Phase-related changes",91,1691,0.0538143110585452
+"Infection vs control","Antimicrobial peptides",23,1691,0.0136014192785334
+"Infection vs control","Immune-related",49,1691,0.028976936723832
+"Infection vs control","Glycogen synthesis / storage",1,1691,0.000591366055588409
+"Infection vs control","Lipid synthesis / metabolism",79,1691,0.0467179183914843
+"Infection vs control","Protein synthesis / storage",14,1691,0.00827912477823773
+"Infection vs control","Detoxification / stress",81,1691,0.0479006505026611
+"Infection vs control","Other / unannotated genes",1353,1691,0.800118273211118

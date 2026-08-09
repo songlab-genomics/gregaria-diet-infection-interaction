@@ -8,10 +8,11 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
+  enrichment_results_pattern: "^go-term-enrichment_"
   output_tag: "enrichment-term-gene-index"
 ---
 
@@ -201,7 +202,7 @@ expand_enrichment_genes <- function(tab, enrichment_context) {
 ## Input files
 
 ```{r input-files}
-go_dir <- latest_dir("^go-term-enrichment_")
+go_dir <- latest_dir(params$enrichment_results_pattern)
 
 input_files <- data.frame(
   input = c(

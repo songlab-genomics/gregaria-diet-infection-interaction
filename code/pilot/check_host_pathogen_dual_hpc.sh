@@ -6,6 +6,7 @@ set -euo pipefail
 
 PROJECT_ROOT="${PROJECT_ROOT:-/scratch/mtecher/gregaria-diet-infection-interaction}"
 DUAL_SAMPLE_TABLE="${DUAL_SAMPLE_TABLE:-config/fatbody_dual_rnaseq_samples.tsv}"
+DUAL_REFERENCE_CACHE_DIR="${DUAL_REFERENCE_CACHE_DIR:-}"
 DUAL_INPUT_MODE="${DUAL_INPUT_MODE:-raw}"
 DUAL_RAW_DIR="${DUAL_RAW_DIR:-/data/songlab/sequencing_data/RNAseq/mehreen}"
 DUAL_TRIMMED_DIR="${DUAL_TRIMMED_DIR:-${PROJECT_ROOT}/input/trimmed-fastp}"
@@ -29,6 +30,21 @@ DUAL_BRACKEN_CMD="${DUAL_BRACKEN_CMD:-bracken}"
 if [ ! -s "${DUAL_SAMPLE_TABLE}" ]; then
   echo "ERROR: missing sample table: ${DUAL_SAMPLE_TABLE}" >&2
   exit 2
+fi
+
+if [ -n "${DUAL_REFERENCE_CACHE_DIR}" ]; then
+  for cached_reference in \
+    "${DUAL_REFERENCE_CACHE_DIR}/combined_host_metarhizium.fna" \
+    "${DUAL_REFERENCE_CACHE_DIR}/combined_host_metarhizium.gtf" \
+    "${DUAL_REFERENCE_CACHE_DIR}/host.prefixed.gtf" \
+    "${DUAL_REFERENCE_CACHE_DIR}/metarhizium.prefixed.gtf" \
+    "${DUAL_REFERENCE_CACHE_DIR}/STAR-host-only/Genome" \
+    "${DUAL_REFERENCE_CACHE_DIR}/STAR-competitive/Genome"; do
+    if [ ! -s "${cached_reference}" ]; then
+      echo "ERROR: cached reference product missing: ${cached_reference}" >&2
+      exit 15
+    fi
+  done
 fi
 
 for reference in \
@@ -152,6 +168,7 @@ echo "  Input mode: ${DUAL_INPUT_MODE}"
 echo "  Raw reads: ${DUAL_RAW_DIR}"
 echo "  External trimmed reads (trimmed mode only): ${DUAL_TRIMMED_DIR}"
 echo "  Host reference: ${DUAL_HOST_FASTA}"
+echo "  Reference cache: ${DUAL_REFERENCE_CACHE_DIR:-not used}"
 echo "  Fungal reference: ${DUAL_FUNGUS_FASTA}"
 echo "  Kraken database: ${DUAL_KRAKEN_DB}"
 echo "  Kraken/Bracken environment: ${METATX_CONDA_ENV}"

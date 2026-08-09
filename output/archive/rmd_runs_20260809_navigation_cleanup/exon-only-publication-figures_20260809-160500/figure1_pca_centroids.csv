@@ -1,0 +1,7 @@
+"Diet","Treatment","Condition","PC1","PC2","centroid_label"
+"33","Control","33 Control",-40.1829008430684,6.74520773627903,"33 Control"
+"33","Infected","33 Infected",19.299845378896,-12.2845164800883,"33 Infected"
+"50","Control","50 Control",-37.757141183628,11.4510516527634,"50 Control"
+"50","Infected","50 Infected",30.7512354370208,-13.1672467721606,"50 Infected"
+"83","Control","83 Control",-32.5483282002836,5.29476685644812,"83 Control"
+"83","Infected","83 Infected",44.3169796138475,14.7273756141097,"83 Infected"

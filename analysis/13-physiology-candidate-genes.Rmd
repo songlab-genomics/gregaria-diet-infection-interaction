@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
-  all_results_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_deseq2_all_contrasts.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -20,7 +20,7 @@ params:
 
 ## Purpose
 
-This page tests the biological hypothesis in a targeted way using all 44 samples.
+This page tests the biological hypothesis in a targeted way using all 45 samples.
 Instead of starting
 from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
 genes plausibly involved in insect-relevant immune and fat-body processes. The
@@ -203,7 +203,7 @@ knitr::kable(
 
 ## Current all-sample DEG sources
 
-The all-scaffold and placed-chromosome models use the same 44 samples and the
+The all-scaffold and placed-chromosome models use the same 45 samples and the
 same significance thresholds. Their gene universes differ, so their adjusted
 p-values are estimated independently and should be compared as analysis
 scopes, not added together.
@@ -221,7 +221,7 @@ placed_dir <- latest_dir("^placed-unplaced-scaffold-analysis_")
 placed_results_file <- file.path(placed_dir, "placed_unplaced_all_deseq2_results.csv")
 
 all_scope <- read.csv(all_results_file, check.names = FALSE) |>
-  dplyr::filter(mapping_branch == "competitive-host") |>
+  dplyr::filter(stringr::str_starts(mapping_branch, "competitive-host")) |>
   dplyr::mutate(analysis_scope = "All scaffolds")
 
 placed_scope <- read.csv(placed_results_file, check.names = FALSE) |>
@@ -361,7 +361,7 @@ p_candidate <- ggplot2::ggplot(
   ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.15))) +
   ggplot2::labs(
     title = "Diet-specific infection-response DEGs in four physiology themes",
-    subtitle = "All 44 samples retained; panels differ only in the tested gene universe",
+    subtitle = "All 45 samples retained; panels differ only in the tested gene universe",
     x = "Diet", y = "Number of candidate DEGs", fill = NULL
   ) +
   ggplot2::theme_bw(base_size = 14) +

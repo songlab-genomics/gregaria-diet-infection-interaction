@@ -1,0 +1,13 @@
+"dataset","diet","direction","n_degs","signed_n"
+"Full dataset","33","Higher in control",639,-639
+"Full dataset","33","Higher in infected",564,564
+"Full dataset","50","Higher in control",819,-819
+"Full dataset","50","Higher in infected",991,991
+"Full dataset","83","Higher in control",271,-271
+"Full dataset","83","Higher in infected",460,460
+"Outliers removed","33","Higher in control",446,-446
+"Outliers removed","33","Higher in infected",486,486
+"Outliers removed","50","Higher in control",817,-817
+"Outliers removed","50","Higher in infected",2606,2606
+"Outliers removed","83","Higher in control",271,-271
+"Outliers removed","83","Higher in infected",460,460

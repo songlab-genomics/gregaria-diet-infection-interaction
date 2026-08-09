@@ -1,0 +1,2565 @@
+---
+title: "Exon-only publication figure exports"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  latest_results_root: "output/rmd_runs"
+  primary_results_pattern: "^exon-only-deseq2-analysis_"
+  cluster_results_pattern: "^exon-only-cluster-enrichment_"
+  curated_results_pattern: "^exon-only-curated-target-genes_"
+  min_total_count: 10
+  min_count: 10
+  min_samples: 3
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "exon-only-publication-figures"
+---
+
+<style>
+img {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+
+## Purpose
+
+This page rebuilds the established publication figure set using only genes
+classified as `Nuclear chromosome` by the official assembly-derived placement
+table. All 45 fat body samples are retained, annotated rRNA loci are excluded,
+and expression counts come from the fresh competitive host-pathogen mapping.
+Unplaced-scaffold results remain on the audit page and are not mixed into these
+primary paper figures.
+
+Every knit writes to a new folder under `output/rmd_runs`, so previous figure
+drafts remain available for comparison.
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Verify inputs**
+
+Confirm the count definition, sample set, placement table, and source reports.
+:::
+::: {.walkthrough-step}
+**Step 2 - Assemble panels**
+
+Copy or rebuild each panel from its analysis page without changing the statistics.
+:::
+::: {.walkthrough-step}
+**Step 3 - Export**
+
+Write publication-ready PNG, SVG, PDF, and source-table files together.
+:::
+:::
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+publication_default_params <- list(
+  metadata_file = "data/metadata/mehreen_metadata_corrected_45.txt",
+  counts_file = paste0(
+    "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/",
+    "competitive-host/host_exon_counts.tsv"
+  ),
+  placement_file = paste0(
+    "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
+    "host-mapping-audit_20260729-163928/unified-model/audit-summary/",
+    "host_gene_sequence_placement.tsv"
+  ),
+  rrna_file = "data/excluded_loci/gregaria_rrna_list.txt",
+  gff_file = "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff",
+  eggnog_file = paste0(
+    "data/GO_Annotations/",
+    "GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  ),
+  latest_results_root = "output/rmd_runs",
+  primary_results_pattern = "^exon-only-deseq2-analysis_",
+  cluster_results_pattern = "^exon-only-cluster-enrichment_",
+  curated_results_pattern = "^exon-only-curated-target-genes_",
+  min_total_count = 10,
+  min_count = 10,
+  min_samples = 3,
+  alpha = 0.05,
+  lfc_threshold = 1,
+  output_tag = "exon-only-publication-figures"
+)
+
+# R Markdown supplies params while knitting. These defaults make Run All Chunks
+# behave the same way in an interactive RStudio session.
+if (!exists("params", inherits = TRUE) || !is.list(params)) {
+  publication_params <- publication_default_params
+} else {
+  publication_params <- utils::modifyList(publication_default_params, params)
+}
+
+path_ancestors <- function(path) {
+  path <- normalizePath(path, mustWork = FALSE)
+  ancestors <- path
+  repeat {
+    parent <- dirname(path)
+    if (identical(parent, path)) break
+    ancestors <- c(ancestors, parent)
+    path <- parent
+  }
+  ancestors
+}
+
+is_publication_project <- function(path) {
+  file.exists(file.path(path, "analysis", "08-publication-figures.Rmd")) &&
+    dir.exists(file.path(path, "data")) &&
+    dir.exists(file.path(path, "output"))
+}
+
+find_publication_project <- function() {
+  starts <- character()
+
+  explicit_root <- Sys.getenv("GREGARIA_DIET_PROJECT_DIR", unset = "")
+  if (nzchar(explicit_root)) starts <- c(starts, explicit_root)
+
+  input_file <- tryCatch(knitr::current_input(dir = TRUE),
+                         error = function(e) "")
+  if (length(input_file) == 1 && nzchar(input_file)) {
+    starts <- c(starts, dirname(input_file))
+  }
+
+  if (requireNamespace("rstudioapi", quietly = TRUE) &&
+      rstudioapi::isAvailable()) {
+    active_file <- tryCatch(
+      rstudioapi::getSourceEditorContext()$path,
+      error = function(e) ""
+    )
+    if (length(active_file) == 1 && nzchar(active_file)) {
+      starts <- c(starts, dirname(active_file))
+    }
+  }
+
+  starts <- unique(c(starts, getwd()))
+  candidates <- unique(unlist(lapply(starts, path_ancestors), use.names = FALSE))
+  matches <- candidates[vapply(candidates, is_publication_project, logical(1))]
+
+  if (length(matches) == 0) {
+    stop(
+      "Could not locate gregaria-diet-infection-interaction. ",
+      "Open this Rmd from that project, set the RStudio working directory to ",
+      "the repository root, or set GREGARIA_DIET_PROJECT_DIR explicitly."
+    )
+  }
+
+  normalizePath(matches[1], mustWork = TRUE)
+}
+
+required <- c("DESeq2", "SummarizedExperiment", "dplyr", "tidyr", "tibble", "stringr",
+              "ggplot2", "ggrepel", "patchwork", "scales",
+              "ggVennDiagram", "UpSetR", "ggplotify", "png", "grid")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+library(ggplot2)
+library(patchwork)
+
+project_dir <- find_publication_project()
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(publication_params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root <- file.path(project_dir, publication_params$latest_results_root)
+metadata_file <- file.path(project_dir, publication_params$metadata_file)
+counts_file <- file.path(project_dir, publication_params$counts_file)
+placement_file <- file.path(project_dir, publication_params$placement_file)
+rrna_file <- file.path(project_dir, publication_params$rrna_file)
+gff_file <- file.path(project_dir, publication_params$gff_file)
+eggnog_file <- file.path(project_dir, publication_params$eggnog_file)
+
+diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+treatment_colors <- c("Control" = "#FAEBD7", "Infected" = "#8B0000")
+condition_colors <- c(
+  "33 Control" = "#F7D6A6",
+  "33 Infected" = "#C75C1B",
+  "50 Control" = "#CDE8D5",
+  "50 Infected" = "#1F6F43",
+  "83 Control" = "#D8C7E8",
+  "83 Infected" = "#5B2E83"
+)
+
+direction_biotype_colors <- c(
+  "Upregulated - Coding genes" = "#B91C1C",
+  "Upregulated - Long non-coding RNA" = "#F87171",
+  "Upregulated - Other / unknown" = "#FCA5A5",
+  "Downregulated - Coding genes" = "#1D4ED8",
+  "Downregulated - Long non-coding RNA" = "#60A5FA",
+  "Downregulated - Other / unknown" = "#BFDBFE"
+)
+
+physiology_theme_colors <- c(
+  "Phase-related changes" = "#C51B7D",
+  "Antimicrobial peptides" = "#D7191C",
+  "Immune-related" = "#F58220",
+  "Glycogen synthesis / storage" = "#FFD92F",
+  "Lipid synthesis / metabolism" = "#1B9E77",
+  "Protein synthesis / storage" = "#377EB8",
+  "Detoxification / stress" = "#984EA3",
+  "Other / unannotated genes" = "#BDBDBD"
+)
+
+theme_pub <- function(base_size = 12) {
+  ggplot2::theme_classic(base_size = base_size) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold"),
+      strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#111827"),
+      strip.text = ggplot2::element_text(face = "bold"),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(face = "bold")
+    )
+}
+```
+
+## Helper functions
+
+```{r helper-functions}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+save_png_svg <- function(plot, file_base, width, height, dpi = 300) {
+  png_path <- file.path(out_dir, paste0(file_base, ".png"))
+  svg_path <- file.path(out_dir, paste0(file_base, ".svg"))
+
+  ggplot2::ggsave(png_path, plot, width = width, height = height,
+                  dpi = dpi, limitsize = FALSE)
+
+  grDevices::svg(svg_path, width = width, height = height, onefile = FALSE)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  print(plot)
+
+  invisible(c(png = png_path, svg = svg_path))
+}
+
+parse_gff_gene_annotation <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      Description = stringr::str_match(attributes, "description=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::mutate(
+      Description = dplyr::if_else(
+        is.na(Description) | Description == "",
+        "no GFF description",
+        utils::URLdecode(Description)
+      ),
+      gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+    ) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+parse_gff_gene_coordinates <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+
+  sequence_regions <- gff |>
+    dplyr::filter(type == "region") |>
+    dplyr::transmute(
+      seqid,
+      seq_start = start,
+      seq_end = end,
+      chromosome = stringr::str_match(attributes, "chromosome=([^;]+)")[, 2],
+      region_name = stringr::str_match(attributes, "Name=([^;]+)")[, 2],
+      genome = stringr::str_match(attributes, "genome=([^;]+)")[, 2]
+    ) |>
+    dplyr::mutate(
+      chromosome = dplyr::coalesce(chromosome, region_name, seqid),
+      chromosome = utils::URLdecode(chromosome),
+      chromosome_class = dplyr::if_else(
+        chromosome %in% c(as.character(1:11), "X"),
+        "Named chromosome",
+        "Unplaced scaffold"
+      )
+    ) |>
+    dplyr::distinct(seqid, .keep_all = TRUE)
+
+  gene_ranges <- gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      seqid,
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      start,
+      end,
+      midpoint = (start + end) / 2,
+      strand
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE) |>
+    dplyr::left_join(sequence_regions, by = "seqid")
+
+  list(gene_ranges = gene_ranges, sequence_regions = sequence_regions)
+}
+
+first_nonempty <- function(x, fallback = "") {
+  x <- x[!is.na(x) & x != "" & x != "-"]
+  if (length(x) == 0) fallback else x[1]
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "eggNOG_Description",
+    "eggNOG_name", "GOs", "EC", "KEGG_ko", "KEGG_Pathway",
+    "KEGG_Module", "KEGG_Reaction", "KEGG_rclass", "BRITE",
+    "KEGG_TC", "CAZy", "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+build_gene_annotation <- function(gff_path, eggnog_path) {
+  gff_annotation <- parse_gff_gene_annotation(gff_path)
+
+  eggnog_annotation <- read_emapper(eggnog_path) |>
+    dplyr::left_join(parse_cds_gene_bridge(gff_path), by = "protein_id") |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      eggNOG_Description = first_nonempty(eggNOG_Description),
+      eggNOG_name = first_nonempty(eggNOG_name),
+      GOs = first_nonempty(GOs),
+      KEGG_ko = first_nonempty(KEGG_ko),
+      KEGG_Pathway = first_nonempty(KEGG_Pathway),
+      PFAMs = first_nonempty(PFAMs),
+      .groups = "drop"
+    )
+
+  gff_annotation |>
+    dplyr::full_join(eggnog_annotation, by = "gene_id") |>
+    dplyr::mutate(
+      Description = dplyr::coalesce(Description, "no GFF description"),
+      gene_biotype = dplyr::coalesce(gene_biotype, "unknown"),
+      annotation_text = stringr::str_squish(paste(
+        Description, eggNOG_Description, eggNOG_name, PFAMs,
+        KEGG_Pathway, sep = " | "
+      ))
+    )
+}
+
+classify_physiology_theme <- function(annotation_text) {
+  text <- stringr::str_to_lower(dplyr::coalesce(annotation_text, ""))
+  dplyr::case_when(
+    stringr::str_detect(
+      text,
+      "antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|metchnikowin|thaumatin|termicin|lysozyme"
+    ) ~ "Antimicrobial peptides",
+    stringr::str_detect(
+      text,
+      "toll|imd|relish|myd88|cactus|dorsal|nf-kappa|nf kappa|jak|stat"
+    ) ~ "Immune-related",
+    stringr::str_detect(
+      text,
+      "immune|peptidoglycan|pgrp|gram-negative|gram negative|beta-1,3-glucan|glucan binding|phenoloxidase|prophenoloxidase|melanization|lectin|hemocyanin|complement|serpin"
+    ) ~ "Immune-related",
+    stringr::str_detect(
+      text,
+      "glycogen|glycogenin|branching enzyme|starch"
+    ) ~ "Glycogen synthesis / storage",
+    stringr::str_detect(
+      text,
+      "lipid|fatty acid|fatty-acid|acyl-coa|acyl coa|acetyl-coa carboxylase|elongase|desaturase|glycerolipid|phospholipid|triacylglycerol|diacylglycerol|sterol|lipase"
+    ) ~ "Lipid synthesis / metabolism",
+    stringr::str_detect(
+      text,
+      "protein synthesis|translation|ribosom|elongation factor|initiation factor|aminoacyl|trna synthetase|vitellogenin|hexamerin|arylphorin|storage protein"
+    ) ~ "Protein synthesis / storage",
+    stringr::str_detect(
+      text,
+      "detox|cytochrome p450|\\bcyp[0-9a-z]|glutathione|gst|carboxylesterase|esterase|udp-glucuronosyltransferase|\\bugt\\b|abc transporter|oxidoreductase|peroxidase|catalase|superoxide|heat shock|stress"
+    ) ~ "Detoxification / stress",
+    stringr::str_detect(text, "no gff description|^\\s*$") ~
+      "Other / unannotated genes",
+    TRUE ~ "Other / unannotated genes"
+  )
+}
+
+classify_gene_class <- function(gene_biotype) {
+  dplyr::case_when(
+    gene_biotype == "protein_coding" ~ "Coding genes",
+    gene_biotype == "lncRNA" ~ "Long non-coding RNA",
+    TRUE ~ "Other / unknown"
+  )
+}
+
+make_condition_label <- function(comparison_type, numerator, denominator, diet,
+                                 side = c("numerator", "denominator")) {
+  side <- match.arg(side)
+  value <- if (side == "numerator") numerator else denominator
+
+  dplyr::case_when(
+    comparison_type == "Infection within diet" ~ paste(value, "diet", diet),
+    grepl("control", comparison_type, ignore.case = TRUE) ~
+      paste("Control diet", value),
+    grepl("infected", comparison_type, ignore.case = TRUE) ~
+      paste("Infected diet", value),
+    TRUE ~ value
+  )
+}
+
+make_condition_hull <- function(df) {
+  if (nrow(df) < 3) return(df[0, ])
+  df[chull(df$PC1, df$PC2), ]
+}
+
+copy_publication_asset <- function(source, file_base) {
+  if (!file.exists(source)) return(NA_character_)
+  target <- file.path(out_dir, paste0(file_base, ".", tools::file_ext(source)))
+  file.copy(source, target, overwrite = TRUE)
+  target
+}
+```
+
+## Current main-chromosome figure inputs
+
+Every figure below is regenerated from the same main-chromosome contract. The
+input table records the exact count matrix, official placement source, and
+current DESeq2 or cluster output used for each export.
+
+### Input data
+
+```{r input-data}
+placed_dir <- latest_dir(publication_params$primary_results_pattern)
+primary_results_file <- file.path(
+  placed_dir,
+  "placed_unplaced_all_deseq2_results.csv"
+)
+head_phase_file <- file.path(
+  project_dir,
+  "data/external/phase_reference/gregaria_head_phase_degs.csv"
+)
+thorax_phase_file <- file.path(
+  project_dir,
+  "data/external/phase_reference/gregaria_thorax_phase_degs.csv"
+)
+circled_cluster_dir <- latest_dir(publication_params$cluster_results_pattern)
+figure3_composite_source <- file.path(
+  circled_cluster_dir,
+  "expression_cluster_gene_level_GO_KEGG_pathway_illustration.png"
+)
+figure3_lollipop_source <- file.path(
+  circled_cluster_dir,
+  "expression_cluster_gene_level_GO_KEGG_lollipop.png"
+)
+figure3_insect_source <- file.path(
+  circled_cluster_dir,
+  "expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.png"
+)
+figure3_reference_source <- file.path(
+  circled_cluster_dir,
+  "expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png"
+)
+curated_target_dir <- latest_dir(publication_params$curated_results_pattern)
+figure4_curated_source <- file.path(
+  curated_target_dir,
+  "figure4_curated_targets_main_chromosomes.png"
+)
+figure4_placement_source <- file.path(
+  curated_target_dir,
+  "curated_target_placement_impact.png"
+)
+figure4_all_scaffolds_source <- file.path(
+  curated_target_dir,
+  "figure4_curated_targets_all_scaffolds.png"
+)
+figure4_homology_flags_source <- file.path(
+  curated_target_dir,
+  "figure4_curated_targets_non_grasshopper_homology_flags.png"
+)
+
+base_inputs <- c(
+  metadata_file, counts_file, placement_file, rrna_file, gff_file, eggnog_file,
+  primary_results_file, head_phase_file, thorax_phase_file,
+  figure3_composite_source, figure3_lollipop_source, figure3_insect_source,
+  figure3_reference_source, figure4_curated_source, figure4_all_scaffolds_source,
+  figure4_homology_flags_source, figure4_placement_source
+)
+if (!all(file.exists(base_inputs))) {
+  stop("Missing publication input(s): ",
+       paste(base_inputs[!file.exists(base_inputs)], collapse = ", "))
+}
+
+placement <- read.delim(placement_file, check.names = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(rrna_file, warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+
+counts_table <- read.delim(counts_file, check.names = FALSE)
+main_chromosome_counts <- as.matrix(
+  counts_table[
+    counts_table$gene_id %in% main_chromosome_ids,
+    setdiff(names(counts_table), "gene_id"),
+    drop = FALSE
+  ]
+)
+rownames(main_chromosome_counts) <- counts_table$gene_id[
+  counts_table$gene_id %in% main_chromosome_ids
+]
+storage.mode(main_chromosome_counts) <- "integer"
+main_chromosome_counts <- main_chromosome_counts[
+  rowSums(main_chromosome_counts >= publication_params$min_count) >=
+    publication_params$min_samples,
+  ,
+  drop = FALSE
+]
+
+metadata_for_models <- read.delim(metadata_file, check.names = FALSE)
+metadata_for_models <- metadata_for_models[
+  , !is.na(names(metadata_for_models)) & nzchar(names(metadata_for_models)),
+  drop = FALSE
+]
+metadata_for_models$label <- as.character(metadata_for_models$label)
+metadata_for_models$Diet <- factor(metadata_for_models$Diet,
+                                   levels = c("33", "50", "83"))
+metadata_for_models$Treatment <- factor(
+  metadata_for_models$Treatment,
+  levels = c("Control", "Infected")
+)
+metadata_for_models <- metadata_for_models[
+  match(colnames(main_chromosome_counts), metadata_for_models$label),
+  ,
+  drop = FALSE
+]
+if (anyNA(metadata_for_models$label)) {
+  stop("Fresh competitive counts contain samples missing from metadata.")
+}
+rownames(metadata_for_models) <- metadata_for_models$label
+metadata_for_models$group <- factor(
+  paste0("diet", metadata_for_models$Diet, "_",
+         tolower(as.character(metadata_for_models$Treatment))),
+  levels = c(
+    "diet33_control", "diet50_control", "diet83_control",
+    "diet33_infected", "diet50_infected", "diet83_infected"
+  )
+)
+
+direct_contrasts <- tibble::tribble(
+  ~contrast_id, ~comparison_type, ~comparison, ~numerator, ~denominator,
+  ~diet, ~numerator_group, ~denominator_group,
+  "infection_diet33", "Infection within diet", "Diet 33: infected vs control", "Infected", "Control", "33", "diet33_infected", "diet33_control",
+  "infection_diet50", "Infection within diet", "Diet 50: infected vs control", "Infected", "Control", "50", "diet50_infected", "diet50_control",
+  "infection_diet83", "Infection within diet", "Diet 83: infected vs control", "Infected", "Control", "83", "diet83_infected", "diet83_control",
+  "control_diet33_vs50", "Diet contrasts among control", "Control 33 vs 50", "33", "50", NA_character_, "diet33_control", "diet50_control",
+  "control_diet83_vs33", "Diet contrasts among control", "Control 83 vs 33", "83", "33", NA_character_, "diet83_control", "diet33_control",
+  "control_diet83_vs50", "Diet contrasts among control", "Control 83 vs 50", "83", "50", NA_character_, "diet83_control", "diet50_control",
+  "infected_diet33_vs50", "Diet contrasts among infected", "Infected 33 vs 50", "33", "50", NA_character_, "diet33_infected", "diet50_infected",
+  "infected_diet83_vs33", "Diet contrasts among infected", "Infected 83 vs 33", "83", "33", NA_character_, "diet83_infected", "diet33_infected",
+  "infected_diet83_vs50", "Diet contrasts among infected", "Infected 83 vs 50", "83", "50", NA_character_, "diet83_infected", "diet50_infected"
+)
+
+primary_results <- read.csv(primary_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    mapping_branch == "Competitive host",
+    analysis_scope == "Placed/host-assigned",
+    sequence_class == "Nuclear chromosome"
+  )
+
+all_sample_results <- primary_results |>
+  dplyr::inner_join(
+    direct_contrasts |>
+      dplyr::select(contrast_id, comparison_type, comparison,
+                    numerator_simple = numerator,
+                    denominator_simple = denominator, diet),
+    by = "contrast_id"
+  ) |>
+  dplyr::transmute(
+    scenario = "All samples",
+    comparison_type, comparison,
+    numerator = numerator_simple,
+    denominator = denominator_simple,
+    diet,
+    gene_id, baseMean, log2FoldChange, lfcSE, stat, pvalue, padj,
+    significant = significant & !is.na(padj) &
+      padj < publication_params$alpha &
+        abs(log2FoldChange) >= publication_params$lfc_threshold,
+    direction = dplyr::if_else(log2FoldChange > 0,
+                               "Upregulated", "Downregulated")
+  )
+
+fit_direct_scenario <- function(excluded_samples, scenario_name) {
+  keep_samples <- setdiff(colnames(main_chromosome_counts), excluded_samples)
+  scenario_counts <- main_chromosome_counts[, keep_samples, drop = FALSE]
+  scenario_counts <- scenario_counts[
+    rowSums(scenario_counts >= publication_params$min_count) >=
+      publication_params$min_samples,
+    ,
+    drop = FALSE
+  ]
+  scenario_meta <- metadata_for_models[keep_samples, , drop = FALSE]
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = scenario_counts,
+    colData = data.frame(group = scenario_meta$group,
+                         row.names = scenario_meta$label),
+    design = ~ 0 + group
+  )
+  dds <- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
+
+  dplyr::bind_rows(lapply(seq_len(nrow(direct_contrasts)), function(i) {
+    spec <- direct_contrasts[i, ]
+    result <- as.data.frame(DESeq2::results(
+      dds,
+      contrast = c("group", spec$numerator_group, spec$denominator_group),
+      alpha = publication_params$alpha,
+      cooksCutoff = FALSE
+    )) |>
+      tibble::rownames_to_column("gene_id")
+    result |>
+      dplyr::transmute(
+        scenario = scenario_name,
+        comparison_type = spec$comparison_type,
+        comparison = spec$comparison,
+        numerator = spec$numerator,
+        denominator = spec$denominator,
+        diet = spec$diet,
+        gene_id, baseMean, log2FoldChange, lfcSE, stat, pvalue, padj,
+        significant = !is.na(padj) & padj < publication_params$alpha &
+          abs(log2FoldChange) >= publication_params$lfc_threshold,
+        direction = dplyr::if_else(log2FoldChange > 0,
+                                   "Upregulated", "Downregulated")
+      )
+  }))
+}
+
+current_outliers <- c("1007", "1036", "1037", "1039")
+no_outlier_results <- fit_direct_scenario(
+  current_outliers,
+  "Current outliers removed"
+)
+scenario_results <- dplyr::bind_rows(all_sample_results, no_outlier_results)
+scenario_results_file <- file.path(
+  out_dir,
+  "main_chromosome_sample_filter_scenario_results.csv"
+)
+write.csv(scenario_results, scenario_results_file, row.names = FALSE)
+
+scenario_sample_counts <- dplyr::bind_rows(
+  metadata_for_models |>
+    dplyr::count(Diet, Treatment, name = "n_samples") |>
+    dplyr::mutate(scenario = "All samples"),
+  metadata_for_models |>
+    dplyr::filter(!label %in% current_outliers) |>
+    dplyr::count(Diet, Treatment, name = "n_samples") |>
+    dplyr::mutate(scenario = "Current outliers removed")
+)
+scenario_sample_counts_file <- file.path(
+  out_dir,
+  "main_chromosome_sample_counts_by_scenario.csv"
+)
+write.csv(scenario_sample_counts, scenario_sample_counts_file,
+          row.names = FALSE)
+
+model_coefficients <- primary_results |>
+  dplyr::filter(contrast_id == "infection_average_all_diets") |>
+  dplyr::mutate(coefficient = "Treatment_Infected_vs_Control")
+model_coefficients_file <- file.path(
+  out_dir,
+  "main_chromosome_average_infection_results.csv"
+)
+write.csv(model_coefficients, model_coefficients_file, row.names = FALSE)
+
+inputs <- data.frame(
+  input = c("metadata", "fresh competitive host counts",
+            "official main-chromosome placement", "rRNA exclusion list",
+            "GFF annotation", "eggNOG annotation",
+            "main-chromosome DESeq2 scenario table",
+            "sample-filter scenario counts",
+            "main-chromosome average infection results", "Head phase DEGs",
+            "Thorax phase DEGs", "Figure 3 composite source"),
+  path = c(metadata_file, counts_file, placement_file, rrna_file,
+           gff_file, eggnog_file,
+           scenario_results_file, scenario_sample_counts_file,
+           model_coefficients_file,
+           head_phase_file, thorax_phase_file, figure3_composite_source),
+  present = c(file.exists(metadata_file), file.exists(counts_file),
+              file.exists(placement_file), file.exists(rrna_file),
+              file.exists(gff_file), file.exists(eggnog_file),
+              file.exists(scenario_results_file),
+              file.exists(scenario_sample_counts_file),
+              file.exists(model_coefficients_file),
+              file.exists(head_phase_file), file.exists(thorax_phase_file),
+              file.exists(figure3_composite_source))
+)
+
+knitr::kable(inputs, caption = "Inputs used to assemble publication figures")
+if (!all(inputs$present)) {
+  stop("One or more publication figure inputs are missing.")
+}
+```
+
+## Standalone experimental-design asset
+
+The design summary remains available as a separate export but is not included
+in the numbered Figure 1 composite.
+
+```{r figure-1-panel-a, fig.width=7.2, fig.height=4.6}
+metadata <- read.delim(metadata_file, check.names = FALSE)
+metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
+                     drop = FALSE]
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment,
+                             levels = c("Control", "Infected"))
+
+design_counts <- metadata |>
+  dplyr::count(Diet, Treatment, name = "n_samples") |>
+  tidyr::complete(Diet, Treatment, fill = list(n_samples = 0)) |>
+  dplyr::mutate(
+    Condition = paste(Diet, Treatment),
+    label = paste0("Diet ", Diet, "\n", Treatment, "\nn = ", n_samples),
+    text_color = dplyr::if_else(Treatment == "Infected", "white", "#111827")
+  )
+
+p_design <- ggplot2::ggplot(
+  design_counts,
+  ggplot2::aes(x = Treatment, y = Diet, fill = Condition)
+) +
+  ggplot2::geom_tile(width = 0.84, height = 0.72, color = "#111827",
+                     linewidth = 0.45) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = label, color = text_color),
+    lineheight = 0.88,
+    size = 3.6,
+    fontface = "bold"
+  ) +
+  ggplot2::annotate(
+    "label",
+    x = 1.5, y = 4.18,
+    label = paste(
+      "Female S. gregaria fat body RNA-seq",
+      "96 h after control or Metarhizium challenge",
+      "all samples retained; rRNA loci removed bioinformatically",
+      sep = "\n"
+    ),
+    label.size = 0.25,
+    fill = "white",
+    color = "#111827",
+    size = 3.5,
+    fontface = "bold",
+    lineheight = 0.96
+  ) +
+  ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
+  ggplot2::scale_color_identity() +
+  ggplot2::scale_y_discrete(limits = rev(levels(metadata$Diet))) +
+  ggplot2::coord_cartesian(clip = "off", ylim = c(0.55, 4.45)) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.title = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 12),
+    axis.ticks = ggplot2::element_blank(),
+    legend.position = "none",
+    plot.margin = ggplot2::margin(8, 8, 8, 8)
+  ) +
+  ggplot2::labs(title = "Experimental design")
+
+save_png_svg(p_design, "experimental_design_standalone",
+             width = 7.2, height = 4.6)
+p_design
+```
+
+## Figure 1: fat body transcriptome PCA
+
+Figure 1 shows the VST PCA from all expressed, chromosome-assigned,
+rRNA-filtered genes. Pale hulls show the spread of each diet-by-treatment
+group. Sample color identifies diet, shape identifies treatment, and the hollow
+centroids are connected within each diet to show the control-to-infected shift.
+
+```{r figure-1-panel-b, fig.width=7.2, fig.height=5.2}
+counts <- main_chromosome_counts
+count_labels_all <- colnames(counts)
+keep_samples <- count_labels_all %in% metadata$label
+counts <- counts[, keep_samples, drop = FALSE]
+count_labels <- count_labels_all[keep_samples]
+metadata_ordered <- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata_ordered$label, count_labels))
+rownames(metadata_ordered) <- metadata_ordered$label
+colnames(counts) <- count_labels
+
+keep_vst <- rowSums(counts) >= publication_params$min_total_count
+dds_vst <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_vst, , drop = FALSE],
+  colData = metadata_ordered,
+  design = ~ Diet + Treatment
+)
+vsd <- DESeq2::vst(dds_vst, blind = TRUE)
+vst_mat <- SummarizedExperiment::assay(vsd)
+nonzero_variance <- apply(vst_mat, 1, var) > 0
+pca <- prcomp(t(vst_mat[nonzero_variance, , drop = FALSE]), scale. = FALSE)
+percent_var <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)), 1)
+
+pca_scores <- data.frame(
+  label = rownames(pca$x),
+  PC1 = pca$x[, "PC1"],
+  PC2 = pca$x[, "PC2"],
+  Diet = metadata_ordered$Diet,
+  Treatment = metadata_ordered$Treatment,
+  check.names = FALSE
+)
+pca_scores$Condition <- factor(
+  paste(pca_scores$Diet, pca_scores$Treatment),
+  levels = names(condition_colors)
+)
+
+pca_centroids <- aggregate(cbind(PC1, PC2) ~ Diet + Treatment + Condition,
+                           pca_scores, mean)
+pca_centroids$centroid_label <- paste(
+  pca_centroids$Diet,
+  pca_centroids$Treatment
+)
+pca_hulls <- do.call(rbind, lapply(split(pca_scores, pca_scores$Condition),
+                                   make_condition_hull))
+centroid_shift <- merge(
+  pca_centroids[pca_centroids$Treatment == "Control",
+                c("Diet", "PC1", "PC2")],
+  pca_centroids[pca_centroids$Treatment == "Infected",
+                c("Diet", "PC1", "PC2")],
+  by = "Diet",
+  suffixes = c("_control", "_infected")
+)
+
+p_pca <- ggplot2::ggplot() +
+  ggplot2::geom_polygon(
+    data = pca_hulls,
+    ggplot2::aes(x = PC1, y = PC2, fill = Condition, group = Condition),
+    alpha = 0.18,
+    color = NA
+  ) +
+  ggplot2::geom_point(
+    data = pca_scores,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet, shape = Treatment),
+    size = 5,
+    stroke = 0.2,
+    alpha = 0.9
+  ) +
+  ggplot2::geom_segment(
+    data = centroid_shift,
+    ggplot2::aes(x = PC1_control, y = PC2_control,
+                 xend = PC1_infected, yend = PC2_infected,
+                 color = Diet),
+    linewidth = 0.8,
+    arrow = grid::arrow(length = grid::unit(0.16, "cm"), type = "closed")
+  ) +
+  ggplot2::geom_point(
+    data = pca_centroids,
+    ggplot2::aes(x = PC1, y = PC2, color = Diet),
+    shape = 21,
+    fill = "white",
+    stroke = 1.2,
+    size = 5
+  ) +
+  ggrepel::geom_label_repel(
+    data = pca_centroids,
+    ggplot2::aes(
+      x = PC1, y = PC2, label = centroid_label,
+      color = Diet
+    ),
+    fill = "white",
+    label.size = 0.25,
+    label.padding = grid::unit(0.18, "lines"),
+    box.padding = 0.45,
+    point.padding = 0.55,
+    min.segment.length = 0,
+    segment.color = "#4B5563",
+    segment.size = 0.3,
+    size = 5,
+    show.legend = FALSE,
+    seed = 20260807
+  ) +
+  ggplot2::scale_fill_manual(values = condition_colors, drop = FALSE) +
+  ggplot2::scale_color_manual(values = diet_colors, drop = FALSE) +
+  ggplot2::scale_shape_manual(values = c("Control" = 16, "Infected" = 17)) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.text = ggplot2::element_text(size = 11.5),
+    legend.title = ggplot2::element_text(size = 12, face = "bold"),
+    axis.title = ggplot2::element_text(size = 18),
+    axis.text = ggplot2::element_text(size = 14, color = "#111827"),
+    panel.grid = ggplot2::element_blank()
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(
+      nrow = 2, title.position = "top", order = 3,
+      override.aes = list(alpha = 0.22, color = NA)
+    ),
+    color = ggplot2::guide_legend(
+      nrow = 1, title.position = "top", order = 2,
+      override.aes = list(shape = 21, fill = "white", size = 4.2)
+    ),
+    shape = ggplot2::guide_legend(
+      nrow = 1, title.position = "top", order = 1,
+      override.aes = list(color = "#111827", size = 3.8)
+    )
+  ) +
+  ggplot2::labs(
+    title = "VST PCA with diet-by-treatment centroids",
+    x = paste0("PC1: ", percent_var[1], "% variance"),
+    y = paste0("PC2: ", percent_var[2], "% variance"),
+    fill = "Condition polygon",
+    color = "Diet",
+    shape = "Treatment"
+  )
+
+write.csv(pca_scores, file.path(out_dir, "figure1_pca_scores.csv"),
+          row.names = FALSE)
+write.csv(pca_centroids, file.path(out_dir, "figure1_pca_centroids.csv"),
+          row.names = FALSE)
+write.csv(centroid_shift, file.path(out_dir,
+                                    "figure1_pca_centroid_shifts.csv"),
+          row.names = FALSE)
+save_png_svg(p_pca, "figure1_fatbody_pca_centroid_shifts",
+             width = 10.2, height = 7.2)
+p_pca
+```
+
+## Figure 2: DEG burden, context overlap, and phase-reference overlap
+
+Panel A reports the complete directional DEG burden for every primary
+contrast. Panel B compares infection-response DEGs called independently in
+diets 33, 50, and 83, making shared and diet-specific responses directly
+visible. Venn membership ignores direction. Panel C compares the
+infection-within-diet DEG union with independent phase DEGs detected between
+solitarious and gregarious locusts in head and thorax. Every set in these panels
+is restricted to genes on the official nuclear chromosomes. The broader
+four-context Venn is retained as a standalone alternative export.
+
+### A. Directional DEG burden
+
+```{r figure-1-panel-c, fig.width=11.2, fig.height=8.4}
+gene_biotypes <- parse_gff_gene_annotation(gff_file)
+
+scenario_degs_for_barplot <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    scenario == "All samples",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+model_degs_for_barplot <- read.csv(model_coefficients_file,
+                                   check.names = FALSE) |>
+  dplyr::filter(
+    coefficient == "Treatment_Infected_vs_Control",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+deg_raw <- dplyr::bind_rows(
+  scenario_degs_for_barplot |>
+    dplyr::transmute(
+      DEG_context = dplyr::case_when(
+        comparison_type == "Infection within diet" ~
+          "Infection within diets",
+        comparison_type == "Diet contrasts among control" ~
+          "Diet DEGs in controls",
+        comparison_type == "Diet contrasts among infected" ~
+          "Diet DEGs in infected",
+        TRUE ~ comparison_type
+      ),
+      comparison_type,
+      comparison,
+      numerator,
+      denominator,
+      diet = as.character(diet),
+      gene_id,
+      log2FoldChange
+    ),
+  model_degs_for_barplot |>
+    dplyr::transmute(
+      DEG_context = "Infection vs control",
+      comparison_type = "Infection vs control",
+      comparison = "All diets: infected vs control",
+      numerator = "Infected",
+      denominator = "Control",
+      diet = NA_character_,
+      gene_id,
+      log2FoldChange
+    )
+)
+
+context_order <- c(
+  "Infection vs control",
+  "Infection within diets",
+  "Diet DEGs in controls",
+  "Diet DEGs in infected"
+)
+
+contrast_order <- c(
+  "All diets\ninfected vs control",
+  "Diet 83\ninfected vs control",
+  "Diet 50\ninfected vs control",
+  "Diet 33\ninfected vs control",
+  "Control\n83 vs 50",
+  "Control\n83 vs 33",
+  "Control\n33 vs 50",
+  "Infected\n83 vs 50",
+  "Infected\n83 vs 33",
+  "Infected\n33 vs 50"
+)
+
+deg_biotype_counts <- deg_raw |>
+  dplyr::mutate(
+    signed_direction = dplyr::if_else(log2FoldChange > 0,
+                                      "Upregulated", "Downregulated"),
+    numerator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, "numerator"
+    ),
+    denominator_condition = make_condition_label(
+      comparison_type, numerator, denominator, diet, "denominator"
+    ),
+    higher_in = dplyr::if_else(log2FoldChange > 0,
+                               numerator_condition, denominator_condition),
+    contrast_label = dplyr::case_when(
+      DEG_context == "Infection within diets" ~
+        paste0("Diet ", diet, "\ninfected vs control"),
+      DEG_context == "Diet DEGs in controls" ~
+        paste0("Control\n", numerator, " vs ", denominator),
+      DEG_context == "Diet DEGs in infected" ~
+        paste0("Infected\n", numerator, " vs ", denominator),
+      DEG_context == "Infection vs control" ~
+        "All diets\ninfected vs control",
+      TRUE ~ comparison
+    )
+  ) |>
+  dplyr::left_join(gene_biotypes, by = "gene_id") |>
+  dplyr::mutate(
+    Gene_class = classify_gene_class(gene_biotype),
+    DEG_context = factor(DEG_context, levels = context_order),
+    contrast_label = factor(contrast_label, levels = contrast_order),
+    signed_direction = factor(signed_direction,
+                              levels = c("Downregulated", "Upregulated")),
+    direction_class = paste(signed_direction, Gene_class, sep = " - ")
+  ) |>
+  dplyr::distinct(DEG_context, comparison, contrast_label, signed_direction,
+                  gene_id, Gene_class, .keep_all = TRUE) |>
+  dplyr::count(DEG_context, comparison, contrast_label,
+               signed_direction, Gene_class,
+               direction_class, name = "n_DEGs") |>
+  dplyr::group_by(DEG_context, comparison, contrast_label, signed_direction) |>
+  tidyr::complete(
+    Gene_class = c("Coding genes", "Long non-coding RNA", "Other / unknown"),
+    fill = list(n_DEGs = 0)
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!is.na(DEG_context), !is.na(contrast_label)) |>
+  dplyr::mutate(
+    direction_class = paste(signed_direction, Gene_class, sep = " - "),
+    signed_n = dplyr::if_else(signed_direction == "Upregulated",
+                              n_DEGs, -n_DEGs)
+  )
+
+deg_total_labels <- deg_biotype_counts |>
+  dplyr::group_by(DEG_context, comparison, contrast_label, signed_direction) |>
+  dplyr::summarise(total_DEGs = sum(n_DEGs), .groups = "drop") |>
+  dplyr::mutate(
+    signed_total = dplyr::if_else(signed_direction == "Upregulated",
+                                  total_DEGs, -total_DEGs)
+  )
+
+context_max <- deg_total_labels |>
+  dplyr::group_by(DEG_context) |>
+  dplyr::summarise(max_total = max(abs(signed_total), 1),
+                   .groups = "drop")
+
+deg_total_labels <- deg_total_labels |>
+  dplyr::left_join(context_max, by = "DEG_context") |>
+  dplyr::filter(total_DEGs > 0) |>
+  dplyr::mutate(
+    label_x = signed_total + dplyr::if_else(
+      signed_total > 0,
+      max_total * 0.025,
+      -max_total * 0.025
+    ),
+    hjust = dplyr::if_else(signed_total > 0, 0, 1)
+  )
+
+p_deg_biotype <- ggplot2::ggplot(
+  deg_biotype_counts,
+  ggplot2::aes(x = signed_n, y = contrast_label, fill = direction_class)
+) +
+  ggplot2::geom_vline(xintercept = 0, linewidth = 0.35, color = "#111827") +
+  ggplot2::geom_col(width = 0.74, color = "white", linewidth = 0.2) +
+  ggplot2::geom_text(
+    data = deg_total_labels,
+    ggplot2::aes(x = label_x, y = contrast_label, label = total_DEGs,
+                 hjust = hjust),
+    inherit.aes = FALSE,
+    size = 6,
+    fontface = "bold"
+  ) +
+  ggplot2::facet_wrap(~ DEG_context, ncol = 2, scales = "free") +
+  ggplot2::scale_fill_manual(values = direction_biotype_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(
+    labels = abs,
+    expand = ggplot2::expansion(mult = c(0.22, 0.22))
+  ) +
+  theme_pub(base_size = 16) +
+  ggplot2::theme(
+    axis.title.y = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(size = 15.5, face = "bold"),
+    axis.text.x = ggplot2::element_text(size = 13.5),
+    axis.title.x = ggplot2::element_text(size = 15, face = "bold"),
+    strip.text = ggplot2::element_text(size = 16, face = "bold"),
+    panel.spacing = grid::unit(0.55, "lines"),
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(size = 13.5, face = "bold"),
+    legend.text = ggplot2::element_text(size = 12),
+    plot.margin = ggplot2::margin(6, 28, 6, 6)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 3, title.position = "top",
+                                 byrow = TRUE)
+  ) +
+  ggplot2::labs(
+    x = "Number of significant DEGs",
+    fill = "Direction and gene class"
+  )
+
+write.csv(deg_biotype_counts,
+          file.path(out_dir, "figure2_panel_A_deg_biotype_counts.csv"),
+          row.names = FALSE)
+write.csv(deg_raw,
+          file.path(out_dir, "figure2_panel_A_exact_contrast_deg_gene_table.csv"),
+          row.names = FALSE)
+save_png_svg(p_deg_biotype, "figure2_panel_A_deg_biotype_burden",
+             width = 11.2, height = 8.4)
+p_deg_biotype
+```
+
+### B-C. DEG-context and phase-reference Venn overlaps
+
+The Venn diagram is used in the primary composite. The ten-set exact-contrast
+UpSet plot is retained as a standalone alternative export.
+
+```{r figure-2-overlap-composition, fig.width=14, fig.height=13, results='asis'}
+scenario_degs <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    scenario == "All samples",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+model_degs <- read.csv(model_coefficients_file, check.names = FALSE) |>
+  dplyr::filter(
+    coefficient == "Treatment_Infected_vs_Control",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+exact_contrast_order <- c(
+  "Diet 33: infected vs control",
+  "Diet 50: infected vs control",
+  "Diet 83: infected vs control",
+  "Control: diet 33 vs 50",
+  "Control: diet 83 vs 33",
+  "Control: diet 83 vs 50",
+  "Infected: diet 33 vs 50",
+  "Infected: diet 83 vs 33",
+  "Infected: diet 83 vs 50",
+  "All diets: infected vs control"
+)
+
+exact_deg_long <- deg_raw |>
+  dplyr::mutate(
+    exact_contrast = dplyr::case_when(
+      DEG_context == "Infection within diets" ~
+        paste0("Diet ", diet, ": infected vs control"),
+      DEG_context == "Diet DEGs in controls" ~
+        paste0("Control: diet ", numerator, " vs ", denominator),
+      DEG_context == "Diet DEGs in infected" ~
+        paste0("Infected: diet ", numerator, " vs ", denominator),
+      DEG_context == "Infection vs control" ~
+        "All diets: infected vs control",
+      TRUE ~ comparison
+    )
+  ) |>
+  dplyr::filter(exact_contrast %in% exact_contrast_order) |>
+  dplyr::distinct(exact_contrast, gene_id)
+
+exact_deg_sets <- lapply(exact_contrast_order, function(contrast_name) {
+  exact_deg_long$gene_id[exact_deg_long$exact_contrast == contrast_name]
+})
+names(exact_deg_sets) <- exact_contrast_order
+exact_deg_sets <- exact_deg_sets[lengths(exact_deg_sets) > 0]
+
+exact_overlap_genes <- sort(unique(unlist(exact_deg_sets,
+                                          use.names = FALSE)))
+exact_overlap_membership <- data.frame(gene_id = exact_overlap_genes)
+for (set_name in names(exact_deg_sets)) {
+  exact_overlap_membership[[set_name]] <-
+    exact_overlap_membership$gene_id %in% exact_deg_sets[[set_name]]
+}
+write.csv(
+  exact_overlap_membership,
+  file.path(out_dir, "figure2_panel_B_exact_contrast_upset_membership.csv"),
+  row.names = FALSE
+)
+
+upset_input <- UpSetR::fromList(exact_deg_sets)
+upset_object <- UpSetR::upset(
+  upset_input,
+  sets = rev(names(exact_deg_sets)),
+  keep.order = TRUE,
+  nsets = length(exact_deg_sets),
+  nintersects = 30,
+  order.by = c("freq", "degree"),
+  decreasing = c(TRUE, FALSE),
+  mb.ratio = c(0.62, 0.38),
+  main.bar.color = "#8B0000",
+  sets.bar.color = "#D9A21B",
+  matrix.color = "#374151",
+  shade.color = "#E5E7EB",
+  shade.alpha = 0.55,
+  point.size = 3.0,
+  line.size = 0.9,
+  text.scale = c(1.45, 1.25, 1.05, 1.15, 1.05, 1.15),
+  mainbar.y.label = "Genes in exact intersections",
+  sets.x.label = "DEGs per exact contrast"
+)
+upset_grob <- grid::grid.grabExpr(
+  print(upset_object),
+  wrap = TRUE,
+  wrap.grobs = TRUE
+)
+
+p_upset <- ggplotify::as.ggplot(upset_grob)
+
+p_upset_heading <- ggplot2::ggplot() +
+  ggplot2::annotate(
+    "text", x = 0, y = 0.72,
+    label = "Alternative exact-contrast DEG overlap",
+    hjust = 0,
+    fontface = "bold",
+    size = 5.2
+  ) +
+  ggplot2::annotate(
+    "text", x = 0, y = 0.20,
+    label = "The 30 largest intersections are shown; set membership ignores direction",
+    hjust = 0,
+    size = 3.7
+  ) +
+  ggplot2::xlim(0, 1) +
+  ggplot2::ylim(0, 1) +
+  ggplot2::theme_void() +
+  ggplot2::theme(plot.margin = ggplot2::margin(2, 8, 0, 8))
+
+p_upset_panel <- p_upset_heading / p_upset +
+  patchwork::plot_layout(heights = c(0.10, 0.90))
+
+save_png_svg(
+  p_upset_panel,
+  "figure2_panel_B_exact_contrast_upset",
+  width = 14.5,
+  height = 8.6
+)
+
+broad_deg_sets <- list(
+  "Infection within diets" = scenario_degs |>
+    dplyr::filter(comparison_type == "Infection within diet") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet DEGs in controls" = scenario_degs |>
+    dplyr::filter(comparison_type == "Diet contrasts among control") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet DEGs in infected" = scenario_degs |>
+    dplyr::filter(comparison_type == "Diet contrasts among infected") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Infection vs control" = unique(model_degs$gene_id)
+)
+broad_deg_sets <- broad_deg_sets[lengths(broad_deg_sets) > 0]
+
+infection_diet_sets <- list(
+  "Diet 33" = scenario_degs |>
+    dplyr::filter(
+      comparison_type == "Infection within diet",
+      as.character(diet) == "33"
+    ) |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet 50" = scenario_degs |>
+    dplyr::filter(
+      comparison_type == "Infection within diet",
+      as.character(diet) == "50"
+    ) |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet 83" = scenario_degs |>
+    dplyr::filter(
+      comparison_type == "Infection within diet",
+      as.character(diet) == "83"
+    ) |>
+    dplyr::pull(gene_id) |>
+    unique()
+)
+infection_diet_sets <- infection_diet_sets[lengths(infection_diet_sets) > 0]
+
+infection_diet_genes <- sort(unique(unlist(infection_diet_sets,
+                                            use.names = FALSE)))
+infection_diet_membership <- data.frame(gene_id = infection_diet_genes)
+for (set_name in names(infection_diet_sets)) {
+  infection_diet_membership[[set_name]] <-
+    infection_diet_membership$gene_id %in% infection_diet_sets[[set_name]]
+}
+infection_diet_membership$intersection <- apply(
+  infection_diet_membership[names(infection_diet_sets)],
+  1,
+  function(x) paste(names(infection_diet_sets)[x], collapse = " + ")
+)
+write.csv(
+  infection_diet_membership,
+  file.path(out_dir, "figure2_infection_diet_venn_membership.csv"),
+  row.names = FALSE
+)
+
+infection_diet_summary <- infection_diet_membership |>
+  dplyr::count(intersection, name = "n_genes") |>
+  dplyr::arrange(dplyr::desc(n_genes), intersection)
+write.csv(
+  infection_diet_summary,
+  file.path(out_dir, "figure2_infection_diet_venn_summary.csv"),
+  row.names = FALSE
+)
+
+all_overlap_genes <- sort(unique(unlist(broad_deg_sets, use.names = FALSE)))
+overlap_membership <- data.frame(gene_id = all_overlap_genes)
+for (set_name in names(broad_deg_sets)) {
+  overlap_membership[[set_name]] <- overlap_membership$gene_id %in%
+    broad_deg_sets[[set_name]]
+}
+overlap_membership$intersection <- apply(
+  overlap_membership[names(broad_deg_sets)],
+  1,
+  function(x) paste(names(broad_deg_sets)[x], collapse = " + ")
+)
+write.csv(overlap_membership,
+          file.path(out_dir, "figure2_deg_family_overlap_membership.csv"),
+          row.names = FALSE)
+
+overlap_summary <- overlap_membership |>
+  dplyr::count(intersection, name = "n_genes") |>
+  dplyr::arrange(dplyr::desc(n_genes), intersection)
+write.csv(overlap_summary,
+          file.path(out_dir, "figure2_deg_family_overlap_summary.csv"),
+          row.names = FALSE)
+
+head_phase_degs <- read.csv(head_phase_file, check.names = FALSE) |>
+  dplyr::filter(
+    significant,
+    gene_id %in% main_chromosome_ids,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+thorax_phase_degs <- read.csv(thorax_phase_file, check.names = FALSE) |>
+  dplyr::filter(
+    significant,
+    gene_id %in% main_chromosome_ids,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+head_phase_genes <- unique(head_phase_degs$gene_id)
+thorax_phase_genes <- unique(thorax_phase_degs$gene_id)
+phase_genes <- intersect(head_phase_genes, thorax_phase_genes)
+
+phase_overlap_sets <- list(
+  "Infection within diets" = broad_deg_sets[["Infection within diets"]],
+  "Head phase DEGs" = head_phase_genes,
+  "Thorax phase DEGs" = thorax_phase_genes
+)
+
+# Verify the exact gene sets displayed anywhere in Figure 2, including panel A.
+figure2_gene_sets_for_rrna_audit <- c(
+  list("Panel A: directional DEG burden" = unique(deg_raw$gene_id)),
+  stats::setNames(exact_deg_sets, paste0("Exact contrast: ", names(exact_deg_sets))),
+  stats::setNames(broad_deg_sets, paste0("Broad context: ", names(broad_deg_sets))),
+  stats::setNames(infection_diet_sets,
+                  paste0("Infection Venn: ", names(infection_diet_sets))),
+  stats::setNames(phase_overlap_sets,
+                  paste0("Phase Venn: ", names(phase_overlap_sets)))
+)
+figure2_rrna_audit <- dplyr::bind_rows(lapply(
+  names(figure2_gene_sets_for_rrna_audit),
+  function(set_name) {
+    ids <- unique(figure2_gene_sets_for_rrna_audit[[set_name]])
+    tibble::tibble(
+      figure2_set = set_name,
+      genes_plotted = length(ids),
+      listed_rRNA_genes = sum(ids %in% rrna_ids)
+    )
+  }
+))
+write.csv(
+  figure2_rrna_audit,
+  file.path(out_dir, "figure2_rrna_exclusion_audit.csv"),
+  row.names = FALSE
+)
+if (any(figure2_rrna_audit$listed_rRNA_genes > 0)) {
+  stop("Figure 2 rRNA audit failed: at least one plotted set contains a listed rRNA gene.")
+}
+
+phase_overlap_genes <- sort(unique(unlist(phase_overlap_sets,
+                                          use.names = FALSE)))
+phase_overlap_membership <- data.frame(gene_id = phase_overlap_genes)
+for (set_name in names(phase_overlap_sets)) {
+  phase_overlap_membership[[set_name]] <-
+    phase_overlap_membership$gene_id %in% phase_overlap_sets[[set_name]]
+}
+phase_overlap_membership$intersection <- apply(
+  phase_overlap_membership[names(phase_overlap_sets)],
+  1,
+  function(x) paste(names(phase_overlap_sets)[x], collapse = " + ")
+)
+write.csv(phase_overlap_membership,
+          file.path(out_dir, "figure2_infection_phase_overlap_membership.csv"),
+          row.names = FALSE)
+
+phase_overlap_summary <- phase_overlap_membership |>
+  dplyr::count(intersection, name = "n_genes") |>
+  dplyr::arrange(dplyr::desc(n_genes), intersection)
+write.csv(phase_overlap_summary,
+          file.path(out_dir, "figure2_infection_phase_overlap_summary.csv"),
+          row.names = FALSE)
+
+broad_deg_plot_sets <- broad_deg_sets
+names(broad_deg_plot_sets) <- c(
+  "Infection\nwithin diet",
+  "Diet\ncontrols",
+  "Diet\ninfected",
+  "Infect.\nvs ctrl"
+)
+
+p_broad_context_venn <- ggVennDiagram::ggVennDiagram(
+  broad_deg_plot_sets,
+  label = "count",
+  label_alpha = 0,
+  edge_size = 0.75,
+  set_size = 7.2,
+  label_size = 7.2
+) +
+  ggplot2::scale_fill_gradient(low = "#FFF7D1", high = "#D9A21B") +
+  ggplot2::theme_void(base_size = 12) +
+  ggplot2::theme(
+    legend.position = "none",
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA),
+    plot.margin = ggplot2::margin(8, 24, 8, 24)
+  ) +
+  ggplot2::labs(
+    fill = "Genes"
+  )
+
+save_png_svg(p_broad_context_venn, "figure2_broad_context_overlap_venn",
+             width = 10.5, height = 9.0)
+
+p_venn <- ggVennDiagram::ggVennDiagram(
+  infection_diet_sets,
+  label = "count",
+  label_alpha = 0,
+  edge_size = 0.75,
+  set_size = 7.2,
+  label_size = 7.2
+) +
+  ggplot2::scale_fill_gradient(low = "#EFF8F2", high = "#64B987") +
+  ggplot2::theme_void(base_size = 12) +
+  ggplot2::theme(
+    legend.position = "none",
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA),
+    plot.margin = ggplot2::margin(8, 24, 8, 24)
+  ) +
+  ggplot2::labs(fill = "Genes")
+
+save_png_svg(p_venn, "figure2_infection_degs_by_diet_venn",
+             width = 10.5, height = 9.0)
+
+phase_overlap_plot_sets <- phase_overlap_sets
+names(phase_overlap_plot_sets) <- c(
+  "Infection\nDEGs",
+  "Head\nphase",
+  "Thorax\nphase"
+)
+
+p_phase_venn <- ggVennDiagram::ggVennDiagram(
+  phase_overlap_plot_sets,
+  label = "count",
+  label_alpha = 0,
+  edge_size = 0.75,
+  set_size = 7.2,
+  label_size = 7.2
+) +
+  ggplot2::scale_fill_gradient(low = "#FFF7D1", high = "#D9A21B") +
+  ggplot2::theme_void(base_size = 12) +
+  ggplot2::theme(
+    legend.position = "none",
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA),
+    plot.margin = ggplot2::margin(8, 24, 8, 24)
+  ) +
+  ggplot2::labs(
+    fill = "Genes"
+  )
+
+save_png_svg(p_phase_venn, "figure2_infection_phase_overlap_venn",
+             width = 10.5, height = 9.0)
+
+gene_annotation <- build_gene_annotation(gff_file, eggnog_file)
+deg_family_long <- dplyr::bind_rows(lapply(names(broad_deg_sets), function(set_name) {
+  data.frame(
+    DEG_family = set_name,
+    gene_id = broad_deg_sets[[set_name]],
+    stringsAsFactors = FALSE
+  )
+}))
+deg_family_long$DEG_family <- factor(
+  deg_family_long$DEG_family,
+  levels = names(broad_deg_sets)
+)
+
+candidate_theme_table <- deg_family_long |>
+  dplyr::left_join(gene_annotation, by = "gene_id") |>
+  dplyr::mutate(
+    annotation_text = dplyr::coalesce(annotation_text, ""),
+    base_physiology_theme = classify_physiology_theme(annotation_text),
+    phase_related = gene_id %in% phase_genes,
+    phase_reference_source = dplyr::case_when(
+      gene_id %in% head_phase_genes & gene_id %in% thorax_phase_genes ~
+        "Head + thorax phase DEG",
+      gene_id %in% head_phase_genes ~ "Head phase DEG",
+      gene_id %in% thorax_phase_genes ~ "Thorax phase DEG",
+      TRUE ~ "Not phase-related"
+    ),
+    physiology_theme = dplyr::case_when(
+      base_physiology_theme != "Other / unannotated genes" ~
+        base_physiology_theme,
+      phase_related ~ "Phase-related changes",
+      TRUE ~ base_physiology_theme
+    ),
+    physiology_theme = factor(physiology_theme,
+                              levels = names(physiology_theme_colors))
+  )
+
+write.csv(candidate_theme_table,
+          file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv"),
+          row.names = FALSE)
+
+composition_counts <- candidate_theme_table |>
+  dplyr::distinct(DEG_family, gene_id, physiology_theme) |>
+  dplyr::count(DEG_family, physiology_theme, name = "n_genes") |>
+  dplyr::group_by(DEG_family) |>
+  tidyr::complete(
+    physiology_theme = factor(names(physiology_theme_colors),
+                              levels = names(physiology_theme_colors)),
+    fill = list(n_genes = 0)
+  ) |>
+  dplyr::mutate(
+    total_genes = sum(n_genes),
+    proportion = dplyr::if_else(total_genes > 0, n_genes / total_genes, 0)
+  ) |>
+  dplyr::ungroup()
+
+write.csv(composition_counts,
+          file.path(out_dir, "figure2_deg_family_candidate_theme_counts.csv"),
+          row.names = FALSE)
+
+candidate_theme_levels <- names(physiology_theme_colors)
+candidate_composition_counts <- composition_counts |>
+  dplyr::filter(physiology_theme %in% candidate_theme_levels) |>
+  dplyr::group_by(DEG_family) |>
+  dplyr::mutate(
+    candidate_genes = sum(n_genes),
+    candidate_proportion = dplyr::if_else(candidate_genes > 0,
+                                          n_genes / candidate_genes, 0)
+  ) |>
+  dplyr::ungroup()
+
+write.csv(candidate_composition_counts,
+          file.path(out_dir,
+                    "figure2_deg_family_candidate_theme_counts_all_categories.csv"),
+          row.names = FALSE)
+
+family_label_levels <- candidate_composition_counts |>
+  dplyr::distinct(DEG_family, total_genes, candidate_genes) |>
+  dplyr::arrange(DEG_family) |>
+  dplyr::mutate(
+    family_label = paste0(
+      DEG_family,
+      "\nall DEG n = ", total_genes
+    )
+  ) |>
+  dplyr::pull(family_label)
+
+pie_counts <- candidate_composition_counts |>
+  dplyr::filter(n_genes > 0) |>
+  dplyr::mutate(
+    family_label = paste0(
+      DEG_family,
+      "\nall DEG n = ", total_genes
+    ),
+    family_label = factor(family_label, levels = family_label_levels)
+  )
+
+p_composition <- ggplot2::ggplot(
+  pie_counts,
+  ggplot2::aes(x = "", y = candidate_proportion,
+               fill = physiology_theme)
+) +
+  ggplot2::geom_col(width = 1, color = "white", linewidth = 0.4) +
+  ggplot2::coord_polar(theta = "y") +
+  ggplot2::facet_wrap(~ family_label, nrow = 1) +
+  ggplot2::scale_fill_manual(
+    values = physiology_theme_colors[candidate_theme_levels],
+    breaks = candidate_theme_levels,
+    drop = FALSE
+  ) +
+  ggplot2::theme_void(base_size = 13) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = "bold", size = 16),
+    plot.subtitle = ggplot2::element_text(size = 11),
+    strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                             color = "#111827"),
+    strip.text = ggplot2::element_text(size = 10.5, face = "bold",
+                                       lineheight = 0.95),
+    legend.position = "bottom",
+    legend.text = ggplot2::element_text(size = 9),
+    legend.title = ggplot2::element_text(face = "bold"),
+    plot.margin = ggplot2::margin(4, 8, 8, 8)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 3, byrow = TRUE,
+                                 title.position = "top")
+  ) +
+  ggplot2::labs(
+    title = "Standalone DEG physiology and phase-reference composition",
+    subtitle = "Immune and physiology annotations are prioritized; phase-related marks remaining DEGs common to head+thorax phase references",
+    fill = "Gene category"
+  )
+
+save_png_svg(p_composition,
+             "figure2_panel_C_candidate_physiology_phase_composition",
+             width = 12, height = 5.6)
+
+# Reuse the complete standalone PNG canvases in the composite. ggVennDiagram
+# places set labels beyond the circle bounds, which patchwork otherwise clips
+# when it resizes the live ggplot objects.
+p_venn_composite <- patchwork::wrap_elements(
+  full = grid::rasterGrob(
+    png::readPNG(file.path(out_dir, "figure2_infection_degs_by_diet_venn.png")),
+    interpolate = TRUE
+  )
+)
+p_phase_venn_composite <- patchwork::wrap_elements(
+  full = grid::rasterGrob(
+    png::readPNG(file.path(out_dir, "figure2_infection_phase_overlap_venn.png")),
+    interpolate = TRUE
+  )
+)
+
+figure2 <- p_deg_biotype / (p_venn_composite | p_phase_venn_composite) +
+  patchwork::plot_layout(heights = c(0.40, 0.60))
+
+save_png_svg(figure2, "figure2_deg_burden_context_phase_venns",
+             width = 20.5, height = 19.0)
+figure2
+
+figure2_exports <- data.frame(
+  figure = c("Figure 2 composite PNG", "Figure 2 composite SVG",
+             "Figure 2A DEG burden PNG",
+             "Figure 2B infection DEGs by diet Venn PNG",
+             "Figure 2B infection DEGs by diet Venn SVG",
+             "Figure 2B infection-by-diet membership table",
+             "Figure 2C infection-phase Venn PNG",
+             "Figure 2C infection-phase Venn SVG",
+             "Alternative broad-context Venn PNG",
+             "Alternative broad-context Venn SVG",
+             "Alternative broad-context membership table",
+             "Alternative exact-contrast UpSet PNG",
+             "Alternative exact-contrast UpSet SVG",
+             "Alternative exact membership table",
+             "Standalone physiology composition PNG",
+             "Standalone candidate category gene table",
+             "Figure 2 rRNA exclusion audit"),
+  path = c(
+    file.path(out_dir, "figure2_deg_burden_context_phase_venns.png"),
+    file.path(out_dir, "figure2_deg_burden_context_phase_venns.svg"),
+    file.path(out_dir, "figure2_panel_A_deg_biotype_burden.png"),
+    file.path(out_dir, "figure2_infection_degs_by_diet_venn.png"),
+    file.path(out_dir, "figure2_infection_degs_by_diet_venn.svg"),
+    file.path(out_dir, "figure2_infection_diet_venn_membership.csv"),
+    file.path(out_dir, "figure2_infection_phase_overlap_venn.png"),
+    file.path(out_dir, "figure2_infection_phase_overlap_venn.svg"),
+    file.path(out_dir, "figure2_broad_context_overlap_venn.png"),
+    file.path(out_dir, "figure2_broad_context_overlap_venn.svg"),
+    file.path(out_dir, "figure2_deg_family_overlap_membership.csv"),
+    file.path(out_dir, "figure2_panel_B_exact_contrast_upset.png"),
+    file.path(out_dir, "figure2_panel_B_exact_contrast_upset.svg"),
+    file.path(out_dir,
+              "figure2_panel_B_exact_contrast_upset_membership.csv"),
+    file.path(out_dir,
+              "figure2_panel_C_candidate_physiology_phase_composition.png"),
+    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv"),
+    file.path(out_dir, "figure2_rrna_exclusion_audit.csv")
+  ),
+  present = file.exists(c(
+    file.path(out_dir, "figure2_deg_burden_context_phase_venns.png"),
+    file.path(out_dir, "figure2_deg_burden_context_phase_venns.svg"),
+    file.path(out_dir, "figure2_panel_A_deg_biotype_burden.png"),
+    file.path(out_dir, "figure2_infection_degs_by_diet_venn.png"),
+    file.path(out_dir, "figure2_infection_degs_by_diet_venn.svg"),
+    file.path(out_dir, "figure2_infection_diet_venn_membership.csv"),
+    file.path(out_dir, "figure2_infection_phase_overlap_venn.png"),
+    file.path(out_dir, "figure2_infection_phase_overlap_venn.svg"),
+    file.path(out_dir, "figure2_broad_context_overlap_venn.png"),
+    file.path(out_dir, "figure2_broad_context_overlap_venn.svg"),
+    file.path(out_dir, "figure2_deg_family_overlap_membership.csv"),
+    file.path(out_dir, "figure2_panel_B_exact_contrast_upset.png"),
+    file.path(out_dir, "figure2_panel_B_exact_contrast_upset.svg"),
+    file.path(out_dir,
+              "figure2_panel_B_exact_contrast_upset_membership.csv"),
+    file.path(out_dir,
+              "figure2_panel_C_candidate_physiology_phase_composition.png"),
+    file.path(out_dir, "figure2_deg_family_candidate_theme_gene_table.csv"),
+    file.path(out_dir, "figure2_rrna_exclusion_audit.csv")
+  ))
+)
+knitr::kable(figure2_exports, caption = "Figure 2 and standalone overlap exports")
+```
+
+## Figure 3: expression clusters and enrichment
+
+Figure 3 uses the two primary chromosome-only expression clusters. Panel A
+aligns the 0-0.1% fungal-alignment zoom above the treatment/diet annotations and
+the complete gene-level main-chromosome DEG heatmap. Values exceeding 0.1% are
+capped only for display and retain their full percentage as enlarged white
+labels. Panels B and C use only genes differentially expressed for infected
+versus control within at least one diet, with cluster 1 and cluster 2 tested
+separately. The overall all-DEG enrichment remains on the analysis page and is
+not repeated here.
+The primary KEGG panel presents the eukaryote-inclusive pathways around a
+locust illustration. Each pathway is connected to a conceptual physiological
+region and reports its `-log10` adjusted P-value and number of cluster genes
+below the pathway name. Connector positions aid interpretation; they do not
+represent measured sub-tissue localization. The pathway set retains
+eukaryote/metazoan-compatible, conserved cross-domain, and broad reference maps
+while excluding explicitly microbial/prokaryotic and disease-reference labels.
+The complete figure is provided in two matched versions: one with KEGG
+lollipops and one with the locust pathway map. The strict insect-focused version
+remains as a secondary export. The complete pathway-scope and pathway-gene
+audits remain available.
+
+```{r figure-3-composite, echo=FALSE, fig.width=16, fig.height=12}
+figure3_asset_specs <- tibble::tribble(
+  ~figure, ~source_base, ~target_base,
+  "Composite: eukaryote-inclusive KEGG pathway illustration",
+  tools::file_path_sans_ext(figure3_composite_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration",
+  "Composite: eukaryote-inclusive KEGG lollipops",
+  tools::file_path_sans_ext(figure3_lollipop_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive",
+  "Composite without panel titles: KEGG pathway illustration",
+  file.path(
+    circled_cluster_dir,
+    "expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free"
+  ),
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free",
+  "Composite without panel titles: eukaryote-inclusive KEGG lollipops",
+  file.path(
+    circled_cluster_dir,
+    "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free"
+  ),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free",
+  "Composite: insect-focused KEGG lollipops",
+  tools::file_path_sans_ext(figure3_insect_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused",
+  "Composite: reference-context companion",
+  tools::file_path_sans_ext(figure3_reference_source),
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references",
+  "Panel A: fungal percentage and two-cluster heatmap",
+  file.path(circled_cluster_dir, "figure3_panel_A_two_cluster_heatmap"),
+  "figure3_panel_A_fungal_percentage_two_cluster_heatmap",
+  "Panel A without title: fungal percentage and two-cluster heatmap",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_A_two_cluster_heatmap_title_free"
+  ),
+  "figure3_panel_A_fungal_percentage_two_cluster_heatmap_title_free",
+  "Panel B: two-cluster GO enrichment",
+  file.path(circled_cluster_dir, "figure3_panel_B_two_cluster_GO"),
+  "figure3_panel_B_two_cluster_GO",
+  "Panel B without title: two-cluster GO enrichment",
+  file.path(circled_cluster_dir, "figure3_panel_B_two_cluster_GO_title_free"),
+  "figure3_panel_B_two_cluster_GO_title_free",
+  "Panel C: eukaryote-inclusive KEGG pathway illustration",
+  file.path(circled_cluster_dir,
+            "figure3_panel_C_two_cluster_KEGG_pathway_illustration"),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration",
+  "Panel C without title: KEGG pathway illustration",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free"
+  ),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free",
+  "Panel C alternative: eukaryote-inclusive KEGG lollipops",
+  file.path(circled_cluster_dir,
+            "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive"),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive",
+  "Panel C without title: eukaryote-inclusive KEGG lollipops",
+  file.path(
+    circled_cluster_dir,
+    "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free"
+  ),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free"
+)
+
+figure3_exports <- tidyr::crossing(
+  asset_index = seq_len(nrow(figure3_asset_specs)),
+  format = c("png", "svg")
+) |>
+  dplyr::mutate(
+    figure = figure3_asset_specs$figure[asset_index],
+    source = paste0(figure3_asset_specs$source_base[asset_index], ".", format),
+    target_base = figure3_asset_specs$target_base[asset_index]
+  )
+
+missing_figure3_assets <- figure3_exports$source[
+  !file.exists(figure3_exports$source)
+]
+if (length(missing_figure3_assets) > 0) {
+  stop("Missing Figure 3 publication asset(s): ",
+       paste(missing_figure3_assets, collapse = ", "))
+}
+
+figure3_exports$copied_path <- mapply(
+  copy_publication_asset,
+  source = figure3_exports$source,
+  file_base = figure3_exports$target_base,
+  USE.NAMES = FALSE
+)
+figure3_exports <- figure3_exports |>
+  dplyr::mutate(
+    source = basename(source),
+    copied_to = basename(copied_path),
+    present = file.exists(copied_path)
+  ) |>
+  dplyr::select(figure, format, source, copied_to, present)
+
+figure3_png <- file.path(
+  out_dir,
+  "figure3_expression_cluster_gene_level_GO_KEGG_pathway_illustration.png"
+)
+figure3_lollipop_png <- file.path(
+  out_dir,
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png"
+)
+knitr::kable(figure3_exports, caption = "Figure 3 copied exports")
+
+```
+
+### Figure 3 versions {.tabset}
+
+#### Locust pathway map
+
+```{r figure-3-locust-map-display, echo=FALSE, fig.width=16, fig.height=19}
+if (file.exists(figure3_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure3_png))
+}
+```
+
+#### KEGG lollipops
+
+```{r figure-3-kegg-lollipop-display, echo=FALSE, fig.width=16, fig.height=18}
+if (file.exists(figure3_lollipop_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure3_lollipop_png))
+}
+```
+
+## Figure 4: curated immune and protein-anabolism targets
+
+Figure 4 preserves the curated biological categories and recalculates every
+DEG status from the corrected 45-sample competitive-host exon-only analysis.
+The supplied v21 workbook contains 111 unique targets (77 immune and 34
+protein-anabolism genes), and all 111 map to main nuclear chromosomes. Each
+target therefore stays in the denominator for every contrast and is shown as
+`N.S.` when it does not meet the current adjusted-P-value and fold-change
+thresholds. The matched all-scaffold view is retained as a reproducibility
+check and has the same target denominator. Placement details remain searchable on the
+[exon-only curated target-gene analysis page](45-exon-only-curated-target-genes.html).
+A separate audit view isolates the curated targets carrying the scaffold-origin
+page's non-metazoan homology review flags; those flags do not prove that the
+genes are contaminants.
+
+```{r figure-4-curated-targets, echo=FALSE, fig.width=15, fig.height=11.5}
+figure4_png <- copy_publication_asset(
+  figure4_curated_source,
+  "figure4_curated_targets_main_chromosomes"
+)
+figure4_placement_png <- copy_publication_asset(
+  figure4_placement_source,
+  "figure4_curated_target_placement_impact"
+)
+figure4_all_scaffolds_png <- copy_publication_asset(
+  figure4_all_scaffolds_source,
+  "figure4_curated_targets_all_scaffolds"
+)
+figure4_homology_flags_png <- copy_publication_asset(
+  figure4_homology_flags_source,
+  "figure4_curated_targets_non_grasshopper_homology_flags"
+)
+
+figure4_exports <- data.frame(
+  figure = c(
+    "Figure 4 main-chromosome curated targets",
+    "Figure 4 all-scaffold curated targets",
+    "Figure 4 homology-review targets",
+    "Figure 4 placement-impact audit"
+  ),
+  source = basename(c(
+    figure4_curated_source, figure4_all_scaffolds_source,
+    figure4_homology_flags_source, figure4_placement_source
+  )),
+  copied_to = basename(c(
+    figure4_png, figure4_all_scaffolds_png, figure4_homology_flags_png,
+    figure4_placement_png
+  )),
+  present = file.exists(c(
+    figure4_png, figure4_all_scaffolds_png, figure4_homology_flags_png,
+    figure4_placement_png
+  ))
+)
+knitr::kable(figure4_exports, caption = "Figure 4 copied exports")
+```
+
+### Figure 4 views {.tabset}
+
+#### Main chromosomes
+
+```{r figure-4-main-display, echo=FALSE, fig.width=15, fig.height=11.5}
+if (file.exists(figure4_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure4_png))
+}
+```
+
+#### All scaffolds
+
+```{r figure-4-all-scaffolds-display, echo=FALSE, fig.width=15, fig.height=11.5}
+if (file.exists(figure4_all_scaffolds_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure4_all_scaffolds_png))
+}
+```
+
+#### Homology review flags
+
+```{r figure-4-homology-flags-display, echo=FALSE, fig.width=15, fig.height=11.5}
+if (file.exists(figure4_homology_flags_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure4_homology_flags_png))
+}
+```
+
+#### Placement impact
+
+```{r figure-4-placement-display, echo=FALSE, fig.width=12, fig.height=7.5}
+if (file.exists(figure4_placement_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure4_placement_png))
+}
+```
+
+## Figure S1: outlier-removal sensitivity
+
+Figure S1 compares DEG calls across sample-filtering scenarios. It is a
+diagnostic companion to the main all-samples analysis: panel A shows how many
+samples remain in each diet-by-infection group, panel B shows how the number of
+DEGs changes across contrasts, and panel C shows whether genes are retained,
+lost, or gained after removing the current outlier set (`1007`, `1036`, `1037`,
+and `1039`).
+
+```{r figure-s1-outlier-sensitivity, fig.width=14, fig.height=13, results='asis'}
+s1_scenario_results <- read.csv(scenario_results_file, check.names = FALSE)
+s1_sample_counts <- read.csv(scenario_sample_counts_file, check.names = FALSE)
+
+s1_scenario_levels <- c("All samples", "Current outliers removed",
+                        "Expanded outlier set")
+s1_scenario_levels <- s1_scenario_levels[
+  s1_scenario_levels %in% unique(s1_scenario_results$scenario)
+]
+s1_direction_levels <- c("Downregulated", "Upregulated")
+s1_direction_colors <- c("Downregulated" = "#1D4ED8",
+                         "Upregulated" = "#B91C1C")
+s1_sensitivity_colors <- c(
+  "Retained after outlier removal" = "#B7791F",
+  "Lost after outlier removal" = "#B91C1C",
+  "Gained after outlier removal" = "#2563EB"
+)
+
+format_comparison_label <- function(x) {
+  dplyr::case_when(
+    x == "Diet 33: infected vs control" ~ "Diet 33\ninfected vs control",
+    x == "Diet 50: infected vs control" ~ "Diet 50\ninfected vs control",
+    x == "Diet 83: infected vs control" ~ "Diet 83\ninfected vs control",
+    x == "Control 33 vs 50" ~ "Control\n33 vs 50",
+    x == "Control 83 vs 33" ~ "Control\n83 vs 33",
+    x == "Control 83 vs 50" ~ "Control\n83 vs 50",
+    x == "Infected 33 vs 50" ~ "Infected\n33 vs 50",
+    x == "Infected 83 vs 33" ~ "Infected\n83 vs 33",
+    x == "Infected 83 vs 50" ~ "Infected\n83 vs 50",
+    TRUE ~ x
+  )
+}
+
+s1_comparison_levels <- c(
+  "Diet 33: infected vs control",
+  "Diet 50: infected vs control",
+  "Diet 83: infected vs control",
+  "Control 33 vs 50",
+  "Control 83 vs 33",
+  "Control 83 vs 50",
+  "Infected 33 vs 50",
+  "Infected 83 vs 33",
+  "Infected 83 vs 50"
+)
+s1_comparison_levels <- s1_comparison_levels[
+  s1_comparison_levels %in% unique(s1_scenario_results$comparison)
+]
+
+s1_sample_counts <- s1_sample_counts |>
+  dplyr::mutate(
+    scenario = factor(scenario, levels = s1_scenario_levels),
+    Diet = factor(Diet, levels = c("33", "50", "83")),
+    Treatment = factor(Treatment, levels = c("Control", "Infected"))
+  )
+
+p_s1_samples <- ggplot2::ggplot(
+  s1_sample_counts,
+  ggplot2::aes(x = Diet, y = n_samples, fill = Treatment)
+) +
+  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.75),
+                    width = 0.66, color = "#111827", linewidth = 0.25) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = n_samples),
+    position = ggplot2::position_dodge(width = 0.75),
+    vjust = -0.25,
+    size = 3.6
+  ) +
+  ggplot2::facet_wrap(~ scenario, nrow = 1) +
+  ggplot2::scale_fill_manual(values = treatment_colors, drop = FALSE) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.15))) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    strip.text = ggplot2::element_text(size = 11, face = "bold"),
+    axis.text = ggplot2::element_text(color = "#111827"),
+    legend.position = "bottom"
+  ) +
+  ggplot2::labs(
+    title = "A. Samples retained per scenario",
+    x = "Diet",
+    y = "Number of samples",
+    fill = "Treatment"
+  )
+
+s1_sig_results <- s1_scenario_results |>
+  dplyr::filter(
+    scenario %in% s1_scenario_levels,
+    comparison %in% s1_comparison_levels,
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold,
+    direction %in% s1_direction_levels
+  ) |>
+  dplyr::mutate(
+    scenario = factor(scenario, levels = s1_scenario_levels),
+    comparison = factor(comparison, levels = s1_comparison_levels),
+    comparison_label = factor(format_comparison_label(as.character(comparison)),
+                              levels = rev(format_comparison_label(s1_comparison_levels))),
+    direction = factor(direction, levels = s1_direction_levels)
+  )
+
+s1_deg_counts <- s1_sig_results |>
+  dplyr::count(scenario, comparison_type, comparison_label, direction,
+               name = "n_genes") |>
+  tidyr::complete(
+    scenario,
+    tidyr::nesting(comparison_type, comparison_label),
+    direction,
+    fill = list(n_genes = 0)
+  ) |>
+  dplyr::mutate(
+    signed_n_genes = dplyr::if_else(direction == "Downregulated",
+                                    -n_genes, n_genes)
+  )
+
+write.csv(s1_sample_counts,
+          file.path(out_dir, "figureS1_sample_counts_by_scenario.csv"),
+          row.names = FALSE)
+write.csv(s1_deg_counts,
+          file.path(out_dir, "figureS1_deg_counts_by_scenario.csv"),
+          row.names = FALSE)
+
+p_s1_burden <- ggplot2::ggplot(
+  s1_deg_counts,
+  ggplot2::aes(x = signed_n_genes, y = comparison_label, fill = direction)
+) +
+  ggplot2::geom_vline(xintercept = 0, color = "#111827", linewidth = 0.3) +
+  ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.2) +
+  ggplot2::facet_wrap(~ scenario, nrow = 1) +
+  ggplot2::scale_fill_manual(values = s1_direction_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(labels = abs) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = "#111827"),
+    strip.text = ggplot2::element_text(size = 10.5, face = "bold"),
+    legend.position = "bottom"
+  ) +
+  ggplot2::labs(
+    title = "B. Direction-aware DEG burden across filtering scenarios",
+    x = "Number of significant DEGs",
+    y = NULL,
+    fill = "Direction"
+  )
+
+s1_compare_scenarios <- c("All samples", "Current outliers removed")
+if (all(s1_compare_scenarios %in% unique(s1_sig_results$scenario))) {
+  s1_retained_lost_gained <- do.call(rbind, lapply(s1_comparison_levels,
+                                                   function(this_comparison) {
+    all_genes <- unique(s1_sig_results$gene_id[
+      s1_sig_results$scenario == "All samples" &
+        s1_sig_results$comparison == this_comparison
+    ])
+    no_outlier_genes <- unique(s1_sig_results$gene_id[
+      s1_sig_results$scenario == "Current outliers removed" &
+        s1_sig_results$comparison == this_comparison
+    ])
+    data.frame(
+      comparison = this_comparison,
+      sensitivity_class = c("Retained after outlier removal",
+                            "Lost after outlier removal",
+                            "Gained after outlier removal"),
+      n_genes = c(
+        length(intersect(all_genes, no_outlier_genes)),
+        length(setdiff(all_genes, no_outlier_genes)),
+        length(setdiff(no_outlier_genes, all_genes))
+      ),
+      stringsAsFactors = FALSE
+    )
+  }))
+} else {
+  s1_retained_lost_gained <- data.frame(
+    comparison = character(),
+    sensitivity_class = character(),
+    n_genes = integer()
+  )
+}
+
+s1_retained_lost_gained <- s1_retained_lost_gained |>
+  dplyr::mutate(
+    comparison = factor(comparison, levels = s1_comparison_levels),
+    comparison_label = factor(format_comparison_label(as.character(comparison)),
+                              levels = rev(format_comparison_label(s1_comparison_levels))),
+    sensitivity_class = factor(sensitivity_class,
+                               levels = names(s1_sensitivity_colors))
+  )
+
+write.csv(s1_retained_lost_gained,
+          file.path(out_dir, "figureS1_retained_lost_gained_degs.csv"),
+          row.names = FALSE)
+
+p_s1_retained <- ggplot2::ggplot(
+  s1_retained_lost_gained,
+  ggplot2::aes(x = n_genes, y = comparison_label, fill = sensitivity_class)
+) +
+  ggplot2::geom_col(width = 0.72, color = "white", linewidth = 0.2) +
+  ggplot2::scale_fill_manual(values = s1_sensitivity_colors, drop = FALSE) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = "#111827"),
+    legend.position = "bottom"
+  ) +
+  ggplot2::labs(
+    title = "C. DEG calls retained, lost, or gained after current outlier removal",
+    x = "Number of significant DEGs",
+    y = NULL,
+    fill = "Sensitivity class"
+  )
+
+figure_s1 <- p_s1_samples / p_s1_burden / p_s1_retained +
+  patchwork::plot_layout(heights = c(0.22, 0.48, 0.30)) +
+  patchwork::plot_annotation(
+    title = "Figure S1. Outlier-removal sensitivity analysis",
+    subtitle = "All comparisons use the rRNA-filtered count matrix and the same DEG thresholds as the main figures",
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure_s1, "figureS1_outlier_removal_sensitivity",
+             width = 17.5, height = 15)
+figure_s1
+
+figure_s1_exports <- data.frame(
+  figure = c("Figure S1 composite PNG", "Figure S1 composite SVG",
+             "Figure S1 sample counts", "Figure S1 DEG counts",
+             "Figure S1 retained/lost/gained counts"),
+  path = c(
+    file.path(out_dir, "figureS1_outlier_removal_sensitivity.png"),
+    file.path(out_dir, "figureS1_outlier_removal_sensitivity.svg"),
+    file.path(out_dir, "figureS1_sample_counts_by_scenario.csv"),
+    file.path(out_dir, "figureS1_deg_counts_by_scenario.csv"),
+    file.path(out_dir, "figureS1_retained_lost_gained_degs.csv")
+  ),
+  present = file.exists(c(
+    file.path(out_dir, "figureS1_outlier_removal_sensitivity.png"),
+    file.path(out_dir, "figureS1_outlier_removal_sensitivity.svg"),
+    file.path(out_dir, "figureS1_sample_counts_by_scenario.csv"),
+    file.path(out_dir, "figureS1_deg_counts_by_scenario.csv"),
+    file.path(out_dir, "figureS1_retained_lost_gained_degs.csv")
+  ))
+)
+knitr::kable(figure_s1_exports,
+             caption = "Figure S1 outlier-sensitivity exports")
+```
+
+## Figure S2: DEG localization on chromosomes
+
+Figure S2 maps the primary main-chromosome DEGs from each broad context onto the
+chromosome coordinates in the RefSeq GFF. Unplaced scaffolds are outside this
+publication figure by design and remain documented on the scaffold-origin and
+placement-sensitivity pages.
+
+An ideal parallel validation would have quantified selected host loci and
+*Metarhizium* load by qPCR from matched fat body tissue. That wet-lab validation
+cannot be performed for this dataset because no remaining tissue is available,
+so the origin of the unplaced-scaffold signal must be evaluated
+bioinformatically with scaffold annotation, fungal similarity searches, and
+competitive host-pathogen remapping.
+
+```{r figure-s2-deg-genome-localization, fig.width=16, fig.height=10.5, results='asis'}
+s2_scenario_degs <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    scenario == "All samples",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+s2_model_degs <- read.csv(model_coefficients_file, check.names = FALSE) |>
+  dplyr::filter(
+    coefficient == "Treatment_Infected_vs_Control",
+    significant,
+    !is.na(gene_id),
+    !is.na(padj),
+    padj < publication_params$alpha,
+    abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+s2_deg_sets <- list(
+  "Infection within diets" = s2_scenario_degs |>
+    dplyr::filter(comparison_type == "Infection within diet") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet DEGs in controls" = s2_scenario_degs |>
+    dplyr::filter(comparison_type == "Diet contrasts among control") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Diet DEGs in infected" = s2_scenario_degs |>
+    dplyr::filter(comparison_type == "Diet contrasts among infected") |>
+    dplyr::pull(gene_id) |>
+    unique(),
+  "Infection vs control" = unique(s2_model_degs$gene_id)
+)
+s2_deg_sets <- s2_deg_sets[lengths(s2_deg_sets) > 0]
+s2_context_levels <- names(s2_deg_sets)
+s2_context_colors <- c(
+  "Infection within diets" = "#C51B7D",
+  "Diet DEGs in controls" = "#D9A21B",
+  "Diet DEGs in infected" = "#1B9E77",
+  "Infection vs control" = "#377EB8"
+)
+
+s2_deg_long <- dplyr::bind_rows(lapply(s2_context_levels, function(context) {
+  data.frame(
+    DEG_context = context,
+    gene_id = s2_deg_sets[[context]],
+    stringsAsFactors = FALSE
+  )
+})) |>
+  dplyr::distinct(DEG_context, gene_id) |>
+  dplyr::mutate(DEG_context = factor(DEG_context,
+                                     levels = s2_context_levels))
+
+gff_coordinates <- parse_gff_gene_coordinates(gff_file)
+chromosome_order <- c(as.character(1:11), "X")
+
+chromosome_regions <- gff_coordinates$sequence_regions |>
+  dplyr::filter(chromosome %in% chromosome_order) |>
+  dplyr::mutate(
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    length_mb = seq_end / 1e6
+  )
+
+annotated_gene_counts <- gff_coordinates$gene_ranges |>
+  dplyr::filter(chromosome %in% chromosome_order) |>
+  dplyr::count(chromosome, name = "annotated_genes")
+
+s2_deg_coordinates <- s2_deg_long |>
+  dplyr::left_join(gff_coordinates$gene_ranges, by = "gene_id") |>
+  dplyr::mutate(
+    chromosome = as.character(chromosome),
+    chromosome_class = dplyr::coalesce(chromosome_class, "Missing from GFF"),
+    position_mb = midpoint / 1e6
+  )
+
+write.csv(s2_deg_coordinates,
+          file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
+          row.names = FALSE)
+
+s2_unplaced_summary <- s2_deg_coordinates |>
+  dplyr::filter(!(chromosome %in% chromosome_order)) |>
+  dplyr::count(DEG_context, chromosome_class, name = "n_degs") |>
+  dplyr::arrange(DEG_context, chromosome_class)
+
+write.csv(s2_unplaced_summary,
+          file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv"),
+          row.names = FALSE)
+
+s2_coordinate_class_counts <- s2_deg_coordinates |>
+  dplyr::mutate(
+    coordinate_class = dplyr::if_else(
+      chromosome_class == "Named chromosome",
+      "Named chromosomes 1-11/X",
+      chromosome_class
+    )
+  ) |>
+  dplyr::count(DEG_context, coordinate_class, name = "n_degs") |>
+  dplyr::group_by(DEG_context) |>
+  dplyr::mutate(proportion = n_degs / sum(n_degs)) |>
+  dplyr::ungroup()
+
+write.csv(s2_coordinate_class_counts,
+          file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
+          row.names = FALSE)
+
+s2_chromosome_degs <- s2_deg_coordinates |>
+  dplyr::filter(chromosome %in% chromosome_order, !is.na(position_mb)) |>
+  dplyr::mutate(
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    DEG_context = factor(DEG_context, levels = s2_context_levels)
+  )
+
+s2_chromosome_counts <- s2_chromosome_degs |>
+  dplyr::count(DEG_context, chromosome, name = "deg_genes") |>
+  tidyr::complete(
+    DEG_context,
+    chromosome = factor(chromosome_order, levels = rev(chromosome_order)),
+    fill = list(deg_genes = 0)
+  ) |>
+  dplyr::mutate(chromosome = as.character(chromosome)) |>
+  dplyr::left_join(annotated_gene_counts, by = "chromosome") |>
+  dplyr::mutate(
+    degs_per_1000_genes = 1000 * deg_genes / annotated_genes,
+    chromosome = factor(chromosome, levels = rev(chromosome_order)),
+    DEG_context = factor(DEG_context, levels = s2_context_levels)
+  )
+
+write.csv(s2_chromosome_counts,
+          file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
+          row.names = FALSE)
+
+p_s2_locations <- ggplot2::ggplot() +
+  ggplot2::geom_segment(
+    data = chromosome_regions,
+    ggplot2::aes(x = 0, xend = length_mb,
+                 y = chromosome, yend = chromosome),
+    linewidth = 4.8,
+    color = "#E5E7EB",
+    lineend = "round"
+  ) +
+  ggplot2::geom_point(
+    data = s2_chromosome_degs,
+    ggplot2::aes(x = position_mb, y = chromosome, color = DEG_context),
+    size = 0.55,
+    alpha = 0.45,
+    position = ggplot2::position_jitter(width = 0, height = 0.15, seed = 17)
+  ) +
+  ggplot2::facet_wrap(~ DEG_context, ncol = 2) +
+  ggplot2::scale_color_manual(values = s2_context_colors, guide = "none") +
+  ggplot2::scale_x_continuous(
+    expand = ggplot2::expansion(mult = c(0.01, 0.04))
+  ) +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(size = 12, face = "bold"),
+    axis.text.y = ggplot2::element_text(size = 10, color = "#111827"),
+    legend.position = "none"
+  ) +
+  ggplot2::labs(
+    title = "A. Chromosomal positions of DEGs by context",
+    subtitle = "Each point is one DEG-context membership; genes shared by contexts appear in each relevant panel",
+    x = "Genomic position (Mb)",
+    y = "Chromosome"
+  )
+
+p_s2_coordinate_class <- ggplot2::ggplot(
+  s2_chromosome_counts,
+  ggplot2::aes(x = chromosome, y = DEG_context,
+               fill = degs_per_1000_genes)
+) +
+  ggplot2::geom_tile(color = "white", linewidth = 0.45) +
+  ggplot2::scale_fill_gradient(low = "#FFF7D1", high = "#8B0000") +
+  theme_pub(base_size = 12) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10, color = "#111827"),
+    axis.text.x = ggplot2::element_text(face = "bold"),
+    legend.position = "bottom"
+  ) +
+  ggplot2::labs(
+    title = "C. DEG density by chromosome and context",
+    x = "Chromosome",
+    y = NULL,
+    fill = "DEGs per 1,000\nannotated genes"
+  )
+
+figure_s2 <- p_s2_locations / p_s2_coordinate_class +
+  patchwork::plot_layout(heights = c(0.78, 0.22)) +
+  patchwork::plot_annotation(
+    title = "Figure S2. Chromosomal localization of DEG contexts",
+    subtitle = "Primary paper DEG sets contain only official nuclear-chromosome genes",
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12)
+    )
+  )
+
+save_png_svg(figure_s2, "figureS2_deg_chromosome_localization",
+             width = 16, height = 10.5)
+figure_s2
+
+figure_s2_exports <- data.frame(
+  figure = c("Figure S2 composite PNG", "Figure S2 composite SVG",
+             "Figure S2 DEG coordinates", "Chromosome density table",
+             "Figure S2 coordinate class counts",
+             "Figure S2 unplaced/missing summary"),
+  path = c(
+    file.path(out_dir, "figureS2_deg_chromosome_localization.png"),
+    file.path(out_dir, "figureS2_deg_chromosome_localization.svg"),
+    file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
+    file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
+    file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
+    file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv")
+  ),
+  present = file.exists(c(
+    file.path(out_dir, "figureS2_deg_chromosome_localization.png"),
+    file.path(out_dir, "figureS2_deg_chromosome_localization.svg"),
+    file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
+    file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
+    file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
+    file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv")
+  ))
+)
+knitr::kable(figure_s2_exports,
+             caption = "Figure S2 chromosome-localization exports")
+knitr::kable(s2_unplaced_summary,
+             caption = "Audit check: excluded unplaced or missing DEG memberships (expected zero)")
+```
+
+## Exported files
+
+```{r exported-files}
+exports <- list.files(out_dir, full.names = FALSE)
+knitr::kable(tibble::tibble(file = exports),
+             caption = paste("Files written to", out_dir))
+```
+
+## Session information
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

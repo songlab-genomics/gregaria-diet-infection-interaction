@@ -1,0 +1,284 @@
+---
+title: "Exon-only diet pairwise DEGs"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
+  treatment_subset: "All"
+  min_count: 10
+  min_samples: 3
+  alpha: 0.05
+  lfc_threshold: 1
+  output_tag: "exon-only-diet-pairwise-deg"
+---
+
+## Purpose
+
+This page reruns the diet contrasts with exon-only counts while retaining the
+same 45 samples, rRNA exclusion, main-chromosome scope, DESeq2 filtering, and
+contrast directions used in the primary analysis.
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Restrict placement**
+
+Use only main-chromosome non-rRNA genes while retaining all samples.
+:::
+::: {.walkthrough-step}
+**Step 2 - Test diet pairs**
+
+Compare diets separately among control and infected locusts.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret context**
+
+Distinguish baseline diet effects from infection-dependent diet differences.
+:::
+:::
+
+This is the all-samples, main-chromosome version of the diet pairwise DEG page. It keeps every
+library in `mehreen_metadata_corrected_45.txt`, including the samples currently treated
+as outliers in sensitivity analyses.
+
+All tests use only non-rRNA genes assigned to nuclear chromosomes by the
+official assembly-placement table. Unplaced scaffolds are retained only in the
+separate origin-audit and sensitivity pages.
+
+This page tests pairwise diet contrasts. Set `treatment_subset` to `Control`,
+`Infected`, or `All` in the YAML header before knitting.
+
+The aim is to separate the diet question from the infection question as much as
+the design allows. When all samples are used, the model includes treatment as a
+covariate so diet contrasts are not simply rediscovering the infected-control
+difference. When one treatment is selected, the model asks which genes differ
+among diets within that treatment subset only.
+
+## Setup and data loading
+
+The metadata and count matrix are matched by sample label before modelling.
+This keeps the analysis reproducible and prevents silent sample-order mistakes,
+which are especially easy to make when count columns carry sequencing-style
+prefixes and suffixes.
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("DESeq2", "ggplot2", "EnhancedVolcano", "readr", "dplyr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+library(ggplot2)
+
+direction_colors <- c("Higher in first diet" = "#237C8E",
+                      "Higher in second diet" = "#B8643C")
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, params$treatment_subset,
+                           run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+metadata <- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label <- as.character(metadata$label)
+metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
+metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+counts_table <- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+stopifnot("gene_id" %in% names(counts_table))
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id")])
+rownames(counts) <- counts_table$gene_id
+storage.mode(counts) <- "integer"
+
+count_labels_all <- sub("_MERGE$", "", sub("^mehreen_", "", colnames(counts)))
+keep_samples <- count_labels_all %in% metadata$label
+counts <- counts[, keep_samples, drop = FALSE]
+count_labels <- count_labels_all[keep_samples]
+metadata <- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) <- metadata$label
+colnames(counts) <- count_labels
+
+placement <- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+counts <- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
+if (params$treatment_subset != "All") {
+  keep_samples <- metadata$Treatment == params$treatment_subset
+  counts <- counts[, keep_samples]
+  metadata <- droplevels(metadata[keep_samples, ])
+}
+
+keep_genes <- rowSums(counts >= params$min_count) >= params$min_samples
+input_audit <- data.frame(
+  treatment_subset = params$treatment_subset,
+  samples_retained = ncol(counts),
+  raw_count_rows = nrow(counts_table),
+  main_chromosome_non_rRNA_rows = nrow(counts),
+  genes_entering_DESeq2 = sum(keep_genes)
+)
+knitr::kable(input_audit, caption = "Main-chromosome analysis input audit")
+write.csv(input_audit, file.path(out_dir, "main_chromosome_input_audit.csv"),
+          row.names = FALSE)
+```
+
+## Fit model
+
+DESeq2 models raw counts with library-size normalization and gene-wise
+dispersion estimates. The `All` analysis uses `~ Treatment + Diet`, so each diet
+coefficient is estimated after accounting for infection status. This gives a
+cleaner diet comparison than pooling control and infected samples without a
+treatment term.
+
+```{r fit-model}
+design_formula <- if (params$treatment_subset == "All") {
+  ~ Treatment + Diet
+} else {
+  ~ Diet
+}
+
+dds <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_genes, ],
+  colData = metadata,
+  design = design_formula
+)
+
+dds <- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
+```
+
+## Pairwise diet contrasts
+
+Each contrast compares two diet levels at a time. A positive log2 fold-change
+means the gene is higher in the first diet named in the contrast; a negative
+log2 fold-change means it is higher in the second diet. The volcano plots show
+both effect size and adjusted p-value, while the CSV files keep the full table
+for downstream overlap and enrichment analyses.
+
+```{r pairwise-contrasts, fig.height=7, fig.width=8}
+diet_pairs <- combn(levels(droplevels(metadata$Diet)), 2, simplify = FALSE)
+
+contrast_results <- list()
+for (pair in diet_pairs) {
+  contrast_label <- paste(pair[1], "vs", pair[2], sep = "_")
+  message("Running diet contrast: ", contrast_label)
+
+  res <- DESeq2::results(dds, contrast = c("Diet", pair[1], pair[2]),
+                         alpha = params$alpha, cooksCutoff = FALSE)
+  res_df <- as.data.frame(res)
+  res_df$gene_id <- rownames(res_df)
+  res_df$contrast <- contrast_label
+  res_df$significant <- !is.na(res_df$padj) &
+    res_df$padj < params$alpha &
+    abs(res_df$log2FoldChange) >= params$lfc_threshold
+
+  contrast_results[[contrast_label]] <- res_df
+  write.csv(res_df, file.path(out_dir, paste0("DESeq2_", contrast_label, ".csv")),
+            row.names = FALSE)
+  writeLines(res_df$gene_id[res_df$significant],
+             file.path(out_dir, paste0("significant_genes_", contrast_label, ".txt")))
+
+  print(EnhancedVolcano::EnhancedVolcano(
+    res_df,
+    lab = res_df$gene_id,
+    x = "log2FoldChange",
+    y = "padj",
+    pCutoff = params$alpha,
+    FCcutoff = params$lfc_threshold,
+    title = paste("Diet", pair[1], "vs", pair[2]),
+    subtitle = paste("Treatment subset:", params$treatment_subset)
+  ))
+}
+
+all_pairwise <- do.call(rbind, contrast_results)
+write.csv(all_pairwise, file.path(out_dir, "all_diet_pairwise_results.csv"),
+          row.names = FALSE)
+```
+
+## DEG count barplot
+
+Volcano plots are useful for seeing the distribution of effect sizes, but they
+are not the fastest way to compare how many genes pass the current thresholds in
+each contrast. This barplot reduces each contrast to the number of significant
+DEGs and separates the direction of change.
+
+```{r deg-count-barplot, fig.height=4.8, fig.width=7.5}
+sig_pairwise <- all_pairwise[all_pairwise$significant &
+                               !is.na(all_pairwise$log2FoldChange), ]
+sig_pairwise$direction <- ifelse(sig_pairwise$log2FoldChange > 0,
+                                 "Higher in first diet",
+                                 "Higher in second diet")
+sig_pairwise$contrast <- factor(sig_pairwise$contrast,
+                                levels = names(contrast_results))
+sig_pairwise$direction <- factor(sig_pairwise$direction,
+                                 levels = c("Higher in first diet",
+                                            "Higher in second diet"))
+
+deg_bar_counts <- as.data.frame(table(
+  contrast = sig_pairwise$contrast,
+  direction = sig_pairwise$direction
+))
+names(deg_bar_counts)[3] <- "n_significant_genes"
+
+p_deg_counts <- ggplot(deg_bar_counts,
+                       aes(x = contrast, y = n_significant_genes,
+                           fill = direction)) +
+  geom_col(position = position_dodge(width = 0.78), width = 0.68) +
+  geom_text(aes(label = n_significant_genes),
+            position = position_dodge(width = 0.78),
+            vjust = -0.35, size = 3.2) +
+  scale_fill_manual(values = direction_colors) +
+  theme_classic() +
+  labs(
+    title = "Significant diet DEGs by contrast and direction",
+    subtitle = paste("Treatment subset:", params$treatment_subset),
+    x = "Diet contrast",
+    y = "Number of significant genes",
+    fill = "Direction"
+  )
+
+p_deg_counts
+ggsave(file.path(out_dir, "diet_pairwise_deg_count_barplot.png"),
+       p_deg_counts, width = 7.5, height = 4.8, dpi = 300)
+write.csv(deg_bar_counts, file.path(out_dir, "diet_pairwise_direction_counts.csv"),
+          row.names = FALSE)
+```
+
+## Summary
+
+The summary table reports the total number of genes that pass the adjusted
+p-value and log2 fold-change thresholds for each diet contrast. It is saved as a
+small machine-readable table because these counts are used again by the
+publication-figure and enrichment pages.
+
+```{r summary}
+summary_table <- aggregate(significant ~ contrast, all_pairwise, sum)
+names(summary_table)[2] <- "n_significant_genes"
+knitr::kable(summary_table)
+
+write.csv(summary_table, file.path(out_dir, "diet_pairwise_summary.csv"),
+          row.names = FALSE)
+```
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

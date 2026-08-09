@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   treatment_subset: "All"
@@ -41,7 +41,7 @@ Distinguish baseline diet effects from infection-dependent diet differences.
 :::
 
 This is the all-samples, main-chromosome version of the diet pairwise DEG page. It keeps every
-library in `mehreen_metadata_fixed.txt`, including the samples currently treated
+library in `mehreen_metadata_corrected_45.txt`, including the samples currently treated
 as outliers in sensitivity analyses.
 
 All tests use only non-rRNA genes assigned to nuclear chromosomes by the

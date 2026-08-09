@@ -1,0 +1,25 @@
+"set_label","pathway_scope","n_enriched_pathways"
+"All infection DEGs","Eukaryote/metazoan-compatible",3
+"All infection DEGs","Core metabolism or cross-domain",14
+"All infection DEGs","Broad KEGG reference map",4
+"All infection DEGs","Microbial/prokaryote-associated label",0
+"All infection DEGs","Reference disease pathway",3
+"All infection DEGs","Unclassified KEGG reference label",0
+"Diet 33","Eukaryote/metazoan-compatible",0
+"Diet 33","Core metabolism or cross-domain",2
+"Diet 33","Broad KEGG reference map",0
+"Diet 33","Microbial/prokaryote-associated label",0
+"Diet 33","Reference disease pathway",0
+"Diet 33","Unclassified KEGG reference label",0
+"Diet 50","Eukaryote/metazoan-compatible",4
+"Diet 50","Core metabolism or cross-domain",10
+"Diet 50","Broad KEGG reference map",2
+"Diet 50","Microbial/prokaryote-associated label",0
+"Diet 50","Reference disease pathway",1
+"Diet 50","Unclassified KEGG reference label",0
+"Diet 83","Eukaryote/metazoan-compatible",1
+"Diet 83","Core metabolism or cross-domain",1
+"Diet 83","Broad KEGG reference map",1
+"Diet 83","Microbial/prokaryote-associated label",0
+"Diet 83","Reference disease pathway",0
+"Diet 83","Unclassified KEGG reference label",0

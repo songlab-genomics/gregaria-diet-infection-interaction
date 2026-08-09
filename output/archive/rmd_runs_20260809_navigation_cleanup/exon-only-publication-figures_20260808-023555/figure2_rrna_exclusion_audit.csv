@@ -1,0 +1,22 @@
+"figure2_set","genes_plotted","listed_rRNA_genes"
+"Panel A: directional DEG burden",1985,0
+"Exact contrast: Diet 33: infected vs control",857,0
+"Exact contrast: Diet 50: infected vs control",1116,0
+"Exact contrast: Diet 83: infected vs control",768,0
+"Exact contrast: Control: diet 33 vs 50",2,0
+"Exact contrast: Control: diet 83 vs 33",47,0
+"Exact contrast: Control: diet 83 vs 50",23,0
+"Exact contrast: Infected: diet 33 vs 50",104,0
+"Exact contrast: Infected: diet 83 vs 33",39,0
+"Exact contrast: Infected: diet 83 vs 50",15,0
+"Exact contrast: All diets: infected vs control",1422,0
+"Broad context: Infection within diets",1633,0
+"Broad context: Diet DEGs in controls",56,0
+"Broad context: Diet DEGs in infected",147,0
+"Broad context: Infection vs control",1422,0
+"Infection Venn: Diet 33",857,0
+"Infection Venn: Diet 50",1116,0
+"Infection Venn: Diet 83",768,0
+"Phase Venn: Infection within diets",1633,0
+"Phase Venn: Head phase DEGs",717,0
+"Phase Venn: Thorax phase DEGs",1074,0

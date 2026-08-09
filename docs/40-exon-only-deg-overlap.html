@@ -1,0 +1,2479 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Emily Baker and Maeva A. Techer" />
+
+<meta name="date" content="2026-08-09" />
+
+<title>Exon-only DEG overlap and prioritization</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="site-style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">S. gregaria diet x infection</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Start Here
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="index.html">Project overview</a>
+    </li>
+    <li>
+      <a href="01-study-design-data.html">Study design and data</a>
+    </li>
+    <li>
+      <a href="02-workflow-reproducibility.html">RNA-seq workflow</a>
+    </li>
+    <li>
+      <a href="03-count-qc-exploration.html">Count QC and exploration</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Fat Body Experiment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="03-count-qc-exploration.html">Experiment QC</a>
+        </li>
+        <li>
+          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
+        </li>
+        <li>
+          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
+        </li>
+        <li>
+          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
+        </li>
+        <li>
+          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
+        </li>
+        <li>
+          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
+        </li>
+        <li>
+          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+        </li>
+        <li>
+          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Interpretation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
+        </li>
+        <li>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+        <li>
+          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Figures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="08-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sensitivity and Validation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+        </li>
+        <li>
+          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+        </li>
+        <li>
+          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Archive
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="archive.html">Archived analysis index</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
+        </li>
+        <li>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
+        </li>
+        <li>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
+        </li>
+        <li>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
+        </li>
+        <li>
+          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
+        </li>
+        <li>
+          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
+        </li>
+        <li>
+          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
+        </li>
+        <li>
+          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
+        </li>
+        <li>
+          <a href="overlap.html">Original DEG overlap and prioritization</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="file_prep.html">Original file preparation</a>
+    </li>
+    <li>
+      <a href="deg.html">Original DEG with rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna.html">Original DEG without rRNA</a>
+    </li>
+    <li>
+      <a href="deg-no-rrna-sva.html">Original DEG without rRNA + SVA</a>
+    </li>
+    <li>
+      <a href="overlap.html">Original overlap page</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Exon-only DEG overlap and
+prioritization</h1>
+<h4 class="author">Emily Baker and Maeva A. Techer</h4>
+<h4 class="date">2026-08-09</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-08-09
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>gregaria-diet-infection-interaction/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260427code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260427)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260427code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260427)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    analysis/output/
+    Ignored:    code/R_timecourse_reference/
+    Ignored:    code/scripts/__pycache__/
+    Ignored:    data/.DS_Store
+    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
+    Ignored:    data/reference/
+    Ignored:    output/.DS_Store
+    Ignored:    output/rmd_runs/
+    Ignored:    output/runs/
+    Ignored:    outputs/.DS_Store
+    Ignored:    scripts/.RData
+    Ignored:    scripts/.Rhistory
+    Ignored:    scripts/manuscript/__pycache__/
+
+Untracked files:
+    Untracked:  analysis/36-exon-only-deseq2-analysis.Rmd
+    Untracked:  analysis/37-exon-only-interaction-model.Rmd
+    Untracked:  analysis/38-exon-only-diet-pairwise-deg.Rmd
+    Untracked:  analysis/39-exon-only-infection-within-diet-deg.Rmd
+    Untracked:  analysis/40-exon-only-deg-overlap.Rmd
+    Untracked:  analysis/41-exon-only-deg-catalogue.Rmd
+    Untracked:  analysis/42-exon-only-go-term-enrichment.Rmd
+    Untracked:  analysis/43-exon-only-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/44-exon-only-expression-clusters.Rmd
+    Untracked:  analysis/45-exon-only-curated-target-genes.Rmd
+    Untracked:  analysis/46-exon-only-publication-figures.Rmd
+    Untracked:  code/config/fatbody_dual_rnaseq_sample_1044.tsv
+    Untracked:  code/config/fatbody_dual_rnaseq_samples_corrected_45.tsv
+    Untracked:  code/pilot/merge_fatbody_1044_lanes.slurm
+    Untracked:  code/pilot/submit_fatbody_1044_addon_hpc.sh
+    Untracked:  data/metadata/mehreen_metadata_corrected_45.txt
+    Untracked:  data/metadata/mehreen_metadata_no_outliers_corrected_45.txt
+    Untracked:  data/metadata/metadata_correction_audit_20260809.tsv
+    Untracked:  manuscript/
+    Untracked:  scripts/manuscript/revise_cbpb_manuscript.py
+    Untracked:  scripts/prepare_corrected_45_sample_inputs.py
+
+Unstaged changes:
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Modified:   analysis/35-count-definition-sensitivity.Rmd
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_hpc.sh
+    Modified:   code/pilot/check_host_pathogen_dual_progress.sh
+    Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
+    Modified:   code/snakemake.host_pathogen_dual.slurm
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<div class="walkthrough-grid">
+<div class="walkthrough-step">
+<p><strong>Step 1 - Build DEG sets</strong></p>
+<p>Collect exact contrast-level chromosome-only gene lists.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 2 - Measure overlap</strong></p>
+<p>Use Venn, UpSet, and presence-absence summaries to show shared
+calls.</p>
+</div>
+<div class="walkthrough-step">
+<p><strong>Step 3 - Prioritize genes</strong></p>
+<p>Trace recurrent genes back to the contrasts in which they are
+significant.</p>
+</div>
+</div>
+<p>This page compares significant main-chromosome DEG lists from the
+all-samples model pages. It also runs the small condition-specific diet
+contrasts needed for targeted Venn diagrams: diet-to-diet DEGs among
+control samples and diet-to-diet DEGs among infected samples.</p>
+<p>The goal is to ask whether the same genes repeatedly appear across
+diet contrasts, infection contrasts, and model coefficients. Genes that
+recur across analyses can be useful candidates for follow-up because
+they are less dependent on a single contrast definition.</p>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>The page reads DEG result files from the timestamped run folders
+produced by the analysis pages. This keeps the overlap step reproducible
+while avoiding hidden helper scripts: the thresholds used to define a
+DEG remain visible in the YAML header.</p>
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required &lt;- c(&quot;DESeq2&quot;, &quot;ggplot2&quot;, &quot;UpSetR&quot;, &quot;ggVennDiagram&quot;, &quot;readr&quot;, &quot;dplyr&quot;)
+missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) &gt; 0) {
+  stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
+}
+library(ggplot2)
+
+diet_colors &lt;- c(&quot;33&quot; = &quot;#E6862E&quot;, &quot;50&quot; = &quot;#2F8F5B&quot;, &quot;83&quot; = &quot;#7B4FA3&quot;)
+overlap_colors &lt;- c(&quot;Present&quot; = &quot;#2F8F5B&quot;, &quot;Absent&quot; = &quot;grey92&quot;)
+bar_color &lt;- &quot;#2F8F5B&quot;
+
+project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
+run_stamp &lt;- format(Sys.time(), &quot;%Y%m%d-%H%M%S&quot;)
+out_dir &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
+                     paste(params$output_tag, run_stamp, sep = &quot;_&quot;))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root &lt;- file.path(project_dir, params$results_root)
+
+latest_dir &lt;- function(pattern) {
+  dirs &lt;- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs &lt;- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) stop(&quot;No run folder matched: &quot;, pattern)
+  dirs[which.max(file.info(dirs)$mtime)]
+}</code></pre>
+</div>
+<div id="find-result-files" class="section level2">
+<h2>Find result files</h2>
+<p>Only CSV files that look like DESeq2 result tables are selected. The
+table below is shown so the reader can see exactly which run outputs
+contributed to the overlap analysis.</p>
+<pre class="r"><code>current_run_dirs &lt;- c(
+  latest_dir(&quot;^exon-only-interaction-model_&quot;),
+  latest_dir(&quot;^exon-only-diet-pairwise-deg_All_&quot;),
+  latest_dir(&quot;^exon-only-infection-within-diet-deg_&quot;)
+)
+all_result_files &lt;- unlist(lapply(
+  current_run_dirs,
+  list.files,
+  pattern = &quot;\\.csv$&quot;,
+  full.names = TRUE
+))
+all_result_files &lt;- all_result_files[grepl(
+  &quot;DESeq2_|all_.*results|coefficients&quot;,
+  basename(all_result_files)
+)]
+
+file_info &lt;- data.frame(
+  file = all_result_files,
+  short_name = basename(all_result_files),
+  modified = file.info(all_result_files)$mtime,
+  stringsAsFactors = FALSE
+)
+file_info &lt;- file_info[order(file_info$short_name,
+                             -as.numeric(file_info$modified)), ]
+
+# Keep the newest run for each result table so old workflowR runs do not
+# duplicate the same contrast many times in the overlap figures.
+file_info &lt;- file_info[!duplicated(file_info$short_name), ]
+result_files &lt;- file_info$file
+
+file_table &lt;- data.frame(
+  file = result_files,
+  short_name = basename(result_files),
+  modified = file.info(result_files)$mtime
+)
+
+knitr::kable(file_table)</code></pre>
+<table>
+<colgroup>
+<col width="75%" />
+<col width="16%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">file</th>
+<th align="left">short_name</th>
+<th align="left">modified</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-diet-pairwise-deg_All_20260809-155959/all_diet_pairwise_results.csv</td>
+<td align="left">all_diet_pairwise_results.csv</td>
+<td align="left">2026-08-09 16:00:07</td>
+</tr>
+<tr class="even">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-infection-within-diet-deg_20260809-160012/all_infection_within_diet_results.csv</td>
+<td align="left">all_infection_within_diet_results.csv</td>
+<td align="left">2026-08-09 16:00:21</td>
+</tr>
+<tr class="odd">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-interaction-model_20260809-155940/all_model_coefficients.csv</td>
+<td align="left">all_model_coefficients.csv</td>
+<td align="left">2026-08-09 15:59:53</td>
+</tr>
+<tr class="even">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-diet-pairwise-deg_All_20260809-155959/DESeq2_33_vs_50.csv</td>
+<td align="left">DESeq2_33_vs_50.csv</td>
+<td align="left">2026-08-09 16:00:06</td>
+</tr>
+<tr class="odd">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-diet-pairwise-deg_All_20260809-155959/DESeq2_33_vs_83.csv</td>
+<td align="left">DESeq2_33_vs_83.csv</td>
+<td align="left">2026-08-09 16:00:06</td>
+</tr>
+<tr class="even">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-diet-pairwise-deg_All_20260809-155959/DESeq2_50_vs_83.csv</td>
+<td align="left">DESeq2_50_vs_83.csv</td>
+<td align="left">2026-08-09 16:00:07</td>
+</tr>
+<tr class="odd">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-infection-within-diet-deg_20260809-160012/DESeq2_infected_vs_control_diet_33.csv</td>
+<td align="left">DESeq2_infected_vs_control_diet_33.csv</td>
+<td align="left">2026-08-09 16:00:19</td>
+</tr>
+<tr class="even">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-infection-within-diet-deg_20260809-160012/DESeq2_infected_vs_control_diet_50.csv</td>
+<td align="left">DESeq2_infected_vs_control_diet_50.csv</td>
+<td align="left">2026-08-09 16:00:20</td>
+</tr>
+<tr class="odd">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-infection-within-diet-deg_20260809-160012/DESeq2_infected_vs_control_diet_83.csv</td>
+<td align="left">DESeq2_infected_vs_control_diet_83.csv</td>
+<td align="left">2026-08-09 16:00:20</td>
+</tr>
+<tr class="even">
+<td
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-interaction-model_20260809-155940/interaction_coefficients.csv</td>
+<td align="left">interaction_coefficients.csv</td>
+<td align="left">2026-08-09 15:59:54</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="build-deg-sets" class="section level2">
+<h2>Build DEG sets</h2>
+<p>Each result table is converted into a set of significant gene IDs. If
+a table already contains a <code>significant</code> column, that column
+is used directly; otherwise the page reconstructs the DEG call from
+adjusted p-value and log2 fold-change. This lets the overlap page work
+with both the current self-contained Rmd outputs and older result
+tables.</p>
+<pre class="r"><code>read_deg_set &lt;- function(path) {
+  tab &lt;- read.csv(path, check.names = FALSE)
+  gene_col &lt;- intersect(c(&quot;gene_id&quot;, &quot;gene&quot;, &quot;GeneID&quot;), names(tab))[1]
+  if (is.na(gene_col)) return(NULL)
+
+  if (&quot;significant&quot; %in% names(tab)) {
+    sig &lt;- tab$significant
+  } else if (all(c(&quot;padj&quot;, &quot;log2FoldChange&quot;) %in% names(tab))) {
+    sig &lt;- !is.na(tab$padj) &amp;
+      tab$padj &lt; params$alpha &amp;
+      abs(tab$log2FoldChange) &gt;= params$lfc_threshold
+  } else {
+    return(NULL)
+  }
+
+  unique(as.character(tab[[gene_col]][sig]))
+}
+
+deg_sets &lt;- lapply(result_files, read_deg_set)
+names(deg_sets) &lt;- tools::file_path_sans_ext(basename(result_files))
+deg_sets &lt;- deg_sets[lengths(deg_sets) &gt; 0]
+
+set_summary &lt;- data.frame(
+  set = names(deg_sets),
+  n_genes = lengths(deg_sets),
+  stringsAsFactors = FALSE
+)
+set_summary &lt;- set_summary[order(set_summary$n_genes, decreasing = TRUE), ]
+deg_sets &lt;- deg_sets[set_summary$set]
+
+knitr::kable(set_summary)</code></pre>
+<table>
+<colgroup>
+<col width="44%" />
+<col width="44%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">set</th>
+<th align="right">n_genes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">all_infection_within_diet_results</td>
+<td align="left">all_infection_within_diet_results</td>
+<td align="right">1585</td>
+</tr>
+<tr class="even">
+<td align="left">all_model_coefficients</td>
+<td align="left">all_model_coefficients</td>
+<td align="right">1109</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="left">DESeq2_infected_vs_control_diet_50</td>
+<td align="right">1096</td>
+</tr>
+<tr class="even">
+<td align="left">DESeq2_infected_vs_control_diet_33</td>
+<td align="left">DESeq2_infected_vs_control_diet_33</td>
+<td align="right">797</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq2_infected_vs_control_diet_83</td>
+<td align="left">DESeq2_infected_vs_control_diet_83</td>
+<td align="right">783</td>
+</tr>
+<tr class="even">
+<td align="left">all_diet_pairwise_results</td>
+<td align="left">all_diet_pairwise_results</td>
+<td align="right">135</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq2_33_vs_83</td>
+<td align="left">DESeq2_33_vs_83</td>
+<td align="right">93</td>
+</tr>
+<tr class="even">
+<td align="left">DESeq2_50_vs_83</td>
+<td align="left">DESeq2_50_vs_83</td>
+<td align="right">41</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq2_33_vs_50</td>
+<td align="left">DESeq2_33_vs_50</td>
+<td align="right">39</td>
+</tr>
+<tr class="even">
+<td align="left">interaction_coefficients</td>
+<td align="left">interaction_coefficients</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write.csv(set_summary, file.path(out_dir, &quot;deg_set_summary.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="deg-set-size-plot" class="section level2">
+<h2>DEG set size plot</h2>
+<p>This first figure is the fastest way to see which contrasts are
+driving most of the DEG signal. It counts each DEG set independently,
+before asking whether genes overlap between sets.</p>
+<pre class="r"><code>set_summary$set &lt;- factor(set_summary$set, levels = rev(set_summary$set))
+
+p_set_size &lt;- ggplot(set_summary, aes(x = set, y = n_genes)) +
+  geom_col(fill = bar_color, width = 0.72) +
+  geom_text(aes(label = n_genes), hjust = -0.12, size = 3) +
+  coord_flip() +
+  theme_classic() +
+  labs(
+    title = &quot;DEG set sizes&quot;,
+    x = &quot;DEG set&quot;,
+    y = &quot;Number of significant genes&quot;
+  )
+
+p_set_size</code></pre>
+<p><img src="figure/40-exon-only-deg-overlap.Rmd/deg-set-size-plot-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(file.path(out_dir, &quot;deg_set_size_barplot.png&quot;),
+       p_set_size, width = 9, height = 5.8, dpi = 300)</code></pre>
+</div>
+<div id="presence-absence-matrix" class="section level2">
+<h2>Presence-absence matrix</h2>
+<p>The presence-absence matrix records whether each DEG appears in each
+result set. The priority table then lists genes that occur in two or
+more sets, which is a practical starting point for annotation,
+enrichment, and candidate-gene figures.</p>
+<pre class="r"><code>if (length(deg_sets) == 0) {
+  stop(&quot;No DEG sets found. Knit the DESeq2 pages first, then rerun this page.&quot;)
+}
+
+all_genes &lt;- sort(unique(unlist(deg_sets)))
+presence &lt;- sapply(deg_sets, function(x) all_genes %in% x)
+presence_df &lt;- data.frame(gene_id = all_genes, presence, check.names = FALSE)
+
+write.csv(presence_df, file.path(out_dir, &quot;deg_presence_absence_matrix.csv&quot;),
+          row.names = FALSE)
+
+overlap_count &lt;- rowSums(presence)
+names(overlap_count) &lt;- all_genes
+priority_genes &lt;- data.frame(
+  gene_id = all_genes[overlap_count &gt;= 2],
+  n_sets = overlap_count[overlap_count &gt;= 2],
+  set_members = apply(presence[overlap_count &gt;= 2, , drop = FALSE], 1,
+                      function(x) paste(names(deg_sets)[x], collapse = &quot;; &quot;)),
+  stringsAsFactors = FALSE
+)
+priority_genes &lt;- priority_genes[order(priority_genes$n_sets, decreasing = TRUE), ]
+
+knitr::kable(head(priority_genes, 25))</code></pre>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="5%" />
+<col width="2%" />
+<col width="87%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">gene_id</th>
+<th align="right">n_sets</th>
+<th align="left">set_members</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">LOC126293368</td>
+<td align="left">LOC126293368</td>
+<td align="right">8</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126281299</td>
+<td align="left">LOC126281299</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126281915</td>
+<td align="left">LOC126281915</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126282167</td>
+<td align="left">LOC126282167</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126295040</td>
+<td align="left">LOC126295040</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126324953</td>
+<td align="left">LOC126324953</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126335309</td>
+<td align="left">LOC126335309</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126336201</td>
+<td align="left">LOC126336201</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126336533</td>
+<td align="left">LOC126336533</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126336534</td>
+<td align="left">LOC126336534</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126336538</td>
+<td align="left">LOC126336538</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126336541</td>
+<td align="left">LOC126336541</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126344004</td>
+<td align="left">LOC126344004</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126354577</td>
+<td align="left">LOC126354577</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83;
+interaction_coefficients</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126266657</td>
+<td align="left">LOC126266657</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126266984</td>
+<td align="left">LOC126266984</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126267114</td>
+<td align="left">LOC126267114</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; DESeq2_infected_vs_control_diet_83;
+interaction_coefficients</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126267263</td>
+<td align="left">LOC126267263</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126267545</td>
+<td align="left">LOC126267545</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126278052</td>
+<td align="left">LOC126278052</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_33;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126278485</td>
+<td align="left">LOC126278485</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126284936</td>
+<td align="left">LOC126284936</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_33; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126285146</td>
+<td align="left">LOC126285146</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">LOC126292038</td>
+<td align="left">LOC126292038</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_50;
+DESeq2_infected_vs_control_diet_83; all_diet_pairwise_results;
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">LOC126295405</td>
+<td align="left">LOC126295405</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results;
+all_model_coefficients; DESeq2_infected_vs_control_diet_83;
+all_diet_pairwise_results; DESeq2_33_vs_83; DESeq2_50_vs_83</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write.csv(priority_genes, file.path(out_dir, &quot;genes_seen_in_two_or_more_sets.csv&quot;),
+          row.names = FALSE)</code></pre>
+</div>
+<div id="intersection-size-plot" class="section level2">
+<h2>Intersection size plot</h2>
+<p>This plot counts overlap patterns directly. A bar means that a group
+of genes is shared by exactly the DEG sets named on the y-axis. This is
+easier to read than a full gene-by-set heatmap when the result files
+contain many contrasts.</p>
+<pre class="r"><code>intersection_labels &lt;- apply(presence, 1, function(x) {
+  paste(names(deg_sets)[x], collapse = &quot; + &quot;)
+})
+intersection_labels &lt;- intersection_labels[nzchar(intersection_labels)]
+intersection_summary &lt;- as.data.frame(table(intersection = intersection_labels),
+                                      stringsAsFactors = FALSE)
+names(intersection_summary)[2] &lt;- &quot;n_genes&quot;
+intersection_summary$n_sets &lt;- vapply(strsplit(intersection_summary$intersection,
+                                               &quot; [+] &quot;),
+                                      length, integer(1))
+intersection_summary &lt;- intersection_summary[order(intersection_summary$n_genes,
+                                                   intersection_summary$n_sets,
+                                                   decreasing = TRUE), ]
+intersection_summary &lt;- head(intersection_summary, 20)
+intersection_summary$intersection_id &lt;- sprintf(&quot;I%02d&quot;, seq_len(nrow(intersection_summary)))
+intersection_summary$intersection_id &lt;- factor(intersection_summary$intersection_id,
+                                               levels = rev(intersection_summary$intersection_id))
+
+p_intersections &lt;- ggplot(intersection_summary,
+                          aes(x = intersection_id, y = n_genes,
+                              fill = factor(n_sets))) +
+  geom_col(width = 0.72) +
+  geom_text(aes(label = n_genes), hjust = -0.12, size = 3) +
+  coord_flip() +
+  scale_fill_manual(values = c(&quot;1&quot; = &quot;#7B8794&quot;, &quot;2&quot; = &quot;#237C8E&quot;,
+                               &quot;3&quot; = &quot;#5B6B4A&quot;, &quot;4&quot; = &quot;#B8643C&quot;,
+                               &quot;5&quot; = &quot;#8C6D9E&quot;, &quot;6&quot; = &quot;#C85A54&quot;),
+                    na.value = &quot;#374151&quot;) +
+  theme_classic() +
+  labs(
+    title = &quot;Top DEG intersections&quot;,
+    subtitle = &quot;Bars show exact overlap patterns across the latest DEG result tables&quot;,
+    x = &quot;Intersection ID&quot;,
+    y = &quot;Number of genes&quot;,
+    fill = &quot;Number of sets&quot;
+  )
+
+p_intersections</code></pre>
+<p><img src="figure/40-exon-only-deg-overlap.Rmd/intersection-size-plot-1.png" alt="" width="864" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(file.path(out_dir, &quot;deg_intersection_size_barplot.png&quot;),
+       p_intersections, width = 9, height = 6.5, dpi = 300)
+write.csv(intersection_summary,
+          file.path(out_dir, &quot;deg_intersection_summary.csv&quot;),
+          row.names = FALSE)
+
+knitr::kable(intersection_summary[, c(&quot;intersection_id&quot;, &quot;n_genes&quot;,
+                                      &quot;n_sets&quot;, &quot;intersection&quot;)],
+             caption = &quot;Intersection IDs used in the plot&quot;)</code></pre>
+<table>
+<caption>Intersection IDs used in the plot</caption>
+<colgroup>
+<col width="1%" />
+<col width="6%" />
+<col width="3%" />
+<col width="2%" />
+<col width="86%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">intersection_id</th>
+<th align="right">n_genes</th>
+<th align="right">n_sets</th>
+<th align="left">intersection</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">I01</td>
+<td align="right">407</td>
+<td align="right">3</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">I02</td>
+<td align="right">365</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33 +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="odd">
+<td align="left">33</td>
+<td align="left">I03</td>
+<td align="right">235</td>
+<td align="right">2</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="even">
+<td align="left">26</td>
+<td align="left">I04</td>
+<td align="right">177</td>
+<td align="right">2</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">I05</td>
+<td align="right">168</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">I06</td>
+<td align="right">99</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="odd">
+<td align="left">30</td>
+<td align="left">I07</td>
+<td align="right">51</td>
+<td align="right">3</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33 +
+DESeq2_infected_vs_control_diet_83</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">I08</td>
+<td align="right">17</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_50</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">I09</td>
+<td align="right">16</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">I10</td>
+<td align="right">13</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_50</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">I11</td>
+<td align="right">11</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">I12</td>
+<td align="right">11</td>
+<td align="right">3</td>
+<td align="left">all_diet_pairwise_results + DESeq2_33_vs_83 +
+DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">I13</td>
+<td align="right">10</td>
+<td align="right">7</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+DESeq2_infected_vs_control_diet_33 + DESeq2_infected_vs_control_diet_83
++ all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">34</td>
+<td align="left">I14</td>
+<td align="right">7</td>
+<td align="right">4</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results +
+DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">I15</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="left">all_diet_pairwise_results + DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">I16</td>
+<td align="right">6</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">I17</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="left">all_infection_within_diet_results +
+all_model_coefficients + DESeq2_infected_vs_control_diet_50 +
+all_diet_pairwise_results + DESeq2_33_vs_83 + DESeq2_33_vs_50</td>
+</tr>
+<tr class="even">
+<td align="left">35</td>
+<td align="left">I18</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_83 + all_diet_pairwise_results +
+DESeq2_33_vs_83 + DESeq2_50_vs_83</td>
+</tr>
+<tr class="odd">
+<td align="left">38</td>
+<td align="left">I19</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">all_model_coefficients + all_diet_pairwise_results +
+DESeq2_33_vs_83 + DESeq2_50_vs_83</td>
+</tr>
+<tr class="even">
+<td align="left">29</td>
+<td align="left">I20</td>
+<td align="right">3</td>
+<td align="right">5</td>
+<td align="left">all_infection_within_diet_results +
+DESeq2_infected_vs_control_diet_33 + all_diet_pairwise_results +
+DESeq2_33_vs_83 + DESeq2_50_vs_83</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="upsetr-plot" class="section level2">
+<h2>UpSetR plot</h2>
+<p>The UpSetR panel is the best compact view when there are more than
+three DEG sets. To keep the figure readable, this panel uses the largest
+current DEG sets from the newest result tables. It is regenerated from
+the current CSV outputs, not copied from the older static overlap
+page.</p>
+<pre class="r"><code>max_upset_sets &lt;- min(10, length(deg_sets))
+upset_sets &lt;- deg_sets[seq_len(max_upset_sets)]
+names(upset_sets) &lt;- gsub(&quot;^DESeq2_&quot;, &quot;&quot;, names(upset_sets))
+names(upset_sets) &lt;- gsub(&quot;_&quot;, &quot; &quot;, names(upset_sets))
+
+upset_input &lt;- UpSetR::fromList(upset_sets)
+
+png(file.path(out_dir, &quot;deg_upsetr_current_sets.png&quot;),
+    width = 3000, height = 2100, res = 300)
+UpSetR::upset(
+  upset_input,
+  nsets = max_upset_sets,
+  nintersects = 30,
+  order.by = &quot;freq&quot;,
+  sets.bar.color = bar_color,
+  main.bar.color = &quot;#374151&quot;,
+  matrix.color = &quot;#111827&quot;,
+  text.scale = c(1.2, 1.2, 0.85, 0.85, 1.1, 0.85)
+)
+dev.off()</code></pre>
+<p>quartz_off_screen 2</p>
+<pre class="r"><code>display_dir &lt;- file.path(project_dir, &quot;docs&quot;, &quot;figure&quot;,
+                         &quot;07-deg-overlap-prioritization.Rmd&quot;)
+dir.create(display_dir, recursive = TRUE, showWarnings = FALSE)
+display_png &lt;- file.path(display_dir, &quot;deg-upsetr-current-sets.png&quot;)
+file.copy(file.path(out_dir, &quot;deg_upsetr_current_sets.png&quot;),
+          display_png, overwrite = TRUE)</code></pre>
+<p>[1] TRUE</p>
+<pre class="r"><code>upset_src &lt;- file.path(&quot;figure&quot;, &quot;07-deg-overlap-prioritization.Rmd&quot;,
+                       &quot;deg-upsetr-current-sets.png&quot;)
+
+cat(paste0(
+  &#39;&lt;p&gt;&lt;img src=&quot;&#39;, upset_src,
+  &#39;&quot; alt=&quot;UpSetR plot of current DEG set intersections&quot; &#39;,
+  &#39;style=&quot;display:block;margin:auto;max-width:100%;height:auto;&quot; /&gt;&lt;/p&gt;&#39;
+))</code></pre>
+<p>
+<img src="figure/07-deg-overlap-prioritization.Rmd/deg-upsetr-current-sets.png" alt="UpSetR plot of current DEG set intersections" style="display:block;margin:auto;max-width:100%;height:auto;" />
+</p>
+</div>
+<div id="venn-diagrams" class="section level2">
+<h2>Venn diagrams</h2>
+<p>Venn diagrams are easier to interpret for three-set questions. The
+first panel compares the infection DEGs found separately in diets 33,
+50, and 83. The second panel summarizes overlap between the broad
+full-model, diet-pairwise, and within-diet infection DEG families.</p>
+<pre class="r"><code>get_set &lt;- function(pattern) {
+  matched &lt;- names(deg_sets)[grepl(pattern, names(deg_sets))]
+  if (length(matched) == 0) {
+    return(character())
+  }
+  unique(unlist(deg_sets[matched], use.names = FALSE))
+}
+
+infection_venn_sets &lt;- list(
+  &quot;Diet 33&quot; = get_set(&quot;infected_vs_control_diet_33$&quot;),
+  &quot;Diet 50&quot; = get_set(&quot;infected_vs_control_diet_50$&quot;),
+  &quot;Diet 83&quot; = get_set(&quot;infected_vs_control_diet_83$&quot;)
+)
+infection_venn_sets &lt;- infection_venn_sets[lengths(infection_venn_sets) &gt; 0]
+
+broad_venn_sets &lt;- list(
+  &quot;Full model&quot; = get_set(&quot;^all_model_coefficients$|^interaction_coefficients$&quot;),
+  &quot;Diet pairwise&quot; = get_set(&quot;^all_diet_pairwise_results$|^DESeq2_[0-9]+_vs_[0-9]+$&quot;),
+  &quot;Within-diet infection&quot; = get_set(&quot;^all_infection_within_diet_results$|infected_vs_control_diet&quot;)
+)
+broad_venn_sets &lt;- broad_venn_sets[lengths(broad_venn_sets) &gt; 0]
+
+venn_theme &lt;- ggplot2::theme(
+  legend.position = &quot;none&quot;,
+  plot.title = ggplot2::element_text(face = &quot;bold&quot;, hjust = 0.5)
+)
+
+plots &lt;- list()
+if (length(infection_venn_sets) &gt;= 2) {
+  p_infection_venn &lt;- ggVennDiagram::ggVennDiagram(
+    infection_venn_sets,
+    label = &quot;count&quot;,
+    label_alpha = 0
+  ) +
+    ggplot2::scale_fill_gradient(low = &quot;#F7F3E8&quot;, high = &quot;#2F8F5B&quot;) +
+    venn_theme +
+    ggplot2::labs(title = &quot;Infection DEGs within diets&quot;)
+  plots[[&quot;infection&quot;]] &lt;- p_infection_venn
+  ggplot2::ggsave(file.path(out_dir, &quot;venn_infection_degs_by_diet.png&quot;),
+                  p_infection_venn, width = 6, height = 5.4, dpi = 300)
+}
+
+if (length(broad_venn_sets) &gt;= 2) {
+  p_broad_venn &lt;- ggVennDiagram::ggVennDiagram(
+    broad_venn_sets,
+    label = &quot;count&quot;,
+    label_alpha = 0
+  ) +
+    ggplot2::scale_fill_gradient(low = &quot;#F7F3E8&quot;, high = &quot;#7B4FA3&quot;) +
+    venn_theme +
+    ggplot2::labs(title = &quot;Broad DEG families&quot;)
+  plots[[&quot;broad&quot;]] &lt;- p_broad_venn
+  ggplot2::ggsave(file.path(out_dir, &quot;venn_broad_deg_families.png&quot;),
+                  p_broad_venn, width = 6, height = 5.4, dpi = 300)
+}
+
+if (length(plots) == 0) {
+  cat(&quot;No Venn diagram was drawn because fewer than two matching DEG sets were found.&quot;)
+} else if (length(plots) == 1) {
+  print(plots[[1]])
+} else {
+  if (requireNamespace(&quot;patchwork&quot;, quietly = TRUE)) {
+    print(plots[[1]] + plots[[2]])
+  } else {
+    print(plots[[1]])
+    print(plots[[2]])
+  }
+}</code></pre>
+<p><img src="figure/40-exon-only-deg-overlap.Rmd/venn-diagrams-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="diet-deg-venns-within-controls-and-infected-samples"
+class="section level2">
+<h2>Diet DEG Venns within controls and infected samples</h2>
+<p>The previous diet-pairwise page tests diet differences across all
+samples while including infection status as a covariate. Here, we ask a
+more specific question: among control samples only, which genes
+distinguish diets, and among infected samples only, which genes
+distinguish diets? Each treatment subset is modeled separately with
+<code>~ Diet</code>, then the three pairwise diet contrasts are shown as
+a Venn diagram.</p>
+<pre class="r"><code>metadata &lt;- read.delim(file.path(project_dir, params$metadata_file),
+                       check.names = FALSE)
+metadata$label &lt;- as.character(metadata$label)
+metadata$Diet &lt;- factor(metadata$Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;))
+metadata$Treatment &lt;- factor(metadata$Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;))
+
+counts_table &lt;- readr::read_tsv(file.path(project_dir, params$counts_file),
+                                show_col_types = FALSE)
+counts &lt;- as.matrix(counts_table[, setdiff(names(counts_table), &quot;gene_id&quot;)])
+rownames(counts) &lt;- counts_table$gene_id
+storage.mode(counts) &lt;- &quot;integer&quot;
+
+count_labels &lt;- sub(&quot;_MERGE$&quot;, &quot;&quot;, sub(&quot;^mehreen_&quot;, &quot;&quot;, colnames(counts)))
+metadata &lt;- metadata[match(count_labels, metadata$label), ]
+stopifnot(identical(metadata$label, count_labels))
+rownames(metadata) &lt;- metadata$label
+colnames(counts) &lt;- count_labels
+
+placement &lt;- readr::read_tsv(file.path(project_dir, params$placement_file),
+                             show_col_types = FALSE) |&gt;
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids &lt;- trimws(readLines(file.path(project_dir, params$rrna_file), warn = FALSE))
+rrna_ids &lt;- rrna_ids[nzchar(rrna_ids) &amp; !startsWith(rrna_ids, &quot;#&quot;)]
+main_chromosome_ids &lt;- placement$gene_id[
+  placement$sequence_class == &quot;Nuclear chromosome&quot; &amp;
+    !placement$gene_id %in% rrna_ids
+]
+counts &lt;- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+
+run_treatment_diet_degs &lt;- function(treatment_label) {
+  keep_samples &lt;- metadata$Treatment == treatment_label
+  metadata_sub &lt;- droplevels(metadata[keep_samples, ])
+  counts_sub &lt;- counts[, metadata_sub$label, drop = FALSE]
+  keep_genes &lt;- rowSums(counts_sub &gt;= params$min_count) &gt;= params$min_samples
+
+  dds &lt;- DESeq2::DESeqDataSetFromMatrix(
+    countData = counts_sub[keep_genes, ],
+    colData = metadata_sub,
+    design = ~ Diet
+  )
+  dds &lt;- DESeq2::DESeq(dds, minReplicatesForReplace = Inf, quiet = TRUE)
+
+  diet_pairs &lt;- combn(levels(droplevels(metadata_sub$Diet)), 2,
+                      simplify = FALSE)
+  contrast_sets &lt;- list()
+  summary_rows &lt;- list()
+
+  for (pair in diet_pairs) {
+    contrast_label &lt;- paste(pair[1], &quot;vs&quot;, pair[2], sep = &quot;_&quot;)
+    res &lt;- DESeq2::results(dds, contrast = c(&quot;Diet&quot;, pair[1], pair[2]),
+                           alpha = params$alpha, cooksCutoff = FALSE)
+    res_df &lt;- as.data.frame(res)
+    res_df$gene_id &lt;- rownames(res_df)
+    res_df$treatment_subset &lt;- treatment_label
+    res_df$contrast &lt;- contrast_label
+    res_df$significant &lt;- !is.na(res_df$padj) &amp;
+      res_df$padj &lt; params$alpha &amp;
+      abs(res_df$log2FoldChange) &gt;= params$lfc_threshold
+    res_df$direction &lt;- ifelse(res_df$log2FoldChange &gt; 0,
+                               paste(&quot;Higher in diet&quot;, pair[1]),
+                               paste(&quot;Higher in diet&quot;, pair[2]))
+
+    write.csv(
+      res_df,
+      file.path(out_dir,
+                paste0(&quot;DESeq2_&quot;, treatment_label, &quot;_diet_&quot;, contrast_label,
+                       &quot;.csv&quot;)),
+      row.names = FALSE
+    )
+    writeLines(
+      res_df$gene_id[res_df$significant],
+      file.path(out_dir,
+                paste0(&quot;significant_genes_&quot;, treatment_label, &quot;_diet_&quot;,
+                       contrast_label, &quot;.txt&quot;))
+    )
+
+    set_name &lt;- paste(pair[1], &quot;vs&quot;, pair[2])
+    contrast_sets[[set_name]] &lt;- unique(res_df$gene_id[res_df$significant])
+    summary_rows[[contrast_label]] &lt;- data.frame(
+      treatment_subset = treatment_label,
+      contrast = contrast_label,
+      n_significant_genes = sum(res_df$significant),
+      n_higher_first_diet = sum(res_df$significant &amp; res_df$log2FoldChange &gt; 0,
+                                na.rm = TRUE),
+      n_higher_second_diet = sum(res_df$significant &amp; res_df$log2FoldChange &lt; 0,
+                                 na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  list(
+    sets = contrast_sets,
+    summary = do.call(rbind, summary_rows)
+  )
+}
+
+control_diet_degs &lt;- run_treatment_diet_degs(&quot;Control&quot;)
+infected_diet_degs &lt;- run_treatment_diet_degs(&quot;Infected&quot;)
+
+condition_diet_summary &lt;- rbind(control_diet_degs$summary,
+                                infected_diet_degs$summary)
+knitr::kable(condition_diet_summary,
+             caption = &quot;Diet-pairwise DEGs run separately within controls and infected samples&quot;)</code></pre>
+<table style="width:100%;">
+<caption>Diet-pairwise DEGs run separately within controls and infected
+samples</caption>
+<colgroup>
+<col width="10%" />
+<col width="17%" />
+<col width="9%" />
+<col width="20%" />
+<col width="20%" />
+<col width="21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">treatment_subset</th>
+<th align="left">contrast</th>
+<th align="right">n_significant_genes</th>
+<th align="right">n_higher_first_diet</th>
+<th align="right">n_higher_second_diet</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">33_vs_50</td>
+<td align="left">Control</td>
+<td align="left">33_vs_50</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">33_vs_83</td>
+<td align="left">Control</td>
+<td align="left">33_vs_83</td>
+<td align="right">79</td>
+<td align="right">29</td>
+<td align="right">50</td>
+</tr>
+<tr class="odd">
+<td align="left">50_vs_83</td>
+<td align="left">Control</td>
+<td align="left">50_vs_83</td>
+<td align="right">50</td>
+<td align="right">8</td>
+<td align="right">42</td>
+</tr>
+<tr class="even">
+<td align="left">33_vs_501</td>
+<td align="left">Infected</td>
+<td align="left">33_vs_50</td>
+<td align="right">26</td>
+<td align="right">3</td>
+<td align="right">23</td>
+</tr>
+<tr class="odd">
+<td align="left">33_vs_831</td>
+<td align="left">Infected</td>
+<td align="left">33_vs_83</td>
+<td align="right">46</td>
+<td align="right">15</td>
+<td align="right">31</td>
+</tr>
+<tr class="even">
+<td align="left">50_vs_831</td>
+<td align="left">Infected</td>
+<td align="left">50_vs_83</td>
+<td align="right">15</td>
+<td align="right">2</td>
+<td align="right">13</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write.csv(condition_diet_summary,
+          file.path(out_dir, &quot;condition_specific_diet_pairwise_summary.csv&quot;),
+          row.names = FALSE)
+
+make_condition_venn &lt;- function(sets, title, high_color, file_name) {
+  sets &lt;- sets[lengths(sets) &gt; 0]
+  if (length(sets) &lt; 2) {
+    return(NULL)
+  }
+  p &lt;- ggVennDiagram::ggVennDiagram(
+    sets,
+    label = &quot;count&quot;,
+    label_alpha = 0
+  ) +
+    ggplot2::scale_fill_gradient(low = &quot;#F7F3E8&quot;, high = high_color) +
+    venn_theme +
+    ggplot2::labs(title = title)
+  ggplot2::ggsave(file.path(out_dir, file_name), p,
+                  width = 6, height = 5.4, dpi = 300)
+  p
+}
+
+p_control_diet_venn &lt;- make_condition_venn(
+  control_diet_degs$sets,
+  &quot;Diet DEGs among controls&quot;,
+  &quot;#2F8F5B&quot;,
+  &quot;venn_diet_degs_controls.png&quot;
+)
+
+p_infected_diet_venn &lt;- make_condition_venn(
+  infected_diet_degs$sets,
+  &quot;Diet DEGs among infected samples&quot;,
+  &quot;#7B4FA3&quot;,
+  &quot;venn_diet_degs_infected.png&quot;
+)
+
+condition_venn_plots &lt;- Filter(Negate(is.null),
+                               list(p_control_diet_venn, p_infected_diet_venn))
+if (length(condition_venn_plots) == 0) {
+  cat(&quot;No condition-specific diet Venn diagram was drawn because fewer than two DEG sets were found.&quot;)
+} else if (length(condition_venn_plots) == 1) {
+  print(condition_venn_plots[[1]])
+} else {
+  if (requireNamespace(&quot;patchwork&quot;, quietly = TRUE)) {
+    print(condition_venn_plots[[1]] + condition_venn_plots[[2]])
+  } else {
+    print(condition_venn_plots[[1]])
+    print(condition_venn_plots[[2]])
+  }
+}</code></pre>
+<p><img src="figure/40-exon-only-deg-overlap.Rmd/condition-specific-diet-venns-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="overlap-plot" class="section level2">
+<h2>Overlap plot</h2>
+<p>The heatmap displays the densest part of the presence-absence matrix
+so the website stays readable. Blue cells mean the gene is significant
+in that DEG set; grey cells mean it is absent from that set under the
+current thresholds.</p>
+<pre class="r"><code>set_display_names &lt;- names(deg_sets)
+set_display_names &lt;- gsub(&quot;^DESeq2_&quot;, &quot;&quot;, set_display_names)
+set_display_names &lt;- gsub(&quot;_&quot;, &quot; &quot;, set_display_names)
+set_display_names &lt;- gsub(&quot;infected vs control diet&quot;, &quot;Infection diet&quot;,
+                          set_display_names)
+set_display_names &lt;- gsub(&quot;diet effect&quot;, &quot;Diet effect&quot;, set_display_names)
+
+plot_df &lt;- data.frame(
+  gene_id = rep(all_genes, times = length(deg_sets)),
+  set = rep(set_display_names, each = length(all_genes)),
+  present = as.vector(presence)
+)
+
+# Plot the densest part of the matrix so the website stays readable.
+top_genes &lt;- names(sort(overlap_count, decreasing = TRUE))[seq_len(min(60, length(overlap_count)))]
+plot_df &lt;- plot_df[plot_df$gene_id %in% top_genes, ]
+gene_order &lt;- names(sort(overlap_count[top_genes], decreasing = FALSE))
+plot_df$gene_id &lt;- factor(plot_df$gene_id, levels = gene_order)
+plot_df$set &lt;- factor(plot_df$set, levels = set_display_names)
+
+p_overlap &lt;- ggplot2::ggplot(plot_df,
+                             ggplot2::aes(x = set, y = gene_id, fill = present)) +
+  ggplot2::geom_tile(color = &quot;white&quot;, linewidth = 0.18) +
+  ggplot2::scale_fill_manual(values = c(&quot;TRUE&quot; = overlap_colors[[&quot;Present&quot;]],
+                                        &quot;FALSE&quot; = overlap_colors[[&quot;Absent&quot;]]),
+                             labels = c(&quot;TRUE&quot; = &quot;Present&quot;,
+                                        &quot;FALSE&quot; = &quot;Absent&quot;)) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                 axis.text.y = ggplot2::element_text(size = 5),
+                 axis.ticks.y = ggplot2::element_blank(),
+                 legend.position = &quot;bottom&quot;) +
+  ggplot2::labs(
+    title = &quot;DEG overlap matrix&quot;,
+    subtitle = &quot;Top genes ranked by number of DEG sets where they appear&quot;,
+    x = &quot;DEG set&quot;,
+    y = &quot;Gene&quot;,
+    fill = &quot;Present&quot;
+  )
+
+p_overlap</code></pre>
+<p><img src="figure/40-exon-only-deg-overlap.Rmd/overlap-plot-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(file.path(out_dir, &quot;deg_overlap_matrix.png&quot;),
+                p_overlap, width = 10, height = 8, dpi = 300)</code></pre>
+</div>
+<div id="Publication_figure" class="section level2">
+<h2>Publication figure</h2>
+<p>Figure 2 combines the exact placed-chromosome DEG burden with overlap
+among the diet, infection, and shared phase-reference contexts. Its
+underlying gene sets are built on this page and in the linked all-sample
+DEG catalogue.</p>
+<div class="float">
+<img src="assets/publication/figure2_deg_burden_context_phase_venns.png"
+alt="Figure 2. DEG burden and overlap among experimental and phase-reference contexts." />
+<div class="figcaption">Figure 2. DEG burden and overlap among
+experimental and phase-reference contexts.</div>
+</div>
+<p>The full-size PNG/SVG exports and the membership tables are collected
+on the <a
+href="08-publication-figures.html#Figure_2:_DEG_burden,_context_overlap,_and_phase-reference_overlap">publication
+figure page</a>.</p>
+<pre class="r"><code>writeLines(capture.output(sessionInfo()),
+           file.path(out_dir, &quot;sessionInfo.txt&quot;))
+sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3   workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1            dplyr_1.2.1                
+ [3] farver_2.1.2                S7_0.2.2                   
+ [5] fastmap_1.2.0               promises_1.5.0             
+ [7] digest_0.6.39               lifecycle_1.0.5            
+ [9] processx_3.9.0              magrittr_2.0.5             
+[11] compiler_4.6.0              rlang_1.2.0                
+[13] sass_0.4.10                 tools_4.6.0                
+[15] yaml_2.3.12                 knitr_1.51                 
+[17] S4Arrays_1.12.0             labeling_0.4.3             
+[19] bit_4.6.0                   DelayedArray_0.38.1        
+[21] plyr_1.8.9                  RColorBrewer_1.1-3         
+[23] abind_1.4-8                 BiocParallel_1.46.0        
+[25] withr_3.0.2                 BiocGenerics_0.58.0        
+[27] grid_4.6.0                  stats4_4.6.0               
+[29] git2r_0.36.2                scales_1.4.0               
+[31] dichromat_2.0-0.1           SummarizedExperiment_1.42.0
+[33] cli_3.6.6                   crayon_1.5.3               
+[35] UpSetR_1.4.0                rmarkdown_2.31             
+[37] ragg_1.5.2                  generics_0.1.4             
+[39] otel_0.2.0                  rstudioapi_0.18.0          
+[41] httr_1.4.8                  tzdb_0.5.0                 
+[43] cachem_1.1.0                stringr_1.6.0              
+[45] parallel_4.6.0              XVector_0.52.0             
+[47] matrixStats_1.5.0           vctrs_0.7.3                
+[49] Matrix_1.7-5                jsonlite_2.0.0             
+[51] callr_3.7.6                 IRanges_2.46.0             
+[53] hms_1.1.4                   patchwork_1.3.2            
+[55] S4Vectors_0.50.1            bit64_4.8.0                
+[57] systemfonts_1.3.2           locfit_1.5-9.12            
+[59] jquerylib_0.1.4             glue_1.8.1                 
+[61] ggVennDiagram_1.5.7         codetools_0.2-20           
+[63] stringi_1.8.7               gtable_0.3.6               
+[65] later_1.4.8                 GenomicRanges_1.64.0       
+[67] tibble_3.3.1                pillar_1.11.1              
+[69] htmltools_0.5.9             Seqinfo_1.2.0              
+[71] R6_2.6.1                    textshaping_1.0.5          
+[73] rprojroot_2.1.1             vroom_1.7.1                
+[75] evaluate_1.0.5              lattice_0.22-9             
+[77] Biobase_2.72.0              readr_2.2.0                
+[79] httpuv_1.6.17               bslib_0.10.0               
+[81] Rcpp_1.1.1-1.1              gridExtra_2.3              
+[83] SparseArray_1.12.2          whisker_0.4.1              
+[85] DESeq2_1.52.0               xfun_0.57                  
+[87] fs_2.1.0                    MatrixGenerics_1.24.0      
+[89] getPass_0.2-4               pkgconfig_2.0.3            </code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3   workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1            dplyr_1.2.1                
+ [3] farver_2.1.2                S7_0.2.2                   
+ [5] fastmap_1.2.0               promises_1.5.0             
+ [7] digest_0.6.39               lifecycle_1.0.5            
+ [9] processx_3.9.0              magrittr_2.0.5             
+[11] compiler_4.6.0              rlang_1.2.0                
+[13] sass_0.4.10                 tools_4.6.0                
+[15] yaml_2.3.12                 knitr_1.51                 
+[17] S4Arrays_1.12.0             labeling_0.4.3             
+[19] bit_4.6.0                   DelayedArray_0.38.1        
+[21] plyr_1.8.9                  RColorBrewer_1.1-3         
+[23] abind_1.4-8                 BiocParallel_1.46.0        
+[25] withr_3.0.2                 BiocGenerics_0.58.0        
+[27] grid_4.6.0                  stats4_4.6.0               
+[29] git2r_0.36.2                scales_1.4.0               
+[31] dichromat_2.0-0.1           SummarizedExperiment_1.42.0
+[33] cli_3.6.6                   crayon_1.5.3               
+[35] UpSetR_1.4.0                rmarkdown_2.31             
+[37] ragg_1.5.2                  generics_0.1.4             
+[39] otel_0.2.0                  rstudioapi_0.18.0          
+[41] httr_1.4.8                  tzdb_0.5.0                 
+[43] cachem_1.1.0                stringr_1.6.0              
+[45] parallel_4.6.0              XVector_0.52.0             
+[47] matrixStats_1.5.0           vctrs_0.7.3                
+[49] Matrix_1.7-5                jsonlite_2.0.0             
+[51] callr_3.7.6                 IRanges_2.46.0             
+[53] hms_1.1.4                   patchwork_1.3.2            
+[55] S4Vectors_0.50.1            bit64_4.8.0                
+[57] systemfonts_1.3.2           locfit_1.5-9.12            
+[59] jquerylib_0.1.4             glue_1.8.1                 
+[61] ggVennDiagram_1.5.7         codetools_0.2-20           
+[63] stringi_1.8.7               gtable_0.3.6               
+[65] later_1.4.8                 GenomicRanges_1.64.0       
+[67] tibble_3.3.1                pillar_1.11.1              
+[69] htmltools_0.5.9             Seqinfo_1.2.0              
+[71] R6_2.6.1                    textshaping_1.0.5          
+[73] rprojroot_2.1.1             vroom_1.7.1                
+[75] evaluate_1.0.5              lattice_0.22-9             
+[77] Biobase_2.72.0              readr_2.2.0                
+[79] httpuv_1.6.17               bslib_0.10.0               
+[81] Rcpp_1.1.1-1.1              gridExtra_2.3              
+[83] SparseArray_1.12.2          whisker_0.4.1              
+[85] DESeq2_1.52.0               xfun_0.57                  
+[87] fs_2.1.0                    MatrixGenerics_1.24.0      
+[89] getPass_0.2-4               pkgconfig_2.0.3            </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<script id="count-definition-navigation">
+(function ($) {
+  "use strict";
+
+  $(function () {
+    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
+      var item = $(this).parent(".dropdown-submenu");
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      item.siblings(".dropdown-submenu.open").removeClass("open")
+        .children("a").attr("aria-expanded", "false");
+      item.toggleClass("open");
+      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
+      return false;
+    });
+  });
+
+  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
+    $(this).find(".dropdown-submenu.open").removeClass("open")
+      .children("a").attr("aria-expanded", "false");
+  });
+}(window.jQuery));
+</script>
+</body>
+</html>

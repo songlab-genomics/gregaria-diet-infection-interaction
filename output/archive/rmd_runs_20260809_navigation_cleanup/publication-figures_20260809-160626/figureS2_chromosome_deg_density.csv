@@ -1,0 +1,49 @@
+"DEG_context","chromosome","deg_genes","annotated_genes","degs_per_1000_genes"
+"Infection within diets","X",221,1806,122.369878183832
+"Infection within diets","11",58,438,132.420091324201
+"Infection within diets","10",86,472,182.203389830508
+"Infection within diets","9",99,826,119.854721549637
+"Infection within diets","8",214,1351,158.40118430792
+"Infection within diets","7",160,1243,128.720836685438
+"Infection within diets","6",180,1580,113.924050632911
+"Infection within diets","5",176,2736,64.327485380117
+"Infection within diets","4",243,1759,138.146674246731
+"Infection within diets","3",350,2954,118.483412322275
+"Infection within diets","2",477,2976,160.282258064516
+"Infection within diets","1",413,3242,127.390499691548
+"Diet DEGs in controls","X",7,1806,3.87596899224806
+"Diet DEGs in controls","11",4,438,9.1324200913242
+"Diet DEGs in controls","10",3,472,6.35593220338983
+"Diet DEGs in controls","9",2,826,2.42130750605327
+"Diet DEGs in controls","8",7,1351,5.18134715025907
+"Diet DEGs in controls","7",5,1243,4.02252614641995
+"Diet DEGs in controls","6",6,1580,3.79746835443038
+"Diet DEGs in controls","5",4,2736,1.46198830409357
+"Diet DEGs in controls","4",5,1759,2.84252416145537
+"Diet DEGs in controls","3",12,2954,4.062288422478
+"Diet DEGs in controls","2",24,2976,8.06451612903226
+"Diet DEGs in controls","1",13,3242,4.0098704503393
+"Diet DEGs in infected","X",69,1806,38.2059800664452
+"Diet DEGs in infected","11",13,438,29.6803652968037
+"Diet DEGs in infected","10",35,472,74.1525423728814
+"Diet DEGs in infected","9",23,826,27.8450363196126
+"Diet DEGs in infected","8",52,1351,38.4900074019245
+"Diet DEGs in infected","7",45,1243,36.2027353177796
+"Diet DEGs in infected","6",74,1580,46.8354430379747
+"Diet DEGs in infected","5",37,2736,13.5233918128655
+"Diet DEGs in infected","4",70,1759,39.7953382603752
+"Diet DEGs in infected","3",101,2954,34.1909275558565
+"Diet DEGs in infected","2",100,2976,33.6021505376344
+"Diet DEGs in infected","1",119,3242,36.7057371992597
+"Infection vs control","X",134,1806,74.1971207087486
+"Infection vs control","11",32,438,73.0593607305936
+"Infection vs control","10",58,472,122.881355932203
+"Infection vs control","9",67,826,81.1138014527845
+"Infection vs control","8",157,1351,116.210214655811
+"Infection vs control","7",127,1243,102.172164119067
+"Infection vs control","6",103,1580,65.1898734177215
+"Infection vs control","5",117,2736,42.7631578947368
+"Infection vs control","4",170,1759,96.6458214894827
+"Infection vs control","3",226,2954,76.5064319566689
+"Infection vs control","2",353,2976,118.615591397849
+"Infection vs control","1",260,3242,80.1974090067859

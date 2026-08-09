@@ -1,0 +1,8 @@
+"intersection","n_genes"
+"Infection within diets",1292
+"Thorax phase DEGs",562
+"Head phase DEGs",304
+"Head phase DEGs + Thorax phase DEGs",275
+"Infection within diets + Thorax phase DEGs",155
+"Infection within diets + Head phase DEGs + Thorax phase DEGs",82
+"Infection within diets + Head phase DEGs",56

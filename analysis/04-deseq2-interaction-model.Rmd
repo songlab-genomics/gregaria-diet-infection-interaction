@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   reference_diet: "50"
   reference_treatment: "Control"
   min_total_count: 10
@@ -39,7 +39,7 @@ Ask whether the infection response changes across diets.
 :::
 
 This page fits the full model for the manuscript question: does infection
-response depend on diet? It retains all 44 samples and all expression-filtered
+response depend on diet? It retains all 45 samples and all expression-filtered
 host loci from the fresh competitive mapping, including genes on nuclear
 chromosomes and unplaced scaffolds. Annotated rRNA loci remain excluded.
 

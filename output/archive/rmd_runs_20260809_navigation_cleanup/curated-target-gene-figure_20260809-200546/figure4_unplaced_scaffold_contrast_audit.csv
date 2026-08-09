@@ -1,0 +1,1 @@
+source_sheet,umbrella,subcategory,gene_id,description_workbook,description_gff,gene_biotype,seqid,sequence_class,contrast_id,contrast_label,figure_scope,positive_condition,negative_condition,baseMean,log2FoldChange,oriented_log2FC,padj,status,higher_expression_condition,original_status,original_value,show_in_figure

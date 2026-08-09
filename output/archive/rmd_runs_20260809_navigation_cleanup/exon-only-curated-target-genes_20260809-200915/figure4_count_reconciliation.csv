@@ -1,0 +1,29 @@
+sequence_scope,source_sheet,umbrella,figure_scope,target_genes,gene_contrast_cells,original_significant_cells,current_significant_cells,newly_significant_cells,no_longer_significant_cells,net_change
+All curated targets,Immune,Cellular Immunity,Diet comparison among infected,9,27,1,0,0,1,-1
+All curated targets,Immune,Cellular Immunity,Within-diet infection response,9,27,12,11,1,2,-1
+All curated targets,Immune,Humoral Immunity,Diet comparison among infected,7,21,0,0,0,0,0
+All curated targets,Immune,Humoral Immunity,Within-diet infection response,7,21,13,8,0,5,-5
+All curated targets,Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,61,183,5,1,0,4,-4
+All curated targets,Immune,Innate Immune Recognition & Signaling,Within-diet infection response,61,183,127,88,4,43,-39
+All curated targets,Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Diet comparison among infected,19,57,3,2,1,2,-1
+All curated targets,Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Within-diet infection response,19,57,31,18,4,17,-13
+All curated targets,Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,2,6,0,0,0,0,0
+All curated targets,Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,2,6,4,6,2,0,2
+All curated targets,Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,8,24,2,0,0,2,-2
+All curated targets,Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,8,24,12,7,1,6,-5
+All curated targets,Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,5,15,1,0,0,1,-1
+All curated targets,Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,5,15,6,3,0,3,-3
+Main chromosome,Immune,Cellular Immunity,Diet comparison among infected,9,27,1,0,0,1,-1
+Main chromosome,Immune,Cellular Immunity,Within-diet infection response,9,27,12,11,1,2,-1
+Main chromosome,Immune,Humoral Immunity,Diet comparison among infected,7,21,0,0,0,0,0
+Main chromosome,Immune,Humoral Immunity,Within-diet infection response,7,21,13,8,0,5,-5
+Main chromosome,Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,61,183,5,1,0,4,-4
+Main chromosome,Immune,Innate Immune Recognition & Signaling,Within-diet infection response,61,183,127,88,4,43,-39
+Main chromosome,Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Diet comparison among infected,19,57,3,2,1,2,-1
+Main chromosome,Protein-Anabolism,"Nitrogen, Amino Acid Transport & Metabolism",Within-diet infection response,19,57,31,18,4,17,-13
+Main chromosome,Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,2,6,0,0,0,0,0
+Main chromosome,Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,2,6,4,6,2,0,2
+Main chromosome,Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,8,24,2,0,0,2,-2
+Main chromosome,Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,8,24,12,7,1,6,-5
+Main chromosome,Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,5,15,1,0,0,1,-1
+Main chromosome,Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,5,15,6,3,0,3,-3

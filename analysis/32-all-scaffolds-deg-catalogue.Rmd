@@ -14,7 +14,7 @@ params:
   latest_results_root: "output/rmd_runs"
   alpha: 0.05
   lfc_threshold: 1
-  all_results_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_deseq2_all_contrasts.csv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_deseq2_all_contrasts.csv"
   output_tag: "all-scaffolds-all-deg-catalogue"
 ---
 
@@ -260,7 +260,8 @@ contrast_map <- tibble::tribble(
 
 deg_raw <- all_results |>
   dplyr::filter(
-    mapping_branch == "competitive-host",
+    # Run-specific suffixes record the count definition and corrected cohort.
+    stringr::str_starts(mapping_branch, "competitive-host"),
     gene_id %in% gene_universe,
     significant,
     !is.na(gene_id),

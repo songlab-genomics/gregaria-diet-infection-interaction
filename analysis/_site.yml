@@ -15,78 +15,114 @@ navbar:
         href: 03-count-qc-exploration.html
   - text: "Fat Body Experiment"
     menu:
-      - text: "Experiment QC"
-        href: 03-count-qc-exploration.html
-      - text: "All samples + all scaffolds"
+      - text: "Transcript + exon"
         menu:
-          - text: "Diet x infection interaction"
+          - text: "Experiment QC"
+            href: 03-count-qc-exploration.html
+          - text: "All scaffolds: interaction"
             href: 04-deseq2-interaction-model.html
-          - text: "Diet pairwise DEGs"
+          - text: "All scaffolds: diet DEGs"
             href: 05-diet-pairwise-deg.html
-          - text: "Infection within diet DEGs"
+          - text: "All scaffolds: infection DEGs"
             href: 06-infection-within-diet-deg.html
-          - text: "DEG overlap"
-            href: 31-all-scaffolds-deg-overlap-prioritization.html
-          - text: "Searchable DEG catalogue"
-            href: 32-all-scaffolds-deg-catalogue.html
-      - text: "All samples + placed chromosomes"
-        menu:
-          - text: "Diet x infection interaction"
+          - text: "Placed chromosomes: interaction"
             href: 14-all-samples-deseq2-interaction-model.html
-          - text: "Diet pairwise DEGs"
+          - text: "Placed chromosomes: diet DEGs"
             href: 15-all-samples-diet-pairwise-deg.html
-          - text: "Infection within diet DEGs"
+          - text: "Placed chromosomes: infection DEGs"
             href: 16-all-samples-infection-within-diet-deg.html
-          - text: "DEG overlap"
-            href: 07-deg-overlap-prioritization.html
-          - text: "Searchable DEG catalogue"
-            href: 24-all-deg-catalogue.html
+      - text: "Exon only"
+        menu:
+          - text: "Analysis overview"
+            href: 36-exon-only-deseq2-analysis.html
+          - text: "Diet x infection interaction"
+            href: 37-exon-only-interaction-model.html
+          - text: "Diet pairwise DEGs"
+            href: 38-exon-only-diet-pairwise-deg.html
+          - text: "Infection within diet DEGs"
+            href: 39-exon-only-infection-within-diet-deg.html
   - text: "Interpretation"
     menu:
-      - text: "Physiology candidates - both scopes"
-        href: 13-physiology-candidate-genes.html
-      - text: "Curated target genes - both scopes"
-        href: 30-curated-target-gene-figure.html
-      - text: "All scaffolds"
+      - text: "Transcript + exon"
         menu:
-          - text: "GO / KEGG enrichment"
+          - text: "Physiology candidates - both scopes"
+            href: 13-physiology-candidate-genes.html
+          - text: "Curated targets - both scopes"
+            href: 30-curated-target-gene-figure.html
+          - text: "All scaffolds: DEG overlap"
+            href: 31-all-scaffolds-deg-overlap-prioritization.html
+          - text: "All scaffolds: DEG catalogue"
+            href: 32-all-scaffolds-deg-catalogue.html
+          - text: "All scaffolds: GO / KEGG"
             href: 33-all-scaffolds-go-term-enrichment.html
-          - text: "GO / KEGG term-gene index"
+          - text: "All scaffolds: term-gene index"
             href: 34-all-scaffolds-enrichment-term-gene-index.html
-          - text: "Scaffold origin interpretation"
-            href: 27-scaffold-origin-audit.html
-      - text: "Placed chromosomes"
-        menu:
-          - text: "GO / KEGG enrichment"
+          - text: "Placed chromosomes: DEG overlap"
+            href: 07-deg-overlap-prioritization.html
+          - text: "Placed chromosomes: DEG catalogue"
+            href: 24-all-deg-catalogue.html
+          - text: "Placed chromosomes: GO / KEGG"
             href: 10-go-term-enrichment.html
-          - text: "GO / KEGG term-gene index"
+          - text: "Placed chromosomes: term-gene index"
             href: 25-enrichment-term-gene-index.html
-          - text: "Expression clusters and enrichment"
+          - text: "Placed chromosomes: expression clusters"
             href: 26-circled-cluster-enrichment.html
+      - text: "Exon only"
+        menu:
+          - text: "DEG overlap"
+            href: 40-exon-only-deg-overlap.html
+          - text: "Searchable DEG catalogue"
+            href: 41-exon-only-deg-catalogue.html
+          - text: "GO / KEGG enrichment"
+            href: 42-exon-only-go-term-enrichment.html
+          - text: "GO / KEGG term-gene index"
+            href: 43-exon-only-enrichment-term-gene-index.html
+          - text: "Expression clusters"
+            href: 44-exon-only-expression-clusters.html
+          - text: "Curated target genes"
+            href: 45-exon-only-curated-target-genes.html
   - text: "Figures"
     menu:
-      - text: "Publication figure exports"
-        href: 08-publication-figures.html
-      - text: "Figure 1 - PCA"
-        href: 14-all-samples-deseq2-interaction-model.html#Publication_figure
-      - text: "Figure 2 - DEG burden and overlap"
-        href: 07-deg-overlap-prioritization.html#Publication_figure
-      - text: "Figure 3 - expression clusters"
-        href: 26-circled-cluster-enrichment.html#Publication_figure
-      - text: "Figure 4 - curated targets"
-        href: 30-curated-target-gene-figure.html#Curated_target_figures
+      - text: "Transcript + exon"
+        menu:
+          - text: "Publication figure exports"
+            href: 08-publication-figures.html
+          - text: "Figure 1 - PCA"
+            href: 14-all-samples-deseq2-interaction-model.html#Publication_figure
+          - text: "Figure 2 - DEG burden and overlap"
+            href: 07-deg-overlap-prioritization.html#Publication_figure
+          - text: "Figure 3 - expression clusters"
+            href: 26-circled-cluster-enrichment.html#Publication_figure
+          - text: "Figure 4 - curated targets"
+            href: 30-curated-target-gene-figure.html#Curated_target_figures
+      - text: "Exon only"
+        menu:
+          - text: "Publication figure exports"
+            href: 46-exon-only-publication-figures.html
+          - text: "Figure 1 - PCA"
+            href: 37-exon-only-interaction-model.html#Publication_figure
+          - text: "Figure 2 - DEG burden and overlap"
+            href: 40-exon-only-deg-overlap.html#Publication_figure
+          - text: "Figure 3 - expression clusters"
+            href: 44-exon-only-expression-clusters.html#Publication_figure
+          - text: "Figure 4 - curated targets"
+            href: 45-exon-only-curated-target-genes.html#Curated_target_figures
   - text: "Sensitivity and Validation"
     menu:
-      - text: "Outlier filtering sensitivity"
-        href: 11-outlier-sensitivity.html
-      - text: "Exon vs transcript+exon counts"
-        href: 35-count-definition-sensitivity.html
-      - text: "Placed vs unplaced scaffolds"
-        href: 28-placed-unplaced-scaffold-analysis.html
-      - text: "Unplaced scaffold origin audit"
-        href: 27-scaffold-origin-audit.html
-      - text: "Metarhizium read burden"
-        href: 29-metarhizium-read-burden.html
+      - text: "Transcript + exon"
+        menu:
+          - text: "Outlier filtering sensitivity"
+            href: 11-outlier-sensitivity.html
+          - text: "Placed vs unplaced scaffolds"
+            href: 28-placed-unplaced-scaffold-analysis.html
+          - text: "Unplaced scaffold origin audit"
+            href: 27-scaffold-origin-audit.html
+          - text: "Metarhizium read burden"
+            href: 29-metarhizium-read-burden.html
+      - text: "Exon only"
+        menu:
+          - text: "Exon only vs transcript + exon"
+            href: 35-count-definition-sensitivity.html
   - text: "Archive"
     menu:
       - text: "Archived analysis index"
@@ -135,3 +171,5 @@ output:
     highlight: textmate
     code_folding: hide
     css: site-style.css
+    includes:
+      after_body: site-navigation.html

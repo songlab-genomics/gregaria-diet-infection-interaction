@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-07" />
+<meta name="date" content="2026-08-09" />
 
 <title>Exon-only versus transcript-plus-exon counting</title>
 
@@ -378,46 +378,46 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="03-count-qc-exploration.html">Experiment QC</a>
-    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="03-count-qc-exploration.html">Experiment QC</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
         </li>
         <li>
-          <a href="31-all-scaffolds-deg-overlap-prioritization.html">DEG overlap</a>
+          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
         </li>
         <li>
-          <a href="32-all-scaffolds-deg-catalogue.html">Searchable DEG catalogue</a>
+          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
+        </li>
+        <li>
+          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
+        </li>
+        <li>
+          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + placed chromosomes</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
         </li>
         <li>
-          <a href="15-all-samples-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
         </li>
         <li>
-          <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
         </li>
         <li>
-          <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
-        </li>
-        <li>
-          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
       </ul>
     </li>
@@ -430,37 +430,64 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
-    </li>
-    <li>
-      <a href="30-curated-target-gene-figure.html">Curated target genes - both scopes</a>
-    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG enrichment</a>
+          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
         </li>
         <li>
-          <a href="34-all-scaffolds-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
         </li>
         <li>
-          <a href="27-scaffold-origin-audit.html">Scaffold origin interpretation</a>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Placed chromosomes</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
         </li>
         <li>
-          <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
         </li>
         <li>
-          <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
+          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
         </li>
       </ul>
     </li>
@@ -473,20 +500,45 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="08-publication-figures.html">Publication figure exports</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="08-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-    </li>
-    <li>
-      <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-    </li>
-    <li>
-      <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
-    </li>
-    <li>
-      <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -497,20 +549,30 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+        </li>
+        <li>
+          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+        </li>
+        <li>
+          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="35-count-definition-sensitivity.html">Exon vs transcript+exon counts</a>
-    </li>
-    <li>
-      <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
-    </li>
-    <li>
-      <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
-    </li>
-    <li>
-      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -605,7 +667,7 @@ div.tocify {
 <h1 class="title toc-ignore">Exon-only versus transcript-plus-exon
 counting</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-07</h4>
+<h4 class="date">2026-08-09</h4>
 
 </div>
 
@@ -634,7 +696,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-07
+<strong>Last updated:</strong> 2026-08-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -673,10 +735,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -769,15 +831,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree0942a37175d9dc7fd261589dbc58f3d9cad0a9f5targetblank0942a37a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5" target="_blank">0942a37</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree0942a37175d9dc7fd261589dbc58f3d9cad0a9f5targetblank0942a37a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -787,7 +849,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5" target="_blank">0942a37</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -806,6 +868,7 @@ Ignored files:
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
+    Ignored:    data/.DS_Store
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
     Ignored:    output/.DS_Store
@@ -814,13 +877,65 @@ Ignored files:
     Ignored:    outputs/.DS_Store
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
+    Ignored:    scripts/manuscript/__pycache__/
 
 Untracked files:
-    Untracked:  analysis/35-count-definition-sensitivity.Rmd
+    Untracked:  analysis/36-exon-only-deseq2-analysis.Rmd
+    Untracked:  analysis/37-exon-only-interaction-model.Rmd
+    Untracked:  analysis/38-exon-only-diet-pairwise-deg.Rmd
+    Untracked:  analysis/39-exon-only-infection-within-diet-deg.Rmd
+    Untracked:  analysis/40-exon-only-deg-overlap.Rmd
+    Untracked:  analysis/41-exon-only-deg-catalogue.Rmd
+    Untracked:  analysis/42-exon-only-go-term-enrichment.Rmd
+    Untracked:  analysis/43-exon-only-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/44-exon-only-expression-clusters.Rmd
+    Untracked:  analysis/45-exon-only-curated-target-genes.Rmd
+    Untracked:  analysis/46-exon-only-publication-figures.Rmd
+    Untracked:  code/config/fatbody_dual_rnaseq_sample_1044.tsv
+    Untracked:  code/config/fatbody_dual_rnaseq_samples_corrected_45.tsv
+    Untracked:  code/pilot/merge_fatbody_1044_lanes.slurm
+    Untracked:  code/pilot/submit_fatbody_1044_addon_hpc.sh
+    Untracked:  data/metadata/mehreen_metadata_corrected_45.txt
+    Untracked:  data/metadata/mehreen_metadata_no_outliers_corrected_45.txt
+    Untracked:  data/metadata/metadata_correction_audit_20260809.tsv
+    Untracked:  manuscript/
+    Untracked:  scripts/manuscript/revise_cbpb_manuscript.py
+    Untracked:  scripts/prepare_corrected_45_sample_inputs.py
 
 Unstaged changes:
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
     Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Modified:   analysis/35-count-definition-sensitivity.Rmd
     Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_hpc.sh
+    Modified:   code/pilot/check_host_pathogen_dual_progress.sh
+    Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
+    Modified:   code/snakemake.host_pathogen_dual.slurm
 
 </code></pre>
 <p>
@@ -836,9 +951,73 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/35-count-definition-sensitivity.Rmd</code>) and HTML
+(<code>docs/35-count-definition-sensitivity.html</code>) files. If
+you’ve configured a remote Git repository (see
+<code>?wflow_git_remote</code>), click on the hyperlinks in the table
+below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/e77f7a51eda3219d0789c27472f6669408bdf8d4/analysis/35-count-definition-sensitivity.Rmd" target="_blank">e77f7a5</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+<td>
+update last results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/e77f7a51eda3219d0789c27472f6669408bdf8d4/docs/35-count-definition-sensitivity.html" target="_blank">e77f7a5</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+<td>
+update last results
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -848,7 +1027,7 @@ There are no past versions. Publish this analysis with
 <div class="walkthrough-grid">
 <div class="walkthrough-step">
 <p><strong>Step 1 - Hold the experiment constant</strong></p>
-<p>Retain all 44 samples, the competitive host alignment, the same
+<p>Retain all 45 samples, the competitive host alignment, the same
 chromosome scope, and the same rRNA exclusion list.</p>
 </div>
 <div class="walkthrough-step">
@@ -1017,7 +1196,7 @@ DT::datatable(
   caption = &quot;Matched count-definition and rRNA audit&quot;
 )</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-11f791fcfaca4190eb8e" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"none","vertical":false,"caption":"<caption>Matched count-definition and rRNA audit<\/caption>","data":[["Exon only","Transcript + exon"],[44,44],[95606,95606],[12402,12402],[83204,83204],[19724,19724],[0,0],[3207195.5,10961426.5],[11140,14132]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>counting_mode<\/th>\n      <th>samples<\/th>\n      <th>input_gene_rows<\/th>\n      <th>listed_rRNA_rows_removed<\/th>\n      <th>genes_after_rRNA_removal<\/th>\n      <th>nuclear_chromosome_genes<\/th>\n      <th>rRNA_rows_remaining<\/th>\n      <th>median_assigned_counts_per_sample<\/th>\n      <th>genes_entering_DESeq2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8]},{"name":"counting_mode","targets":0},{"name":"samples","targets":1},{"name":"input_gene_rows","targets":2},{"name":"listed_rRNA_rows_removed","targets":3},{"name":"genes_after_rRNA_removal","targets":4},{"name":"nuclear_chromosome_genes","targets":5},{"name":"rRNA_rows_remaining","targets":6},{"name":"median_assigned_counts_per_sample","targets":7},{"name":"genes_entering_DESeq2","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"none","vertical":false,"caption":"<caption>Matched count-definition and rRNA audit<\/caption>","data":[["Exon only","Transcript + exon"],[45,45],[95606,95606],[12402,12402],[83204,83204],[19724,19724],[0,0],[3187304,10865036],[11141,14134]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>counting_mode<\/th>\n      <th>samples<\/th>\n      <th>input_gene_rows<\/th>\n      <th>listed_rRNA_rows_removed<\/th>\n      <th>genes_after_rRNA_removal<\/th>\n      <th>nuclear_chromosome_genes<\/th>\n      <th>rRNA_rows_remaining<\/th>\n      <th>median_assigned_counts_per_sample<\/th>\n      <th>genes_entering_DESeq2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8]},{"name":"counting_mode","targets":0},{"name":"samples","targets":1},{"name":"input_gene_rows","targets":2},{"name":"listed_rRNA_rows_removed","targets":3},{"name":"genes_after_rRNA_removal","targets":4},{"name":"nuclear_chromosome_genes","targets":5},{"name":"rRNA_rows_remaining","targets":6},{"name":"median_assigned_counts_per_sample","targets":7},{"name":"genes_entering_DESeq2","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 <p>Both matrices must report zero in <code>rRNA_rows_remaining</code>.
 This is a direct check against <code>gregaria_rrna_list</code>, rather
 than an inference from the featureCounts labels.</p>
@@ -1075,6 +1254,43 @@ p_input_summary &lt;- p_reads | p_tested
 save_png_svg(p_input_summary, &quot;count_definition_input_summary&quot;, 13, 5.5)
 p_input_summary</code></pre>
 <p><img src="figure/35-count-definition-sensitivity.Rmd/input-summary-figure-1.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-input-summary-figure-1">
+Past versions of input-summary-figure-1.png
+</button>
+</p>
+<div id="fig-input-summary-figure-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/e77f7a51eda3219d0789c27472f6669408bdf8d4/docs/figure/35-count-definition-sensitivity.Rmd/input-summary-figure-1.png" target="_blank">e77f7a5</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="step-2-run-identical-deseq2-contrasts" class="section level2">
 <h2>Step 2: run identical DESeq2 contrasts</h2>
@@ -1273,7 +1489,7 @@ p_deg_counts &lt;- ggplot2::ggplot(
   ggplot2::labs(
     title = &quot;DEG totals under exon-only and transcript-plus-exon counting&quot;,
     subtitle = paste0(
-      &quot;All 44 samples; nuclear chromosomes; rRNA removed; padj &lt; &quot;,
+      &quot;All 45 samples; nuclear chromosomes; rRNA removed; padj &lt; &quot;,
       params$alpha, &quot;; |log2FC| &gt;= &quot;, params$lfc_threshold
     ),
     x = &quot;Significant genes&quot;, y = NULL, fill = &quot;Counting mode&quot;
@@ -1286,6 +1502,43 @@ p_deg_counts &lt;- ggplot2::ggplot(
 save_png_svg(p_deg_counts, &quot;count_definition_deg_totals&quot;, 18, 10)
 p_deg_counts</code></pre>
 <p><img src="figure/35-count-definition-sensitivity.Rmd/deg-count-figure-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-deg-count-figure-1">
+Past versions of deg-count-figure-1.png
+</button>
+</p>
+<div id="fig-deg-count-figure-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/e77f7a51eda3219d0789c27472f6669408bdf8d4/docs/figure/35-count-definition-sensitivity.Rmd/deg-count-figure-1.png" target="_blank">e77f7a5</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>significant_long &lt;- all_results |&gt;
   dplyr::filter(.data$significant) |&gt;
   dplyr::distinct(.data$counting_mode, .data$contrast_id, .data$gene_id)
@@ -1356,6 +1609,43 @@ write.csv(overlap_summary,
 save_png_svg(p_overlap, &quot;count_definition_deg_membership&quot;, 18, 8.5)
 p_overlap</code></pre>
 <p><img src="figure/35-count-definition-sensitivity.Rmd/deg-overlap-figure-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-deg-overlap-figure-1">
+Past versions of deg-overlap-figure-1.png
+</button>
+</p>
+<div id="fig-deg-overlap-figure-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/e77f7a51eda3219d0789c27472f6669408bdf8d4/docs/figure/35-count-definition-sensitivity.Rmd/deg-overlap-figure-1.png" target="_blank">e77f7a5</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="results-table" class="section level2">
 <h2>Results table</h2>
@@ -1403,7 +1693,223 @@ DT::datatable(
   caption = &quot;DEG totals and overlap by counting mode&quot;
 )</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-d16b85687158d7e01783" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d16b85687158d7e01783">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Interaction: diet 83 vs 33&quot;,&quot;Interaction: diet 83 vs 50&quot;,&quot;Interaction: diet 33 vs 50&quot;,&quot;Average infected vs control&quot;,&quot;Infected: diet 83 vs 33&quot;,&quot;Infected: diet 83 vs 50&quot;,&quot;Infected: diet 33 vs 50&quot;,&quot;Controls: diet 83 vs 33&quot;,&quot;Controls: diet 83 vs 50&quot;,&quot;Controls: diet 33 vs 50&quot;,&quot;Diet 83: infected vs control&quot;,&quot;Diet 50: infected vs control&quot;,&quot;Diet 33: infected vs control&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"2\" data-max=\"1422\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"2009\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"314\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"1108\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"1117\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>DEG totals and overlap by counting mode<\/caption>","data":[["Average infection response","Diet among controls","Diet among controls","Diet among controls","Diet among infected","Diet among infected","Diet among infected","Diet by infection interaction","Diet by infection interaction","Diet by infection interaction","Infection within diet","Infection within diet","Infection within diet"],["infection_average_all_diets","control_diet33_vs50","control_diet83_vs33","control_diet83_vs50","infected_diet33_vs50","infected_diet83_vs33","infected_diet83_vs50","interaction_diet33_vs50","interaction_diet83_vs33","interaction_diet83_vs50","infection_diet33","infection_diet50","infection_diet83"],["Average infected vs control","Controls: diet 33 vs 50","Controls: diet 83 vs 33","Controls: diet 83 vs 50","Infected: diet 33 vs 50","Infected: diet 83 vs 33","Infected: diet 83 vs 50","Interaction: diet 33 vs 50","Interaction: diet 83 vs 33","Interaction: diet 83 vs 50","Diet 33: infected vs control","Diet 50: infected vs control","Diet 83: infected vs control"],[1422,2,47,23,104,39,15,3,7,5,857,1116,768],[1691,15,60,59,303,86,59,0,11,58,1016,2009,1030],[314,1,14,7,14,15,1,3,5,1,233,224,224],[1108,1,33,16,90,24,14,0,2,4,624,892,544],[583,14,27,43,213,62,45,0,9,54,392,1117,486]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>contrast_family<\/th>\n      <th>contrast_id<\/th>\n      <th>contrast<\/th>\n      <th>exon_only_DEGs<\/th>\n      <th>transcript_exon_DEGs<\/th>\n      <th>exon_only_unique<\/th>\n      <th>shared_DEGs<\/th>\n      <th>transcript_exon_unique<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"name":"contrast_family","targets":0},{"name":"contrast_id","targets":1},{"name":"contrast","targets":2},{"name":"exon_only_DEGs","targets":3},{"name":"transcript_exon_DEGs","targets":4},{"name":"exon_only_unique","targets":5},{"name":"shared_DEGs","targets":6},{"name":"transcript_exon_unique","targets":7}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-d16b85687158d7e01783">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Interaction: diet 83 vs 33&quot;,&quot;Interaction: diet 83 vs 50&quot;,&quot;Interaction: diet 33 vs 50&quot;,&quot;Average infected vs control&quot;,&quot;Infected: diet 83 vs 33&quot;,&quot;Infected: diet 83 vs 50&quot;,&quot;Infected: diet 33 vs 50&quot;,&quot;Controls: diet 83 vs 33&quot;,&quot;Controls: diet 83 vs 50&quot;,&quot;Controls: diet 33 vs 50&quot;,&quot;Diet 83: infected vs control&quot;,&quot;Diet 50: infected vs control&quot;,&quot;Diet 33: infected vs control&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"1422\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"1830\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"321\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"1101\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"958\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>DEG totals and overlap by counting mode<\/caption>","data":[["Average infection response","Diet among controls","Diet among controls","Diet among controls","Diet among infected","Diet among infected","Diet among infected","Diet by infection interaction","Diet by infection interaction","Diet by infection interaction","Infection within diet","Infection within diet","Infection within diet"],["infection_average_all_diets","control_diet33_vs50","control_diet83_vs33","control_diet83_vs50","infected_diet33_vs50","infected_diet83_vs33","infected_diet83_vs50","interaction_diet33_vs50","interaction_diet83_vs33","interaction_diet83_vs50","infection_diet33","infection_diet50","infection_diet83"],["Average infected vs control","Controls: diet 33 vs 50","Controls: diet 83 vs 33","Controls: diet 83 vs 50","Infected: diet 33 vs 50","Infected: diet 83 vs 33","Infected: diet 83 vs 50","Interaction: diet 33 vs 50","Interaction: diet 83 vs 33","Interaction: diet 83 vs 50","Diet 33: infected vs control","Diet 50: infected vs control","Diet 83: infected vs control"],[1422,2,45,21,75,67,49,1,7,3,797,1096,783],[1830,10,57,44,210,508,323,0,140,196,968,1821,1391],[321,1,13,6,17,13,10,1,3,2,219,233,197],[1101,1,32,15,58,54,39,0,4,1,578,863,586],[729,9,25,29,152,454,284,0,136,195,390,958,805]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>contrast_family<\/th>\n      <th>contrast_id<\/th>\n      <th>contrast<\/th>\n      <th>exon_only_DEGs<\/th>\n      <th>transcript_exon_DEGs<\/th>\n      <th>exon_only_unique<\/th>\n      <th>shared_DEGs<\/th>\n      <th>transcript_exon_unique<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"name":"contrast_family","targets":0},{"name":"contrast_id","targets":1},{"name":"contrast","targets":2},{"name":"exon_only_DEGs","targets":3},{"name":"transcript_exon_DEGs","targets":4},{"name":"exon_only_unique","targets":5},{"name":"shared_DEGs","targets":6},{"name":"transcript_exon_unique","targets":7}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="step-4-omnibus-diet-by-infection-interaction"
+class="section level2">
+<h2>Step 4: omnibus diet-by-infection interaction</h2>
+<p>The pairwise difference-of-differences contrasts above ask which two
+diets have different infection responses. The omnibus likelihood-ratio
+test (LRT) asks the broader question first: does allowing any
+diet-specific infection response improve the model relative to additive
+diet and infection effects?</p>
+<p>The two nested models are:</p>
+<pre class="r"><code>full    = ~ Diet + Treatment + Diet:Treatment
+reduced = ~ Diet + Treatment</code></pre>
+<p>Unlike a one-coefficient Wald test, the omnibus LRT has no single
+log2 fold change. We therefore report FDR-significant genes and, for the
+main-chromosome analysis, summarize the largest absolute pairwise
+interaction log2 fold change as an accompanying effect-size
+diagnostic.</p>
+<pre class="r"><code>fit_omnibus_interaction &lt;- function(counts, counting_mode, sequence_scope) {
+  keep &lt;- rowSums(counts &gt;= params$min_count) &gt;= params$min_samples
+  analysis_counts &lt;- counts[keep, , drop = FALSE]
+
+  interaction_metadata &lt;- metadata[sample_ids, , drop = FALSE]
+  interaction_metadata$Diet &lt;- stats::relevel(
+    factor(interaction_metadata$Diet), ref = &quot;50&quot;
+  )
+  interaction_metadata$Treatment &lt;- stats::relevel(
+    factor(interaction_metadata$Treatment), ref = &quot;Control&quot;
+  )
+
+  dds &lt;- DESeq2::DESeqDataSetFromMatrix(
+    countData = analysis_counts,
+    colData = as.data.frame(interaction_metadata),
+    design = ~ Diet + Treatment + Diet:Treatment
+  )
+  dds &lt;- DESeq2::DESeq(
+    dds,
+    test = &quot;LRT&quot;,
+    reduced = ~ Diet + Treatment,
+    minReplicatesForReplace = Inf,
+    quiet = TRUE
+  )
+
+  result &lt;- as.data.frame(DESeq2::results(
+    dds,
+    alpha = params$alpha,
+    cooksCutoff = FALSE
+  )) |&gt;
+    tibble::rownames_to_column(&quot;gene_id&quot;) |&gt;
+    tibble::as_tibble() |&gt;
+    dplyr::mutate(
+      counting_mode = counting_mode,
+      sequence_scope = sequence_scope,
+      omnibus_significant = !is.na(.data$padj) &amp; .data$padj &lt; params$alpha
+    )
+
+  list(dds = dds, results = result, genes_entering_model = sum(keep))
+}
+
+lrt_inputs &lt;- list(
+  &quot;Exon only&quot; = list(
+    &quot;Main chromosomes&quot; = nuclear_counts[[&quot;Exon only&quot;]],
+    &quot;All scaffolds&quot; = rrna_filtered_counts[[&quot;Exon only&quot;]]
+  ),
+  &quot;Transcript + exon&quot; = list(
+    &quot;Main chromosomes&quot; = nuclear_counts[[&quot;Transcript + exon&quot;]],
+    &quot;All scaffolds&quot; = rrna_filtered_counts[[&quot;Transcript + exon&quot;]]
+  )
+)
+
+lrt_fits &lt;- list()
+for (mode in names(lrt_inputs)) {
+  for (scope in names(lrt_inputs[[mode]])) {
+    key &lt;- paste(mode, scope, sep = &quot;__&quot;)
+    lrt_fits[[key]] &lt;- fit_omnibus_interaction(
+      lrt_inputs[[mode]][[scope]], mode, scope
+    )
+  }
+}
+
+lrt_results &lt;- dplyr::bind_rows(lapply(lrt_fits, `[[`, &quot;results&quot;))
+
+safe_max_abs &lt;- function(x) {
+  x &lt;- abs(x[is.finite(x)])
+  if (length(x) == 0) NA_real_ else max(x)
+}
+
+pairwise_interaction_effects &lt;- all_results |&gt;
+  dplyr::filter(.data$contrast_family == &quot;Diet by infection interaction&quot;) |&gt;
+  dplyr::group_by(.data$counting_mode, .data$gene_id) |&gt;
+  dplyr::summarise(
+    max_abs_pairwise_interaction_log2FC = safe_max_abs(.data$log2FoldChange),
+    .groups = &quot;drop&quot;
+  )
+
+lrt_results &lt;- lrt_results |&gt;
+  dplyr::left_join(
+    pairwise_interaction_effects,
+    by = c(&quot;counting_mode&quot;, &quot;gene_id&quot;)
+  ) |&gt;
+  dplyr::left_join(
+    placement |&gt;
+      dplyr::select(.data$gene_id, .data$sequence_class),
+    by = &quot;gene_id&quot;
+  )
+
+lrt_summary &lt;- dplyr::bind_rows(lapply(names(lrt_fits), function(key) {
+  fit &lt;- lrt_fits[[key]]
+  result &lt;- fit$results |&gt;
+    dplyr::left_join(
+      pairwise_interaction_effects,
+      by = c(&quot;counting_mode&quot;, &quot;gene_id&quot;)
+    )
+  tibble::tibble(
+    counting_mode = unique(result$counting_mode),
+    sequence_scope = unique(result$sequence_scope),
+    genes_entering_model = fit$genes_entering_model,
+    omnibus_FDR_lt_0_05 = sum(result$omnibus_significant),
+    omnibus_FDR_and_max_abs_pairwise_log2FC_ge_1 = if (
+      unique(result$sequence_scope) == &quot;Main chromosomes&quot;
+    ) {
+      sum(
+        result$omnibus_significant &amp;
+          !is.na(result$max_abs_pairwise_interaction_log2FC) &amp;
+          result$max_abs_pairwise_interaction_log2FC &gt;= params$lfc_threshold
+      )
+    } else {
+      NA_integer_
+    }
+  )
+}))
+
+lrt_placement_summary &lt;- lrt_results |&gt;
+  dplyr::filter(
+    .data$sequence_scope == &quot;All scaffolds&quot;,
+    .data$omnibus_significant
+  ) |&gt;
+  dplyr::mutate(
+    sequence_class = dplyr::coalesce(.data$sequence_class, &quot;Unresolved&quot;)
+  ) |&gt;
+  dplyr::count(
+    .data$counting_mode, .data$sequence_class,
+    name = &quot;omnibus_FDR_lt_0_05&quot;
+  ) |&gt;
+  dplyr::arrange(.data$counting_mode, dplyr::desc(.data$omnibus_FDR_lt_0_05))
+
+write.csv(
+  lrt_results,
+  file.path(out_dir, &quot;count_definition_omnibus_interaction_LRT_results.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  lrt_summary,
+  file.path(out_dir, &quot;count_definition_omnibus_interaction_LRT_summary.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  lrt_placement_summary,
+  file.path(out_dir, &quot;count_definition_omnibus_interaction_placement_summary.csv&quot;),
+  row.names = FALSE
+)
+
+DT::datatable(
+  lrt_summary,
+  rownames = FALSE,
+  options = list(pageLength = 8, scrollX = TRUE),
+  caption = &quot;Omnibus diet-by-infection LRT under both count definitions&quot;
+)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-099192bd3f1b1605eaca" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-099192bd3f1b1605eaca">{"x":{"filter":"none","vertical":false,"caption":"<caption>Omnibus diet-by-infection LRT under both count definitions<\/caption>","data":[["Exon only","Exon only","Transcript + exon","Transcript + exon"],["Main chromosomes","All scaffolds","Main chromosomes","All scaffolds"],[11141,13886,14134,16900],[1,1,140,121],[1,null,138,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>counting_mode<\/th>\n      <th>sequence_scope<\/th>\n      <th>genes_entering_model<\/th>\n      <th>omnibus_FDR_lt_0_05<\/th>\n      <th>omnibus_FDR_and_max_abs_pairwise_log2FC_ge_1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"name":"counting_mode","targets":0},{"name":"sequence_scope","targets":1},{"name":"genes_entering_model","targets":2},{"name":"omnibus_FDR_lt_0_05","targets":3},{"name":"omnibus_FDR_and_max_abs_pairwise_log2FC_ge_1","targets":4}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[8,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>p_lrt &lt;- lrt_summary |&gt;
+  dplyr::mutate(
+    counting_mode = factor(.data$counting_mode, levels = names(mode_colors)),
+    sequence_scope = factor(
+      .data$sequence_scope,
+      levels = c(&quot;Main chromosomes&quot;, &quot;All scaffolds&quot;)
+    )
+  ) |&gt;
+  ggplot2::ggplot(ggplot2::aes(
+    x = .data$sequence_scope,
+    y = .data$omnibus_FDR_lt_0_05,
+    fill = .data$counting_mode
+  )) +
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge(width = 0.76),
+    width = 0.68,
+    color = &quot;#111827&quot;
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = scales::comma(.data$omnibus_FDR_lt_0_05)),
+    position = ggplot2::position_dodge(width = 0.76),
+    vjust = -0.35,
+    size = 5,
+    fontface = &quot;bold&quot;
+  ) +
+  ggplot2::scale_fill_manual(values = mode_colors) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.16))
+  ) +
+  ggplot2::labs(
+    title = &quot;Formal diet-by-infection interaction is count-definition sensitive&quot;,
+    subtitle = &quot;Omnibus LRT, Benjamini-Hochberg FDR &lt; 0.05; all 45 libraries retained&quot;,
+    x = NULL,
+    y = &quot;Genes with an omnibus interaction&quot;,
+    fill = &quot;Counting mode&quot;
+  ) +
+  theme_report(16)
+
+save_png_svg(p_lrt, &quot;count_definition_omnibus_interaction_LRT&quot;, 12, 6.5)
+p_lrt</code></pre>
+<p><img src="figure/35-count-definition-sensitivity.Rmd/omnibus-interaction-lrt-figure-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>The LRT is interpreted before the pairwise interaction contrasts. A
+small omnibus set supports a broad shared infection response with
+selective diet-dependent divergence. Differences between counting modes
+are reported as sensitivity rather than treated as evidence that one
+definition is universally correct.</p>
 </div>
 <div id="interpretation" class="section level2">
 <h2>Interpretation</h2>
@@ -1427,7 +1933,7 @@ Platform: aarch64-apple-darwin23
 Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
@@ -1437,54 +1943,54 @@ time zone: Asia/Tokyo
 tzcode source: internal
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
 [1] workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] ggplot2_4.0.3               htmlwidgets_1.6.4          
- [7] processx_3.9.0              Biobase_2.72.0             
- [9] lattice_0.22-9              callr_3.7.6                
-[11] crosstalk_1.2.2             vctrs_0.7.3                
-[13] tools_4.6.0                 generics_0.1.4             
-[15] stats4_4.6.0                parallel_4.6.0             
-[17] tibble_3.3.1                pkgconfig_2.0.3            
-[19] Matrix_1.7-5                RColorBrewer_1.1-3         
-[21] S7_0.2.2                    S4Vectors_0.50.1           
-[23] lifecycle_1.0.5             compiler_4.6.0             
-[25] farver_2.1.2                stringr_1.6.0              
-[27] git2r_0.36.2                textshaping_1.0.5          
-[29] DESeq2_1.52.0               getPass_0.2-4              
-[31] Seqinfo_1.2.0               codetools_0.2-20           
-[33] httpuv_1.6.17               htmltools_0.5.9            
-[35] sass_0.4.10                 yaml_2.3.12                
-[37] tidyr_1.3.2                 later_1.4.8                
-[39] pillar_1.11.1               jquerylib_0.1.4            
-[41] whisker_0.4.1               DT_0.34.0                  
-[43] BiocParallel_1.46.0         cachem_1.1.0               
-[45] DelayedArray_0.38.1         abind_1.4-8                
-[47] locfit_1.5-9.12             tidyselect_1.2.1           
-[49] digest_0.6.39               stringi_1.8.7              
-[51] purrr_1.2.2                 dplyr_1.2.1                
-[53] labeling_0.4.3              rprojroot_2.1.1            
-[55] fastmap_1.2.0               grid_4.6.0                 
-[57] cli_3.6.6                   SparseArray_1.12.2         
-[59] magrittr_2.0.5              patchwork_1.3.2            
-[61] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[63] withr_3.0.2                 scales_1.4.0               
-[65] promises_1.5.0              rmarkdown_2.31             
-[67] XVector_0.52.0              httr_1.4.8                 
-[69] matrixStats_1.5.0           otel_0.2.0                 
-[71] ragg_1.5.2                  evaluate_1.0.5             
-[73] knitr_1.51                  GenomicRanges_1.64.0       
-[75] IRanges_2.46.0              rlang_1.2.0                
-[77] Rcpp_1.1.1-1.1              glue_1.8.1                 
-[79] BiocGenerics_0.58.0         svglite_2.2.2              
-[81] rstudioapi_0.18.0           jsonlite_2.0.0             
-[83] R6_2.6.1                    systemfonts_1.3.2          
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6
+ [3] xfun_0.57                   bslib_0.10.0
+ [5] ggplot2_4.0.3               htmlwidgets_1.6.4
+ [7] processx_3.9.0              Biobase_2.72.0
+ [9] lattice_0.22-9              callr_3.7.6
+[11] crosstalk_1.2.2             vctrs_0.7.3
+[13] tools_4.6.0                 generics_0.1.4
+[15] stats4_4.6.0                parallel_4.6.0
+[17] tibble_3.3.1                pkgconfig_2.0.3
+[19] Matrix_1.7-5                RColorBrewer_1.1-3
+[21] S7_0.2.2                    S4Vectors_0.50.1
+[23] lifecycle_1.0.5             compiler_4.6.0
+[25] farver_2.1.2                stringr_1.6.0
+[27] git2r_0.36.2                textshaping_1.0.5
+[29] DESeq2_1.52.0               getPass_0.2-4
+[31] Seqinfo_1.2.0               codetools_0.2-20
+[33] httpuv_1.6.17               htmltools_0.5.9
+[35] sass_0.4.10                 yaml_2.3.12
+[37] tidyr_1.3.2                 later_1.4.8
+[39] pillar_1.11.1               jquerylib_0.1.4
+[41] whisker_0.4.1               DT_0.34.0
+[43] BiocParallel_1.46.0         cachem_1.1.0
+[45] DelayedArray_0.38.1         abind_1.4-8
+[47] locfit_1.5-9.12             tidyselect_1.2.1
+[49] digest_0.6.39               stringi_1.8.7
+[51] purrr_1.2.2                 dplyr_1.2.1
+[53] labeling_0.4.3              rprojroot_2.1.1
+[55] fastmap_1.2.0               grid_4.6.0
+[57] cli_3.6.6                   SparseArray_1.12.2
+[59] magrittr_2.0.5              patchwork_1.3.2
+[61] S4Arrays_1.12.0             dichromat_2.0-0.1
+[63] withr_3.0.2                 scales_1.4.0
+[65] promises_1.5.0              rmarkdown_2.31
+[67] XVector_0.52.0              httr_1.4.8
+[69] matrixStats_1.5.0           otel_0.2.0
+[71] ragg_1.5.2                  evaluate_1.0.5
+[73] knitr_1.51                  GenomicRanges_1.64.0
+[75] IRanges_2.46.0              rlang_1.2.0
+[77] Rcpp_1.1.1-1.1              glue_1.8.1
+[79] BiocGenerics_0.58.0         svglite_2.2.2
+[81] rstudioapi_0.18.0           jsonlite_2.0.0
+[83] R6_2.6.1                    systemfonts_1.3.2
 [85] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 <br>
 <p>
@@ -1500,7 +2006,7 @@ Platform: aarch64-apple-darwin23
 Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
@@ -1510,54 +2016,54 @@ time zone: Asia/Tokyo
 tzcode source: internal
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
 [1] workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] ggplot2_4.0.3               htmlwidgets_1.6.4          
- [7] processx_3.9.0              Biobase_2.72.0             
- [9] lattice_0.22-9              callr_3.7.6                
-[11] crosstalk_1.2.2             vctrs_0.7.3                
-[13] tools_4.6.0                 generics_0.1.4             
-[15] stats4_4.6.0                parallel_4.6.0             
-[17] tibble_3.3.1                pkgconfig_2.0.3            
-[19] Matrix_1.7-5                RColorBrewer_1.1-3         
-[21] S7_0.2.2                    S4Vectors_0.50.1           
-[23] lifecycle_1.0.5             compiler_4.6.0             
-[25] farver_2.1.2                stringr_1.6.0              
-[27] git2r_0.36.2                textshaping_1.0.5          
-[29] DESeq2_1.52.0               getPass_0.2-4              
-[31] Seqinfo_1.2.0               codetools_0.2-20           
-[33] httpuv_1.6.17               htmltools_0.5.9            
-[35] sass_0.4.10                 yaml_2.3.12                
-[37] tidyr_1.3.2                 later_1.4.8                
-[39] pillar_1.11.1               jquerylib_0.1.4            
-[41] whisker_0.4.1               DT_0.34.0                  
-[43] BiocParallel_1.46.0         cachem_1.1.0               
-[45] DelayedArray_0.38.1         abind_1.4-8                
-[47] locfit_1.5-9.12             tidyselect_1.2.1           
-[49] digest_0.6.39               stringi_1.8.7              
-[51] purrr_1.2.2                 dplyr_1.2.1                
-[53] labeling_0.4.3              rprojroot_2.1.1            
-[55] fastmap_1.2.0               grid_4.6.0                 
-[57] cli_3.6.6                   SparseArray_1.12.2         
-[59] magrittr_2.0.5              patchwork_1.3.2            
-[61] S4Arrays_1.12.0             dichromat_2.0-0.1          
-[63] withr_3.0.2                 scales_1.4.0               
-[65] promises_1.5.0              rmarkdown_2.31             
-[67] XVector_0.52.0              httr_1.4.8                 
-[69] matrixStats_1.5.0           otel_0.2.0                 
-[71] ragg_1.5.2                  evaluate_1.0.5             
-[73] knitr_1.51                  GenomicRanges_1.64.0       
-[75] IRanges_2.46.0              rlang_1.2.0                
-[77] Rcpp_1.1.1-1.1              glue_1.8.1                 
-[79] BiocGenerics_0.58.0         svglite_2.2.2              
-[81] rstudioapi_0.18.0           jsonlite_2.0.0             
-[83] R6_2.6.1                    systemfonts_1.3.2          
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6
+ [3] xfun_0.57                   bslib_0.10.0
+ [5] ggplot2_4.0.3               htmlwidgets_1.6.4
+ [7] processx_3.9.0              Biobase_2.72.0
+ [9] lattice_0.22-9              callr_3.7.6
+[11] crosstalk_1.2.2             vctrs_0.7.3
+[13] tools_4.6.0                 generics_0.1.4
+[15] stats4_4.6.0                parallel_4.6.0
+[17] tibble_3.3.1                pkgconfig_2.0.3
+[19] Matrix_1.7-5                RColorBrewer_1.1-3
+[21] S7_0.2.2                    S4Vectors_0.50.1
+[23] lifecycle_1.0.5             compiler_4.6.0
+[25] farver_2.1.2                stringr_1.6.0
+[27] git2r_0.36.2                textshaping_1.0.5
+[29] DESeq2_1.52.0               getPass_0.2-4
+[31] Seqinfo_1.2.0               codetools_0.2-20
+[33] httpuv_1.6.17               htmltools_0.5.9
+[35] sass_0.4.10                 yaml_2.3.12
+[37] tidyr_1.3.2                 later_1.4.8
+[39] pillar_1.11.1               jquerylib_0.1.4
+[41] whisker_0.4.1               DT_0.34.0
+[43] BiocParallel_1.46.0         cachem_1.1.0
+[45] DelayedArray_0.38.1         abind_1.4-8
+[47] locfit_1.5-9.12             tidyselect_1.2.1
+[49] digest_0.6.39               stringi_1.8.7
+[51] purrr_1.2.2                 dplyr_1.2.1
+[53] labeling_0.4.3              rprojroot_2.1.1
+[55] fastmap_1.2.0               grid_4.6.0
+[57] cli_3.6.6                   SparseArray_1.12.2
+[59] magrittr_2.0.5              patchwork_1.3.2
+[61] S4Arrays_1.12.0             dichromat_2.0-0.1
+[63] withr_3.0.2                 scales_1.4.0
+[65] promises_1.5.0              rmarkdown_2.31
+[67] XVector_0.52.0              httr_1.4.8
+[69] matrixStats_1.5.0           otel_0.2.0
+[71] ragg_1.5.2                  evaluate_1.0.5
+[73] knitr_1.51                  GenomicRanges_1.64.0
+[75] IRanges_2.46.0              rlang_1.2.0
+[77] Rcpp_1.1.1-1.1              glue_1.8.1
+[79] BiocGenerics_0.58.0         svglite_2.2.2
+[81] rstudioapi_0.18.0           jsonlite_2.0.0
+[83] R6_2.6.1                    systemfonts_1.3.2
 [85] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 </div>
 </div>
@@ -1662,5 +2168,30 @@ $(document).ready(function ()  {
   })();
 </script>
 
+<script id="count-definition-navigation">
+(function ($) {
+  "use strict";
+
+  $(function () {
+    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
+      var item = $(this).parent(".dropdown-submenu");
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      item.siblings(".dropdown-submenu.open").removeClass("open")
+        .children("a").attr("aria-expanded", "false");
+      item.toggleClass("open");
+      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
+      return false;
+    });
+  });
+
+  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
+    $(this).find(".dropdown-submenu.open").removeClass("open")
+      .children("a").attr("aria-expanded", "false");
+  });
+}(window.jQuery));
+</script>
 </body>
 </html>

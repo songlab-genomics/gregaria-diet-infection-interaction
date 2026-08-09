@@ -1,0 +1,13 @@
+source_sheet,umbrella,figure_scope,p_value,p_label
+Immune,Cellular Immunity,Diet comparison among infected,,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,,N.S.D.
+Immune,Detoxification,Diet comparison among infected,0.24783760811959402,N.S.D.
+Immune,Detoxification,Within-diet infection response,0.2584870756462177,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,1,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,1,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,1,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,1,N.S.D.
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,0.010199490025498725,p = 0.010

@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='1728.00pt' height='432.00pt' viewBox='0 0 1728.00 432.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw'>
+    <rect x='0.00' y='0.00' width='1728.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw)'>
+<rect x='-0.00000000000013' y='0.00' width='1728.00' height='432.00' style='stroke-width: 1.55; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNy45N3w4NjAuMDF8NDguNTF8MzI1LjI3'>
+    <rect x='7.97' y='48.51' width='852.04' height='276.75' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNy45N3w4NjAuMDF8NDguNTF8MzI1LjI3)'>
+<rect x='7.97' y='48.51' width='852.04' height='276.75' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<line x1='707.75' y1='325.27' x2='707.75' y2='48.51' style='stroke-width: 0.75; stroke: #6B7280; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
+<text x='20.23' y='77.12' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='204.88px' lengthAdjust='spacingAndGlyphs'>Metabolic pathways</text>
+<text x='20.23' y='110.87' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='435.70px' lengthAdjust='spacingAndGlyphs'>Pentose and glucuronate interconversions</text>
+<text x='20.23' y='144.62' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='99.84px' lengthAdjust='spacingAndGlyphs'>Cell cycle</text>
+<text x='20.23' y='178.37' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='176.34px' lengthAdjust='spacingAndGlyphs'>Cell cycle - yeast</text>
+<text x='20.23' y='212.12' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='378.58px' lengthAdjust='spacingAndGlyphs'>Drug metabolism - cytochrome P450</text>
+<text x='20.23' y='245.87' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='396.81px' lengthAdjust='spacingAndGlyphs'>Biosynthesis of secondary metabolites</text>
+<text x='20.23' y='279.62' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='487.56px' lengthAdjust='spacingAndGlyphs'>Metabolism of xenobiotics by cytochrome P450</text>
+<text x='20.23' y='313.37' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='295.66px' lengthAdjust='spacingAndGlyphs'>Insect hormone biosynthesis</text>
+<line x1='620.86' y1='68.76' x2='757.18' y2='68.76' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='102.51' x2='752.69' y2='102.51' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='136.26' x2='806.58' y2='136.26' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='170.02' x2='757.18' y2='170.02' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='203.77' x2='757.18' y2='203.77' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='237.52' x2='754.84' y2='237.52' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='271.27' x2='752.69' y2='271.27' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='620.86' y1='305.02' x2='757.18' y2='305.02' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<circle cx='757.18' cy='68.76' r='13.32' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='752.69' cy='102.51' r='8.08' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='806.58' cy='136.26' r='8.89' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='757.18' cy='170.02' r='8.24' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='757.18' cy='203.77' r='8.52' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='754.84' cy='237.52' r='10.60' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='752.69' cy='271.27' r='8.52' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='757.18' cy='305.02' r='6.38' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+</g>
+<g clip-path='url(#cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw)'>
+</g>
+<defs>
+  <clipPath id='cpODY3Ljk5fDE3MjAuMDN8NDguNTF8MzI1LjI3'>
+    <rect x='867.99' y='48.51' width='852.04' height='276.75' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpODY3Ljk5fDE3MjAuMDN8NDguNTF8MzI1LjI3)'>
+<rect x='867.99' y='48.51' width='852.04' height='276.75' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<line x1='1567.77' y1='325.27' x2='1567.77' y2='48.51' style='stroke-width: 0.75; stroke: #6B7280; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
+<text x='880.24' y='108.76' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='343.62px' lengthAdjust='spacingAndGlyphs'>Hedgehog signaling pathway - fly</text>
+<text x='880.24' y='195.24' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='400.64px' lengthAdjust='spacingAndGlyphs'>Neuroactive ligand-receptor interaction</text>
+<text x='880.24' y='281.73' style='font-size: 23.33px;fill: #111827; font-family: "Arial";' textLength='317.70px' lengthAdjust='spacingAndGlyphs'>Toll and Imd signaling pathway</text>
+<line x1='1480.88' y1='100.41' x2='1574.18' y2='100.41' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='1480.88' y1='186.89' x2='1582.40' y2='186.89' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<line x1='1480.88' y1='273.38' x2='1569.05' y2='273.38' style='stroke-width: 1.71; stroke: #8B5A2B; stroke-opacity: 0.80; stroke-linecap: butt;' />
+<circle cx='1574.18' cy='100.41' r='8.39' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='1582.40' cy='186.89' r='9.01' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<circle cx='1569.05' cy='273.38' r='8.08' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+</g>
+<g clip-path='url(#cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw)'>
+</g>
+<defs>
+  <clipPath id='cpNy45N3w4NjAuMDF8Ny45N3w0OC41MQ=='>
+    <rect x='7.97' y='7.97' width='852.04' height='40.54' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNy45N3w4NjAuMDF8Ny45N3w0OC41MQ==)'>
+<rect x='7.97' y='7.97' width='852.04' height='40.54' style='stroke-width: 3.10; stroke: #111827; fill: #F3F4F6;' />
+<text x='433.99' y='38.98' text-anchor='middle' style='font-size: 30.00px; font-weight: bold;fill: #1A1A1A; font-family: "Arial";' textLength='196.73px' lengthAdjust='spacingAndGlyphs'>DEG cluster 1</text>
+</g>
+<g clip-path='url(#cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw)'>
+</g>
+<defs>
+  <clipPath id='cpODY3Ljk5fDE3MjAuMDN8Ny45N3w0OC41MQ=='>
+    <rect x='867.99' y='7.97' width='852.04' height='40.54' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpODY3Ljk5fDE3MjAuMDN8Ny45N3w0OC41MQ==)'>
+<rect x='867.99' y='7.97' width='852.04' height='40.54' style='stroke-width: 3.10; stroke: #111827; fill: #F3F4F6;' />
+<text x='1294.01' y='38.98' text-anchor='middle' style='font-size: 30.00px; font-weight: bold;fill: #1A1A1A; font-family: "Arial";' textLength='196.73px' lengthAdjust='spacingAndGlyphs'>DEG cluster 2</text>
+</g>
+<g clip-path='url(#cpMC4wMHwxNzI4LjAwfDAuMDB8NDMyLjAw)'>
+<polyline points='7.97,325.27 860.01,325.27 ' style='stroke-width: 0.96; stroke-linecap: butt;' />
+<polyline points='19.77,329.25 19.77,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='220.13,329.25 220.13,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='420.50,329.25 420.50,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='620.86,329.25 620.86,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='821.22,329.25 821.22,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<text x='19.77' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-9</text>
+<text x='220.13' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-6</text>
+<text x='420.50' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-3</text>
+<text x='620.86' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='821.22' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>3</text>
+<polyline points='867.99,325.27 1720.03,325.27 ' style='stroke-width: 0.96; stroke-linecap: butt;' />
+<polyline points='879.79,329.25 879.79,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='1080.15,329.25 1080.15,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='1280.51,329.25 1280.51,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='1480.88,329.25 1480.88,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<polyline points='1681.24,329.25 1681.24,325.27 ' style='stroke-width: 1.55; stroke-linecap: butt;' />
+<text x='879.79' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-9</text>
+<text x='1080.15' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-6</text>
+<text x='1280.51' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='13.34px' lengthAdjust='spacingAndGlyphs'>-3</text>
+<text x='1480.88' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='1681.24' y='343.18' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='864.00' y='362.50' text-anchor='middle' style='font-size: 17.00px; font-family: "Arial";' textLength='176.70px' lengthAdjust='spacingAndGlyphs'>-log10 adjusted p-value</text>
+<rect x='548.90' y='382.02' width='630.21' height='42.01' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<text x='553.88' y='413.76' style='font-size: 30.00px; font-weight: bold; font-family: "Arial";' textLength='361.75px' lengthAdjust='spacingAndGlyphs'>Cluster genes in pathway</text>
+<rect x='923.60' y='387.00' width='36.85' height='32.05' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<circle cx='942.02' cy='403.03' r='9.50' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<rect x='1009.76' y='387.00' width='36.85' height='32.05' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<circle cx='1028.19' cy='403.03' r='11.29' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<rect x='1095.93' y='387.00' width='36.85' height='32.05' style='stroke-width: 1.55; stroke: none; fill: #FFFFFF;' />
+<circle cx='1114.35' cy='403.03' r='12.58' style='stroke-width: 1.03; stroke: #8B5A2B; stroke-opacity: 0.95; fill: #8B5A2B; fill-opacity: 0.95;' />
+<text x='968.42' y='413.76' style='font-size: 30.00px; font-family: "Arial";' textLength='33.38px' lengthAdjust='spacingAndGlyphs'>25</text>
+<text x='1054.58' y='413.76' style='font-size: 30.00px; font-family: "Arial";' textLength='33.38px' lengthAdjust='spacingAndGlyphs'>50</text>
+<text x='1140.75' y='413.76' style='font-size: 30.00px; font-family: "Arial";' textLength='33.38px' lengthAdjust='spacingAndGlyphs'>75</text>
+</g>
+</g>
+</svg>

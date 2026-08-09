@@ -9,11 +9,13 @@ output:
     toc_float: true
 params:
   latest_results_root: "output/rmd_runs"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
-  mapping_summary_file: "output/runs/host_pathogen_dual_20260727_000952/05-mapping-comparison/competitive_mapping_summary.tsv"
+  primary_results_pattern: "^placed-unplaced-scaffold-analysis_"
+  enrichment_results_pattern: "^go-term-enrichment_"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
   timecourse_fatbody_reference_dir: "data/external/timecourse_fatbody_reference"
   timecourse_head_thorax_counts_dir: "data/raw_read_counts/03-gregaria-DESeq2"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
@@ -457,7 +459,7 @@ build_term_maps_from_eggnog <- function() {
 }
 
 load_term_maps <- function() {
-  go_dir <- latest_dir("^go-term-enrichment_")
+  go_dir <- latest_dir(params$enrichment_results_pattern)
   expected <- file.path(
     go_dir,
     c("eggNOG_GO_TERM2GENE.csv", "eggNOG_GO_TERM2NAME.csv",
@@ -530,7 +532,7 @@ expand_term_genes <- function(tab, gene_annotation) {
 ## Inputs
 
 ```{r inputs}
-primary_run_dir <- latest_dir("^placed-unplaced-scaffold-analysis_")
+primary_run_dir <- latest_dir(params$primary_results_pattern)
 if (is.na(primary_run_dir)) {
   stop("Build the placed/unplaced audit page before this cluster page.")
 }

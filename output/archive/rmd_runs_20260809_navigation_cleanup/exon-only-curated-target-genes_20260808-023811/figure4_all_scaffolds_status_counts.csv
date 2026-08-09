@@ -1,0 +1,164 @@
+source_sheet,umbrella,figure_scope,x_label,x_order,status,n_genes,percentage,n_targets,p_value,p_label
+Immune,Cellular Immunity,Diet comparison among infected,"50
+vs
+33",1,N.S.,5,62.5,8,0.08309584520773962,N.S.D.
+Immune,Cellular Immunity,Diet comparison among infected,"50
+vs
+33",1,Upregulated,3,37.5,8,0.08309584520773962,N.S.D.
+Immune,Cellular Immunity,Diet comparison among infected,"83
+vs
+33",2,N.S.,8,100,8,0.08309584520773962,N.S.D.
+Immune,Cellular Immunity,Diet comparison among infected,"83
+vs
+50",3,N.S.,8,100,8,0.08309584520773962,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,33,1,Downregulated,1,12.5,8,0.1694915254237288,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,33,1,N.S.,6,75,8,0.1694915254237288,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,33,1,Upregulated,1,12.5,8,0.1694915254237288,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,50,2,N.S.,5,62.5,8,0.1694915254237288,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,50,2,Upregulated,3,37.5,8,0.1694915254237288,N.S.D.
+Immune,Cellular Immunity,Within-diet infection response,83,3,N.S.,8,100,8,0.1694915254237288,N.S.D.
+Immune,Detoxification,Diet comparison among infected,"50
+vs
+33",1,Downregulated,1,12.5,8,6.999650017499125e-4,p < 0.001
+Immune,Detoxification,Diet comparison among infected,"50
+vs
+33",1,N.S.,2,25,8,6.999650017499125e-4,p < 0.001
+Immune,Detoxification,Diet comparison among infected,"50
+vs
+33",1,Upregulated,5,62.5,8,6.999650017499125e-4,p < 0.001
+Immune,Detoxification,Diet comparison among infected,"83
+vs
+33",2,N.S.,8,100,8,6.999650017499125e-4,p < 0.001
+Immune,Detoxification,Diet comparison among infected,"83
+vs
+50",3,N.S.,8,100,8,6.999650017499125e-4,p < 0.001
+Immune,Detoxification,Within-diet infection response,33,1,Downregulated,2,25,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,33,1,N.S.,5,62.5,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,33,1,Upregulated,1,12.5,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,50,2,N.S.,6,75,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,50,2,Upregulated,2,25,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,83,3,N.S.,7,87.5,8,0.4928253587320634,N.S.D.
+Immune,Detoxification,Within-diet infection response,83,3,Upregulated,1,12.5,8,0.4928253587320634,N.S.D.
+Immune,Humoral Immunity,Diet comparison among infected,"50
+vs
+33",1,N.S.,11,100,11,,N.S.D.
+Immune,Humoral Immunity,Diet comparison among infected,"83
+vs
+33",2,N.S.,11,100,11,,N.S.D.
+Immune,Humoral Immunity,Diet comparison among infected,"83
+vs
+50",3,N.S.,11,100,11,,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,33,1,Downregulated,2,18.181818181818183,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,33,1,N.S.,5,45.45454545454545,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,33,1,Upregulated,4,36.36363636363637,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,50,2,Downregulated,4,36.36363636363637,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,50,2,N.S.,2,18.181818181818183,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,50,2,Upregulated,5,45.45454545454545,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,83,3,Downregulated,1,9.090909090909092,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,83,3,N.S.,5,45.45454545454545,11,0.49452527373631316,N.S.D.
+Immune,Humoral Immunity,Within-diet infection response,83,3,Upregulated,5,45.45454545454545,11,0.49452527373631316,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,"50
+vs
+33",1,N.S.,43,95.55555555555556,45,0.3249337533123344,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,"50
+vs
+33",1,Upregulated,2,4.444444444444445,45,0.3249337533123344,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,"83
+vs
+33",2,N.S.,45,100,45,0.3249337533123344,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Diet comparison among infected,"83
+vs
+50",3,N.S.,45,100,45,0.3249337533123344,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,33,1,Downregulated,1,2.2222222222222223,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,33,1,N.S.,17,37.77777777777778,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,33,1,Upregulated,27,60,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,50,2,Downregulated,2,4.444444444444445,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,50,2,N.S.,10,22.22222222222222,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,50,2,Upregulated,33,73.33333333333333,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,83,3,N.S.,19,42.22222222222222,45,0.2166391680415979,N.S.D.
+Immune,Innate Immune Recognition & Signaling,Within-diet infection response,83,3,Upregulated,26,57.77777777777778,45,0.2166391680415979,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"50
+vs
+33",1,N.S.,7,38.888888888888886,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"50
+vs
+33",1,Upregulated,11,61.111111111111114,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+33",2,N.S.,15,83.33333333333333,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+33",2,Upregulated,3,16.666666666666668,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+50",3,N.S.,17,94.44444444444444,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+50",3,Upregulated,1,5.555555555555555,18,3.4998250087495624e-4,p < 0.001
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,33,1,Downregulated,6,33.333333333333336,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,33,1,N.S.,11,61.111111111111114,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,33,1,Upregulated,1,5.555555555555555,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,50,2,Downregulated,2,11.11111111111111,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,50,2,N.S.,13,72.22222222222223,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,50,2,Upregulated,3,16.666666666666668,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,83,3,Downregulated,1,5.555555555555555,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,83,3,N.S.,16,88.88888888888889,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,83,3,Upregulated,1,5.555555555555555,18,0.12829358532073395,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,"50
+vs
+33",1,N.S.,12,70.58823529411765,17,0.007749612519374031,p = 0.008
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,"50
+vs
+33",1,Upregulated,5,29.41176470588235,17,0.007749612519374031,p = 0.008
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,"83
+vs
+33",2,N.S.,17,100,17,0.007749612519374031,p = 0.008
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Diet comparison among infected,"83
+vs
+50",3,N.S.,17,100,17,0.007749612519374031,p = 0.008
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,33,1,Downregulated,2,11.764705882352942,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,33,1,N.S.,10,58.8235294117647,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,33,1,Upregulated,5,29.41176470588235,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,50,2,Downregulated,1,5.882352941176471,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,50,2,N.S.,7,41.1764705882353,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,50,2,Upregulated,9,52.94117647058823,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,83,3,N.S.,12,70.58823529411765,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Nutrient Sensing & TOR/Insulin Signaling,Within-diet infection response,83,3,Upregulated,5,29.41176470588235,17,0.2936353182340883,N.S.D.
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"50
+vs
+33",1,N.S.,9,17.647058823529413,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"50
+vs
+33",1,Upregulated,42,82.3529411764706,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+33",2,N.S.,49,96.07843137254902,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+33",2,Upregulated,2,3.9215686274509802,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+50",3,N.S.,51,100,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,33,1,Downregulated,21,41.1764705882353,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,33,1,N.S.,29,56.86274509803921,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,33,1,Upregulated,1,1.9607843137254901,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,50,2,Downregulated,3,5.882352941176471,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,50,2,N.S.,47,92.15686274509804,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,50,2,Upregulated,1,1.9607843137254901,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,83,3,Downregulated,4,7.8431372549019605,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,83,3,N.S.,46,90.19607843137256,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,83,3,Upregulated,1,1.9607843137254901,51,4.999750012499375e-5,p < 0.0001
+Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,"50
+vs
+33",1,N.S.,5,100,5,,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,"83
+vs
+33",2,N.S.,5,100,5,,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Diet comparison among infected,"83
+vs
+50",3,N.S.,5,100,5,,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,33,1,Downregulated,1,20,5,0.23338833058347083,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,33,1,N.S.,4,80,5,0.23338833058347083,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,50,2,Downregulated,3,60,5,0.23338833058347083,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,50,2,N.S.,2,40,5,0.23338833058347083,N.S.D.
+Protein-Anabolism,Storage Hexamerins & Reserves,Within-diet infection response,83,3,N.S.,5,100,5,0.23338833058347083,N.S.D.

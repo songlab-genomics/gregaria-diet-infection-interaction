@@ -365,48 +365,46 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="03-count-qc-exploration.html">Experiment QC</a>
-    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples retained</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="03-count-qc-exploration.html">Experiment QC</a>
         </li>
         <li>
-          <a href="15-all-samples-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
         </li>
         <li>
-          <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
+        </li>
+        <li>
+          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
+        </li>
+        <li>
+          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
+        </li>
+        <li>
+          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Current outliers removed</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="17-outliers-removed-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
         </li>
         <li>
-          <a href="18-outliers-removed-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
         </li>
         <li>
-          <a href="19-outliers-removed-infection-within-diet-deg.html">Infection within diet DEGs</a>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sensitivity and filters</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenario table</a>
+          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
         </li>
         <li>
-          <a href="11-outlier-sensitivity.html">Outlier sensitivity</a>
-        </li>
-        <li>
-          <a href="09-outliers-load-enrichment.html">Quality sensitivity and enrichment</a>
+          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
       </ul>
     </li>
@@ -419,32 +417,149 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="13-physiology-candidate-genes.html">Physiology candidate genes</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
+        </li>
+        <li>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
-    </li>
-    <li>
-      <a href="08-publication-figures.html">Publication figure exports</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
+        </li>
+        <li>
+          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
+        </li>
+        <li>
+          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Reference Context
+    Figures
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="22-deg-logical-set-construction.html">Fat body DEGs vs tissue / phase</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="08-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="20-phase-signature-overlap.html">Phase signature - all samples</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="21-phase-signature-overlap-no-outliers.html">Phase signature - outliers removed</a>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sensitivity and Validation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+        </li>
+        <li>
+          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+        </li>
+        <li>
+          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -455,20 +570,38 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="archive.html">Archived analysis index</a>
+    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Earlier current-analysis pages</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Original interaction model</a>
+          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Original diet pairwise DEGs</a>
+          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Original infection-within-diet DEGs</a>
+          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
         </li>
         <li>
-          <a href="07-deg-overlap-prioritization.html">Original DEG overlap and prioritization</a>
+          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
+        </li>
+        <li>
+          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
+        </li>
+        <li>
+          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
+        </li>
+        <li>
+          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
+        </li>
+        <li>
+          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
+        </li>
+        <li>
+          <a href="overlap.html">Original DEG overlap and prioritization</a>
         </li>
       </ul>
     </li>
@@ -1440,5 +1573,30 @@ $(document).ready(function ()  {
   })();
 </script>
 
+<script id="count-definition-navigation">
+(function ($) {
+  "use strict";
+
+  $(function () {
+    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
+      var item = $(this).parent(".dropdown-submenu");
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      item.siblings(".dropdown-submenu.open").removeClass("open")
+        .children("a").attr("aria-expanded", "false");
+      item.toggleClass("open");
+      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
+      return false;
+    });
+  });
+
+  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
+    $(this).find(".dropdown-submenu.open").removeClass("open")
+      .children("a").attr("aria-expanded", "false");
+  });
+}(window.jQuery));
+</script>
 </body>
 </html>

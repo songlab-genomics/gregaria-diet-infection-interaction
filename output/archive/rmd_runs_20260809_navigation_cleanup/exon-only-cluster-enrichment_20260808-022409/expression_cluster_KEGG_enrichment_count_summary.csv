@@ -1,0 +1,9 @@
+"expression_cluster","pathway_theme","pathway_scope","n_significant_pathways"
+"DEG cluster 1","Broad metabolic map","Broad KEGG reference map",1
+"DEG cluster 1","Carbohydrate and energy metabolism","Core metabolism or cross-domain",3
+"DEG cluster 1","Carbohydrate and energy metabolism","Broad KEGG reference map",1
+"DEG cluster 1","Detoxification and secondary metabolism","Core metabolism or cross-domain",2
+"DEG cluster 1","Detoxification and secondary metabolism","Broad KEGG reference map",3
+"DEG cluster 1","Genetic information processing","Core metabolism or cross-domain",1
+"DEG cluster 1","Genetic information processing","Reference disease pathway",1
+"DEG cluster 1","Other KEGG pathway","Core metabolism or cross-domain",1

@@ -1,0 +1,3 @@
+sample_id	original_datasheet	previous_metadata	correction	downstream_action
+1024	Female; Infected; Yellow; diet 33	Female; Infected; diet 83	Reassign diet 83 to diet 33	Reuse existing counts with corrected metadata in every model
+1044	Female; Infected; Blue; diet 83	Missing	Add as infected diet 83	Merge lanes, map, quantify, classify, and add to new 45-sample matrices

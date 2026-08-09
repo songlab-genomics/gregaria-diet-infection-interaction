@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-06" />
+<meta name="date" content="2026-08-09" />
 
 <title>All samples + all scaffolds: infection within diet DEGs</title>
 
@@ -374,46 +374,46 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="03-count-qc-exploration.html">Experiment QC</a>
-    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + all scaffolds</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="04-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="03-count-qc-exploration.html">Experiment QC</a>
         </li>
         <li>
-          <a href="05-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
         </li>
         <li>
-          <a href="06-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
         </li>
         <li>
-          <a href="31-all-scaffolds-deg-overlap-prioritization.html">DEG overlap</a>
+          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
         </li>
         <li>
-          <a href="32-all-scaffolds-deg-catalogue.html">Searchable DEG catalogue</a>
+          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
+        </li>
+        <li>
+          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
+        </li>
+        <li>
+          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All samples + placed chromosomes</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="14-all-samples-deseq2-interaction-model.html">Diet x infection interaction</a>
+          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
         </li>
         <li>
-          <a href="15-all-samples-diet-pairwise-deg.html">Diet pairwise DEGs</a>
+          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
         </li>
         <li>
-          <a href="16-all-samples-infection-within-diet-deg.html">Infection within diet DEGs</a>
+          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
         </li>
         <li>
-          <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
-        </li>
-        <li>
-          <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
         </li>
       </ul>
     </li>
@@ -426,37 +426,64 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
-    </li>
-    <li>
-      <a href="30-curated-target-gene-figure.html">Curated target genes - both scopes</a>
-    </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">All scaffolds</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG enrichment</a>
+          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
         </li>
         <li>
-          <a href="34-all-scaffolds-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
         </li>
         <li>
-          <a href="27-scaffold-origin-audit.html">Scaffold origin interpretation</a>
+          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
+        </li>
+        <li>
+          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
+        </li>
+        <li>
+          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
+        </li>
+        <li>
+          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
+        </li>
+        <li>
+          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
         </li>
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Placed chromosomes</a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="10-go-term-enrichment.html">GO / KEGG enrichment</a>
+          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
         </li>
         <li>
-          <a href="25-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
         </li>
         <li>
-          <a href="26-circled-cluster-enrichment.html">Expression clusters and enrichment</a>
+          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
+        </li>
+        <li>
+          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
         </li>
       </ul>
     </li>
@@ -469,20 +496,45 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="08-publication-figures.html">Publication figure exports</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="08-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-    </li>
-    <li>
-      <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-    </li>
-    <li>
-      <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
-    </li>
-    <li>
-      <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
+        </li>
+        <li>
+          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
+        </li>
+        <li>
+          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
+        </li>
+        <li>
+          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
+        </li>
+        <li>
+          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -493,17 +545,30 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
+        </li>
+        <li>
+          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
+        </li>
+        <li>
+          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
+        </li>
+        <li>
+          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+        </li>
+      </ul>
     </li>
-    <li>
-      <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
-    </li>
-    <li>
-      <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
-    </li>
-    <li>
-      <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -598,7 +663,7 @@ div.tocify {
 <h1 class="title toc-ignore">All samples + all scaffolds: infection
 within diet DEGs</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-06</h4>
+<h4 class="date">2026-08-09</h4>
 
 </div>
 
@@ -627,7 +692,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-06
+<strong>Last updated:</strong> 2026-08-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -762,15 +827,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree5ebe940cf69e3df270b8c321df2ac7264d284d19targetblank5ebe940a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreede5edfb95a347b793c528f6a90a9983778983e38targetblankde5edfba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -780,7 +845,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/5ebe940cf69e3df270b8c321df2ac7264d284d19" target="_blank">5ebe940</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/de5edfb95a347b793c528f6a90a9983778983e38" target="_blank">de5edfb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -799,17 +864,39 @@ Ignored files:
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
+    Ignored:    data/.DS_Store
     Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
     Ignored:    data/reference/
     Ignored:    output/.DS_Store
     Ignored:    output/rmd_runs/
     Ignored:    output/runs/
+    Ignored:    outputs/.DS_Store
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
+    Ignored:    scripts/manuscript/__pycache__/
 
 Untracked files:
-    Untracked:  output/archive/rmd_runs_20260806/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/site_build_artifacts_20260806/28-placed-unplaced-scaffold-analysis_cache/html/run-deseq2_a47470e453bd1a12bb9fca9d052eda43.rdb
+    Untracked:  analysis/36-exon-only-deseq2-analysis.Rmd
+    Untracked:  analysis/37-exon-only-interaction-model.Rmd
+    Untracked:  analysis/38-exon-only-diet-pairwise-deg.Rmd
+    Untracked:  analysis/39-exon-only-infection-within-diet-deg.Rmd
+    Untracked:  analysis/40-exon-only-deg-overlap.Rmd
+    Untracked:  analysis/41-exon-only-deg-catalogue.Rmd
+    Untracked:  analysis/42-exon-only-go-term-enrichment.Rmd
+    Untracked:  analysis/43-exon-only-enrichment-term-gene-index.Rmd
+    Untracked:  analysis/44-exon-only-expression-clusters.Rmd
+    Untracked:  analysis/45-exon-only-curated-target-genes.Rmd
+    Untracked:  analysis/46-exon-only-publication-figures.Rmd
+    Untracked:  code/config/fatbody_dual_rnaseq_sample_1044.tsv
+    Untracked:  code/config/fatbody_dual_rnaseq_samples_corrected_45.tsv
+    Untracked:  code/pilot/merge_fatbody_1044_lanes.slurm
+    Untracked:  code/pilot/submit_fatbody_1044_addon_hpc.sh
+    Untracked:  data/metadata/mehreen_metadata_corrected_45.txt
+    Untracked:  data/metadata/mehreen_metadata_no_outliers_corrected_45.txt
+    Untracked:  data/metadata/metadata_correction_audit_20260809.tsv
+    Untracked:  manuscript/
+    Untracked:  scripts/manuscript/revise_cbpb_manuscript.py
+    Untracked:  scripts/prepare_corrected_45_sample_inputs.py
 
 Unstaged changes:
     Modified:   analysis/01-study-design-data.Rmd
@@ -829,7 +916,6 @@ Unstaged changes:
     Modified:   analysis/24-all-deg-catalogue.Rmd
     Modified:   analysis/25-enrichment-term-gene-index.Rmd
     Modified:   analysis/26-circled-cluster-enrichment.Rmd
-    Modified:   analysis/27-scaffold-origin-audit.Rmd
     Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
     Modified:   analysis/29-metarhizium-read-burden.Rmd
     Modified:   analysis/30-curated-target-gene-figure.Rmd
@@ -837,13 +923,15 @@ Unstaged changes:
     Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
     Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
     Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Modified:   analysis/35-count-definition-sensitivity.Rmd
     Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
-    Modified:   analysis/site-style.css
     Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
-    Modified:   code/cluster.json
+    Modified:   code/config.smk
+    Modified:   code/pilot/check_host_pathogen_dual_hpc.sh
     Modified:   code/pilot/check_host_pathogen_dual_progress.sh
     Modified:   code/rules/07_host_pathogen_dual_rnaseq.smk
+    Modified:   code/snakemake.host_pathogen_dual.slurm
 
 </code></pre>
 <p>
@@ -889,6 +977,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/0942a37175d9dc7fd261589dbc58f3d9cad0a9f5/docs/06-infection-within-diet-deg.html" target="_blank">0942a37</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-07
+</td>
+<td>
+update publication
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/analysis/06-infection-within-diet-deg.Rmd" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+reformat the pages
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/9779d0d625a9428f16278d5bca55302910581e40/docs/06-infection-within-diet-deg.html" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+<td>
+reformat the pages
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1070,7 +1209,7 @@ across diets.</p>
 <p>This page tests infected versus control samples separately within
 each diet. This is a simple and readable complement to the full
 interaction model.</p>
-<p>This branch retains all 44 samples and all expression-filtered,
+<p>This branch retains all 45 samples and all expression-filtered,
 non-rRNA host loci from the fresh competitive mapping, including genes
 on unplaced scaffolds. The parallel <a
 href="16-all-samples-infection-within-diet-deg.html">placed-chromosome
@@ -1255,6 +1394,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1349,6 +1499,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/vst-sample-heatmap-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/vst-sample-heatmap-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1385,7 +1546,7 @@ Maeva TECHER
 </div>
 </div>
 <pre class="r"><code>dev.off()</code></pre>
-<pre><code>quartz_off_screen 
+<pre><code>quartz_off_screen
                 3 </code></pre>
 <pre class="r"><code>pheatmap::pheatmap(
   vst_mat[top_genes, ],
@@ -1476,6 +1637,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1536,6 +1708,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-2.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1594,6 +1777,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/infection-tests-3.png" target="_blank">5ebe940</a>
@@ -1770,6 +1964,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1830,6 +2035,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-2.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -1888,6 +2104,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/diet-specific-deg-pca-3.png" target="_blank">5ebe940</a>
@@ -2008,6 +2235,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -2057,6 +2295,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-2.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-2.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -2104,6 +2353,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-3.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/within-diet-ma-plots-3.png" target="_blank">5ebe940</a>
@@ -2302,6 +2562,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -2444,6 +2715,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/pca-centroid-arrows-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/pca-centroid-arrows-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -2541,6 +2823,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-1.png" target="_blank">5ebe940</a>
@@ -2714,6 +3007,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-by-biotype-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/diverging-deg-burden-by-biotype-1.png" target="_blank">5ebe940</a>
@@ -3144,6 +3448,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/9779d0d625a9428f16278d5bca55302910581e40/docs/figure/06-infection-within-diet-deg.Rmd/curated-theme-barplot-1.png" target="_blank">9779d0d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/5ebe940cf69e3df270b8c321df2ac7264d284d19/docs/figure/06-infection-within-diet-deg.Rmd/curated-theme-barplot-1.png" target="_blank">5ebe940</a>
 </td>
 <td>
@@ -3212,7 +3527,7 @@ DT::datatable(
   caption = &quot;Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap&quot;
 )</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-8e5959f7d44745aa3695" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-8e5959f7d44745aa3695">{"x":{"filter":"none","vertical":false,"caption":"<caption>Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap<\/caption>","data":[["LOC126285462","LOC126335463","LOC126267652","LOC126267163","LOC126268068","LOC126267215","LOC126266759","LOC126271975","LOC126336578","LOC126267038","LOC126335547","LOC126331066","LOC126365918","LOC126267162","LOC126335468","LOC126266760","LOC126271991","LOC126278177","LOC126336325","LOC126336416","LOC126299332","LOC126336409","LOC126336415","LOC126298412","LOC126335724","LOC126285457","LOC126355939","LOC126278149","LOC126355303","LOC126299559","LOC126278707","LOC126335114","LOC126354995","LOC126282181","LOC126354579","LOC126356204","LOC126335115","LOC126332793","LOC126299510","LOC126360693","LOC126335083","LOC126278232","LOC126282207","LOC126298572","LOC126298882","LOC126267478","LOC126272350","LOC126267335","LOC126267104","LOC126267690","LOC126299121","LOC126277885","LOC126266677","LOC126335167","LOC126272138","LOC126335554","LOC126335605","LOC126335469","LOC126291639","LOC126272086","LOC126272263","LOC126276318","LOC126354270","LOC126334876","LOC126336408","LOC126299565","LOC126335646","LOC126336762","LOC126299533","LOC126336753","LOC126335723","LOC126323918","LOC126354316","LOC126328322","LOC126355972","LOC126327137","LOC126332617","LOC126281423","LOC126355971","LOC126332180","LOC126277939","LOC126274026","LOC126304741","LOC126334774","LOC126278130","LOC126355964","LOC126335006","LOC126336871","LOC126298210"],["","","PGRPLA","","PGRPLA","PGRPLA","","","","","","","PGRPLA","PGRPLC","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","CLIPD2","bt","","","","","","","","","nrm","","","","","","","","","","","","","","","","","","","","","bli-4","","","","","","","",""],["Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Alpha-lactalbumin / lysozyme C","Immunoglobulin V-set domain","Signal transducer and activator of transcription","Belongs to the serpin family","Immunoglobulin","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","It is involved in the biological process described with","polypeptide N-acetylgalactosaminyltransferase","Knottins","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","amino acid transporter","Carboxylic ester hydrolase activity","Transporter activity. It is involved in the biological process described with transmembrane transport","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Trypsin","Belongs to the type-B carboxylesterase lipase family","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the major facilitator superfamily. Sugar transporter (TC 2.A.1.1) family","catalytic activity. It is involved in the biological process described with metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","Trypsin-like serine protease","Peptidase C13 family","Belongs to the type-B carboxylesterase lipase family","Sugar proton symporter activity. It is involved in the biological process described with carbohydrate transport","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","aspartic-type endopeptidase activity. It is involved in the biological process described with proteolysis","Aromatic amino acid lyase","cysteine-type endopeptidase inhibitor activity. It is involved in the biological process described with proteolysis","carbohydrate binding","CD80-like C2-set immunoglobulin domain","Immunoglobulin C-2 Type","Domain of unknown function (DUF1986)","Immunoglobulin like","Immunoglobulin C-2 Type","Immunoglobulin","Belongs to the serpin family","Immunoglobulin domain","IRSp53/MIM homology domain","Required for homeostatic regulation of sleep under normal conditions and after sleep deprivation. Important regulator of the Sh K( ) channel, acting as a signaling molecule that connects sleep drive to lowered membrane excitability, possibly by enhancing K( ) channel activity and thus reducing neuronal excitability","Belongs to the serpin family","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Immunoglobulin like","Immunoglobulin V-set domain","Immunoglobulin","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, copper containing domain","Microsomal triglyceride transfer protein","nutrient reservoir activity","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with proteolysis","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with carbohydrate metabolic process","Proprotein convertase P-domain","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","It is involved in the biological process described with carbohydrate metabolic process","ABC transporter transmembrane region","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","It is involved in the biological process described with metabolic process","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis","Sugar (and other) transporter","L-ascorbic acid metabolic process"],["Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism"],["DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG"],["33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50","33, 50, 83","33, 50","33, 50, 83","50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33","50, 83","50","50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","83","83","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],["Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in control","Higher in control","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],[3.424189869822157e-28,1.096702904962594e-27,1.7447784231946e-20,2.043047842380509e-19,1.121881181937103e-18,8.993011974466619e-17,3.409801164507625e-15,8.00464242296359e-15,2.470129932000727e-13,5.585470005357055e-13,4.960365481413883e-12,1.026539083478761e-11,1.042044306716059e-11,1.978971946665936e-11,1.033448841941714e-10,1.056129558284702e-10,2.174318816160258e-10,2.869854081475315e-10,5.128634163928668e-10,5.128946273417395e-14,6.984698058549828e-10,5.637296572593217e-05,0.000268172067181146,0.00713571288561512,0.03157815850101477,5.296211595721235e-38,5.390255998427122e-21,1.477417927559288e-19,2.155672059637442e-19,2.300420847829228e-19,9.986181438712277e-18,3.240782424650047e-17,1.121286515301542e-16,1.130036891940826e-15,1.745990428344283e-15,1.745990428344283e-15,2.606145675641446e-15,2.064688707620922e-14,4.340293447942752e-14,7.45128066386191e-14,9.250372463141217e-14,1.632209789105901e-13,8.413622716185171e-13,5.326250456959295e-07,5.483106666402031e-06,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[2.963390983000665,6.86425298447286,3.081750107600663,3.570123824819182,2.751724905297856,5.570047574104461,3.032287929512179,6.856714133664914,5.246105933183758,1.285741990816123,2.952810152758409,1.851273802796783,1.697624402670435,2.167509575440949,3.612843027409463,2.625214688839151,1.033332190431748,1.690369641064962,6.823215019384653,2.371727289656519,1.672096017310876,2.517402963367925,2.319049521288292,1.860058640495059,2.946612063117708,3.094588761203877,6.407823832889503,1.647688585794747,3.65849241571219,2.814118311570653,3.866685079580785,4.209600283387701,6.826040183541615,5.629752598122535,3.721414617367507,3.327673462514965,6.256378670774461,1.586426179570999,5.100999470504021,2.210687104397855,3.522877523115648,1.855502424355055,2.176976719525454,1.282988452905405,2.92068111889116,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>gene_id<\/th>\n      <th>Preferred_name<\/th>\n      <th>Description<\/th>\n      <th>Functional_theme<\/th>\n      <th>DEG_class<\/th>\n      <th>DEG_diets<\/th>\n      <th>DEG_direction_summary<\/th>\n      <th>min_padj<\/th>\n      <th>max_abs_lfc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[7,8]},{"name":"gene_id","targets":0},{"name":"Preferred_name","targets":1},{"name":"Description","targets":2},{"name":"Functional_theme","targets":3},{"name":"DEG_class","targets":4},{"name":"DEG_diets","targets":5},{"name":"DEG_direction_summary","targets":6},{"name":"min_padj","targets":7},{"name":"max_abs_lfc","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-8e5959f7d44745aa3695">{"x":{"filter":"none","vertical":false,"caption":"<caption>Curated immune, nutrition, and storage/lipid-transport genes shown in the heatmap<\/caption>","data":[["LOC126285462","LOC126335463","LOC126267652","LOC126267163","LOC126268068","LOC126267215","LOC126266759","LOC126271975","LOC126336578","LOC126267038","LOC126335547","LOC126331066","LOC126365918","LOC126267162","LOC126335468","LOC126266760","LOC126271991","LOC126278177","LOC126336325","LOC126336416","LOC126299332","LOC126336415","LOC126336409","LOC126298412","LOC126335724","LOC126285457","LOC126355939","LOC126278149","LOC126355303","LOC126299559","LOC126278707","LOC126335114","LOC126354995","LOC126354579","LOC126356204","LOC126335115","LOC126332793","LOC126299510","LOC126360693","LOC126335083","LOC126282181","LOC126282207","LOC126267545","LOC126354068","LOC126336948","LOC126272715","LOC126298572","LOC126267478","LOC126272350","LOC126267104","LOC126267335","LOC126291639","LOC126267690","LOC126299121","LOC126277885","LOC126266677","LOC126335167","LOC126282013","LOC126272138","LOC126335605","LOC126335554","LOC126335469","LOC126272086","LOC126276318","LOC126272263","LOC126334876","LOC126336408","LOC126299565","LOC126335646","LOC126336762","LOC126299533","LOC126335723","LOC126336753","LOC126323918","LOC126354316","LOC126355818","LOC126355972","LOC126332617","LOC126328322","LOC126327137","LOC126355971","LOC126281423","LOC126304741","LOC126277939","LOC126274026","LOC126332180","LOC126268728","LOC126334774","LOC126278130","LOC126336871","LOC126335006"],["","","PGRPLA","","PGRPLA","PGRPLA","","","","","","","PGRPLA","PGRPLC","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","Faa","","","","","","","CLIPD2","bt","","","","","","","","","nrm","","","","","","","","","","","","","","","","","","","","","bli-4","","","","","","",""],["Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","Alpha-lactalbumin / lysozyme C","Immunoglobulin V-set domain","Signal transducer and activator of transcription","Belongs to the serpin family","Immunoglobulin","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Animal peptidoglycan recognition proteins homologous to Bacteriophage T3 lysozyme.","Belongs to the serpin family","N-acetylmuramoyl-L-alanine amidase activity. It is involved in the biological process described with peptidoglycan catabolic process","It is involved in the biological process described with","polypeptide N-acetylgalactosaminyltransferase","Knottins","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, all-alpha domain","Catalyzes the reduction of fatty acyl-CoA to fatty alcohols","amino acid transporter","Carboxylic ester hydrolase activity","Transporter activity. It is involved in the biological process described with transmembrane transport","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Trypsin","Belongs to the type-B carboxylesterase lipase family","carboxy-lyase activity. It is involved in the biological process described with carboxylic acid metabolic process","Belongs to the major facilitator superfamily. Sugar transporter (TC 2.A.1.1) family","catalytic activity. It is involved in the biological process described with metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","Trypsin-like serine protease","Peptidase C13 family","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","Trypsin-like serine protease","Belongs to the type-B carboxylesterase lipase family","carbohydrate binding. It is involved in the biological process described with mannose metabolic process","Fumarylacetoacetase activity. It is involved in the biological process described with aromatic amino acid family metabolic process","aspartic-type endopeptidase activity. It is involved in the biological process described with proteolysis","cysteine-type endopeptidase inhibitor activity. It is involved in the biological process described with proteolysis","carbohydrate binding","Immunoglobulin C-2 Type","CD80-like C2-set immunoglobulin domain","C-type lectin (CTL) or carbohydrate-recognition domain (CRD)","Domain of unknown function (DUF1986)","Immunoglobulin like","Immunoglobulin C-2 Type","Immunoglobulin","Belongs to the serpin family","Immunoglobulin V-set domain","Immunoglobulin domain","Required for homeostatic regulation of sleep under normal conditions and after sleep deprivation. Important regulator of the Sh K( ) channel, acting as a signaling molecule that connects sleep drive to lowered membrane excitability, possibly by enhancing K( ) channel activity and thus reducing neuronal excitability","IRSp53/MIM homology domain","Belongs to the serpin family","Immunoglobulin like","Immunoglobulin","Immunoglobulin V-set domain","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","Lipid transporter activity. It is involved in the biological process described with lipid transport","Hemocyanin, copper containing domain","Microsomal triglyceride transfer protein","nutrient reservoir activity","Hemocyanin, all-alpha domain","Hemocyanin, all-alpha domain","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","activity. It is involved in the biological process described with carbohydrate metabolic process","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the type-B carboxylesterase lipase family","Belongs to the type-B carboxylesterase lipase family","It is involved in the biological process described with proteolysis","It is involved in the biological process described with carbohydrate metabolic process","Proprotein convertase P-domain","serine-type endopeptidase activity. It is involved in the biological process described with proteolysis","It is involved in the biological process described with carbohydrate metabolic process","Belongs to the peptidase S1 family","ABC transporter transmembrane region","Transmembrane transporter activity. It is involved in the biological process described with transmembrane transport","Sugar (and other) transporter","metallocarboxypeptidase activity. It is involved in the biological process described with proteolysis"],["Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Immune-related","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Storage/lipid transport","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism","Nutrition/metabolism"],["DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG","Not DEG"],["33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50","33, 50, 83","33, 50","33, 50, 83","50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33","50","50, 83","33, 50, 83","33, 50, 83","33, 50","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50, 83","33, 50","50, 83","33, 50","83","83","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],["Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","Higher in control","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in infected","Higher in control","Higher in control","Higher in control","Higher in control","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],[3.424189869822157e-28,1.096702904962594e-27,1.7447784231946e-20,2.043047842380509e-19,1.121881181937103e-18,8.993011974466619e-17,3.409801164507625e-15,8.00464242296359e-15,1.305360647567199e-13,5.585470005357055e-13,4.960365481413883e-12,1.026539083478761e-11,1.042044306716059e-11,1.978971946665936e-11,1.033448841941714e-10,1.056129558284702e-10,2.174318816160258e-10,2.869854081475315e-10,5.316124900779135e-10,5.128946273417395e-14,6.984698058549828e-10,1.322750423235506e-05,0.0005477995645215072,0.00713571288561512,0.0321084886301915,5.296211595721235e-38,5.390255998427122e-21,2.381019139830354e-20,2.155672059637442e-19,2.300420847829228e-19,9.986181438712277e-18,3.240782424650047e-17,1.121286515301542e-16,1.745990428344283e-15,1.745990428344283e-15,2.606145675641446e-15,2.064688707620922e-14,4.340293447942752e-14,7.45128066386191e-14,9.250372463141217e-14,1.305360647567199e-13,8.413622716185171e-13,1.513423086555245e-12,4.346480976945424e-09,4.414306682008177e-09,1.411072013285436e-06,2.26149144710459e-06,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[2.963390983000665,6.86425298447286,3.081750107600663,3.570123824819182,2.751724905297856,5.570047574104461,3.032287929512179,6.856714133664914,5.164294850406386,1.285741990816123,3.251095187868282,1.851273802796783,1.697624402670435,2.165529212381438,3.612843027409463,2.625214688839151,1.033332190431748,1.659414802447144,6.809836501638332,2.371727289656519,1.672096017310876,2.536629297408302,2.262134839835352,1.860058640495059,2.847409158587995,3.094588761203877,6.407823832889503,1.677525331452013,3.65849241571219,2.844734810217475,3.866685079580785,4.209600283387701,6.839020461944971,3.980622492254898,3.327673462514965,6.106846835791815,1.444439150363575,5.100999470504021,2.210687104397855,3.590491419220707,5.495088390095256,2.291966177554995,6.634048167852214,4.777222301522771,3.284459527528786,1.273948313550342,1.243155425198366,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>gene_id<\/th>\n      <th>Preferred_name<\/th>\n      <th>Description<\/th>\n      <th>Functional_theme<\/th>\n      <th>DEG_class<\/th>\n      <th>DEG_diets<\/th>\n      <th>DEG_direction_summary<\/th>\n      <th>min_padj<\/th>\n      <th>max_abs_lfc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[7,8]},{"name":"gene_id","targets":0},{"name":"Preferred_name","targets":1},{"name":"Description","targets":2},{"name":"Functional_theme","targets":3},{"name":"DEG_class","targets":4},{"name":"DEG_diets","targets":5},{"name":"DEG_direction_summary","targets":6},{"name":"min_padj","targets":7},{"name":"max_abs_lfc","targets":8}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>write.csv(curated_gene_list,
           file.path(out_dir, &quot;curated_immune_nutrition_gene_list.csv&quot;),
           row.names = FALSE)</code></pre>
@@ -3236,7 +3551,7 @@ knitr::kable(summary_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">33</td>
-<td align="right">1216</td>
+<td align="right">1104</td>
 </tr>
 <tr class="even">
 <td align="left">50</td>
@@ -3244,7 +3559,7 @@ knitr::kable(summary_table)</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">83</td>
-<td align="right">737</td>
+<td align="right">822</td>
 </tr>
 </tbody>
 </table>
@@ -3258,7 +3573,7 @@ Platform: aarch64-apple-darwin23
 Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
@@ -3268,53 +3583,53 @@ time zone: Asia/Tokyo
 tzcode source: internal
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
 [1] ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] htmlwidgets_1.6.4           ggrepel_0.9.8              
- [7] processx_3.9.0              Biobase_2.72.0             
- [9] lattice_0.22-9              callr_3.7.6                
-[11] crosstalk_1.2.2             vctrs_0.7.3                
-[13] tools_4.6.0                 generics_0.1.4             
-[15] stats4_4.6.0                parallel_4.6.0             
-[17] tibble_3.3.1                pkgconfig_2.0.3            
-[19] pheatmap_1.0.13             Matrix_1.7-5               
-[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
-[23] S7_0.2.2                    S4Vectors_0.50.1           
-[25] lifecycle_1.0.5             compiler_4.6.0             
-[27] farver_2.1.2                stringr_1.6.0              
-[29] git2r_0.36.2                textshaping_1.0.5          
-[31] DESeq2_1.52.0               getPass_0.2-4              
-[33] Seqinfo_1.2.0               codetools_0.2-20           
-[35] httpuv_1.6.17               htmltools_0.5.9            
-[37] sass_0.4.10                 yaml_2.3.12                
-[39] later_1.4.8                 pillar_1.11.1              
-[41] jquerylib_0.1.4             whisker_0.4.1              
-[43] DT_0.34.0                   BiocParallel_1.46.0        
-[45] cachem_1.1.0                DelayedArray_0.38.1        
-[47] abind_1.4-8                 locfit_1.5-9.12            
-[49] tidyselect_1.2.1            digest_0.6.39              
-[51] stringi_1.8.7               dplyr_1.2.1                
-[53] labeling_0.4.3              rprojroot_2.1.1            
-[55] fastmap_1.2.0               grid_4.6.0                 
-[57] cli_3.6.6                   SparseArray_1.12.2         
-[59] magrittr_2.0.5              S4Arrays_1.12.0            
-[61] dichromat_2.0-0.1           withr_3.0.2                
-[63] scales_1.4.0                promises_1.5.0             
-[65] rmarkdown_2.31              XVector_0.52.0             
-[67] httr_1.4.8                  matrixStats_1.5.0          
-[69] otel_0.2.0                  ragg_1.5.2                 
-[71] evaluate_1.0.5              knitr_1.51                 
-[73] GenomicRanges_1.64.0        IRanges_2.46.0             
-[75] rlang_1.2.0                 Rcpp_1.1.1-1.1             
-[77] glue_1.8.1                  BiocGenerics_0.58.0        
-[79] rstudioapi_0.18.0           jsonlite_2.0.0             
-[81] R6_2.6.1                    systemfonts_1.3.2          
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6
+ [3] xfun_0.57                   bslib_0.10.0
+ [5] htmlwidgets_1.6.4           ggrepel_0.9.8
+ [7] processx_3.9.0              Biobase_2.72.0
+ [9] lattice_0.22-9              callr_3.7.6
+[11] crosstalk_1.2.2             vctrs_0.7.3
+[13] tools_4.6.0                 generics_0.1.4
+[15] stats4_4.6.0                parallel_4.6.0
+[17] tibble_3.3.1                pkgconfig_2.0.3
+[19] pheatmap_1.0.13             Matrix_1.7-5
+[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0
+[23] S7_0.2.2                    S4Vectors_0.50.1
+[25] lifecycle_1.0.5             compiler_4.6.0
+[27] farver_2.1.2                stringr_1.6.0
+[29] git2r_0.36.2                textshaping_1.0.5
+[31] DESeq2_1.52.0               getPass_0.2-4
+[33] Seqinfo_1.2.0               codetools_0.2-20
+[35] httpuv_1.6.17               htmltools_0.5.9
+[37] sass_0.4.10                 yaml_2.3.12
+[39] later_1.4.8                 pillar_1.11.1
+[41] jquerylib_0.1.4             whisker_0.4.1
+[43] DT_0.34.0                   BiocParallel_1.46.0
+[45] cachem_1.1.0                DelayedArray_0.38.1
+[47] abind_1.4-8                 locfit_1.5-9.12
+[49] tidyselect_1.2.1            digest_0.6.39
+[51] stringi_1.8.7               dplyr_1.2.1
+[53] labeling_0.4.3              rprojroot_2.1.1
+[55] fastmap_1.2.0               grid_4.6.0
+[57] cli_3.6.6                   SparseArray_1.12.2
+[59] magrittr_2.0.5              S4Arrays_1.12.0
+[61] dichromat_2.0-0.1           withr_3.0.2
+[63] scales_1.4.0                promises_1.5.0
+[65] rmarkdown_2.31              XVector_0.52.0
+[67] httr_1.4.8                  matrixStats_1.5.0
+[69] otel_0.2.0                  ragg_1.5.2
+[71] evaluate_1.0.5              knitr_1.51
+[73] GenomicRanges_1.64.0        IRanges_2.46.0
+[75] rlang_1.2.0                 Rcpp_1.1.1-1.1
+[77] glue_1.8.1                  BiocGenerics_0.58.0
+[79] rstudioapi_0.18.0           jsonlite_2.0.0
+[81] R6_2.6.1                    systemfonts_1.3.2
 [83] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 <br>
 <p>
@@ -3330,7 +3645,7 @@ Platform: aarch64-apple-darwin23
 Running under: macOS Tahoe 26.5.2
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
@@ -3340,53 +3655,53 @@ time zone: Asia/Tokyo
 tzcode source: internal
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
 [1] ggplot2_4.0.3   workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.42.0 gtable_0.3.6               
- [3] xfun_0.57                   bslib_0.10.0               
- [5] htmlwidgets_1.6.4           ggrepel_0.9.8              
- [7] processx_3.9.0              Biobase_2.72.0             
- [9] lattice_0.22-9              callr_3.7.6                
-[11] crosstalk_1.2.2             vctrs_0.7.3                
-[13] tools_4.6.0                 generics_0.1.4             
-[15] stats4_4.6.0                parallel_4.6.0             
-[17] tibble_3.3.1                pkgconfig_2.0.3            
-[19] pheatmap_1.0.13             Matrix_1.7-5               
-[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0     
-[23] S7_0.2.2                    S4Vectors_0.50.1           
-[25] lifecycle_1.0.5             compiler_4.6.0             
-[27] farver_2.1.2                stringr_1.6.0              
-[29] git2r_0.36.2                textshaping_1.0.5          
-[31] DESeq2_1.52.0               getPass_0.2-4              
-[33] Seqinfo_1.2.0               codetools_0.2-20           
-[35] httpuv_1.6.17               htmltools_0.5.9            
-[37] sass_0.4.10                 yaml_2.3.12                
-[39] later_1.4.8                 pillar_1.11.1              
-[41] jquerylib_0.1.4             whisker_0.4.1              
-[43] DT_0.34.0                   BiocParallel_1.46.0        
-[45] cachem_1.1.0                DelayedArray_0.38.1        
-[47] abind_1.4-8                 locfit_1.5-9.12            
-[49] tidyselect_1.2.1            digest_0.6.39              
-[51] stringi_1.8.7               dplyr_1.2.1                
-[53] labeling_0.4.3              rprojroot_2.1.1            
-[55] fastmap_1.2.0               grid_4.6.0                 
-[57] cli_3.6.6                   SparseArray_1.12.2         
-[59] magrittr_2.0.5              S4Arrays_1.12.0            
-[61] dichromat_2.0-0.1           withr_3.0.2                
-[63] scales_1.4.0                promises_1.5.0             
-[65] rmarkdown_2.31              XVector_0.52.0             
-[67] httr_1.4.8                  matrixStats_1.5.0          
-[69] otel_0.2.0                  ragg_1.5.2                 
-[71] evaluate_1.0.5              knitr_1.51                 
-[73] GenomicRanges_1.64.0        IRanges_2.46.0             
-[75] rlang_1.2.0                 Rcpp_1.1.1-1.1             
-[77] glue_1.8.1                  BiocGenerics_0.58.0        
-[79] rstudioapi_0.18.0           jsonlite_2.0.0             
-[81] R6_2.6.1                    systemfonts_1.3.2          
+ [1] SummarizedExperiment_1.42.0 gtable_0.3.6
+ [3] xfun_0.57                   bslib_0.10.0
+ [5] htmlwidgets_1.6.4           ggrepel_0.9.8
+ [7] processx_3.9.0              Biobase_2.72.0
+ [9] lattice_0.22-9              callr_3.7.6
+[11] crosstalk_1.2.2             vctrs_0.7.3
+[13] tools_4.6.0                 generics_0.1.4
+[15] stats4_4.6.0                parallel_4.6.0
+[17] tibble_3.3.1                pkgconfig_2.0.3
+[19] pheatmap_1.0.13             Matrix_1.7-5
+[21] RColorBrewer_1.1-3          EnhancedVolcano_1.30.0
+[23] S7_0.2.2                    S4Vectors_0.50.1
+[25] lifecycle_1.0.5             compiler_4.6.0
+[27] farver_2.1.2                stringr_1.6.0
+[29] git2r_0.36.2                textshaping_1.0.5
+[31] DESeq2_1.52.0               getPass_0.2-4
+[33] Seqinfo_1.2.0               codetools_0.2-20
+[35] httpuv_1.6.17               htmltools_0.5.9
+[37] sass_0.4.10                 yaml_2.3.12
+[39] later_1.4.8                 pillar_1.11.1
+[41] jquerylib_0.1.4             whisker_0.4.1
+[43] DT_0.34.0                   BiocParallel_1.46.0
+[45] cachem_1.1.0                DelayedArray_0.38.1
+[47] abind_1.4-8                 locfit_1.5-9.12
+[49] tidyselect_1.2.1            digest_0.6.39
+[51] stringi_1.8.7               dplyr_1.2.1
+[53] labeling_0.4.3              rprojroot_2.1.1
+[55] fastmap_1.2.0               grid_4.6.0
+[57] cli_3.6.6                   SparseArray_1.12.2
+[59] magrittr_2.0.5              S4Arrays_1.12.0
+[61] dichromat_2.0-0.1           withr_3.0.2
+[63] scales_1.4.0                promises_1.5.0
+[65] rmarkdown_2.31              XVector_0.52.0
+[67] httr_1.4.8                  matrixStats_1.5.0
+[69] otel_0.2.0                  ragg_1.5.2
+[71] evaluate_1.0.5              knitr_1.51
+[73] GenomicRanges_1.64.0        IRanges_2.46.0
+[75] rlang_1.2.0                 Rcpp_1.1.1-1.1
+[77] glue_1.8.1                  BiocGenerics_0.58.0
+[79] rstudioapi_0.18.0           jsonlite_2.0.0
+[81] R6_2.6.1                    systemfonts_1.3.2
 [83] MatrixGenerics_1.24.0       fs_2.1.0                   </code></pre>
 </div>
 </div>
@@ -3491,5 +3806,30 @@ $(document).ready(function ()  {
   })();
 </script>
 
+<script id="count-definition-navigation">
+(function ($) {
+  "use strict";
+
+  $(function () {
+    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
+      var item = $(this).parent(".dropdown-submenu");
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      item.siblings(".dropdown-submenu.open").removeClass("open")
+        .children("a").attr("aria-expanded", "false");
+      item.toggleClass("open");
+      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
+      return false;
+    });
+  });
+
+  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
+    $(this).find(".dropdown-submenu.open").removeClass("open")
+      .children("a").attr("aria-expanded", "false");
+  });
+}(window.jQuery));
+</script>
 </body>
 </html>

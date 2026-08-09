@@ -1,0 +1,81 @@
+run_folder	reason
+all-scaffolds-all-deg-catalogue_20260806-011158	superseded duplicate; newer run retained
+all-scaffolds-all-deg-catalogue_20260809-154811	superseded duplicate; newer run retained
+all-scaffolds-deg-overlap-prioritization_20260806-011140	superseded duplicate; newer run retained
+all-scaffolds-deseq2-interaction-model_20260806-010820	superseded duplicate; newer run retained
+all-scaffolds-diet-pairwise-deg_All_20260806-010845	superseded duplicate; newer run retained
+all-scaffolds-enrichment-term-gene-index_20260806-010143	superseded duplicate; newer run retained
+all-scaffolds-go-term-enrichment_20260806-010044	superseded duplicate; newer run retained
+all-scaffolds-infection-within-diet-deg_20260806-010907	superseded duplicate; newer run retained
+count-definition-sensitivity_20260807-155054	superseded duplicate; newer run retained
+count-definition-sensitivity_20260807-155203	superseded duplicate; newer run retained
+count-definition-sensitivity_20260807-155445	superseded duplicate; newer run retained
+count-definition-sensitivity_20260808-000825	superseded duplicate; newer run retained
+count-qc-exploration_20260806-010813	superseded duplicate; newer run retained
+curated-target-gene-figure_20260808-001351	superseded duplicate; newer run retained
+curated-target-gene-figure_20260808-001552	superseded duplicate; newer run retained
+curated-target-gene-figure_20260808-003158	superseded duplicate; newer run retained
+curated-target-gene-figure_20260808-003320	superseded duplicate; newer run retained
+enrichment-term-gene-index_20260806-010258	superseded duplicate; newer run retained
+exon-only-cluster-enrichment_20260808-021527	superseded duplicate; newer run retained
+exon-only-cluster-enrichment_20260808-022409	superseded duplicate; newer run retained
+exon-only-curated-target-genes_20260808-021751	superseded duplicate; newer run retained
+exon-only-curated-target-genes_20260808-022605	superseded duplicate; newer run retained
+exon-only-curated-target-genes_20260808-023811	superseded duplicate; newer run retained
+exon-only-deg-catalogue_20260808-021714	superseded duplicate; newer run retained
+exon-only-deg-catalogue_20260808-022542	superseded duplicate; newer run retained
+exon-only-deg-overlap_20260808-021336	superseded duplicate; newer run retained
+exon-only-deg-overlap_20260808-022253	superseded duplicate; newer run retained
+exon-only-deseq2-analysis_20260808-020715	superseded duplicate; newer run retained
+exon-only-deseq2-analysis_20260808-022116	superseded duplicate; newer run retained
+exon-only-diet-pairwise-deg_All_20260808-021241	superseded duplicate; newer run retained
+exon-only-diet-pairwise-deg_All_20260808-022208	superseded duplicate; newer run retained
+exon-only-enrichment-term-gene-index_20260808-021453	superseded duplicate; newer run retained
+exon-only-enrichment-term-gene-index_20260808-022351	superseded duplicate; newer run retained
+exon-only-go-term-enrichment_20260808-021358	superseded duplicate; newer run retained
+exon-only-go-term-enrichment_20260808-022306	superseded duplicate; newer run retained
+exon-only-infection-within-diet-deg_20260808-021253	superseded duplicate; newer run retained
+exon-only-infection-within-diet-deg_20260808-022220	superseded duplicate; newer run retained
+exon-only-interaction-model_20260808-021229	superseded duplicate; newer run retained
+exon-only-interaction-model_20260808-022156	superseded duplicate; newer run retained
+exon-only-interaction-model_20260808-024203	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-021848	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-022630	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-023120	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-023338	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-023555	superseded duplicate; newer run retained
+exon-only-publication-figures_20260808-023835	superseded duplicate; newer run retained
+go-term-enrichment_20260806-010202	superseded duplicate; newer run retained
+main-chromosome-all-deg-catalogue_20260806-011113	superseded duplicate; newer run retained
+main-chromosome-all-samples-deseq2-interaction-model_20260806-011011	superseded duplicate; newer run retained
+main-chromosome-all-samples-diet-pairwise-deg_All_20260806-011025	superseded duplicate; newer run retained
+main-chromosome-all-samples-infection-within-diet-deg_20260806-011039	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-142818	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-144148	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-163010	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-163828	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-164442	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-170732	superseded duplicate; newer run retained
+main-chromosome-cluster-enrichment_20260807-171246	superseded duplicate; newer run retained
+main-chromosome-deg-overlap-prioritization_20260806-010956	superseded duplicate; newer run retained
+metarhizium-read-burden_20260807-143116	superseded duplicate; newer run retained
+outlier-sensitivity_20260806-010711	superseded duplicate; newer run retained
+physiology-candidate-genes_20260806-010321	superseded duplicate; newer run retained
+placed-unplaced-scaffold-analysis_20260806-010555	superseded duplicate; newer run retained
+publication-figures_20260807-162528	superseded duplicate; newer run retained
+publication-figures_20260807-171511	superseded duplicate; newer run retained
+study-design-data_20260806-010009	superseded duplicate; newer run retained
+workflow-reproducibility_20260806-010806	superseded duplicate; newer run retained
+curated-target-gene-figure_20260809-200546	incomplete v21 rebuild; completed newer run retained
+curated-target-gene-figure_20260809-155638	superseded fallback-list build; verified v21 rebuild retained
+exon-only-curated-target-genes_20260809-160435	superseded fallback-list build; verified v21 rebuild retained
+publication-figures_20260809-160626	superseded publication build; corrected v21 rebuild retained
+exon-only-publication-figures_20260809-160500	superseded publication build; corrected v21 rebuild retained
+curated-target-gene-figure_20260809-200846	superseded v21 build; corrected narrative rebuild retained
+exon-only-curated-target-genes_20260809-200915	superseded v21 build; corrected narrative rebuild retained
+publication-figures_20260809-201117	superseded v21 publication build; latest verified rebuild retained
+exon-only-publication-figures_20260809-201251	superseded v21 publication build; latest verified rebuild retained
+curated-target-gene-figure_20260809-201654	superseded v21 build; separate audit-download rebuild retained
+exon-only-curated-target-genes_20260809-201716	superseded v21 build; separate audit-download rebuild retained
+publication-figures_20260809-201746	superseded publication build; latest verified rebuild retained
+exon-only-publication-figures_20260809-201906	superseded publication build; latest verified rebuild retained

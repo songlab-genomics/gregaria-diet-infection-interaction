@@ -1,0 +1,11 @@
+"set","n_genes"
+"all_infection_within_diet_results",2399
+"all_model_coefficients",2057
+"DESeq2_infected_vs_control_diet_50",1810
+"DESeq2_infected_vs_control_diet_33",1216
+"DESeq2_infected_vs_control_diet_83",737
+"all_diet_pairwise_results",281
+"DESeq2_33_vs_50",182
+"interaction_coefficients",125
+"DESeq2_33_vs_83",107
+"DESeq2_50_vs_83",47

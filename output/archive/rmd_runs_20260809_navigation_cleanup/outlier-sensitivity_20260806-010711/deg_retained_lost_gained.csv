@@ -1,0 +1,10 @@
+"diet","status","n_genes"
+"33","Retained in both",816
+"33","Lost after removing outliers",387
+"33","Gained after removing outliers",116
+"50","Retained in both",1448
+"50","Lost after removing outliers",362
+"50","Gained after removing outliers",1975
+"83","Retained in both",731
+"83","Lost after removing outliers",0
+"83","Gained after removing outliers",0

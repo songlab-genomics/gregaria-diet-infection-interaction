@@ -1,0 +1,55 @@
+"comparison","sensitivity_class","n_genes","comparison_label"
+"Diet 33: infected vs control","Retained after outlier removal",582,"Diet 33
+infected vs control"
+"Diet 33: infected vs control","Lost after outlier removal",215,"Diet 33
+infected vs control"
+"Diet 33: infected vs control","Gained after outlier removal",60,"Diet 33
+infected vs control"
+"Diet 50: infected vs control","Retained after outlier removal",684,"Diet 50
+infected vs control"
+"Diet 50: infected vs control","Lost after outlier removal",412,"Diet 50
+infected vs control"
+"Diet 50: infected vs control","Gained after outlier removal",93,"Diet 50
+infected vs control"
+"Diet 83: infected vs control","Retained after outlier removal",751,"Diet 83
+infected vs control"
+"Diet 83: infected vs control","Lost after outlier removal",32,"Diet 83
+infected vs control"
+"Diet 83: infected vs control","Gained after outlier removal",9,"Diet 83
+infected vs control"
+"Control 33 vs 50","Retained after outlier removal",2,"Control
+33 vs 50"
+"Control 33 vs 50","Lost after outlier removal",0,"Control
+33 vs 50"
+"Control 33 vs 50","Gained after outlier removal",3,"Control
+33 vs 50"
+"Control 83 vs 33","Retained after outlier removal",37,"Control
+83 vs 33"
+"Control 83 vs 33","Lost after outlier removal",8,"Control
+83 vs 33"
+"Control 83 vs 33","Gained after outlier removal",5,"Control
+83 vs 33"
+"Control 83 vs 50","Retained after outlier removal",10,"Control
+83 vs 50"
+"Control 83 vs 50","Lost after outlier removal",11,"Control
+83 vs 50"
+"Control 83 vs 50","Gained after outlier removal",5,"Control
+83 vs 50"
+"Infected 33 vs 50","Retained after outlier removal",67,"Infected
+33 vs 50"
+"Infected 33 vs 50","Lost after outlier removal",8,"Infected
+33 vs 50"
+"Infected 33 vs 50","Gained after outlier removal",6,"Infected
+33 vs 50"
+"Infected 83 vs 33","Retained after outlier removal",62,"Infected
+83 vs 33"
+"Infected 83 vs 33","Lost after outlier removal",5,"Infected
+83 vs 33"
+"Infected 83 vs 33","Gained after outlier removal",7,"Infected
+83 vs 33"
+"Infected 83 vs 50","Retained after outlier removal",35,"Infected
+83 vs 50"
+"Infected 83 vs 50","Lost after outlier removal",14,"Infected
+83 vs 50"
+"Infected 83 vs 50","Gained after outlier removal",0,"Infected
+83 vs 50"

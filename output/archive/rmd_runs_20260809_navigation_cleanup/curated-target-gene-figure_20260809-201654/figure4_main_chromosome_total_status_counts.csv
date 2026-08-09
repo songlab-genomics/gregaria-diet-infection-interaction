@@ -1,0 +1,55 @@
+source_sheet,umbrella,figure_scope,x_label,x_order,status,n_genes,percentage,n_targets,p_value,p_label
+Immune,Total Immune,Diet comparison among infected,"50
+vs
+33",1,N.S.,75,97.40259740259741,77,1,N.S.D.
+Immune,Total Immune,Diet comparison among infected,"50
+vs
+33",1,Upregulated,2,2.5974025974025974,77,1,N.S.D.
+Immune,Total Immune,Diet comparison among infected,"83
+vs
+33",2,N.S.,74,96.1038961038961,77,1,N.S.D.
+Immune,Total Immune,Diet comparison among infected,"83
+vs
+33",2,Upregulated,3,3.896103896103896,77,1,N.S.D.
+Immune,Total Immune,Diet comparison among infected,"83
+vs
+50",3,N.S.,75,97.40259740259741,77,1,N.S.D.
+Immune,Total Immune,Diet comparison among infected,"83
+vs
+50",3,Upregulated,2,2.5974025974025974,77,1,N.S.D.
+Immune,Total Immune,Within-diet infection response,33,1,Downregulated,6,7.792207792207792,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,33,1,N.S.,36,46.753246753246756,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,33,1,Upregulated,35,45.45454545454545,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,50,2,Downregulated,11,14.285714285714286,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,50,2,N.S.,14,18.181818181818183,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,50,2,Upregulated,52,67.53246753246754,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,83,3,Downregulated,2,2.5974025974025974,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,83,3,N.S.,33,42.857142857142854,77,4.4997750112494374e-4,p < 0.001
+Immune,Total Immune,Within-diet infection response,83,3,Upregulated,42,54.54545454545455,77,4.4997750112494374e-4,p < 0.001
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"50
+vs
+33",1,N.S.,30,88.23529411764706,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"50
+vs
+33",1,Upregulated,4,11.764705882352942,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"83
+vs
+33",2,Downregulated,1,2.9411764705882355,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"83
+vs
+33",2,N.S.,32,94.11764705882354,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"83
+vs
+33",2,Upregulated,1,2.9411764705882355,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Diet comparison among infected,"83
+vs
+50",3,N.S.,34,100,34,0.08329583520823959,N.S.D.
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,33,1,Downregulated,3,8.823529411764707,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,33,1,N.S.,22,64.70588235294117,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,33,1,Upregulated,9,26.470588235294116,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,50,2,Downregulated,8,23.529411764705884,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,50,2,N.S.,9,26.470588235294116,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,50,2,Upregulated,17,50,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,83,3,Downregulated,3,8.823529411764707,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,83,3,N.S.,21,61.76470588235294,34,0.01224938753062347,p = 0.012
+Protein-Anabolism,Total Protein Anabolism,Within-diet infection response,83,3,Upregulated,10,29.41176470588235,34,0.01224938753062347,p = 0.012

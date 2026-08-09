@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   output_tag: "workflow-reproducibility"
 ---
 
@@ -22,9 +22,10 @@ params:
 Follow fastp, STAR, and competitive host-pathogen mapping on the HPC.
 :::
 ::: {.walkthrough-step}
-**Step 2 - Count genes**
+**Step 2 - Count genes twice**
 
-Use `-t transcript,exon -g gene_id` as the single active featureCounts definition.
+Use `-t transcript,exon -g gene_id` for the primary analysis and
+`-t exon -g gene_id` for the matched sensitivity analysis.
 :::
 ::: {.walkthrough-step}
 **Step 3 - Reproduce reports**
@@ -36,6 +37,11 @@ Run the visible R Markdown code into new timestamped output folders.
 This page is the reproducibility map for the project. It explains where inputs
 live, where new results are written, and how to rerun the workflowR pages
 without relying on hidden helper scripts.
+
+Both count definitions use the same 45 libraries and corrected metadata:
+`1024` is infected diet 33, while the recovered `1044` library is infected
+diet 83. The two branches differ only in which annotation feature types are
+counted, so their DEG results can be compared directly.
 
 ## Repository layout
 
@@ -96,7 +102,7 @@ workflow_nodes <- data.frame(
   detail = c(
     "fat body; RiboZero", "read quality reports",
     "genome + GFF", "reads to genome",
-    "mapping summaries", "transcript + exon; gene_id",
+    "mapping summaries", "transcript + exon primary; exon sensitivity",
     "master count matrix", "gregaria rRNA list",
     "depth, VST, PCA", "diet and infection",
     "GO and KEGG themes", "curated panels"

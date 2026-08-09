@@ -8,9 +8,9 @@ output:
     toc: true
     toc_float: true
 params:
-  exon_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_exon_counts.tsv"
-  transcript_exon_counts_file: "output/runs/host_pathogen_dual_20260727_000952/04-count-matrices/competitive-host/host_transcript_exon_sensitivity_counts.tsv"
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
+  exon_counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  transcript_exon_counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   min_count: 10
@@ -26,7 +26,7 @@ params:
 ::: {.walkthrough-step}
 **Step 1 - Hold the experiment constant**
 
-Retain all 44 samples, the competitive host alignment, the same chromosome
+Retain all 45 samples, the competitive host alignment, the same chromosome
 scope, and the same rRNA exclusion list.
 :::
 ::: {.walkthrough-step}
@@ -460,7 +460,7 @@ p_deg_counts <- ggplot2::ggplot(
   ggplot2::labs(
     title = "DEG totals under exon-only and transcript-plus-exon counting",
     subtitle = paste0(
-      "All 44 samples; nuclear chromosomes; rRNA removed; padj < ",
+      "All 45 samples; nuclear chromosomes; rRNA removed; padj < ",
       params$alpha, "; |log2FC| >= ", params$lfc_threshold
     ),
     x = "Significant genes", y = NULL, fill = "Counting mode"
@@ -596,6 +596,228 @@ DT::datatable(
   caption = "DEG totals and overlap by counting mode"
 )
 ```
+
+## Step 4: omnibus diet-by-infection interaction
+
+The pairwise difference-of-differences contrasts above ask which two diets have
+different infection responses. The omnibus likelihood-ratio test (LRT) asks the
+broader question first: does allowing any diet-specific infection response
+improve the model relative to additive diet and infection effects?
+
+The two nested models are:
+
+```r
+full    = ~ Diet + Treatment + Diet:Treatment
+reduced = ~ Diet + Treatment
+```
+
+Unlike a one-coefficient Wald test, the omnibus LRT has no single log2 fold
+change. We therefore report FDR-significant genes and, for the main-chromosome
+analysis, summarize the largest absolute pairwise interaction log2 fold change
+as an accompanying effect-size diagnostic.
+
+```{r omnibus-interaction-lrt}
+fit_omnibus_interaction <- function(counts, counting_mode, sequence_scope) {
+  keep <- rowSums(counts >= params$min_count) >= params$min_samples
+  analysis_counts <- counts[keep, , drop = FALSE]
+
+  interaction_metadata <- metadata[sample_ids, , drop = FALSE]
+  interaction_metadata$Diet <- stats::relevel(
+    factor(interaction_metadata$Diet), ref = "50"
+  )
+  interaction_metadata$Treatment <- stats::relevel(
+    factor(interaction_metadata$Treatment), ref = "Control"
+  )
+
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = analysis_counts,
+    colData = as.data.frame(interaction_metadata),
+    design = ~ Diet + Treatment + Diet:Treatment
+  )
+  dds <- DESeq2::DESeq(
+    dds,
+    test = "LRT",
+    reduced = ~ Diet + Treatment,
+    minReplicatesForReplace = Inf,
+    quiet = TRUE
+  )
+
+  result <- as.data.frame(DESeq2::results(
+    dds,
+    alpha = params$alpha,
+    cooksCutoff = FALSE
+  )) |>
+    tibble::rownames_to_column("gene_id") |>
+    tibble::as_tibble() |>
+    dplyr::mutate(
+      counting_mode = counting_mode,
+      sequence_scope = sequence_scope,
+      omnibus_significant = !is.na(.data$padj) & .data$padj < params$alpha
+    )
+
+  list(dds = dds, results = result, genes_entering_model = sum(keep))
+}
+
+lrt_inputs <- list(
+  "Exon only" = list(
+    "Main chromosomes" = nuclear_counts[["Exon only"]],
+    "All scaffolds" = rrna_filtered_counts[["Exon only"]]
+  ),
+  "Transcript + exon" = list(
+    "Main chromosomes" = nuclear_counts[["Transcript + exon"]],
+    "All scaffolds" = rrna_filtered_counts[["Transcript + exon"]]
+  )
+)
+
+lrt_fits <- list()
+for (mode in names(lrt_inputs)) {
+  for (scope in names(lrt_inputs[[mode]])) {
+    key <- paste(mode, scope, sep = "__")
+    lrt_fits[[key]] <- fit_omnibus_interaction(
+      lrt_inputs[[mode]][[scope]], mode, scope
+    )
+  }
+}
+
+lrt_results <- dplyr::bind_rows(lapply(lrt_fits, `[[`, "results"))
+
+safe_max_abs <- function(x) {
+  x <- abs(x[is.finite(x)])
+  if (length(x) == 0) NA_real_ else max(x)
+}
+
+pairwise_interaction_effects <- all_results |>
+  dplyr::filter(.data$contrast_family == "Diet by infection interaction") |>
+  dplyr::group_by(.data$counting_mode, .data$gene_id) |>
+  dplyr::summarise(
+    max_abs_pairwise_interaction_log2FC = safe_max_abs(.data$log2FoldChange),
+    .groups = "drop"
+  )
+
+lrt_results <- lrt_results |>
+  dplyr::left_join(
+    pairwise_interaction_effects,
+    by = c("counting_mode", "gene_id")
+  ) |>
+  dplyr::left_join(
+    placement |>
+      dplyr::select(.data$gene_id, .data$sequence_class),
+    by = "gene_id"
+  )
+
+lrt_summary <- dplyr::bind_rows(lapply(names(lrt_fits), function(key) {
+  fit <- lrt_fits[[key]]
+  result <- fit$results |>
+    dplyr::left_join(
+      pairwise_interaction_effects,
+      by = c("counting_mode", "gene_id")
+    )
+  tibble::tibble(
+    counting_mode = unique(result$counting_mode),
+    sequence_scope = unique(result$sequence_scope),
+    genes_entering_model = fit$genes_entering_model,
+    omnibus_FDR_lt_0_05 = sum(result$omnibus_significant),
+    omnibus_FDR_and_max_abs_pairwise_log2FC_ge_1 = if (
+      unique(result$sequence_scope) == "Main chromosomes"
+    ) {
+      sum(
+        result$omnibus_significant &
+          !is.na(result$max_abs_pairwise_interaction_log2FC) &
+          result$max_abs_pairwise_interaction_log2FC >= params$lfc_threshold
+      )
+    } else {
+      NA_integer_
+    }
+  )
+}))
+
+lrt_placement_summary <- lrt_results |>
+  dplyr::filter(
+    .data$sequence_scope == "All scaffolds",
+    .data$omnibus_significant
+  ) |>
+  dplyr::mutate(
+    sequence_class = dplyr::coalesce(.data$sequence_class, "Unresolved")
+  ) |>
+  dplyr::count(
+    .data$counting_mode, .data$sequence_class,
+    name = "omnibus_FDR_lt_0_05"
+  ) |>
+  dplyr::arrange(.data$counting_mode, dplyr::desc(.data$omnibus_FDR_lt_0_05))
+
+write.csv(
+  lrt_results,
+  file.path(out_dir, "count_definition_omnibus_interaction_LRT_results.csv"),
+  row.names = FALSE
+)
+write.csv(
+  lrt_summary,
+  file.path(out_dir, "count_definition_omnibus_interaction_LRT_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  lrt_placement_summary,
+  file.path(out_dir, "count_definition_omnibus_interaction_placement_summary.csv"),
+  row.names = FALSE
+)
+
+DT::datatable(
+  lrt_summary,
+  rownames = FALSE,
+  options = list(pageLength = 8, scrollX = TRUE),
+  caption = "Omnibus diet-by-infection LRT under both count definitions"
+)
+```
+
+```{r omnibus-interaction-lrt-figure, fig.width=12, fig.height=6.5}
+p_lrt <- lrt_summary |>
+  dplyr::mutate(
+    counting_mode = factor(.data$counting_mode, levels = names(mode_colors)),
+    sequence_scope = factor(
+      .data$sequence_scope,
+      levels = c("Main chromosomes", "All scaffolds")
+    )
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = .data$sequence_scope,
+    y = .data$omnibus_FDR_lt_0_05,
+    fill = .data$counting_mode
+  )) +
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge(width = 0.76),
+    width = 0.68,
+    color = "#111827"
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = scales::comma(.data$omnibus_FDR_lt_0_05)),
+    position = ggplot2::position_dodge(width = 0.76),
+    vjust = -0.35,
+    size = 5,
+    fontface = "bold"
+  ) +
+  ggplot2::scale_fill_manual(values = mode_colors) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.16))
+  ) +
+  ggplot2::labs(
+    title = "Formal diet-by-infection interaction is count-definition sensitive",
+    subtitle = "Omnibus LRT, Benjamini-Hochberg FDR < 0.05; all 45 libraries retained",
+    x = NULL,
+    y = "Genes with an omnibus interaction",
+    fill = "Counting mode"
+  ) +
+  theme_report(16)
+
+save_png_svg(p_lrt, "count_definition_omnibus_interaction_LRT", 12, 6.5)
+p_lrt
+```
+
+The LRT is interpreted before the pairwise interaction contrasts. A small
+omnibus set supports a broad shared infection response with selective
+diet-dependent divergence. Differences between counting modes are reported as
+sensitivity rather than treated as evidence that one definition is universally
+correct.
 
 ## Interpretation
 

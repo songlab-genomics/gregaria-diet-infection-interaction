@@ -8,13 +8,16 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   latest_results_root: "output/rmd_runs"
+  primary_results_pattern: "^placed-unplaced-scaffold-analysis_"
+  cluster_results_pattern: "^main-chromosome-cluster-enrichment_"
+  curated_results_pattern: "^curated-target-gene-figure_"
   min_total_count: 10
   min_count: 10
   min_samples: 3
@@ -34,7 +37,7 @@ img {
 
 This page rebuilds the established publication figure set using only genes
 classified as `Nuclear chromosome` by the official assembly-derived placement
-table. All 44 fat body samples are retained, annotated rRNA loci are excluded,
+table. All 45 fat body samples are retained, annotated rRNA loci are excluded,
 and expression counts come from the fresh competitive host-pathogen mapping.
 Unplaced-scaffold results remain on the audit page and are not mixed into these
 primary paper figures.
@@ -66,9 +69,9 @@ Write publication-ready PNG, SVG, PDF, and source-table files together.
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 publication_default_params <- list(
-  metadata_file = "data/metadata/mehreen_metadata_fixed.txt",
+  metadata_file = "data/metadata/mehreen_metadata_corrected_45.txt",
   counts_file = paste0(
-    "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/",
+    "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/",
     "host_counts_no_rrna.tsv"
   ),
   placement_file = paste0(
@@ -83,6 +86,9 @@ publication_default_params <- list(
     "GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   ),
   latest_results_root = "output/rmd_runs",
+  primary_results_pattern = "^placed-unplaced-scaffold-analysis_",
+  cluster_results_pattern = "^main-chromosome-cluster-enrichment_",
+  curated_results_pattern = "^curated-target-gene-figure_",
   min_total_count = 10,
   min_count = 10,
   min_samples = 3,
@@ -469,7 +475,7 @@ current DESeq2 or cluster output used for each export.
 ### Input data
 
 ```{r input-data}
-placed_dir <- latest_dir("^placed-unplaced-scaffold-analysis_")
+placed_dir <- latest_dir(publication_params$primary_results_pattern)
 primary_results_file <- file.path(
   placed_dir,
   "placed_unplaced_all_deseq2_results.csv"
@@ -482,7 +488,7 @@ thorax_phase_file <- file.path(
   project_dir,
   "data/external/phase_reference/gregaria_thorax_phase_degs.csv"
 )
-circled_cluster_dir <- latest_dir("^main-chromosome-cluster-enrichment_")
+circled_cluster_dir <- latest_dir(publication_params$cluster_results_pattern)
 figure3_composite_source <- file.path(
   circled_cluster_dir,
   "expression_cluster_gene_level_GO_KEGG_pathway_illustration.png"
@@ -499,7 +505,7 @@ figure3_reference_source <- file.path(
   circled_cluster_dir,
   "expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png"
 )
-curated_target_dir <- latest_dir("^curated-target-gene-figure_")
+curated_target_dir <- latest_dir(publication_params$curated_results_pattern)
 figure4_curated_source <- file.path(
   curated_target_dir,
   "figure4_curated_targets_main_chromosomes.png"
@@ -1932,12 +1938,13 @@ if (file.exists(figure3_lollipop_png)) {
 ## Figure 4: curated immune and protein-anabolism targets
 
 Figure 4 preserves the curated biological categories and recalculates every
-DEG status from the current competitive-host analysis.
-The 99 retained target genes stay in the denominator for every contrast; a gene
-is shown as `N.S.` when it does not meet the current adjusted-P-value and fold-
-change thresholds. A matched all-scaffold view restores all 163 original
-curated targets, including the 64 targets on unplaced scaffolds, for direct
-comparison with the earlier figure. Placement details remain searchable on the
+DEG status from the corrected 45-sample competitive-host transcript+exon
+analysis. The supplied v21 workbook contains 111 unique targets (77 immune and
+34 protein-anabolism genes), and all 111 map to main nuclear chromosomes. Each
+target therefore stays in the denominator for every contrast and is shown as
+`N.S.` when it does not meet the current adjusted-P-value and fold-change
+thresholds. The matched all-scaffold view is retained as a reproducibility
+check and has the same target denominator. Placement details remain searchable on the
 [curated target-gene analysis page](30-curated-target-gene-figure.html).
 A separate audit view isolates the curated targets carrying the scaffold-origin
 page's non-metazoan homology review flags; those flags do not prove that the

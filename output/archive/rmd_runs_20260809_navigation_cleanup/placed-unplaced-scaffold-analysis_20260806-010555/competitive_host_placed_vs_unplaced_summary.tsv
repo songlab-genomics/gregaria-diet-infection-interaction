@@ -1,0 +1,27 @@
+analysis_scope	contrast_id	contrast_family	numerator	denominator	tested_genes	higher_in_numerator	higher_in_denominator	total_degs
+Placed/host-assigned	infection_diet33	Infection within diet	Infected diet 33	Control diet 33	14132	552	464	1016
+Placed/host-assigned	infection_diet50	Infection within diet	Infected diet 50	Control diet 50	14132	1263	746	2009
+Placed/host-assigned	infection_diet83	Infection within diet	Infected diet 83	Control diet 83	14132	658	372	1030
+Placed/host-assigned	control_diet33_vs50	Diet among controls	Control diet 33	Control diet 50	14132	10	5	15
+Placed/host-assigned	control_diet83_vs50	Diet among controls	Control diet 83	Control diet 50	14132	24	35	59
+Placed/host-assigned	control_diet83_vs33	Diet among controls	Control diet 83	Control diet 33	14132	34	26	60
+Placed/host-assigned	infected_diet33_vs50	Diet among infected	Infected diet 33	Infected diet 50	14132	13	290	303
+Placed/host-assigned	infected_diet83_vs50	Diet among infected	Infected diet 83	Infected diet 50	14132	45	14	59
+Placed/host-assigned	infected_diet83_vs33	Diet among infected	Infected diet 83	Infected diet 33	14132	63	23	86
+Placed/host-assigned	infection_average_all_diets	Average infection response	Average infected	Average control	14132	893	798	1691
+Placed/host-assigned	interaction_diet33_vs50	Diet by infection interaction	Infection response diet 33	Infection response diet 50	14132	0	0	0
+Placed/host-assigned	interaction_diet83_vs50	Diet by infection interaction	Infection response diet 83	Infection response diet 50	14132	26	32	58
+Placed/host-assigned	interaction_diet83_vs33	Diet by infection interaction	Infection response diet 83	Infection response diet 33	14132	8	3	11
+Unplaced scaffold	infection_diet33	Infection within diet	Infected diet 33	Control diet 33	2756	4	700	704
+Unplaced scaffold	infection_diet50	Infection within diet	Infected diet 50	Control diet 50	2756	0	0	0
+Unplaced scaffold	infection_diet83	Infection within diet	Infected diet 83	Control diet 83	2756	0	0	0
+Unplaced scaffold	control_diet33_vs50	Diet among controls	Control diet 33	Control diet 50	2756	0	0	0
+Unplaced scaffold	control_diet83_vs50	Diet among controls	Control diet 83	Control diet 50	2756	0	0	0
+Unplaced scaffold	control_diet83_vs33	Diet among controls	Control diet 83	Control diet 33	2756	0	0	0
+Unplaced scaffold	infected_diet33_vs50	Diet among infected	Infected diet 33	Infected diet 50	2756	1	2149	2150
+Unplaced scaffold	infected_diet83_vs50	Diet among infected	Infected diet 83	Infected diet 50	2756	0	0	0
+Unplaced scaffold	infected_diet83_vs33	Diet among infected	Infected diet 83	Infected diet 33	2756	120	0	120
+Unplaced scaffold	infection_average_all_diets	Average infection response	Average infected	Average control	2756	37	113	150
+Unplaced scaffold	interaction_diet33_vs50	Diet by infection interaction	Infection response diet 33	Infection response diet 50	2756	0	107	107
+Unplaced scaffold	interaction_diet83_vs50	Diet by infection interaction	Infection response diet 83	Infection response diet 50	2756	0	0	0
+Unplaced scaffold	interaction_diet83_vs33	Diet by infection interaction	Infection response diet 83	Infection response diet 33	2756	106	0	106

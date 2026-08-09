@@ -37,6 +37,33 @@ body {
   background-color: #22313f;
 }
 
+/* Count-definition submenus are shared by every scientific section. */
+.navbar .dropdown-menu {
+  min-width: 230px;
+}
+
+.navbar .dropdown-submenu > a {
+  color: #102a43;
+  font-weight: 750;
+}
+
+.navbar .dropdown-submenu > .dropdown-menu {
+  min-width: 285px;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.navbar .dropdown-submenu.open > .dropdown-menu {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav > li:nth-last-child(-n + 4) .dropdown-submenu > .dropdown-menu {
+    right: 100%;
+    left: auto;
+  }
+}
+
 .main-container {
   max-width: 1160px;
 }
@@ -502,5 +529,18 @@ img {
 
   .hero-panel h1 {
     font-size: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar .dropdown-submenu > .dropdown-menu {
+    position: static;
+    float: none;
+    width: auto;
+    min-width: 0;
+    max-height: none;
+    margin: 0 0 4px 16px;
+    border: 0;
+    box-shadow: none;
   }
 }

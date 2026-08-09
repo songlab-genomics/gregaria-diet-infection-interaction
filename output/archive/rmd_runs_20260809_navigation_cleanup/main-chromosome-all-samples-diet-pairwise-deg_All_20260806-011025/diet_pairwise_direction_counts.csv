@@ -1,0 +1,7 @@
+"contrast","direction","n_significant_genes"
+"33_vs_50","Higher in first diet",16
+"33_vs_83","Higher in first diet",36
+"50_vs_83","Higher in first diet",10
+"33_vs_50","Higher in second diet",199
+"33_vs_83","Higher in second diet",88
+"50_vs_83","Higher in second diet",41

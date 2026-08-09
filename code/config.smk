@@ -245,7 +245,15 @@ DUAL_FUNGUS_GTF = env_str(
     f"{DUAL_FUNGUS_REFERENCE_DIR}/GCF_000187425.2_genomic.gtf",
 )
 
-DUAL_REFERENCE_DIR = f"{DUAL_DIR}/00-reference"
+# A one-library add-on run can reuse the immutable reference products and STAR
+# indexes from the completed 44-library run. Sample outputs still go to the new
+# DUAL_DIR, so the historical run is never modified.
+DUAL_REFERENCE_CACHE_DIR = env_str("DUAL_REFERENCE_CACHE_DIR", "")
+DUAL_REFERENCE_DIR = (
+    DUAL_REFERENCE_CACHE_DIR
+    if DUAL_REFERENCE_CACHE_DIR
+    else f"{DUAL_DIR}/00-reference"
+)
 DUAL_HOST_ONLY_STAR_INDEX_DIR = f"{DUAL_REFERENCE_DIR}/STAR-host-only"
 DUAL_COMPETITIVE_STAR_INDEX_DIR = f"{DUAL_REFERENCE_DIR}/STAR-competitive"
 DUAL_HOST_PREFIX = env_str("DUAL_HOST_PREFIX", "HOST__")

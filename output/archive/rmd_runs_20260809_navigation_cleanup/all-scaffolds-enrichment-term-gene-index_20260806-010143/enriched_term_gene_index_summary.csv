@@ -1,0 +1,15 @@
+"enrichment_context","database","family","n_enriched_terms"
+"Direction-aware enrichment","GO","Control animals only",10
+"Direction-aware enrichment","GO","Infected animals only",141
+"Direction-aware enrichment","GO","Infected within diet",644
+"Direction-aware enrichment","KEGG_pathway","Control animals only",15
+"Direction-aware enrichment","KEGG_pathway","Infected animals only",19
+"Direction-aware enrichment","KEGG_pathway","Infected within diet",66
+"Non-directional enrichment","GO","All infection DEGs",210
+"Non-directional enrichment","GO","Diet 33",124
+"Non-directional enrichment","GO","Diet 50",226
+"Non-directional enrichment","GO","Diet 83",90
+"Non-directional enrichment","KEGG_pathway","All infection DEGs",24
+"Non-directional enrichment","KEGG_pathway","Diet 33",2
+"Non-directional enrichment","KEGG_pathway","Diet 50",17
+"Non-directional enrichment","KEGG_pathway","Diet 83",3

@@ -35,6 +35,7 @@ if [ -z "${DUAL_RUN_ID:-}" ]; then
 fi
 DUAL_DIR="${DUAL_DIR:-${PROJECT_ROOT}/output/runs/${DUAL_RUN_ID}}"
 DUAL_SAMPLE_TABLE="${DUAL_SAMPLE_TABLE:-config/fatbody_dual_rnaseq_samples.tsv}"
+DUAL_REFERENCE_CACHE_DIR="${DUAL_REFERENCE_CACHE_DIR:-}"
 DUAL_INPUT_MODE="${DUAL_INPUT_MODE:-raw}"
 DUAL_RAW_DIR="${DUAL_RAW_DIR:-/data/songlab/sequencing_data/RNAseq/mehreen}"
 DUAL_TRIMMED_DIR="${DUAL_TRIMMED_DIR:-${PROJECT_ROOT}/input/trimmed-fastp}"
@@ -82,6 +83,7 @@ export PROJECT_ROOT
 export DUAL_RUN_ID
 export DUAL_DIR
 export DUAL_SAMPLE_TABLE
+export DUAL_REFERENCE_CACHE_DIR
 export DUAL_INPUT_MODE
 export DUAL_RAW_DIR
 export DUAL_TRIMMED_DIR
@@ -124,6 +126,7 @@ echo "Resume existing run: ${DUAL_RESUME_EXISTING}"
 echo "Raw reads: ${DUAL_RAW_DIR}"
 echo "Input mode: ${DUAL_INPUT_MODE}"
 echo "External trimmed reads (trimmed mode only): ${DUAL_TRIMMED_DIR}"
+echo "Reference cache: ${DUAL_REFERENCE_CACHE_DIR:-not used}"
 echo "Host reference: ${DUAL_HOST_FASTA}"
 echo "Fungal reference: ${DUAL_FUNGUS_FASTA}"
 echo "Kraken database: ${DUAL_KRAKEN_DB}"

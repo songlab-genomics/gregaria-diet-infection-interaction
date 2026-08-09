@@ -1,0 +1,6 @@
+Intercept
+Diet_33_vs_50
+Diet_83_vs_50
+Treatment_Infected_vs_Control
+Diet33.TreatmentInfected
+Diet83.TreatmentInfected

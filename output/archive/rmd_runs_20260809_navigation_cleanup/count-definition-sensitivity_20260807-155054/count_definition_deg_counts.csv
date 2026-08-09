@@ -1,0 +1,53 @@
+"counting_mode","contrast_family","contrast_id","direction","n_DEGs","total_DEGs"
+"Exon only","Average infection response","infection_average_all_diets","Higher in denominator",690,1422
+"Exon only","Average infection response","infection_average_all_diets","Higher in numerator",732,1422
+"Exon only","Diet among controls","control_diet33_vs50","Higher in denominator",0,2
+"Exon only","Diet among controls","control_diet33_vs50","Higher in numerator",2,2
+"Exon only","Diet among controls","control_diet83_vs33","Higher in denominator",22,47
+"Exon only","Diet among controls","control_diet83_vs33","Higher in numerator",25,47
+"Exon only","Diet among controls","control_diet83_vs50","Higher in denominator",5,23
+"Exon only","Diet among controls","control_diet83_vs50","Higher in numerator",18,23
+"Exon only","Diet among infected","infected_diet33_vs50","Higher in denominator",99,104
+"Exon only","Diet among infected","infected_diet33_vs50","Higher in numerator",5,104
+"Exon only","Diet among infected","infected_diet83_vs33","Higher in denominator",16,39
+"Exon only","Diet among infected","infected_diet83_vs33","Higher in numerator",23,39
+"Exon only","Diet among infected","infected_diet83_vs50","Higher in denominator",4,15
+"Exon only","Diet among infected","infected_diet83_vs50","Higher in numerator",11,15
+"Exon only","Diet by infection interaction","interaction_diet33_vs50","Higher in denominator",3,3
+"Exon only","Diet by infection interaction","interaction_diet33_vs50","Higher in numerator",0,3
+"Exon only","Diet by infection interaction","interaction_diet83_vs33","Higher in denominator",2,7
+"Exon only","Diet by infection interaction","interaction_diet83_vs33","Higher in numerator",5,7
+"Exon only","Diet by infection interaction","interaction_diet83_vs50","Higher in denominator",1,5
+"Exon only","Diet by infection interaction","interaction_diet83_vs50","Higher in numerator",4,5
+"Exon only","Infection within diet","infection_diet33","Higher in denominator",396,857
+"Exon only","Infection within diet","infection_diet33","Higher in numerator",461,857
+"Exon only","Infection within diet","infection_diet50","Higher in denominator",374,1116
+"Exon only","Infection within diet","infection_diet50","Higher in numerator",742,1116
+"Exon only","Infection within diet","infection_diet83","Higher in denominator",269,768
+"Exon only","Infection within diet","infection_diet83","Higher in numerator",499,768
+"Transcript + exon","Average infection response","infection_average_all_diets","Higher in denominator",798,1691
+"Transcript + exon","Average infection response","infection_average_all_diets","Higher in numerator",893,1691
+"Transcript + exon","Diet among controls","control_diet33_vs50","Higher in denominator",5,15
+"Transcript + exon","Diet among controls","control_diet33_vs50","Higher in numerator",10,15
+"Transcript + exon","Diet among controls","control_diet83_vs33","Higher in denominator",26,60
+"Transcript + exon","Diet among controls","control_diet83_vs33","Higher in numerator",34,60
+"Transcript + exon","Diet among controls","control_diet83_vs50","Higher in denominator",35,59
+"Transcript + exon","Diet among controls","control_diet83_vs50","Higher in numerator",24,59
+"Transcript + exon","Diet among infected","infected_diet33_vs50","Higher in denominator",290,303
+"Transcript + exon","Diet among infected","infected_diet33_vs50","Higher in numerator",13,303
+"Transcript + exon","Diet among infected","infected_diet83_vs33","Higher in denominator",23,86
+"Transcript + exon","Diet among infected","infected_diet83_vs33","Higher in numerator",63,86
+"Transcript + exon","Diet among infected","infected_diet83_vs50","Higher in denominator",14,59
+"Transcript + exon","Diet among infected","infected_diet83_vs50","Higher in numerator",45,59
+"Transcript + exon","Diet by infection interaction","interaction_diet33_vs50","Higher in denominator",0,0
+"Transcript + exon","Diet by infection interaction","interaction_diet33_vs50","Higher in numerator",0,0
+"Transcript + exon","Diet by infection interaction","interaction_diet83_vs33","Higher in denominator",3,11
+"Transcript + exon","Diet by infection interaction","interaction_diet83_vs33","Higher in numerator",8,11
+"Transcript + exon","Diet by infection interaction","interaction_diet83_vs50","Higher in denominator",32,58
+"Transcript + exon","Diet by infection interaction","interaction_diet83_vs50","Higher in numerator",26,58
+"Transcript + exon","Infection within diet","infection_diet33","Higher in denominator",464,1016
+"Transcript + exon","Infection within diet","infection_diet33","Higher in numerator",552,1016
+"Transcript + exon","Infection within diet","infection_diet50","Higher in denominator",746,2009
+"Transcript + exon","Infection within diet","infection_diet50","Higher in numerator",1263,2009
+"Transcript + exon","Infection within diet","infection_diet83","Higher in denominator",372,1030
+"Transcript + exon","Infection within diet","infection_diet83","Higher in numerator",658,1030

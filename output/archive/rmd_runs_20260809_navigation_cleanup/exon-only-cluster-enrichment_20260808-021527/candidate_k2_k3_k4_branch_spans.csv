@@ -1,0 +1,10 @@
+"k","candidate_cluster_number","candidate_cluster","start","end","midpoint","n_genes"
+2,1,"Candidate cluster 1",1,989,495,989
+2,2,"Candidate cluster 2",990,1985,1487.5,996
+3,1,"Candidate cluster 1",1,989,495,989
+3,2,"Candidate cluster 2",990,1034,1012,45
+3,3,"Candidate cluster 3",1035,1985,1510,951
+4,1,"Candidate cluster 1",1,918,459.5,918
+4,2,"Candidate cluster 2",919,989,954,71
+4,3,"Candidate cluster 3",990,1034,1012,45
+4,4,"Candidate cluster 4",1035,1985,1510,951

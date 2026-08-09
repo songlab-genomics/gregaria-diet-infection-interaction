@@ -12,6 +12,8 @@ params:
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
+  results_pattern: "^placed-unplaced-scaffold-analysis_"
+  cluster_results_pattern: "^main-chromosome-cluster-enrichment_"
   alpha: 0.05
   lfc_threshold: 1
   output_tag: "main-chromosome-all-deg-catalogue"
@@ -186,7 +188,7 @@ slugify <- function(x) {
 ## Input files
 
 ```{r input-files}
-placed_dir <- latest_dir("^placed-unplaced-scaffold-analysis_")
+placed_dir <- latest_dir(params$results_pattern)
 scenario_results_file <- file.path(placed_dir, "placed_unplaced_all_deseq2_results.csv")
 
 input_files <- data.frame(
@@ -425,7 +427,7 @@ for (context_label in names(context_count_plots)) {
   )
 }
 
-cluster_assignment_dir <- latest_dir("^main-chromosome-cluster-enrichment_")
+cluster_assignment_dir <- latest_dir(params$cluster_results_pattern)
 cluster_assignment_file <- if (is.na(cluster_assignment_dir)) {
   NA_character_
 } else {

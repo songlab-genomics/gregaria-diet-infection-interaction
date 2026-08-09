@@ -1,0 +1,56 @@
+source_sheet,umbrella,figure_scope,x_label,x_order,status,n_genes,percentage,n_targets,p_value,p_label
+Immune,Cellular Immunity,Diet comparison among infected,"50
+vs
+33",1,N.S.,2,100,2,,
+Immune,Cellular Immunity,Diet comparison among infected,"83
+vs
+33",2,N.S.,2,100,2,,
+Immune,Cellular Immunity,Diet comparison among infected,"83
+vs
+50",3,N.S.,2,100,2,,
+Immune,Cellular Immunity,Within-diet infection response,33,1,N.S.,2,100,2,,
+Immune,Cellular Immunity,Within-diet infection response,50,2,N.S.,2,100,2,,
+Immune,Cellular Immunity,Within-diet infection response,83,3,N.S.,2,100,2,,
+Immune,Detoxification,Diet comparison among infected,"50
+vs
+33",1,N.S.,2,100,2,0.19699015049247537,
+Immune,Detoxification,Diet comparison among infected,"83
+vs
+33",2,Upregulated,2,100,2,0.19699015049247537,
+Immune,Detoxification,Diet comparison among infected,"83
+vs
+50",3,N.S.,2,100,2,0.19699015049247537,
+Immune,Detoxification,Within-diet infection response,33,1,N.S.,2,100,2,0.20533973301334935,
+Immune,Detoxification,Within-diet infection response,50,2,N.S.,2,100,2,0.20533973301334935,
+Immune,Detoxification,Within-diet infection response,83,3,Upregulated,2,100,2,0.20533973301334935,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"50
+vs
+33",1,N.S.,5,100,5,1,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+33",2,N.S.,4,80,5,1,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+33",2,Upregulated,1,20,5,1,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Diet comparison among infected,"83
+vs
+50",3,N.S.,5,100,5,1,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,33,1,N.S.,5,100,5,,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,50,2,N.S.,5,100,5,,
+Protein-Anabolism,Nitrogen & Amino Acid Metabolism,Within-diet infection response,83,3,N.S.,5,100,5,,
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"50
+vs
+33",1,N.S.,14,100,14,0.09609519524023799,
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+33",2,N.S.,11,78.57142857142857,14,0.09609519524023799,
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+33",2,Upregulated,3,21.428571428571427,14,0.09609519524023799,
+Protein-Anabolism,Protein Synthesis & Translation,Diet comparison among infected,"83
+vs
+50",3,N.S.,14,100,14,0.09609519524023799,
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,33,1,N.S.,14,100,14,1,
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,50,2,N.S.,14,100,14,1,
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,83,3,N.S.,13,92.85714285714286,14,1,
+Protein-Anabolism,Protein Synthesis & Translation,Within-diet infection response,83,3,Upregulated,1,7.142857142857143,14,1,

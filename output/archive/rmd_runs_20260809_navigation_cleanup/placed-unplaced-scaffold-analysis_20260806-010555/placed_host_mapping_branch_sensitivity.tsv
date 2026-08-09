@@ -1,0 +1,14 @@
+contrast_id	Competitive host	Host only	difference
+infection_diet33	1016	1016	0
+infection_diet50	2009	2009	0
+infection_diet83	1030	1035	-5
+control_diet33_vs50	15	15	0
+control_diet83_vs50	59	59	0
+control_diet83_vs33	60	60	0
+infected_diet33_vs50	303	303	0
+infected_diet83_vs50	59	59	0
+infected_diet83_vs33	86	87	-1
+infection_average_all_diets	1691	1694	-3
+interaction_diet33_vs50	0	0	0
+interaction_diet83_vs50	58	54	4
+interaction_diet83_vs33	11	11	0

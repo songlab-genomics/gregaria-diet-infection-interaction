@@ -1,0 +1,115 @@
+"DEG_context","comparison","contrast_label","signed_direction","Gene_class","direction_class","n_DEGs","signed_n"
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Downregulated","Coding genes","Downregulated - Coding genes",716,-716
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",39,-39
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Upregulated","Coding genes","Upregulated - Coding genes",962,962
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",113,113
+"Infection vs control","All diets: infected vs control","All diets
+infected vs control","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Downregulated","Coding genes","Downregulated - Coding genes",400,-400
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",18,-18
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Upregulated","Coding genes","Upregulated - Coding genes",517,517
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",33,33
+"Infection within diets","Diet 33: infected vs control","Diet 33
+infected vs control","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Downregulated","Coding genes","Downregulated - Coding genes",669,-669
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",26,-26
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Upregulated","Coding genes","Upregulated - Coding genes",1039,1039
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",87,87
+"Infection within diets","Diet 50: infected vs control","Diet 50
+infected vs control","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Downregulated","Coding genes","Downregulated - Coding genes",342,-342
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",13,-13
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Upregulated","Coding genes","Upregulated - Coding genes",968,968
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",68,68
+"Infection within diets","Diet 83: infected vs control","Diet 83
+infected vs control","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in controls","Control 33 vs 50","Control
+33 vs 50","Upregulated","Coding genes","Upregulated - Coding genes",8,8
+"Diet DEGs in controls","Control 33 vs 50","Control
+33 vs 50","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",2,2
+"Diet DEGs in controls","Control 33 vs 50","Control
+33 vs 50","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Downregulated","Coding genes","Downregulated - Coding genes",18,-18
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",4,-4
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Upregulated","Coding genes","Upregulated - Coding genes",34,34
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",1,1
+"Diet DEGs in controls","Control 83 vs 33","Control
+83 vs 33","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Downregulated","Coding genes","Downregulated - Coding genes",20,-20
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",0,0
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Upregulated","Coding genes","Upregulated - Coding genes",24,24
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",0,0
+"Diet DEGs in controls","Control 83 vs 50","Control
+83 vs 50","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Downregulated","Coding genes","Downregulated - Coding genes",190,-190
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",11,-11
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Upregulated","Coding genes","Upregulated - Coding genes",8,8
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",1,1
+"Diet DEGs in infected","Infected 33 vs 50","Infected
+33 vs 50","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Downregulated","Coding genes","Downregulated - Coding genes",45,-45
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",4,-4
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Upregulated","Coding genes","Upregulated - Coding genes",428,428
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",31,31
+"Diet DEGs in infected","Infected 83 vs 33","Infected
+83 vs 33","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Downregulated","Coding genes","Downregulated - Coding genes",26,-26
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Downregulated","Long non-coding RNA","Downregulated - Long non-coding RNA",3,-3
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Downregulated","Other / unknown","Downregulated - Other / unknown",0,0
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Upregulated","Coding genes","Upregulated - Coding genes",269,269
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Upregulated","Long non-coding RNA","Upregulated - Long non-coding RNA",25,25
+"Diet DEGs in infected","Infected 83 vs 50","Infected
+83 vs 50","Upregulated","Other / unknown","Upregulated - Other / unknown",0,0

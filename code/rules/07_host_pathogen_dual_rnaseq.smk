@@ -84,6 +84,14 @@ DUAL_FUNGUS_PRIMARY_MATRIX = (
     DUAL_DIR
     + "/04-count-matrices/competitive-fungus/metarhizium_transcript_exon_counts.tsv"
 )
+# Secondary host matrices support the explicit exon-only sensitivity pages.
+# They never replace the transcript+exon primary analysis.
+DUAL_HOST_ONLY_EXON_MATRIX = (
+    DUAL_DIR + "/04-count-matrices/host-only/host_exon_counts.tsv"
+)
+DUAL_COMPETITIVE_HOST_EXON_MATRIX = (
+    DUAL_DIR + "/04-count-matrices/competitive-host/host_exon_counts.tsv"
+)
 DUAL_HOST_ONLY_MAPPING_QC = (
     DUAL_DIR + "/05-mapping-comparison/host_only_mapping_summary.tsv"
 )
@@ -244,6 +252,8 @@ def dual_local_transfer_files():
             "host-only-transcript-exon",
             "competitive-host-transcript-exon",
             "competitive-fungus-transcript-exon",
+            "host-only-exon",
+            "competitive-host-exon",
         ]
         for sample in DUAL_SAMPLES
     ]
@@ -255,6 +265,8 @@ def dual_local_transfer_files():
             DUAL_HOST_ONLY_PRIMARY_MATRIX,
             DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
             DUAL_FUNGUS_PRIMARY_MATRIX,
+            DUAL_HOST_ONLY_EXON_MATRIX,
+            DUAL_COMPETITIVE_HOST_EXON_MATRIX,
             DUAL_HOST_ONLY_MAPPING_QC,
             DUAL_COMPETITIVE_MAPPING_QC,
             DUAL_COUNT_RECONCILIATION_SAMPLE,
@@ -293,6 +305,8 @@ def dual_rnaseq_final_outputs():
             DUAL_HOST_ONLY_PRIMARY_MATRIX,
             DUAL_COMPETITIVE_HOST_PRIMARY_MATRIX,
             DUAL_FUNGUS_PRIMARY_MATRIX,
+            DUAL_HOST_ONLY_EXON_MATRIX,
+            DUAL_COMPETITIVE_HOST_EXON_MATRIX,
             DUAL_HOST_ONLY_MAPPING_QC,
             DUAL_COMPETITIVE_MAPPING_QC,
             DUAL_COUNT_RECONCILIATION_SAMPLE,
@@ -379,6 +393,7 @@ rule dual_run_provenance:
             ("fungal_reference_accession", DUAL_FUNGUS_ACCESSION),
             ("fungal_fasta", DUAL_FUNGUS_FASTA),
             ("fungal_gtf", DUAL_FUNGUS_GTF),
+            ("reference_cache_dir", DUAL_REFERENCE_CACHE_DIR or "not used"),
             ("mapping_branches", "host-only,competitive-host-pathogen"),
             ("host_only_star_index", DUAL_HOST_ONLY_STAR_INDEX_DIR),
             ("competitive_star_index", DUAL_COMPETITIVE_STAR_INDEX_DIR),
@@ -687,6 +702,66 @@ rule dual_featurecounts_fungus_transcript_exon:
         """
 
 
+rule dual_featurecounts_host_only_exon:
+    input:
+        bam=DUAL_DIR + "/02-host-only-star/{sample}_Aligned.sortedByCoord.out.bam",
+        gtf=DUAL_HOST_GTF
+    output:
+        counts=DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt",
+        summary=DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt.summary"
+    threads: 12
+    shell:
+        r"""
+        set -euo pipefail
+        module purge
+        module load mamba
+        source activate subread
+        mkdir -p $(dirname {output.counts})
+        featureCounts \
+          -p --countReadPairs -B -C \
+          -s {DUAL_FEATURECOUNTS_STRAND} \
+          -t exon \
+          -g gene_id \
+          --extraAttributes gene_name \
+          --primary \
+          -Q 10 \
+          -T {threads} \
+          -a {input.gtf} \
+          -o {output.counts} \
+          {input.bam}
+        """
+
+
+rule dual_featurecounts_competitive_host_exon:
+    input:
+        bam=DUAL_DIR + "/02-competitive-star/{sample}_Aligned.sortedByCoord.out.bam",
+        gtf=DUAL_HOST_PREFIXED_GTF
+    output:
+        counts=DUAL_DIR + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt",
+        summary=DUAL_DIR + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt.summary"
+    threads: 12
+    shell:
+        r"""
+        set -euo pipefail
+        module purge
+        module load mamba
+        source activate subread
+        mkdir -p $(dirname {output.counts})
+        featureCounts \
+          -p --countReadPairs -B -C \
+          -s {DUAL_FEATURECOUNTS_STRAND} \
+          -t exon \
+          -g gene_id \
+          --extraAttributes gene_name \
+          --primary \
+          -Q 10 \
+          -T {threads} \
+          -a {input.gtf} \
+          -o {output.counts} \
+          {input.bam}
+        """
+
+
 rule dual_merge_host_only_transcript_exon_counts:
     input:
         dual_featurecounts(
@@ -760,6 +835,55 @@ rule dual_merge_fungus_transcript_exon_counts:
         python3 scripts/merge_featurecounts.py \
           {params.sample_args} \
           --strip-prefix '{DUAL_FUNGUS_PREFIX}' \
+          --output {output}
+        """
+
+
+rule dual_merge_host_only_exon_counts:
+    input:
+        dual_featurecounts(
+            DUAL_DIR + "/03-featurecounts/host-only-exon/{sample}.featureCounts.txt"
+        )
+    output:
+        DUAL_HOST_ONLY_EXON_MATRIX
+    params:
+        sample_args=" ".join(
+            "--sample-file "
+            + sample
+            + "="
+            + DUAL_DIR
+            + f"/03-featurecounts/host-only-exon/{sample}.featureCounts.txt"
+            for sample in DUAL_SAMPLES
+        )
+    shell:
+        r"""
+        python3 scripts/merge_featurecounts.py \
+          {params.sample_args} \
+          --output {output}
+        """
+
+
+rule dual_merge_competitive_host_exon_counts:
+    input:
+        dual_featurecounts(
+            DUAL_DIR + "/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt"
+        )
+    output:
+        DUAL_COMPETITIVE_HOST_EXON_MATRIX
+    params:
+        sample_args=" ".join(
+            "--sample-file "
+            + sample
+            + "="
+            + DUAL_DIR
+            + f"/03-featurecounts/competitive-host-exon/{sample}.featureCounts.txt"
+            for sample in DUAL_SAMPLES
+        )
+    shell:
+        r"""
+        python3 scripts/merge_featurecounts.py \
+          {params.sample_args} \
+          --strip-prefix '{DUAL_HOST_PREFIX}' \
           --output {output}
         """
 
@@ -1066,7 +1190,17 @@ rule dual_prepare_local_transfer_bundle:
 
         for source in input.results:
             source_path = Path(str(source)).resolve()
-            add_entry(source_path, str(source_path.relative_to(run_root)))
+            try:
+                archive_path = str(source_path.relative_to(run_root))
+            except ValueError:
+                # Add-on runs may read immutable maps from the prior reference
+                # cache. Preserve them in the bundle without pretending they
+                # were generated in the new sample-output directory.
+                reference_root = Path(DUAL_REFERENCE_DIR).resolve()
+                archive_path = "00-reference-cache/" + str(
+                    source_path.relative_to(reference_root)
+                )
+            add_entry(source_path, archive_path)
         add_entry(input.metadata, "inputs/fatbody_dual_rnaseq_samples.tsv")
         add_entry(input.rrna, "inputs/gregaria_rrna_list.txt")
 

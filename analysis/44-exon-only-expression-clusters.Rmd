@@ -1,0 +1,5032 @@
+---
+title: "Exon-only DEG expression clusters and enrichment"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  latest_results_root: "output/rmd_runs"
+  primary_results_pattern: "^exon-only-deseq2-analysis_"
+  enrichment_results_pattern: "^exon-only-go-term-enrichment_"
+  counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  timecourse_fatbody_reference_dir: "data/external/timecourse_fatbody_reference"
+  timecourse_head_thorax_counts_dir: "data/raw_read_counts/03-gregaria-DESeq2"
+  eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  min_count: 10
+  min_samples: 3
+  alpha: 0.05
+  top_terms_per_panel: 18
+  output_tag: "exon-only-cluster-enrichment"
+---
+
+## Purpose
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Cluster expression**
+
+Group main-chromosome DEGs by their row-scaled VST profiles across all samples.
+:::
+::: {.walkthrough-step}
+**Step 2 - Test functions**
+
+Run GO and eukaryote-inclusive KEGG enrichment within each expression cluster.
+:::
+::: {.walkthrough-step}
+**Step 3 - Interpret patterns**
+
+Read expression, DEG context, fungal signal, and enrichment as one figure.
+:::
+:::
+
+This page rebuilds the gene-level expression clusters using only significant
+main-chromosome fat body DEGs from the joint all-samples model. The current
+publication composite retains the earlier three-block display for continuity,
+but that grouping is provisional. The full unpartitioned gene dendrogram and
+its exactly aligned heatmap are shown below so that new boundaries can be chosen
+from the current chromosome-only data rather than inherited from the older run.
+
+The foreground is the exported gene list for that circled branch. The enrichment
+is run in two ways:
+
+- against all expressed main-chromosome genes in the rRNA-filtered count matrix;
+- against all genes in the full all-samples fat body DEG heatmap.
+
+The first test asks what functions are over-represented compared with the whole
+expressed transcriptome. The second test asks what makes this heatmap branch
+different from the other fat body DEGs.
+
+For GO enrichment, only terms that resolve to Biological process, Cellular
+component, or Molecular function in the local GO database are kept in the final
+tables and plots. Unresolved GO identifiers are omitted here because they do not
+provide an interpretable functional label.
+
+**Current cluster decision:** [Open the searchable unmerged four-branch
+review](#unmerged-four-branch-review) before deciding which branches should be
+merged in the publication figure.
+
+## Setup
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("clusterProfiler", "DESeq2", "dplyr", "readr", "tidyr", "stringr",
+              "ggplot2", "DT", "GO.db", "AnnotationDbi", "tibble",
+              "scales", "SummarizedExperiment", "cluster", "png")
+required <- c(required, "patchwork", "ggdendro")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+library(ggplot2)
+library(patchwork)
+
+figure3_path_ancestors <- function(path) {
+  path <- normalizePath(path, mustWork = FALSE)
+  ancestors <- path
+  repeat {
+    parent <- dirname(path)
+    if (identical(parent, path)) break
+    ancestors <- c(ancestors, parent)
+    path <- parent
+  }
+  ancestors
+}
+
+is_figure3_project <- function(path) {
+  file.exists(file.path(path, "analysis", "26-circled-cluster-enrichment.Rmd")) &&
+    dir.exists(file.path(path, "data")) &&
+    dir.exists(file.path(path, "output"))
+}
+
+find_figure3_project <- function() {
+  starts <- character()
+
+  explicit_root <- Sys.getenv("GREGARIA_DIET_PROJECT_DIR", unset = "")
+  if (nzchar(explicit_root)) starts <- c(starts, explicit_root)
+
+  input_file <- tryCatch(knitr::current_input(dir = TRUE),
+                         error = function(e) "")
+  if (length(input_file) == 1 && nzchar(input_file)) {
+    starts <- c(starts, dirname(input_file))
+  }
+
+  if (requireNamespace("rstudioapi", quietly = TRUE) &&
+      rstudioapi::isAvailable()) {
+    active_file <- tryCatch(
+      rstudioapi::getSourceEditorContext()$path,
+      error = function(e) ""
+    )
+    if (length(active_file) == 1 && nzchar(active_file)) {
+      starts <- c(starts, dirname(active_file))
+    }
+  }
+
+  starts <- unique(c(starts, getwd()))
+  candidates <- unique(unlist(
+    lapply(starts, figure3_path_ancestors),
+    use.names = FALSE
+  ))
+  matches <- candidates[vapply(candidates, is_figure3_project, logical(1))]
+
+  if (length(matches) == 0) {
+    stop(
+      "Could not locate gregaria-diet-infection-interaction. ",
+      "Open this Rmd from that project, set the working directory to the ",
+      "repository root, or set GREGARIA_DIET_PROJECT_DIR explicitly."
+    )
+  }
+
+  normalizePath(matches[1], mustWork = TRUE)
+}
+
+project_dir <- find_figure3_project()
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(project_dir, "output", "rmd_runs",
+                     paste(params$output_tag, run_stamp, sep = "_"))
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_root <- file.path(project_dir, params$latest_results_root)
+counts_file <- file.path(project_dir, params$counts_file)
+mapping_summary_file <- file.path(project_dir, params$mapping_summary_file)
+placement_file <- file.path(project_dir, params$placement_file)
+rrna_file <- file.path(project_dir, params$rrna_file)
+metadata_file <- file.path(project_dir, params$metadata_file)
+timecourse_fatbody_dir <- file.path(
+  project_dir,
+  params$timecourse_fatbody_reference_dir
+)
+timecourse_head_thorax_dir <- file.path(
+  project_dir,
+  params$timecourse_head_thorax_counts_dir
+)
+eggnog_file <- file.path(project_dir, params$eggnog_file)
+gff_file <- file.path(project_dir, params$gff_file)
+figure3_locust_path <- file.path(
+  project_dir,
+  "analysis", "assets", "figure3", "schistocerca_pathway_base.png"
+)
+if (!file.exists(figure3_locust_path)) {
+  stop("Missing Figure 3 locust illustration: ", figure3_locust_path)
+}
+
+current_outliers <- c("1007", "1036", "1037", "1039")
+
+go_ontology_colors <- c(
+  "Biological process" = "#111111",
+  "Cellular component" = "#8B5A2B",
+  "Molecular function" = "#8C8C8C"
+)
+
+kegg_scope_colors <- c(
+  "Eukaryote/metazoan-compatible" = "#1E88E5",
+  "Core metabolism or cross-domain" = "#2F8F5B",
+  "Broad KEGG reference map" = "#4B5563",
+  "Microbial/prokaryote-associated label" = "#E41A1C",
+  "Reference disease pathway" = "#7B4FA3",
+  "Unclassified KEGG reference label" = "#F59E0B"
+)
+kegg_lollipop_color <- "#8B5A2B"
+```
+
+## Helper functions
+
+```{r helper-functions}
+latest_dir <- function(pattern) {
+  dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+  dirs <- dirs[grepl(pattern, basename(dirs))]
+  if (length(dirs) == 0) return(NA_character_)
+  dirs[which.max(file.info(dirs)$mtime)]
+}
+
+resolve_cluster_file <- function(path_param) {
+  explicit_path <- if (is.null(path_param) || !nzchar(path_param)) {
+    NA_character_
+  } else if (grepl("^/", path_param)) {
+    path_param
+  } else {
+    file.path(project_dir, path_param)
+  }
+  if (!is.na(explicit_path) && file.exists(explicit_path)) {
+    return(explicit_path)
+  }
+
+  phase_dir <- latest_dir("^phase-signature-overlap_")
+  if (is.na(phase_dir)) return(explicit_path)
+
+  candidate <- file.path(
+    phase_dir,
+    "circled_upper_cluster_audit",
+    "circled_upper_cluster_genes.csv"
+  )
+  candidate
+}
+
+read_emapper <- function(path) {
+  cols <- c(
+    "query", "seed_ortholog", "evalue", "score", "eggNOG_OGs",
+    "max_annot_lvl", "COG_category", "Description", "Preferred_name",
+    "GOs", "EC", "KEGG_ko", "KEGG_Pathway", "KEGG_Module",
+    "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy",
+    "BiGG_Reaction", "PFAMs"
+  )
+  tab <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", fill = TRUE)
+  names(tab) <- cols[seq_len(ncol(tab))]
+  tab |>
+    dplyr::mutate(protein_id = stringr::str_extract(query, "XP_[0-9]+[.][0-9]+"))
+}
+
+parse_cds_gene_bridge <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "CDS") |>
+    dplyr::transmute(
+      protein_id = stringr::str_match(attributes, "protein_id=([^;]+)")[, 2],
+      gene_id = stringr::str_match(attributes, "gene=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(protein_id), !is.na(gene_id)) |>
+    dplyr::distinct()
+}
+
+parse_gff_gene_annotation <- function(path) {
+  gff <- read.delim(path, comment.char = "#", header = FALSE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+  names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
+                       "strand", "phase", "attributes")
+  gff |>
+    dplyr::filter(type == "gene") |>
+    dplyr::transmute(
+      gene_id = dplyr::coalesce(
+        stringr::str_match(attributes, "gene=([^;]+)")[, 2],
+        stringr::str_match(attributes, "Name=([^;]+)")[, 2]
+      ),
+      Description = stringr::str_match(attributes, "description=([^;]+)")[, 2],
+      gene_biotype = stringr::str_match(attributes, "gene_biotype=([^;]+)")[, 2]
+    ) |>
+    dplyr::filter(!is.na(gene_id)) |>
+    dplyr::mutate(
+      Description = dplyr::if_else(
+        is.na(Description) | Description == "",
+        "no GFF description",
+        utils::URLdecode(Description)
+      ),
+      gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+    ) |>
+    dplyr::distinct(gene_id, .keep_all = TRUE)
+}
+
+read_metadata <- function(path) {
+  tab <- read.delim(path, check.names = FALSE)
+  tab <- tab[, !is.na(names(tab)) & nzchar(names(tab)), drop = FALSE]
+  tab$label <- as.character(tab$label)
+  tab$Diet <- factor(tab$Diet, levels = c("33", "50", "83"))
+  tab$Treatment <- factor(tab$Treatment, levels = c("Infected", "Control"))
+  tab
+}
+
+read_featurecounts_gene_counts <- function(path, sample_id) {
+  tab <- read.delim(path, comment.char = "#", check.names = FALSE)
+  if ("Geneid" %in% names(tab)) {
+    count_col <- names(tab)[ncol(tab)]
+    out <- tibble::tibble(
+      gene_id = as.character(tab[["Geneid"]]),
+      count = as.integer(tab[[count_col]])
+    )
+  } else {
+    tab <- read.delim(path, comment.char = "#", header = FALSE,
+                      check.names = FALSE)
+    if (ncol(tab) < 2) {
+      stop("Count file must contain at least gene ID and count columns: ", path)
+    }
+    out <- tibble::tibble(
+      gene_id = as.character(tab[[1]]),
+      count = as.integer(tab[[ncol(tab)]])
+    )
+  }
+  out <- out |>
+    dplyr::filter(!is.na(gene_id), nzchar(gene_id)) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(count = sum(count, na.rm = TRUE), .groups = "drop")
+  names(out)[2] <- sample_id
+  out
+}
+
+parse_head_thorax_reference_metadata <- function(reference_dir) {
+  files <- list.files(
+    reference_dir,
+    pattern = "^SGRE-(HEAD|THOX)-(CRD|ISO)-[0-9]+_MERGE_featurecounts[.]txt$",
+    full.names = TRUE
+  )
+  if (length(files) == 0) {
+    return(tibble::tibble(
+      sample_id = character(),
+      count_file = character(),
+      tissue = character(),
+      phase = character(),
+      rearing_condition = character(),
+      replicate = integer(),
+      source = character(),
+      display_group = character(),
+      reference_role = character(),
+      sample_label = character(),
+      sample_block = character()
+    ))
+  }
+
+  parsed <- stringr::str_match(
+    basename(files),
+    "^SGRE-(HEAD|THOX)-(CRD|ISO)-([0-9]+)_MERGE_featurecounts[.]txt$"
+  )
+  tibble::tibble(
+    sample_id = stringr::str_remove(basename(files), "_featurecounts[.]txt$"),
+    count_file = files,
+    tissue_code = parsed[, 2],
+    rearing_code = parsed[, 3],
+    replicate = as.integer(parsed[, 4])
+  ) |>
+    dplyr::filter(!is.na(tissue_code), !is.na(rearing_code)) |>
+    dplyr::mutate(
+      tissue = dplyr::case_when(
+        tissue_code == "HEAD" ~ "Head",
+        tissue_code == "THOX" ~ "Thorax",
+        TRUE ~ tissue_code
+      ),
+      phase = dplyr::case_when(
+        rearing_code == "CRD" ~ "Gregarious",
+        rearing_code == "ISO" ~ "Solitarious",
+        TRUE ~ rearing_code
+      ),
+      rearing_condition = dplyr::case_when(
+        rearing_code == "CRD" ~ "Crowded",
+        rearing_code == "ISO" ~ "Isolated",
+        TRUE ~ rearing_code
+      ),
+      source = "Time-course head/thorax phase reference",
+      display_group = paste0(
+        tissue, ": ",
+        dplyr::if_else(rearing_condition == "Crowded",
+                       "crowded/gregarious", "isolated/solitarious")
+      ),
+      reference_role = paste(tissue, tolower(rearing_condition),
+                             "rep", replicate),
+      sample_label = paste0(substr(tissue, 1, 1), "-",
+                            rearing_code, "-", replicate),
+      sample_block = paste(tissue, "reference")
+    ) |>
+    dplyr::arrange(tissue, rearing_condition, replicate)
+}
+
+first_nonempty <- function(x, fallback = "") {
+  x <- x[!is.na(x) & x != "" & x != "-"]
+  if (length(x) == 0) fallback else x[1]
+}
+
+build_term_maps_from_eggnog <- function() {
+  counts_raw <- read.csv(counts_file, check.names = FALSE)
+  gene_universe <- unique(counts_raw[[1]])
+  annotation <- read_emapper(eggnog_file) |>
+    dplyr::left_join(parse_cds_gene_bridge(gff_file), by = "protein_id") |>
+    dplyr::filter(!is.na(gene_id), gene_id %in% gene_universe) |>
+    dplyr::group_by(gene_id) |>
+    dplyr::summarise(
+      GOs = first_nonempty(GOs, ""),
+      KEGG_Pathway = first_nonempty(KEGG_Pathway, ""),
+      .groups = "drop"
+    )
+
+  term2gene_go <- annotation |>
+    dplyr::select(gene_id, GOs) |>
+    tidyr::separate_rows(GOs, sep = ",") |>
+    dplyr::filter(grepl("^GO:", GOs)) |>
+    dplyr::transmute(term = GOs, gene = gene_id) |>
+    dplyr::distinct()
+
+  go_names <- AnnotationDbi::mapIds(
+    GO.db::GO.db,
+    keys = unique(term2gene_go$term),
+    keytype = "GOID",
+    column = "TERM",
+    multiVals = "first"
+  )
+  go_ontology <- AnnotationDbi::mapIds(
+    GO.db::GO.db,
+    keys = unique(term2gene_go$term),
+    keytype = "GOID",
+    column = "ONTOLOGY",
+    multiVals = "first"
+  )
+  term2name_go <- data.frame(
+    term = names(go_names),
+    name = unname(go_names),
+    ontology = unname(go_ontology)
+  ) |>
+    dplyr::filter(!is.na(name))
+
+  term2gene_kegg <- annotation |>
+    dplyr::select(gene_id, KEGG_Pathway) |>
+    tidyr::separate_rows(KEGG_Pathway, sep = ",") |>
+    dplyr::filter(grepl("^ko[0-9]+$", KEGG_Pathway)) |>
+    dplyr::transmute(term = KEGG_Pathway, gene = gene_id) |>
+    dplyr::distinct()
+
+  term2name_kegg <- term2gene_kegg |>
+    dplyr::distinct(term) |>
+    dplyr::mutate(
+      name = term,
+      pathway_theme = "Other KEGG pathway",
+      pathway_scope = "Unclassified KEGG reference label"
+    )
+
+  list(
+    term2gene_go = term2gene_go,
+    term2name_go = term2name_go,
+    term2gene_kegg = term2gene_kegg,
+    term2name_kegg = term2name_kegg
+  )
+}
+
+load_term_maps <- function() {
+  go_dir <- latest_dir(params$enrichment_results_pattern)
+  expected <- file.path(
+    go_dir,
+    c("eggNOG_GO_TERM2GENE.csv", "eggNOG_GO_TERM2NAME.csv",
+      "eggNOG_KEGG_pathway_TERM2GENE.csv",
+      "eggNOG_KEGG_pathway_TERM2NAME.csv")
+  )
+  if (!is.na(go_dir) && all(file.exists(expected))) {
+    return(list(
+      term2gene_go = read.csv(expected[1], check.names = FALSE),
+      term2name_go = read.csv(expected[2], check.names = FALSE),
+      term2gene_kegg = read.csv(expected[3], check.names = FALSE),
+      term2name_kegg = read.csv(expected[4], check.names = FALSE)
+    ))
+  }
+  build_term_maps_from_eggnog()
+}
+
+run_enrichment <- function(genes, universe, term2gene, term2name, database,
+                           background_label) {
+  term2gene <- term2gene |>
+    dplyr::filter(gene %in% universe) |>
+    dplyr::distinct(term, gene)
+  term2name_min <- term2name |>
+    dplyr::distinct(term, .keep_all = TRUE) |>
+    dplyr::select(term, name)
+
+  tested_universe <- intersect(universe, term2gene$gene)
+  tested_genes <- intersect(genes, tested_universe)
+  if (length(tested_genes) < 5 || length(tested_universe) < 10) {
+    return(data.frame())
+  }
+
+  res <- clusterProfiler::enricher(
+    gene = tested_genes,
+    universe = tested_universe,
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name_min,
+    pvalueCutoff = 1,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 1,
+    minGSSize = 5,
+    maxGSSize = 5000
+  )
+  if (is.null(res)) return(data.frame())
+  out <- as.data.frame(res)
+  if (nrow(out) == 0) return(data.frame())
+  out |>
+    dplyr::mutate(
+      database = database,
+      background = background_label,
+      foreground_genes_tested = length(tested_genes),
+      background_genes_tested = length(tested_universe)
+    )
+}
+
+expand_term_genes <- function(tab, gene_annotation) {
+  if (nrow(tab) == 0) {
+    return(tibble::tibble())
+  }
+  tab |>
+    dplyr::filter(p.adjust <= params$alpha) |>
+    dplyr::select(database, background, ID, Description, GeneRatio, BgRatio,
+                  pvalue, p.adjust, qvalue, Count, geneID) |>
+    tidyr::separate_rows(geneID, sep = "/") |>
+    dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+    dplyr::left_join(gene_annotation, by = "gene_id")
+}
+```
+
+## Inputs
+
+```{r inputs}
+primary_run_dir <- latest_dir(params$primary_results_pattern)
+if (is.na(primary_run_dir)) {
+  stop("Build the placed/unplaced audit page before this cluster page.")
+}
+primary_result_file <- file.path(
+  primary_run_dir,
+  "placed_unplaced_all_deseq2_results.csv"
+)
+
+input_files <- data.frame(
+  input = c("Joint all-contrast DESeq2 results",
+            "Sample metadata", "Fresh competitive host count matrix",
+            "Competitive mapping summary",
+            "Official gene placement", "Annotated rRNA exclusion list",
+            "eggNOG annotation", "GFF gene descriptions"),
+  path = c(primary_result_file, metadata_file, counts_file,
+           mapping_summary_file,
+           placement_file, rrna_file,
+           eggnog_file, gff_file),
+  present = c(file.exists(primary_result_file), file.exists(metadata_file),
+              file.exists(counts_file),
+              file.exists(mapping_summary_file),
+              file.exists(placement_file), file.exists(rrna_file),
+              file.exists(eggnog_file), file.exists(gff_file))
+)
+knitr::kable(input_files, caption = "Inputs for main-chromosome cluster enrichment")
+if (!all(input_files$present)) {
+  stop("One or more required inputs are missing.")
+}
+```
+
+```{r build-input-sets}
+gff_annotation <- parse_gff_gene_annotation(gff_file)
+counts_table <- readr::read_tsv(counts_file, show_col_types = FALSE)
+counts <- as.matrix(counts_table[, setdiff(names(counts_table), "gene_id"), drop = FALSE])
+rownames(counts) <- counts_table$gene_id
+storage.mode(counts) <- "integer"
+
+placement <- readr::read_tsv(placement_file, show_col_types = FALSE) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+rrna_ids <- trimws(readLines(rrna_file, warn = FALSE))
+rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
+main_chromosome_ids <- placement$gene_id[
+  placement$sequence_class == "Nuclear chromosome" &
+    !placement$gene_id %in% rrna_ids
+]
+counts <- counts[intersect(rownames(counts), main_chromosome_ids), , drop = FALSE]
+expressed_universe <- rownames(counts)[
+  rowSums(counts >= params$min_count, na.rm = TRUE) >= params$min_samples
+]
+counts <- counts[expressed_universe, , drop = FALSE]
+
+metadata <- read_metadata(metadata_file) |>
+  dplyr::filter(label %in% colnames(counts)) |>
+  dplyr::arrange(match(label, colnames(counts))) |>
+  dplyr::mutate(
+    group = factor(
+      paste0("diet", Diet, "_", tolower(as.character(Treatment))),
+      levels = c(
+        "diet33_control", "diet50_control", "diet83_control",
+        "diet33_infected", "diet50_infected", "diet83_infected"
+      )
+    )
+  )
+if (!setequal(metadata$label, colnames(counts))) {
+  stop("Metadata and fresh competitive counts have different sample IDs.")
+}
+counts <- counts[, metadata$label, drop = FALSE]
+
+dds <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts,
+  colData = data.frame(
+    group = metadata$group,
+    row.names = metadata$label
+  ),
+  design = ~ 0 + group
+)
+dds <- DESeq2::DESeq(
+  dds,
+  minReplicatesForReplace = Inf,
+  quiet = TRUE
+)
+vst_matrix <- SummarizedExperiment::assay(DESeq2::vst(dds, blind = TRUE))
+
+primary_results <- readr::read_csv(primary_result_file, show_col_types = FALSE) |>
+  dplyr::filter(
+    mapping_branch == "Competitive host",
+    analysis_scope == "Placed/host-assigned",
+    significant,
+    gene_id %in% main_chromosome_ids,
+    gene_id %in% rownames(vst_matrix)
+  )
+if (nrow(primary_results) == 0) {
+  stop("No significant main-chromosome DEGs were found in the primary results.")
+}
+
+context_membership <- primary_results |>
+  dplyr::mutate(
+    context_family = dplyr::case_when(
+      contrast_family == "Diet among controls" ~ "Diet in controls",
+      contrast_family == "Diet among infected" ~ "Diet in infected",
+      contrast_family %in% c(
+        "Infection within diet",
+        "Average infection response",
+        "Diet by infection interaction"
+      ) ~ "Infection within diet",
+      TRUE ~ "Other fat body DEG"
+    )
+  ) |>
+  dplyr::distinct(gene_id, context_family)
+
+gene_context <- context_membership |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    n_context_families = dplyr::n_distinct(context_family),
+    single_context = dplyr::first(context_family),
+    DEG_context = dplyr::case_when(
+      n_context_families > 1 ~ "Infection + diet",
+      TRUE ~ single_context
+    ),
+    .groups = "drop"
+  )
+
+full_heatmap_genes <- primary_results |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    n_deg_contrasts = dplyr::n_distinct(contrast_id),
+    comparisons = paste(sort(unique(contrast_id)), collapse = "; "),
+    directions = paste(sort(unique(higher_in)), collapse = "; "),
+    max_abs_log2FC = max(abs(log2FoldChange), na.rm = TRUE),
+    min_padj = min(padj, na.rm = TRUE),
+    phase_class = "Not evaluated in this chromosome-only figure",
+    .groups = "drop"
+  ) |>
+  dplyr::left_join(gene_context, by = "gene_id") |>
+  dplyr::left_join(
+    gff_annotation |> dplyr::select(gene_id, Description),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no GFF description")
+  )
+
+full_heatmap_z_input <- vst_matrix[full_heatmap_genes$gene_id, , drop = FALSE]
+full_heatmap_z_input <- t(scale(t(full_heatmap_z_input)))
+keep_finite <- apply(full_heatmap_z_input, 1, function(x) all(is.finite(x)))
+full_heatmap_z_input <- full_heatmap_z_input[keep_finite, , drop = FALSE]
+full_heatmap_genes <- full_heatmap_genes |>
+  dplyr::filter(gene_id %in% rownames(full_heatmap_z_input))
+
+sample_max_index <- max.col(abs(full_heatmap_z_input), ties.method = "first")
+sample_diagnostics <- tibble::tibble(
+  gene_id = rownames(full_heatmap_z_input),
+  max_abs_sample_z = apply(abs(full_heatmap_z_input), 1, max),
+  sample_with_max_abs_z = colnames(full_heatmap_z_input)[sample_max_index],
+  sample_deviation_direction = dplyr::if_else(
+    full_heatmap_z_input[cbind(seq_len(nrow(full_heatmap_z_input)), sample_max_index)] > 0,
+    "Higher than gene mean",
+    "Lower than gene mean"
+  )
+)
+full_heatmap_genes <- full_heatmap_genes |>
+  dplyr::left_join(sample_diagnostics, by = "gene_id")
+
+row_distance <- stats::dist(full_heatmap_z_input)
+row_tree <- stats::hclust(row_distance, method = "complete")
+ordered_genes <- rownames(full_heatmap_z_input)[row_tree$order]
+raw_cluster <- stats::cutree(row_tree, k = 4)[ordered_genes]
+cluster_runs <- rle(raw_cluster)
+row_cluster_spans <- data.frame(
+  cluster_id = cluster_runs$values,
+  start = cumsum(c(1L, head(cluster_runs$lengths, -1L))),
+  end = cumsum(cluster_runs$lengths),
+  n = cluster_runs$lengths
+)
+if (nrow(row_cluster_spans) != 4) {
+  stop("The four-cluster tree did not produce four contiguous heatmap branches.")
+}
+
+full_heatmap_genes <- full_heatmap_genes |>
+  dplyr::mutate(heatmap_row_order = match(gene_id, ordered_genes)) |>
+  dplyr::arrange(heatmap_row_order)
+full_heatmap_z_input <- full_heatmap_z_input[ordered_genes, , drop = FALSE]
+
+full_heatmap_gene_file <- file.path(
+  out_dir,
+  "full_main_chromosome_deg_diagnostic_heatmap_gene_order.csv"
+)
+full_heatmap_z_file <- file.path(
+  out_dir,
+  "full_main_chromosome_deg_diagnostic_z_vst_matrix.csv.gz"
+)
+row_cluster_span_file <- file.path(out_dir, "row_cluster_spans_k4.csv")
+write.csv(full_heatmap_genes, full_heatmap_gene_file, row.names = FALSE)
+write.csv(full_heatmap_z_input, gzfile(full_heatmap_z_file))
+write.csv(row_cluster_spans, row_cluster_span_file, row.names = FALSE)
+
+cluster_genes <- ordered_genes[raw_cluster == cluster_runs$values[[1]]]
+circled_cluster <- full_heatmap_genes |>
+  dplyr::filter(gene_id %in% cluster_genes)
+full_deg_universe <- unique(full_heatmap_genes$gene_id)
+
+set_summary <- data.frame(
+  set = c("First main-chromosome expression branch",
+          "All expressed main-chromosome genes",
+          "Union of all significant main-chromosome fat body DEGs"),
+  n_genes = c(length(cluster_genes), length(expressed_universe),
+              length(full_deg_universe))
+)
+
+write.csv(set_summary, file.path(out_dir, "circled_cluster_set_summary.csv"),
+          row.names = FALSE)
+knitr::kable(set_summary, caption = "Gene sets used for enrichment")
+```
+
+## Enrichment tests
+
+```{r run-enrichment}
+maps <- load_term_maps()
+
+maps$term2gene_go <- maps$term2gene_go |>
+  dplyr::filter(gene %in% expressed_universe)
+maps$term2gene_kegg <- maps$term2gene_kegg |>
+  dplyr::filter(gene %in% expressed_universe)
+
+backgrounds <- list(
+  "Expressed rRNA-filtered genes" = expressed_universe,
+  "All fat body DEGs in heatmap" = intersect(full_deg_universe, expressed_universe)
+)
+
+go_enrichment <- dplyr::bind_rows(lapply(names(backgrounds), function(bg) {
+  run_enrichment(
+    genes = cluster_genes,
+    universe = backgrounds[[bg]],
+    term2gene = maps$term2gene_go,
+    term2name = maps$term2name_go,
+    database = "GO",
+    background_label = bg
+  )
+}))
+
+kegg_enrichment <- dplyr::bind_rows(lapply(names(backgrounds), function(bg) {
+  run_enrichment(
+    genes = cluster_genes,
+    universe = backgrounds[[bg]],
+    term2gene = maps$term2gene_kegg,
+    term2name = maps$term2name_kegg,
+    database = "KEGG_pathway",
+    background_label = bg
+  )
+}))
+
+if (nrow(go_enrichment) > 0) {
+  go_enrichment <- go_enrichment |>
+    dplyr::left_join(
+      maps$term2name_go |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(
+          ID = term,
+          ontology = dplyr::recode(
+            ontology,
+            BP = "Biological process",
+            CC = "Cellular component",
+            MF = "Molecular function",
+            .default = NA_character_
+          )
+        ),
+      by = "ID"
+    ) |>
+    dplyr::filter(!is.na(ontology))
+}
+
+if (nrow(kegg_enrichment) > 0) {
+  kegg_enrichment <- kegg_enrichment |>
+    dplyr::left_join(
+      maps$term2name_kegg |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(ID = term, pathway_theme, pathway_scope),
+      by = "ID"
+    ) |>
+    dplyr::mutate(
+      pathway_theme = dplyr::coalesce(pathway_theme, "Other KEGG pathway"),
+      pathway_scope = dplyr::coalesce(pathway_scope,
+                                      "Unclassified KEGG reference label")
+    )
+}
+
+all_enrichment <- dplyr::bind_rows(go_enrichment, kegg_enrichment)
+significant_enrichment <- all_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(database, background, p.adjust)
+
+write.csv(go_enrichment,
+          file.path(out_dir, "circled_cluster_GO_enrichment_all_terms.csv"),
+          row.names = FALSE)
+write.csv(kegg_enrichment,
+          file.path(out_dir, "circled_cluster_KEGG_enrichment_all_terms.csv"),
+          row.names = FALSE)
+write.csv(all_enrichment,
+          file.path(out_dir, "circled_cluster_enrichment_all_terms.csv"),
+          row.names = FALSE)
+write.csv(significant_enrichment,
+          file.path(out_dir, "circled_cluster_enrichment_significant_terms.csv"),
+          row.names = FALSE)
+
+enrichment_count_summary <- significant_enrichment |>
+  dplyr::count(database, background, name = "n_significant_terms") |>
+  tidyr::complete(database = c("GO", "KEGG_pathway"),
+                  background = names(backgrounds),
+                  fill = list(n_significant_terms = 0)) |>
+  dplyr::arrange(database, background)
+
+write.csv(enrichment_count_summary,
+          file.path(out_dir, "circled_cluster_enrichment_count_summary.csv"),
+          row.names = FALSE)
+knitr::kable(enrichment_count_summary,
+             caption = "Significant enriched terms in the circled cluster")
+```
+
+## Expression-cluster landscape
+
+The full diagnostic heatmap is first divided into four row branches from the
+current gene-level dendrogram. The three-block display below keeps the earlier
+publication layout by provisionally combining branches 3 and 4; it should be
+treated as a visual review, not as the final clustering decision. The later
+[full heatmap and gene-level cladogram](#Cluster_cladogram) preserve the original
+tree continuously and provide the appropriate view for selecting new
+boundaries. The lollipop panels summarize significant GO terms using all fat
+body DEGs in the heatmap as the enrichment background.
+
+```{r expression-cluster-landscape, fig.width=24, fig.height=26}
+full_heatmap_z <- read.csv(gzfile(full_heatmap_z_file), check.names = FALSE,
+                           row.names = 1)
+full_heatmap_z <- as.matrix(full_heatmap_z)
+storage.mode(full_heatmap_z) <- "numeric"
+
+raw_sample_order <- colnames(full_heatmap_z)
+sample_metadata <- read_metadata(metadata_file) |>
+  dplyr::filter(label %in% raw_sample_order) |>
+  dplyr::mutate(
+    original_sample_index = match(label, raw_sample_order),
+    Treatment_plot = factor(as.character(Treatment),
+                            levels = c("Control", "Infected")),
+    Diet_plot = factor(as.character(Diet), levels = c("33", "50", "83"))
+  ) |>
+  dplyr::arrange(Treatment_plot, Diet_plot, original_sample_index)
+sample_metadata <- sample_metadata |>
+  dplyr::mutate(
+    sample_index = dplyr::row_number(),
+    sample_group = factor(
+      paste(Treatment_plot, Diet_plot),
+      levels = c("Control 33", "Control 50", "Control 83",
+                 "Infected 33", "Infected 50", "Infected 83")
+    ),
+    outlier_status = dplyr::if_else(
+      label %in% current_outliers,
+      "Discussed outlier",
+      "Other sample"
+    )
+  )
+sample_order <- sample_metadata$label
+
+row_cluster_spans <- read.csv(row_cluster_span_file, check.names = FALSE) |>
+  dplyr::arrange(start) |>
+  dplyr::mutate(
+    original_expression_cluster_order = dplyr::row_number(),
+    original_expression_cluster = paste0(
+      "Original branch ", original_expression_cluster_order,
+      "\n(n = ", n, " genes)"
+    ),
+    expression_cluster_order = dplyr::case_when(
+      original_expression_cluster_order %in% c(1, 2) ~ original_expression_cluster_order,
+      original_expression_cluster_order %in% c(3, 4) ~ 3L
+    )
+  )
+
+merged_cluster_spans <- row_cluster_spans |>
+  dplyr::group_by(expression_cluster_order) |>
+  dplyr::summarise(
+    start = min(start),
+    end = max(end),
+    n = sum(n),
+    original_branches = paste(original_expression_cluster_order, collapse = "+"),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    expression_cluster = dplyr::case_when(
+      expression_cluster_order == 1 ~ "DEG cluster 1",
+      expression_cluster_order == 2 ~ "DEG cluster 2",
+      expression_cluster_order == 3 ~ "DEG cluster 3+4"
+    )
+  )
+cluster_levels <- merged_cluster_spans$expression_cluster
+expression_cluster_colors <- stats::setNames(
+  c("#315C8A", "#C85A54", "#2F8F5B"),
+  cluster_levels
+)
+cluster_index <- findInterval(
+  full_heatmap_genes$heatmap_row_order,
+  row_cluster_spans$start
+)
+cluster_index <- pmin(pmax(cluster_index, 1), nrow(row_cluster_spans))
+merged_cluster_index <- row_cluster_spans$expression_cluster_order[cluster_index]
+merged_cluster_match <- match(
+  merged_cluster_index,
+  merged_cluster_spans$expression_cluster_order
+)
+
+deg_context_levels <- c(
+  "Diet in controls",
+  "Diet in infected",
+  "Infection within diet",
+  "Infection + diet",
+  "Diet in controls + infected",
+  "Other fat body DEG"
+)
+deg_context_labels <- c(
+  "Diet in controls" = "Diet DEG in controls",
+  "Diet in infected" = "Diet DEG in infected",
+  "Infection within diet" = "Infected vs control within diet",
+  "Infection + diet" = "Infection + diet DEG",
+  "Diet in controls + infected" = "Diet DEG in controls + infected",
+  "Other fat body DEG" = "Other fat body DEG"
+)
+deg_context_colors <- c(
+  "Diet in controls" = "#DDE3EA",
+  "Diet in infected" = "#AEBBC8",
+  "Infection within diet" = "#7D8FA3",
+  "Infection + diet" = "#4D6278",
+  "Diet in controls + infected" = "#2F4052",
+  "Other fat body DEG" = "#F2F4F6"
+)
+deg_context_plot_levels <- c(
+  "~ diet (controls)",
+  "~ diet (infected)",
+  "~ diet + infection",
+  "shared DEGs",
+  "Other fat body DEG"
+)
+deg_context_plot_colors <- c(
+  "~ diet (controls)" = "#DDE3EA",
+  "~ diet (infected)" = "#AEBBC8",
+  "~ diet + infection" = "#65788C",
+  "shared DEGs" = "#263544",
+  "Other fat body DEG" = "#F2F4F6"
+)
+
+expression_cluster_assignments <- full_heatmap_genes |>
+  dplyr::mutate(
+    expression_cluster_order = merged_cluster_index,
+    expression_cluster = factor(merged_cluster_spans$expression_cluster[merged_cluster_match],
+                                levels = cluster_levels),
+    original_expression_cluster_order =
+      row_cluster_spans$original_expression_cluster_order[cluster_index],
+    original_expression_cluster =
+      row_cluster_spans$original_expression_cluster[cluster_index],
+    original_pheatmap_cluster_id = row_cluster_spans$cluster_id[cluster_index],
+    within_cluster_order = heatmap_row_order -
+      merged_cluster_spans$start[merged_cluster_match] + 1,
+    original_within_cluster_order = heatmap_row_order -
+      row_cluster_spans$start[cluster_index] + 1,
+    DEG_context = dplyr::coalesce(DEG_context, "Other fat body DEG"),
+    DEG_context = dplyr::if_else(
+      DEG_context %in% deg_context_levels,
+      DEG_context,
+      "Other fat body DEG"
+    ),
+    DEG_context = factor(DEG_context, levels = deg_context_levels)
+  ) |>
+  dplyr::arrange(
+    expression_cluster_order,
+    DEG_context,
+    min_padj,
+    dplyr::desc(max_abs_log2FC),
+    original_within_cluster_order
+  ) |>
+  dplyr::group_by(expression_cluster) |>
+  dplyr::mutate(within_cluster_order = dplyr::row_number()) |>
+  dplyr::ungroup() |>
+  dplyr::select(heatmap_row_order, gene_id, expression_cluster_order,
+                expression_cluster, original_expression_cluster_order,
+                original_expression_cluster, original_pheatmap_cluster_id,
+                within_cluster_order, original_within_cluster_order,
+                Description, DEG_context, phase_class,
+                n_deg_contrasts, comparisons, directions, max_abs_log2FC,
+                min_padj, max_abs_sample_z, sample_with_max_abs_z,
+                sample_deviation_direction)
+
+write.csv(
+  expression_cluster_assignments,
+  file.path(out_dir, "full_heatmap_expression_cluster_assignments.csv"),
+  row.names = FALSE
+)
+
+cluster_go_enrichment <- dplyr::bind_rows(lapply(cluster_levels, function(cl) {
+  genes <- expression_cluster_assignments$gene_id[
+    expression_cluster_assignments$expression_cluster == cl
+  ]
+  run_enrichment(
+    genes = genes,
+    universe = backgrounds[["All fat body DEGs in heatmap"]],
+    term2gene = maps$term2gene_go,
+    term2name = maps$term2name_go,
+    database = "GO",
+    background_label = "All fat body DEGs in heatmap"
+  ) |>
+    dplyr::mutate(
+      expression_cluster = cl,
+      n_cluster_genes = length(genes)
+    )
+}))
+
+if (nrow(cluster_go_enrichment) > 0) {
+  cluster_go_enrichment <- cluster_go_enrichment |>
+    dplyr::left_join(
+      maps$term2name_go |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(
+          ID = term,
+          ontology = dplyr::recode(
+            ontology,
+            BP = "Biological process",
+            CC = "Cellular component",
+            MF = "Molecular function",
+            .default = NA_character_
+          )
+        ),
+      by = "ID"
+    ) |>
+    dplyr::filter(!is.na(ontology)) |>
+    dplyr::mutate(
+      expression_cluster = factor(expression_cluster, levels = cluster_levels),
+      ontology = factor(ontology, levels = names(go_ontology_colors))
+    )
+}
+
+cluster_go_significant <- cluster_go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(expression_cluster, ontology, p.adjust)
+
+cluster_go_summary <- cluster_go_significant |>
+  dplyr::count(expression_cluster, ontology, name = "n_significant_terms") |>
+  tidyr::complete(expression_cluster = factor(cluster_levels,
+                                             levels = cluster_levels),
+                  ontology = factor(names(go_ontology_colors),
+                                    levels = names(go_ontology_colors)),
+                  fill = list(n_significant_terms = 0)) |>
+  dplyr::arrange(expression_cluster, ontology)
+
+write.csv(cluster_go_enrichment,
+          file.path(out_dir,
+                    "expression_cluster_GO_enrichment_all_terms.csv"),
+          row.names = FALSE)
+write.csv(cluster_go_significant,
+          file.path(out_dir,
+                    "expression_cluster_GO_enrichment_significant_terms.csv"),
+          row.names = FALSE)
+write.csv(cluster_go_summary,
+          file.path(out_dir,
+                    "expression_cluster_GO_enrichment_count_summary.csv"),
+          row.names = FALSE)
+
+cluster_gene_annotation <- expression_cluster_assignments |>
+  dplyr::select(gene_id, DEG_context, phase_class, n_deg_contrasts,
+                comparisons, directions, max_abs_log2FC, min_padj) |>
+  dplyr::left_join(
+    gff_annotation |> dplyr::select(gene_id, Description, gene_biotype),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no GFF description"),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+  )
+
+cluster_term_gene_long <- cluster_go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::select(expression_cluster, database, background, ID, Description,
+                GeneRatio, BgRatio, pvalue, p.adjust, qvalue, Count, geneID) |>
+  tidyr::separate_rows(geneID, sep = "/") |>
+  dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+  dplyr::left_join(cluster_gene_annotation, by = "gene_id") |>
+  dplyr::arrange(expression_cluster, p.adjust, term_id, gene_id)
+
+cluster_term_gene_compact <- cluster_term_gene_long |>
+  dplyr::group_by(expression_cluster, database, background, term_id, term_name,
+                  GeneRatio, BgRatio, p.adjust, Count) |>
+  dplyr::summarise(
+    DEG_gene_IDs = paste(sort(unique(gene_id)), collapse = "; "),
+    DEG_gene_descriptions = paste(sort(unique(Description)), collapse = "; "),
+    DEG_contexts = paste(sort(unique(DEG_context)), collapse = "; "),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(expression_cluster, p.adjust)
+
+write.csv(cluster_term_gene_long,
+          file.path(out_dir,
+                    "expression_cluster_GO_term_gene_index_long.csv"),
+          row.names = FALSE)
+write.csv(cluster_term_gene_compact,
+          file.path(out_dir,
+                    "expression_cluster_GO_term_gene_index_compact.csv"),
+          row.names = FALSE)
+
+sample_group_ranges <- sample_metadata |>
+  dplyr::group_by(Treatment_plot, Diet_plot, sample_group) |>
+  dplyr::summarise(start = min(sample_index), end = max(sample_index),
+                   .groups = "drop") |>
+  dplyr::arrange(Treatment_plot, Diet_plot)
+sample_gaps <- sample_group_ranges$end[-nrow(sample_group_ranges)] + 0.5
+treatment_gaps <- sample_group_ranges$end[
+  which(as.character(sample_group_ranges$Treatment_plot[-nrow(sample_group_ranges)]) !=
+          as.character(sample_group_ranges$Treatment_plot[-1]))
+] + 0.5
+diet_gaps <- setdiff(sample_gaps, treatment_gaps)
+
+annotation_fill_colors <- c(
+  "Treatment: Infected" = "#8B0000",
+  "Treatment: Control" = "#FAEBD7",
+  "Diet: 33" = "#E6862E",
+  "Diet: 50" = "#2F8F5B",
+  "Diet: 83" = "#7B4FA3"
+)
+
+sample_x_limits <- c(-1.25, length(sample_order) + 0.5)
+
+sample_annotation_long <- sample_metadata |>
+  dplyr::transmute(
+    sample_index,
+    Treatment = as.character(Treatment),
+    Diet = as.character(Diet)
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Treatment, Diet),
+    names_to = "track",
+    values_to = "value"
+  ) |>
+  dplyr::mutate(
+    track = factor(track, levels = c("Diet", "Treatment")),
+    track_y = as.numeric(track),
+    fill_key = paste(track, value, sep = ": ")
+  )
+
+sample_annotation_plot <- ggplot2::ggplot(
+  sample_annotation_long,
+  ggplot2::aes(x = sample_index, y = track_y, fill = fill_key)
+) +
+  ggplot2::geom_tile(width = 0.95, height = 0.9) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black",
+                      linewidth = 0.35) +
+  ggplot2::geom_vline(xintercept = treatment_gaps, color = "black",
+                      linewidth = 0.8) +
+  ggplot2::scale_fill_manual(values = annotation_fill_colors, drop = FALSE) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0),
+    position = "top"
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = seq_len(2),
+    labels = c("Diet", "Treatment"),
+    limits = c(0.45, 2.55),
+    expand = c(0, 0),
+    sec.axis = ggplot2::dup_axis(
+      breaks = seq_len(2),
+      labels = c("Diet", "Treatment")
+    )
+  ) +
+  ggplot2::labs(
+    x = NULL,
+    y = NULL,
+    title = "A. Full fat body DEG expression landscape split by row clusters",
+    fill = "Sample annotation"
+  ) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks.x = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 11),
+    axis.text.y.right = ggplot2::element_text(face = "bold", size = 11),
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(face = "bold"),
+    plot.title = ggplot2::element_text(face = "bold", size = 15),
+    plot.margin = ggplot2::margin(3, 4, 0, 4)
+  )
+
+heatmap_z_plot <- full_heatmap_z[
+  expression_cluster_assignments$gene_id,
+  sample_order,
+  drop = FALSE
+]
+heatmap_z_plot <- pmax(pmin(heatmap_z_plot, 3), -3)
+heatmap_df <- as.data.frame(heatmap_z_plot, check.names = FALSE) |>
+  tibble::rownames_to_column("gene_id") |>
+  dplyr::left_join(
+    expression_cluster_assignments |>
+      dplyr::select(gene_id, expression_cluster, within_cluster_order,
+                    DEG_context),
+    by = "gene_id"
+  ) |>
+  tidyr::pivot_longer(
+    cols = dplyr::all_of(sample_order),
+    names_to = "sample_id",
+    values_to = "z"
+  ) |>
+  dplyr::mutate(sample_index = match(sample_id, sample_order))
+
+heatmap_colors <- grDevices::colorRampPalette(
+  c("#237C8E", "#F7F3E8", "#C85A54")
+)(101)
+
+gene_context_strip_df <- expression_cluster_assignments |>
+  dplyr::select(gene_id, expression_cluster, within_cluster_order,
+                DEG_context) |>
+  dplyr::mutate(
+    DEG_context_plot = dplyr::case_when(
+      DEG_context == "Diet in controls" ~
+        "~ diet (controls)",
+      DEG_context == "Diet in infected" ~
+        "~ diet (infected)",
+      DEG_context == "Infection within diet" ~
+        "~ diet + infection",
+      DEG_context %in% c("Infection + diet",
+                         "Diet in controls + infected") ~
+        "shared DEGs",
+      TRUE ~ "Other fat body DEG"
+    ),
+    DEG_context_plot = factor(DEG_context_plot,
+                              levels = deg_context_plot_levels)
+  )
+present_deg_context_levels <- deg_context_plot_levels[
+  deg_context_plot_levels %in%
+    as.character(gene_context_strip_df$DEG_context_plot)
+]
+present_deg_context_labels <- stringr::str_wrap(
+  present_deg_context_levels,
+  width = 26
+)
+
+cluster_heatmap_plot <- ggplot2::ggplot(
+  heatmap_df,
+  ggplot2::aes(x = sample_index, y = within_cluster_order, fill = z)
+) +
+  ggplot2::geom_segment(
+    data = gene_context_strip_df,
+    ggplot2::aes(
+      x = -1.1,
+      xend = 0.35,
+      y = within_cluster_order,
+      yend = within_cluster_order,
+      color = DEG_context_plot
+    ),
+    inherit.aes = FALSE,
+    linewidth = 1.05,
+    lineend = "butt"
+  ) +
+  ggplot2::geom_raster() +
+  ggplot2::geom_vline(xintercept = 0.5, color = "#9CA3AF",
+                      linewidth = 0.4) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black",
+                      linewidth = 0.25) +
+  ggplot2::geom_vline(xintercept = treatment_gaps, color = "black",
+                      linewidth = 0.65) +
+  ggplot2::facet_grid(expression_cluster ~ ., scales = "free_y",
+                      switch = "y") +
+  ggplot2::scale_fill_gradientn(
+    colors = heatmap_colors,
+    limits = c(-3, 3),
+    oob = scales::squish,
+    name = "Row z-score"
+  ) +
+  ggplot2::scale_color_manual(
+    values = deg_context_plot_colors,
+    breaks = present_deg_context_levels,
+    labels = present_deg_context_labels,
+    drop = TRUE,
+    name = "DEG context"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_reverse(expand = c(0, 0)) +
+  ggplot2::labs(
+    x = NULL,
+    y = NULL,
+    title = NULL,
+    subtitle = NULL
+  ) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,
+                                        vjust = 0.5, size = 13),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    strip.placement = "outside",
+    strip.background.y = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#9CA3AF"),
+    strip.text.y.left = ggplot2::element_text(angle = 90, face = "bold",
+                                              size = 13),
+    panel.spacing.y = grid::unit(0.25, "lines"),
+    legend.position = "right",
+    legend.box = "vertical",
+    legend.title = ggplot2::element_text(face = "bold"),
+    legend.text = ggplot2::element_text(size = 9),
+    plot.title = ggplot2::element_text(face = "bold"),
+    plot.margin = ggplot2::margin(0, 4, 3, 4)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_colorbar(
+      order = 1,
+      title.position = "top",
+      barheight = grid::unit(3.0, "cm"),
+      barwidth = grid::unit(0.35, "cm")
+    ),
+    color = ggplot2::guide_legend(
+      order = 2,
+      title.position = "top",
+      override.aes = list(linewidth = 3)
+    )
+  )
+
+ggplot2::ggsave(
+  file.path(out_dir, "expression_cluster_gene_level_heatmap.png"),
+  cluster_heatmap_plot,
+  width = 20,
+  height = 12,
+  dpi = 260
+)
+
+prepare_lollipop_df <- function(tab, ontologies, n_terms,
+                                terms_per_ontology = FALSE) {
+  group_vars <- if (terms_per_ontology) {
+    c("expression_cluster", "ontology")
+  } else {
+    "expression_cluster"
+  }
+
+  tab |>
+    dplyr::filter(p.adjust <= params$alpha, ontology %in% ontologies) |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
+    dplyr::slice_min(p.adjust, n = n_terms, with_ties = FALSE) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(expression_cluster, ontology, p.adjust) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::mutate(
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      term_label = stringr::str_wrap(Description, 46),
+      term_plot_id = paste(term_label, dplyr::row_number(),
+                           expression_cluster, sep = "___")
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      term_plot_id = factor(term_plot_id, levels = rev(unique(term_plot_id))),
+      expression_cluster = factor(expression_cluster, levels = cluster_levels)
+    )
+}
+
+clean_term_labels <- function(x) {
+  labels <- sub("___.*$", "", x)
+  dplyr::if_else(labels == "No significant GO terms", "", labels)
+}
+
+make_lollipop_plot <- function(plot_df, title, subtitle = NULL) {
+  if (nrow(plot_df) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate("text", x = 0, y = 0,
+                          label = "No significant GO terms",
+                          size = 6, fontface = "bold") +
+        ggplot2::theme_void() +
+        ggplot2::labs(title = title, subtitle = subtitle)
+      )
+  }
+
+  x_axis_max <- max(
+    c(plot_df$neg_log10_padj, -log10(params$alpha)),
+    na.rm = TRUE
+  )
+  x_axis_limit <- x_axis_max + max(0.8, x_axis_max * 0.18)
+  label_space <- x_axis_max * 2.4
+  x_breaks <- pretty(c(0, x_axis_limit), n = 5)
+  x_breaks <- x_breaks[x_breaks >= 0 & x_breaks <= x_axis_limit]
+  missing_label_x <- max(
+    c(plot_df$neg_log10_padj, -log10(params$alpha)),
+    na.rm = TRUE
+  ) / 2
+  missing_cluster_df <- tibble::tibble(
+    expression_cluster = factor(
+      setdiff(cluster_levels, as.character(unique(plot_df$expression_cluster))),
+      levels = cluster_levels
+    ),
+    term_plot_id = "No significant GO terms",
+    x = missing_label_x,
+    label = "No significant GO terms"
+  ) |>
+    dplyr::filter(!is.na(expression_cluster))
+
+  ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_plot_id)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_vline(
+      xintercept = 0,
+      color = "#9CA3AF",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_text(
+      data = plot_df,
+      ggplot2::aes(
+        x = -label_space * 0.98,
+        y = term_plot_id,
+        label = clean_term_labels(term_plot_id)
+      ),
+      inherit.aes = FALSE,
+      hjust = 0,
+      size = 5.2,
+      lineheight = 0.84,
+      color = "#111827"
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = neg_log10_padj,
+                   y = term_plot_id, yend = term_plot_id,
+                   color = ontology),
+      linewidth = 0.7,
+      alpha = 0.75
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count, color = ontology),
+      alpha = 0.95
+    ) +
+    ggplot2::geom_text(
+      data = missing_cluster_df,
+      ggplot2::aes(x = x, y = term_plot_id, label = label),
+      inherit.aes = FALSE,
+      size = 4,
+      color = "#6B7280",
+      fontface = "bold"
+    ) +
+    ggplot2::facet_wrap(~ expression_cluster, nrow = 1,
+                        scales = "free_y", drop = FALSE) +
+    ggplot2::scale_color_manual(values = go_ontology_colors, drop = FALSE) +
+    ggplot2::scale_y_discrete(labels = function(x) rep("", length(x))) +
+    ggplot2::scale_x_continuous(
+      limits = c(-label_space, x_axis_limit),
+      breaks = x_breaks,
+      expand = c(0, 0)
+    ) +
+    ggplot2::scale_size_continuous(range = c(3.5, 9)) +
+    ggplot2::labs(
+      title = title,
+      subtitle = subtitle,
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      color = "GO ontology",
+      size = "Cluster genes in term"
+    ) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.line = ggplot2::element_blank(),
+      axis.line.x.bottom = ggplot2::element_line(color = "black",
+                                                 linewidth = 0.35),
+      panel.border = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#9CA3AF"),
+      strip.text = ggplot2::element_text(face = "bold", size = 12),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+}
+
+go_lollipop_df <- prepare_lollipop_df(
+  cluster_go_significant,
+  ontologies = names(go_ontology_colors),
+  n_terms = 4,
+  terms_per_ontology = TRUE
+)
+
+go_lollipop_plot <- make_lollipop_plot(
+  go_lollipop_df,
+  title = "B. GO terms by expression cluster",
+  subtitle = "Foreground = genes in each expression cluster; background = all fat body DEGs in the heatmap"
+)
+
+gene_level_GO_figure <- sample_annotation_plot /
+  cluster_heatmap_plot /
+  go_lollipop_plot +
+  patchwork::plot_layout(heights = c(0.95, 6.8, 5.6)) +
+  patchwork::plot_annotation(
+    title = "Full gene-level expression and GO enrichment by DEG cluster",
+    subtitle = "All samples are retained; GO lollipops combine BP, CC, and MF terms in each cluster"
+  )
+
+ggplot2::ggsave(
+  file.path(out_dir, "expression_cluster_gene_level_GO_lollipop.png"),
+  gene_level_GO_figure,
+  width = 21,
+  height = 19,
+  dpi = 220
+)
+
+knitr::kable(
+  cluster_go_summary,
+  caption = "Significant GO terms by expression cluster and ontology"
+)
+```
+
+## Unmerged four-branch review {#unmerged-four-branch-review .tabset}
+
+The four branches below are the direct `k = 4` cut of the current
+main-chromosome gene-expression dendrogram. No branches are merged in this
+section. This is the appropriate table to review before deciding whether the
+publication figure should retain four clusters, merge selected branches, or use
+a different cut of the tree.
+
+Enrichment is recomputed independently for each original branch against all
+fat-body DEGs in the heatmap. A zero therefore means that no term passed the
+adjusted p-value threshold for that branch and background. It does not mean
+that the branch contains no annotated genes.
+
+### Coverage and enrichment
+
+```{r unmerged-k4-coverage-enrichment}
+original_branch_levels <- paste("Branch", seq_len(nrow(row_cluster_spans)))
+
+go_gene_counts <- maps$term2gene_go |>
+  dplyr::distinct(gene) |>
+  dplyr::count(gene, name = "n_GO_annotations")
+kegg_gene_counts <- maps$term2gene_kegg |>
+  dplyr::distinct(gene) |>
+  dplyr::count(gene, name = "n_KEGG_annotations")
+
+unmerged_gene_table <- expression_cluster_assignments |>
+  dplyr::mutate(
+    original_branch = factor(
+      paste("Branch", original_expression_cluster_order),
+      levels = original_branch_levels
+    ),
+    proposed_merged_cluster = as.character(expression_cluster)
+  ) |>
+  dplyr::left_join(
+    gff_annotation |> dplyr::select(gene_id, gene_biotype),
+    by = "gene_id"
+  ) |>
+  dplyr::left_join(go_gene_counts, by = c("gene_id" = "gene")) |>
+  dplyr::left_join(kegg_gene_counts, by = c("gene_id" = "gene")) |>
+  dplyr::mutate(
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown"),
+    n_GO_annotations = dplyr::coalesce(n_GO_annotations, 0L),
+    n_KEGG_annotations = dplyr::coalesce(n_KEGG_annotations, 0L)
+  ) |>
+  dplyr::arrange(original_expression_cluster_order,
+                 original_within_cluster_order) |>
+  dplyr::select(
+    heatmap_row_order, original_branch, original_pheatmap_cluster_id,
+    original_within_cluster_order, proposed_merged_cluster,
+    gene_id, Description, gene_biotype, DEG_context, n_deg_contrasts,
+    comparisons, directions, max_abs_log2FC, min_padj,
+    max_abs_sample_z, sample_with_max_abs_z,
+    sample_deviation_direction, n_GO_annotations, n_KEGG_annotations
+  )
+
+write.csv(
+  unmerged_gene_table,
+  file.path(out_dir, "unmerged_k4_full_gene_assignments.csv"),
+  row.names = FALSE
+)
+
+unmerged_go_enrichment <- dplyr::bind_rows(lapply(
+  original_branch_levels,
+  function(branch) {
+    genes <- unmerged_gene_table$gene_id[
+      as.character(unmerged_gene_table$original_branch) == branch
+    ]
+    run_enrichment(
+      genes = genes,
+      universe = backgrounds[["All fat body DEGs in heatmap"]],
+      term2gene = maps$term2gene_go,
+      term2name = maps$term2name_go,
+      database = "GO",
+      background_label = "All fat body DEGs in heatmap"
+    ) |>
+      dplyr::mutate(original_branch = branch,
+                    n_branch_genes = length(genes))
+  }
+)) |>
+  dplyr::left_join(
+    maps$term2name_go |>
+      dplyr::distinct(term, .keep_all = TRUE) |>
+      dplyr::transmute(
+        ID = term,
+        ontology = dplyr::recode(
+          ontology,
+          BP = "Biological process",
+          CC = "Cellular component",
+          MF = "Molecular function",
+          .default = NA_character_
+        )
+      ),
+    by = "ID"
+  ) |>
+  dplyr::filter(!is.na(ontology))
+
+unmerged_kegg_enrichment <- dplyr::bind_rows(lapply(
+  original_branch_levels,
+  function(branch) {
+    genes <- unmerged_gene_table$gene_id[
+      as.character(unmerged_gene_table$original_branch) == branch
+    ]
+    run_enrichment(
+      genes = genes,
+      universe = backgrounds[["All fat body DEGs in heatmap"]],
+      term2gene = maps$term2gene_kegg,
+      term2name = maps$term2name_kegg,
+      database = "KEGG_pathway",
+      background_label = "All fat body DEGs in heatmap"
+    ) |>
+      dplyr::mutate(original_branch = branch,
+                    n_branch_genes = length(genes))
+  }
+))
+
+unmerged_go_significant <- unmerged_go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(original_branch, ontology, p.adjust)
+unmerged_kegg_significant <- unmerged_kegg_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(original_branch, p.adjust)
+
+write.csv(
+  unmerged_go_enrichment,
+  file.path(out_dir, "unmerged_k4_GO_enrichment_all_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  unmerged_go_significant,
+  file.path(out_dir, "unmerged_k4_GO_enrichment_significant_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  unmerged_kegg_enrichment,
+  file.path(out_dir, "unmerged_k4_KEGG_enrichment_all_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  unmerged_kegg_significant,
+  file.path(out_dir, "unmerged_k4_KEGG_enrichment_significant_terms.csv"),
+  row.names = FALSE
+)
+
+branch_coverage <- unmerged_gene_table |>
+  dplyr::group_by(original_branch) |>
+  dplyr::summarise(
+    n_genes = dplyr::n(),
+    n_with_GFF_description = sum(Description != "no GFF description"),
+    n_with_GO = sum(n_GO_annotations > 0),
+    percent_with_GO = round(100 * n_with_GO / n_genes, 1),
+    n_with_KEGG = sum(n_KEGG_annotations > 0),
+    percent_with_KEGG = round(100 * n_with_KEGG / n_genes, 1),
+    .groups = "drop"
+  )
+
+branch_go_counts <- unmerged_go_significant |>
+  dplyr::mutate(
+    ontology_code = dplyr::recode(
+      ontology,
+      "Biological process" = "BP",
+      "Cellular component" = "CC",
+      "Molecular function" = "MF"
+    )
+  ) |>
+  dplyr::count(original_branch, ontology_code, name = "n_terms") |>
+  tidyr::complete(
+    original_branch = original_branch_levels,
+    ontology_code = c("BP", "CC", "MF"),
+    fill = list(n_terms = 0)
+  ) |>
+  tidyr::pivot_wider(
+    names_from = ontology_code,
+    values_from = n_terms,
+    names_prefix = "significant_GO_"
+  )
+
+branch_kegg_counts <- unmerged_kegg_significant |>
+  dplyr::count(original_branch, name = "significant_KEGG_pathways") |>
+  tidyr::complete(
+    original_branch = original_branch_levels,
+    fill = list(significant_KEGG_pathways = 0)
+  )
+
+unmerged_branch_summary <- branch_coverage |>
+  dplyr::mutate(original_branch = as.character(original_branch)) |>
+  dplyr::left_join(branch_go_counts, by = "original_branch") |>
+  dplyr::left_join(branch_kegg_counts, by = "original_branch") |>
+  dplyr::arrange(match(original_branch, original_branch_levels))
+
+write.csv(
+  unmerged_branch_summary,
+  file.path(out_dir, "unmerged_k4_annotation_enrichment_summary.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  unmerged_branch_summary,
+  caption = paste0(
+    "Annotation coverage and significant enrichment for the four unmerged ",
+    "branches; adjusted p-value <= ", params$alpha
+  )
+)
+```
+
+### Complete gene list
+
+```{r unmerged-k4-complete-gene-list}
+DT::datatable(
+  unmerged_gene_table,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = paste0(
+    "All ", nrow(unmerged_gene_table),
+    " main-chromosome DEGs with their unmerged branch assignments"
+  )
+)
+```
+
+### Significant GO terms
+
+```{r unmerged-k4-go-table}
+if (nrow(unmerged_go_significant) > 0) {
+  DT::datatable(
+    unmerged_go_significant |>
+      dplyr::select(original_branch, ontology, ID, Description,
+                    GeneRatio, BgRatio, pvalue, p.adjust, qvalue,
+                    Count, geneID),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Significant GO terms for each unmerged branch"
+  )
+} else {
+  cat("No GO term passed the adjusted p-value threshold in any branch.")
+}
+```
+
+### Significant KEGG pathways
+
+```{r unmerged-k4-kegg-table}
+if (nrow(unmerged_kegg_significant) > 0) {
+  DT::datatable(
+    unmerged_kegg_significant |>
+      dplyr::select(original_branch, ID, Description, GeneRatio, BgRatio,
+                    pvalue, p.adjust, qvalue, Count, geneID),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Significant KEGG pathways for each unmerged branch"
+  )
+} else {
+  cat("No KEGG pathway passed the adjusted p-value threshold in any branch.")
+}
+```
+
+## Combined GO and KEGG figure
+
+The main figure below keeps the full gene-by-sample heatmap so every DEG in the
+circled branch remains visible, then summarizes GO terms and KEGG pathways for
+the same expression clusters. KEGG terms are eggNOG-linked `ko` reference
+pathways, not insect-only organism pathways. The pathway-scope category is kept
+in the exported KEGG tables, but panel C uses one brown color so the pathway
+labels remain visually simple. The code also exports optional
+per-sample and treatment-average cluster-score summaries as secondary diagnostic
+files.
+
+### DEG context annotation in panel A
+
+The `DEG context` strip on the left of panel A is a contrast-family annotation.
+It tells which type of DESeq2 contrast detected each gene as significant before
+the heatmap was clustered. These labels are useful for reading the heatmap, but
+they should not be interpreted as mutually exclusive biological mechanisms.
+
+`~ diet (controls)` means the gene was significant in diet comparisons among
+control animals only, for example control 33 vs 50, 83 vs 33, or 83 vs 50. This
+is the closest label to a baseline diet effect without infection.
+
+`~ diet (infected)` means the gene was significant in diet comparisons among
+infected animals only. This asks whether infected animals on different diets
+have different expression.
+
+`~ diet + infection` means the gene was significant when infected and
+control animals were compared within at least one diet. This is the most direct
+infection-response label in this heatmap, but the comparison is diet-stratified,
+so the label keeps both diet and infection in view.
+
+`shared DEGs` means the gene was detected in more than one contrast family. This
+combines genes that were diet-associated in both control and infected
+backgrounds, and genes that were detected in both infection and diet contrast
+families. It is an overlap label and does not by itself prove a formal
+diet-by-infection interaction.
+
+`Other fat body DEG` is a fallback category for genes in the full fat-body DEG
+heatmap that do not fall cleanly into the simplified contrast families above. It
+is retained in the code for completeness, but it may not appear in every figure.
+
+```{r expression-cluster-treatment-summary, fig.width=18, fig.height=18}
+cluster_sample_scores <- heatmap_df |>
+  dplyr::group_by(expression_cluster, sample_id) |>
+  dplyr::summarise(cluster_mean_z = mean(z, na.rm = TRUE),
+                   .groups = "drop") |>
+  dplyr::left_join(
+    sample_metadata |>
+      dplyr::select(label, Treatment, Diet, sample_group, outlier_status),
+    by = c("sample_id" = "label")
+  ) |>
+  dplyr::mutate(
+    expression_cluster = factor(expression_cluster, levels = cluster_levels),
+    sample_group = factor(sample_group,
+                          levels = unique(sample_metadata$sample_group)),
+    sample_label = dplyr::if_else(
+      outlier_status == "Discussed outlier",
+      paste0(sample_id, " *"),
+      sample_id
+    ),
+    sample_label = factor(
+      sample_label,
+      levels = rev(dplyr::if_else(
+        sample_metadata$outlier_status == "Discussed outlier",
+        paste0(sample_metadata$label, " *"),
+        sample_metadata$label
+      ))
+    )
+  )
+
+treatment_cluster_summary <- cluster_sample_scores |>
+  dplyr::group_by(expression_cluster, Treatment, Diet, sample_group) |>
+  dplyr::summarise(
+    n_samples = dplyr::n(),
+    mean_z = mean(cluster_mean_z, na.rm = TRUE),
+    sd_z = stats::sd(cluster_mean_z, na.rm = TRUE),
+    se_z = sd_z / sqrt(n_samples),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    sample_group_plot = factor(sample_group,
+                               levels = rev(unique(sample_metadata$sample_group))),
+    tile_label = sprintf("%.2f", mean_z)
+  )
+
+write.csv(cluster_sample_scores,
+          file.path(out_dir,
+                    "expression_cluster_sample_scores.csv"),
+          row.names = FALSE)
+write.csv(treatment_cluster_summary,
+          file.path(out_dir,
+                    "expression_cluster_treatment_summary.csv"),
+          row.names = FALSE)
+
+sample_cluster_heatmap_plot <- ggplot2::ggplot(
+  cluster_sample_scores,
+  ggplot2::aes(x = expression_cluster, y = sample_label, fill = cluster_mean_z)
+) +
+  ggplot2::geom_tile(color = "white", linewidth = 0.8) +
+  ggplot2::facet_grid(sample_group ~ ., scales = "free_y",
+                      space = "free_y", switch = "y") +
+  ggplot2::scale_fill_gradientn(
+    colors = heatmap_colors,
+    limits = c(-2, 2),
+    oob = scales::squish,
+    name = "Sample cluster\nscore"
+  ) +
+  ggplot2::scale_x_discrete(position = "top") +
+  ggplot2::labs(
+    title = "A. Sample-level cluster expression heatmap",
+    subtitle = "Each tile is one sample's mean score for a gene-expression cluster; * marks discussed outliers",
+    x = "Expression cluster",
+    y = "Sample grouped by diet/treatment"
+  ) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 8),
+    axis.title = ggplot2::element_text(face = "bold"),
+    strip.placement = "outside",
+    strip.background.y = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#9CA3AF"),
+    strip.text.y.left = ggplot2::element_text(angle = 0, face = "bold",
+                                              size = 11),
+    panel.spacing.y = grid::unit(0.15, "lines"),
+    legend.position = "right",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+ggplot2::ggsave(
+  file.path(out_dir, "expression_cluster_sample_level_heatmap.png"),
+  sample_cluster_heatmap_plot,
+  width = 10,
+  height = 10,
+  dpi = 300
+)
+
+treatment_cluster_heatmap_plot <- ggplot2::ggplot(
+  treatment_cluster_summary,
+  ggplot2::aes(x = expression_cluster, y = sample_group_plot, fill = mean_z)
+) +
+  ggplot2::geom_tile(color = "white", linewidth = 1.2) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = tile_label),
+    size = 5,
+    fontface = "bold",
+    color = "#111827"
+  ) +
+  ggplot2::scale_fill_gradientn(
+    colors = heatmap_colors,
+    limits = c(-2, 2),
+    oob = scales::squish,
+    name = "Mean row\nz-score"
+  ) +
+  ggplot2::scale_x_discrete(position = "top") +
+  ggplot2::labs(
+    title = "A. Treatment-by-cluster expression summary",
+    subtitle = "Each tile is the mean cluster score across samples in that diet/treatment group",
+    x = "Expression cluster",
+    y = "Diet/treatment group"
+  ) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 12),
+    axis.title = ggplot2::element_text(face = "bold"),
+    legend.position = "right",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+ggplot2::ggsave(
+  file.path(out_dir, "expression_cluster_treatment_average_heatmap.png"),
+  treatment_cluster_heatmap_plot,
+  width = 10,
+  height = 5.5,
+  dpi = 300
+)
+
+cluster_kegg_enrichment <- dplyr::bind_rows(lapply(cluster_levels, function(cl) {
+  genes <- expression_cluster_assignments$gene_id[
+    expression_cluster_assignments$expression_cluster == cl
+  ]
+  run_enrichment(
+    genes = genes,
+    universe = backgrounds[["All fat body DEGs in heatmap"]],
+    term2gene = maps$term2gene_kegg,
+    term2name = maps$term2name_kegg,
+    database = "KEGG_pathway",
+    background_label = "All fat body DEGs in heatmap"
+  ) |>
+    dplyr::mutate(
+      expression_cluster = cl,
+      n_cluster_genes = length(genes)
+    )
+}))
+
+if (nrow(cluster_kegg_enrichment) > 0) {
+  cluster_kegg_enrichment <- cluster_kegg_enrichment |>
+    dplyr::left_join(
+      maps$term2name_kegg |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(ID = term, pathway_theme, pathway_scope),
+      by = "ID"
+    ) |>
+    dplyr::mutate(
+      pathway_theme = dplyr::coalesce(pathway_theme, "Other KEGG pathway"),
+      pathway_scope = dplyr::coalesce(pathway_scope,
+                                      "Unclassified KEGG reference label"),
+      expression_cluster = factor(expression_cluster, levels = cluster_levels),
+      pathway_scope = factor(pathway_scope, levels = names(kegg_scope_colors))
+    )
+}
+
+cluster_kegg_significant <- cluster_kegg_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(expression_cluster, pathway_theme, p.adjust)
+
+cluster_kegg_summary <- cluster_kegg_significant |>
+  dplyr::count(expression_cluster, pathway_theme, pathway_scope,
+               name = "n_significant_pathways") |>
+  dplyr::arrange(expression_cluster, pathway_theme, pathway_scope)
+
+write.csv(cluster_kegg_enrichment,
+          file.path(out_dir,
+                    "expression_cluster_KEGG_enrichment_all_terms.csv"),
+          row.names = FALSE)
+write.csv(cluster_kegg_significant,
+          file.path(out_dir,
+                    "expression_cluster_KEGG_enrichment_significant_terms.csv"),
+          row.names = FALSE)
+write.csv(cluster_kegg_summary,
+          file.path(out_dir,
+                    "expression_cluster_KEGG_enrichment_count_summary.csv"),
+          row.names = FALSE)
+
+cluster_kegg_term_gene_long <- cluster_kegg_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::select(expression_cluster, database, background, pathway_theme,
+                pathway_scope, ID, Description, GeneRatio, BgRatio, pvalue,
+                p.adjust, qvalue, Count, geneID) |>
+  tidyr::separate_rows(geneID, sep = "/") |>
+  dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+  dplyr::left_join(cluster_gene_annotation, by = "gene_id") |>
+  dplyr::arrange(expression_cluster, p.adjust, term_id, gene_id)
+
+cluster_kegg_term_gene_compact <- cluster_kegg_term_gene_long |>
+  dplyr::group_by(expression_cluster, database, background, pathway_theme,
+                  pathway_scope, term_id, term_name, GeneRatio, BgRatio,
+                  p.adjust, Count) |>
+  dplyr::summarise(
+    DEG_gene_IDs = paste(sort(unique(gene_id)), collapse = "; "),
+    DEG_gene_descriptions = paste(sort(unique(Description)), collapse = "; "),
+    DEG_contexts = paste(sort(unique(DEG_context)), collapse = "; "),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(expression_cluster, p.adjust)
+
+write.csv(cluster_kegg_term_gene_long,
+          file.path(out_dir,
+                    "expression_cluster_KEGG_term_gene_index_long.csv"),
+          row.names = FALSE)
+write.csv(cluster_kegg_term_gene_compact,
+          file.path(out_dir,
+                    "expression_cluster_KEGG_term_gene_index_compact.csv"),
+          row.names = FALSE)
+
+prepare_kegg_lollipop_df <- function(tab, n_terms) {
+  tab |>
+    dplyr::filter(p.adjust <= params$alpha) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::slice_min(p.adjust, n = n_terms, with_ties = FALSE) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(expression_cluster, pathway_theme, p.adjust) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::mutate(
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      pathway_label = stringr::str_wrap(Description, 34),
+      pathway_plot_id = paste(pathway_label, dplyr::row_number(),
+                              expression_cluster, sep = "___")
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      pathway_plot_id = factor(pathway_plot_id,
+                               levels = rev(unique(pathway_plot_id))),
+      expression_cluster = factor(expression_cluster, levels = cluster_levels)
+    )
+}
+
+clean_kegg_labels <- function(x) {
+  labels <- sub("___.*$", "", x)
+  dplyr::if_else(labels == "No significant KEGG pathways", "", labels)
+}
+
+make_kegg_lollipop_plot <- function(plot_df, title, subtitle = NULL) {
+  if (nrow(plot_df) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate("text", x = 0, y = 0,
+                          label = "No significant KEGG pathways",
+                          size = 6, fontface = "bold") +
+        ggplot2::theme_void() +
+        ggplot2::labs(title = title, subtitle = subtitle)
+      )
+  }
+
+  x_axis_max <- max(
+    c(plot_df$neg_log10_padj, -log10(params$alpha)),
+    na.rm = TRUE
+  )
+  x_axis_limit <- x_axis_max + max(0.8, x_axis_max * 0.18)
+  label_space <- x_axis_max * 2.4
+  x_breaks <- pretty(c(0, x_axis_limit), n = 5)
+  x_breaks <- x_breaks[x_breaks >= 0 & x_breaks <= x_axis_limit]
+  missing_label_x <- max(
+    c(plot_df$neg_log10_padj, -log10(params$alpha)),
+    na.rm = TRUE
+  ) / 2
+  missing_cluster_df <- tibble::tibble(
+    expression_cluster = factor(
+      setdiff(cluster_levels, as.character(unique(plot_df$expression_cluster))),
+      levels = cluster_levels
+    ),
+    pathway_plot_id = "No significant KEGG pathways",
+    x = missing_label_x,
+    label = "No significant KEGG pathways"
+  ) |>
+    dplyr::filter(!is.na(expression_cluster))
+
+  ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = pathway_plot_id)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_vline(
+      xintercept = 0,
+      color = "#9CA3AF",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_text(
+      data = plot_df,
+      ggplot2::aes(
+        x = -label_space * 0.98,
+        y = pathway_plot_id,
+        label = clean_kegg_labels(pathway_plot_id)
+      ),
+      inherit.aes = FALSE,
+      hjust = 0,
+      size = 5.2,
+      lineheight = 0.84,
+      color = "#111827"
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = neg_log10_padj,
+                   y = pathway_plot_id, yend = pathway_plot_id),
+      color = kegg_lollipop_color,
+      linewidth = 0.8,
+      alpha = 0.78
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count),
+      color = kegg_lollipop_color,
+      alpha = 0.95
+    ) +
+    ggplot2::geom_text(
+      data = missing_cluster_df,
+      ggplot2::aes(x = x, y = pathway_plot_id, label = label),
+      inherit.aes = FALSE,
+      size = 4,
+      color = "#6B7280",
+      fontface = "bold"
+    ) +
+    ggplot2::facet_wrap(~ expression_cluster, nrow = 1,
+                        scales = "free_y", drop = FALSE) +
+    ggplot2::scale_y_discrete(labels = function(x) rep("", length(x))) +
+    ggplot2::scale_x_continuous(
+      limits = c(-label_space, x_axis_limit),
+      breaks = x_breaks,
+      expand = c(0, 0)
+    ) +
+    ggplot2::scale_size_continuous(range = c(4, 10)) +
+    ggplot2::labs(
+      title = title,
+      subtitle = subtitle,
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      size = "Cluster genes in pathway"
+    ) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.line = ggplot2::element_blank(),
+      axis.line.x.bottom = ggplot2::element_line(color = "black",
+                                                 linewidth = 0.35),
+      panel.border = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#9CA3AF"),
+      strip.text = ggplot2::element_text(face = "bold", size = 12),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+}
+
+kegg_lollipop_df <- prepare_kegg_lollipop_df(
+  cluster_kegg_significant,
+  n_terms = 8
+)
+kegg_lollipop_plot <- make_kegg_lollipop_plot(
+  kegg_lollipop_df,
+  title = "C. KEGG pathways by expression cluster",
+  subtitle = "Foreground = genes in each expression cluster; background = all fat body DEGs in the heatmap"
+)
+
+gene_level_KEGG_figure <- sample_annotation_plot /
+  cluster_heatmap_plot /
+  kegg_lollipop_plot +
+  patchwork::plot_layout(heights = c(0.95, 6.8, 3.7)) +
+  patchwork::plot_annotation(
+    title = "Full gene-level expression and KEGG enrichment by expression cluster",
+    subtitle = "Top panel keeps all genes in the circled heatmap branch; lower panel shows KEGG pathways enriched in each cluster"
+  )
+
+ggplot2::ggsave(
+  file.path(out_dir,
+            "expression_cluster_gene_level_KEGG_lollipop.png"),
+  gene_level_KEGG_figure,
+  width = 21,
+  height = 15,
+  dpi = 220
+)
+
+gene_level_GO_KEGG_figure <- sample_annotation_plot /
+  cluster_heatmap_plot /
+  go_lollipop_plot /
+  kegg_lollipop_plot +
+  patchwork::plot_layout(heights = c(0.95, 6.8, 5.6, 3.7)) +
+  patchwork::plot_annotation(
+    title = "Full gene-level expression and functional enrichment by DEG cluster"
+  )
+
+print(gene_level_GO_KEGG_figure)
+ggplot2::ggsave(
+  file.path(out_dir,
+            "legacy_three_block_expression_cluster_gene_level_GO_KEGG_lollipop.png"),
+  gene_level_GO_KEGG_figure,
+  width = 21,
+  height = 22,
+  dpi = 220
+)
+
+knitr::kable(
+  cluster_kegg_summary,
+  caption = "Significant KEGG pathways by expression cluster"
+)
+```
+
+## Composite with reference tissues
+
+This companion composite keeps the same fat-body DEG rows as panel A above, but
+adds VST expression columns for the available reference samples: the two
+time-course FAT phase controls and the copied head/thorax phase-reference
+samples. These reference samples are not used to call the DEGs in this figure;
+they are shown only to ask whether the fat-body DEG clusters also have visible
+expression structure in other tissues or in the independent FAT controls.
+
+```{r expression-cluster-reference-composite, fig.width=24, fig.height=22}
+timecourse_reference_metadata <- file.path(
+  timecourse_fatbody_dir,
+  "gregaria_FAT_phase_reference_metadata.csv"
+)
+
+timecourse_ref_meta <- if (file.exists(timecourse_reference_metadata)) {
+  read.csv(timecourse_reference_metadata, check.names = FALSE) |>
+    dplyr::mutate(
+      count_file = file.path(timecourse_fatbody_dir, "readcounts", file_name),
+      file_present = file.exists(count_file)
+    )
+} else {
+  tibble::tibble()
+}
+
+head_thorax_ref_meta <- parse_head_thorax_reference_metadata(
+  timecourse_head_thorax_dir
+) |>
+  dplyr::mutate(file_present = file.exists(count_file))
+
+fatbody_ref_meta <- if (nrow(timecourse_ref_meta) > 0) {
+  timecourse_ref_meta |>
+    dplyr::mutate(
+      tissue = "Fat body",
+      source = "Time-course fat body phase control",
+      display_group = dplyr::case_when(
+        phase == "Gregarious" ~ "Fat body: gregarious/crowded control",
+        phase == "Solitarious" ~ "Fat body: solitarious/isolated control",
+        TRUE ~ "Fat body: reference control"
+      ),
+      sample_label = dplyr::case_when(
+        phase == "Gregarious" ~ "FAT-G",
+        phase == "Solitarious" ~ "FAT-S",
+        TRUE ~ sample_id
+      ),
+      sample_block = "FAT controls",
+      treatment_or_phase = phase,
+      diet = "Reference"
+    ) |>
+    dplyr::select(
+      sample_id, count_file, tissue, phase, rearing_condition, replicate,
+      source, display_group, reference_role, sample_label, sample_block,
+      treatment_or_phase, diet, file_present
+    )
+} else {
+  tibble::tibble()
+}
+
+head_thorax_ref_meta <- head_thorax_ref_meta |>
+  dplyr::mutate(
+    treatment_or_phase = phase,
+    diet = "Reference"
+  ) |>
+  dplyr::select(
+    sample_id, count_file, tissue, phase, rearing_condition, replicate,
+    source, display_group, reference_role, sample_label, sample_block,
+    treatment_or_phase, diet, file_present
+  )
+
+reference_manifest <- dplyr::bind_rows(
+  fatbody_ref_meta,
+  head_thorax_ref_meta
+)
+
+reference_inputs <- reference_manifest |>
+  dplyr::count(sample_block, tissue, treatment_or_phase, file_present,
+               name = "n_samples")
+knitr::kable(
+  reference_inputs,
+  caption = "Reference samples available for the expanded panel A"
+)
+
+reference_ready <- nrow(reference_manifest) > 0 &&
+  all(reference_manifest$file_present)
+
+if (reference_ready) {
+  # Reuse the audited, expressed main-chromosome matrix built above.
+  experiment_counts <- counts
+  experiment_counts <- experiment_counts[, sample_order, drop = FALSE]
+
+  experiment_reference_meta <- sample_metadata |>
+    dplyr::transmute(
+      sample_id = label,
+      count_file = NA_character_,
+      tissue = "Fat body",
+      phase = "Diet-infection experiment",
+      rearing_condition = "Semi-isolated experiment",
+      replicate = NA_integer_,
+      source = "Diet-infection fat body experiment",
+      display_group = paste(Treatment, Diet, sep = "_"),
+      reference_role = paste("Fat body", Treatment, "diet", Diet),
+      sample_label = label,
+      sample_block = "Experiment fat body",
+      treatment_or_phase = as.character(Treatment),
+      diet = as.character(Diet),
+      file_present = TRUE
+    )
+
+  reference_manifest <- reference_manifest |>
+    dplyr::mutate(
+      sample_block = factor(
+        sample_block,
+        levels = c("FAT controls", "Head reference", "Thorax reference")
+      ),
+      tissue = factor(tissue, levels = c("Fat body", "Head", "Thorax")),
+      treatment_or_phase = factor(
+        treatment_or_phase,
+        levels = c("Control", "Infected", "Gregarious", "Solitarious")
+      )
+    ) |>
+    dplyr::arrange(sample_block, tissue, treatment_or_phase, replicate)
+
+  combined_reference_meta <- dplyr::bind_rows(
+    experiment_reference_meta,
+    reference_manifest
+  )
+
+  reference_count_tables <- Map(
+    read_featurecounts_gene_counts,
+    reference_manifest$count_file,
+    reference_manifest$sample_id
+  )
+  reference_counts_df <- Reduce(
+    function(x, y) dplyr::full_join(x, y, by = "gene_id"),
+    reference_count_tables
+  )
+  reference_counts <- as.matrix(reference_counts_df[, -1, drop = FALSE])
+  rownames(reference_counts) <- reference_counts_df$gene_id
+  reference_counts[is.na(reference_counts)] <- 0L
+  storage.mode(reference_counts) <- "integer"
+
+  shared_reference_genes <- Reduce(
+    intersect,
+    list(rownames(experiment_counts), rownames(reference_counts))
+  )
+
+  combined_counts <- cbind(
+    experiment_counts[shared_reference_genes, , drop = FALSE],
+    reference_counts[
+      shared_reference_genes,
+      reference_manifest$sample_id,
+      drop = FALSE
+    ]
+  )
+
+  combined_reference_meta <- combined_reference_meta[
+    match(colnames(combined_counts), combined_reference_meta$sample_id),
+  ]
+  combined_reference_meta$sample_block <- factor(
+    combined_reference_meta$sample_block,
+    levels = c(
+      "Experiment fat body",
+      "FAT controls",
+      "Head reference",
+      "Thorax reference"
+    )
+  )
+  combined_reference_meta$tissue <- factor(
+    combined_reference_meta$tissue,
+    levels = c("Fat body", "Head", "Thorax")
+  )
+  combined_reference_meta$treatment_or_phase <- factor(
+    combined_reference_meta$treatment_or_phase,
+    levels = c("Control", "Infected", "Gregarious", "Solitarious")
+  )
+  combined_reference_meta$diet <- factor(
+    combined_reference_meta$diet,
+    levels = c("33", "50", "83", "Reference")
+  )
+  rownames(combined_reference_meta) <- combined_reference_meta$sample_id
+
+  keep_reference <- rowSums(combined_counts >= params$min_count) >= params$min_samples
+  dds_reference <- DESeq2::DESeqDataSetFromMatrix(
+    countData = combined_counts[keep_reference, , drop = FALSE],
+    colData = as.data.frame(combined_reference_meta),
+    design = ~ 1
+  )
+  vst_reference <- DESeq2::vst(dds_reference, blind = TRUE)
+  vst_reference_mat <- SummarizedExperiment::assay(vst_reference)
+
+  reference_gene_table <- expression_cluster_assignments |>
+    dplyr::filter(gene_id %in% rownames(vst_reference_mat)) |>
+    dplyr::arrange(expression_cluster_order, within_cluster_order) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::mutate(reference_within_cluster_order = dplyr::row_number()) |>
+    dplyr::ungroup()
+
+  reference_sample_order <- combined_reference_meta$sample_id
+  reference_heatmap_z <- vst_reference_mat[
+    reference_gene_table$gene_id,
+    reference_sample_order,
+    drop = FALSE
+  ]
+  reference_heatmap_z <- t(scale(t(reference_heatmap_z)))
+  reference_heatmap_z[is.na(reference_heatmap_z)] <- 0
+  reference_heatmap_z <- pmax(pmin(reference_heatmap_z, 3), -3)
+
+  reference_sample_metadata <- combined_reference_meta |>
+    tibble::rownames_to_column("sample_id_check") |>
+    dplyr::select(-sample_id_check) |>
+    dplyr::mutate(
+      sample_index = dplyr::row_number(),
+      sample_group_key = paste(sample_block, treatment_or_phase, diet, sep = "|")
+    )
+
+  reference_sample_ranges <- reference_sample_metadata |>
+    dplyr::group_by(sample_group_key, sample_block) |>
+    dplyr::summarise(start = min(sample_index), end = max(sample_index),
+                     .groups = "drop") |>
+    dplyr::arrange(start)
+  reference_group_gaps <- reference_sample_ranges$end[
+    -nrow(reference_sample_ranges)
+  ] + 0.5
+  reference_block_gaps <- reference_sample_ranges$end[
+    which(
+      as.character(reference_sample_ranges$sample_block[-nrow(reference_sample_ranges)]) !=
+        as.character(reference_sample_ranges$sample_block[-1])
+    )
+  ] + 0.5
+  reference_group_gaps <- setdiff(reference_group_gaps, reference_block_gaps)
+
+  reference_annotation_colors <- c(
+    "Tissue: Fat body" = "#D9A441",
+    "Tissue: Head" = "#009E9A",
+    "Tissue: Thorax" = "#C51B7D",
+    "Diet: 33" = "#E6862E",
+    "Diet: 50" = "#2F8F5B",
+    "Diet: 83" = "#7B4FA3",
+    "Diet: Reference" = "#D1D5DB",
+    "State: Control" = "#FAEBD7",
+    "State: Infected" = "#8B0000",
+    "State: Gregarious" = "#111827",
+    "State: Solitarious" = "#6B7280"
+  )
+
+  reference_annotation_long <- reference_sample_metadata |>
+    dplyr::transmute(
+      sample_index,
+      Tissue = as.character(tissue),
+      Diet = as.character(diet),
+      State = as.character(treatment_or_phase)
+    ) |>
+    tidyr::pivot_longer(
+      cols = c(Tissue, Diet, State),
+      names_to = "track",
+      values_to = "value"
+    ) |>
+    dplyr::mutate(
+      track = factor(track, levels = c("Tissue", "Diet", "State")),
+      track_y = as.numeric(track),
+      fill_key = paste(track, value, sep = ": ")
+    )
+
+  reference_x_limits <- c(-1.25, length(reference_sample_order) + 0.5)
+
+  reference_sample_annotation_plot <- ggplot2::ggplot(
+    reference_annotation_long,
+    ggplot2::aes(x = sample_index, y = track_y, fill = fill_key)
+  ) +
+    ggplot2::geom_tile(width = 0.95, height = 0.9) +
+    ggplot2::geom_vline(xintercept = reference_group_gaps,
+                        color = "black", linewidth = 0.25) +
+    ggplot2::geom_vline(xintercept = reference_block_gaps,
+                        color = "black", linewidth = 0.8) +
+    ggplot2::scale_fill_manual(values = reference_annotation_colors,
+                               drop = FALSE) +
+    ggplot2::scale_x_continuous(
+      limits = reference_x_limits,
+      breaks = reference_sample_metadata$sample_index,
+      labels = reference_sample_metadata$sample_label,
+      expand = c(0, 0),
+      position = "top"
+    ) +
+    ggplot2::scale_y_continuous(
+      breaks = seq_len(3),
+      labels = c("Tissue", "Diet", "State"),
+      limits = c(0.45, 3.55),
+      expand = c(0, 0)
+    ) +
+    ggplot2::labs(x = NULL, y = NULL, fill = "Sample annotation") +
+    ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme(
+      panel.grid = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(face = "bold", size = 9),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(face = "bold"),
+      legend.text = ggplot2::element_text(size = 8)
+    ) +
+    ggplot2::guides(
+      fill = ggplot2::guide_legend(nrow = 2, byrow = TRUE)
+    )
+
+  reference_gene_context_strip_df <- reference_gene_table |>
+    dplyr::select(gene_id, expression_cluster, reference_within_cluster_order,
+                  DEG_context) |>
+    dplyr::mutate(
+      DEG_context_plot = dplyr::case_when(
+        DEG_context == "Diet in controls" ~ "~ diet (controls)",
+        DEG_context == "Diet in infected" ~ "~ diet (infected)",
+        DEG_context == "Infection within diet" ~ "~ diet + infection",
+        DEG_context %in% c("Infection + diet",
+                           "Diet in controls + infected") ~ "shared DEGs",
+        TRUE ~ "Other fat body DEG"
+      ),
+      DEG_context_plot = factor(DEG_context_plot,
+                                levels = deg_context_plot_levels)
+    )
+  present_reference_deg_context_levels <- deg_context_plot_levels[
+    deg_context_plot_levels %in%
+      as.character(reference_gene_context_strip_df$DEG_context_plot)
+  ]
+  present_reference_deg_context_labels <- stringr::str_wrap(
+    present_reference_deg_context_levels,
+    width = 26
+  )
+
+  reference_heatmap_df <- as.data.frame(reference_heatmap_z,
+                                        check.names = FALSE) |>
+    tibble::rownames_to_column("gene_id") |>
+    dplyr::left_join(
+      reference_gene_table |>
+        dplyr::select(gene_id, expression_cluster,
+                      reference_within_cluster_order),
+      by = "gene_id"
+    ) |>
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(reference_sample_order),
+      names_to = "sample_id",
+      values_to = "z"
+    ) |>
+    dplyr::mutate(sample_index = match(sample_id, reference_sample_order))
+
+  reference_cluster_heatmap_plot <- ggplot2::ggplot(
+    reference_heatmap_df,
+    ggplot2::aes(x = sample_index, y = reference_within_cluster_order,
+                 fill = z)
+  ) +
+    ggplot2::geom_segment(
+      data = reference_gene_context_strip_df,
+      ggplot2::aes(
+        x = -1.1,
+        xend = 0.35,
+        y = reference_within_cluster_order,
+        yend = reference_within_cluster_order,
+        color = DEG_context_plot
+      ),
+      inherit.aes = FALSE,
+      linewidth = 1.05,
+      lineend = "butt"
+    ) +
+    ggplot2::geom_raster() +
+    ggplot2::geom_vline(xintercept = 0.5, color = "#9CA3AF",
+                        linewidth = 0.4) +
+    ggplot2::geom_vline(xintercept = reference_group_gaps,
+                        color = "black", linewidth = 0.25) +
+    ggplot2::geom_vline(xintercept = reference_block_gaps,
+                        color = "black", linewidth = 0.8) +
+    ggplot2::facet_grid(expression_cluster ~ ., scales = "free_y",
+                        switch = "y") +
+    ggplot2::scale_fill_gradientn(
+      colors = heatmap_colors,
+      limits = c(-3, 3),
+      oob = scales::squish,
+      name = "Row z-score"
+    ) +
+    ggplot2::scale_color_manual(
+      values = deg_context_plot_colors,
+      breaks = present_reference_deg_context_levels,
+      labels = present_reference_deg_context_labels,
+      drop = TRUE,
+      name = "DEG context"
+    ) +
+    ggplot2::scale_x_continuous(
+      limits = reference_x_limits,
+      breaks = reference_sample_metadata$sample_index,
+      labels = reference_sample_metadata$sample_label,
+      expand = c(0, 0)
+    ) +
+    ggplot2::scale_y_reverse(expand = c(0, 0)) +
+    ggplot2::labs(
+      x = NULL,
+      y = NULL,
+      title = "A. Fat body DEG expression landscape with reference tissues",
+      subtitle = paste0(
+        "Rows are ", nrow(reference_gene_table),
+        " fat-body DEGs; head, thorax, and FAT references are VST context columns"
+      )
+    ) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,
+                                          vjust = 0.5, size = 7),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      strip.placement = "outside",
+      strip.background.y = ggplot2::element_rect(fill = "#F3F4F6",
+                                                 color = "#9CA3AF"),
+      strip.text.y.left = ggplot2::element_text(angle = 90, face = "bold",
+                                                size = 13),
+      panel.spacing.y = grid::unit(0.25, "lines"),
+      legend.position = "right",
+      legend.box = "vertical",
+      legend.title = ggplot2::element_text(face = "bold"),
+      legend.text = ggplot2::element_text(size = 9),
+      plot.title = ggplot2::element_text(face = "bold")
+    ) +
+    ggplot2::guides(
+      fill = ggplot2::guide_colorbar(
+        order = 1,
+        title.position = "top",
+        barheight = grid::unit(3.0, "cm"),
+        barwidth = grid::unit(0.35, "cm")
+      ),
+      color = ggplot2::guide_legend(
+        order = 2,
+        title.position = "top",
+        override.aes = list(linewidth = 3)
+      )
+    )
+
+  reference_gene_level_GO_KEGG_figure <- reference_sample_annotation_plot /
+    reference_cluster_heatmap_plot /
+    go_lollipop_plot /
+    kegg_lollipop_plot +
+    patchwork::plot_layout(heights = c(1.05, 6.8, 5.6, 3.7)) +
+    patchwork::plot_annotation(
+      title = "Fat body DEG expression clusters with reference tissues",
+      subtitle = paste0(
+        "DEGs were called only in the fat body diet-infection experiment; ",
+        "reference columns show VST row-z-scores for context"
+      )
+    )
+
+  print(reference_gene_level_GO_KEGG_figure)
+  ggplot2::ggsave(
+    file.path(out_dir,
+              "expression_cluster_gene_level_GO_KEGG_lollipop_with_references.png"),
+    reference_gene_level_GO_KEGG_figure,
+    width = 24,
+    height = 22,
+    dpi = 220
+  )
+  grDevices::svg(
+    file.path(out_dir,
+              "expression_cluster_gene_level_GO_KEGG_lollipop_with_references.svg"),
+    width = 24,
+    height = 22,
+    onefile = FALSE
+  )
+  print(reference_gene_level_GO_KEGG_figure)
+  grDevices::dev.off()
+
+  ggplot2::ggsave(
+    file.path(out_dir,
+              "expression_cluster_reference_panel_A_heatmap.png"),
+    reference_sample_annotation_plot / reference_cluster_heatmap_plot +
+      patchwork::plot_layout(heights = c(1.05, 6.8)),
+    width = 24,
+    height = 11,
+    dpi = 260
+  )
+
+  write.csv(
+    reference_gene_table,
+    file.path(out_dir,
+              "expression_cluster_reference_panel_A_genes.csv"),
+    row.names = FALSE
+  )
+  write.csv(
+    combined_reference_meta,
+    file.path(out_dir,
+              "expression_cluster_reference_panel_A_samples.csv"),
+    row.names = FALSE
+  )
+} else {
+  message("Reference composite skipped because one or more reference count files are missing.")
+}
+```
+
+## Full heatmap and gene-level cladogram {#Cluster_cladogram}
+
+This is the re-delimitation workspace. It contains every significant
+main-chromosome DEG in the current all-samples analysis and does **not** draw any
+provisional cluster boundaries. The dendrogram and heatmap are generated from
+the same row-z-scored VST matrix, the same complete-linkage tree, and the same
+leaf order. Thus, a branch seen in the tree aligns exactly with the genes on the
+same horizontal band of the heatmap. The tree describes expression-profile
+similarity; it is not a phylogeny.
+
+```{r canonical-full-gene-tree-heatmap, fig.width=30, fig.height=24}
+canonical_gene_dendro <- ggdendro::dendro_data(
+  stats::as.dendrogram(row_tree),
+  type = "rectangle"
+)
+
+canonical_gene_leaves <- ggdendro::label(canonical_gene_dendro) |>
+  dplyr::rename(gene_id = label, leaf_x = x, leaf_y = y) |>
+  dplyr::arrange(leaf_x) |>
+  dplyr::mutate(canonical_gene_order = dplyr::row_number())
+
+canonical_order_check <- data.frame(
+  check = "Gene-level dendrogram leaf order matches the clustered heatmap order",
+  value = identical(canonical_gene_leaves$gene_id, ordered_genes)
+)
+if (!canonical_order_check$value) {
+  stop("Canonical dendrogram leaves do not match the clustered heatmap order.")
+}
+
+canonical_gene_table <- canonical_gene_leaves |>
+  dplyr::select(canonical_gene_order, gene_id) |>
+  dplyr::left_join(unmerged_gene_table, by = "gene_id") |>
+  dplyr::arrange(canonical_gene_order)
+
+write.csv(
+  canonical_gene_table,
+  file.path(out_dir, "full_heatmap_canonical_gene_order.csv"),
+  row.names = FALSE
+)
+write.csv(
+  canonical_order_check,
+  file.path(out_dir, "full_heatmap_canonical_order_check.csv"),
+  row.names = FALSE
+)
+
+canonical_gene_order <- canonical_gene_leaves$gene_id
+canonical_heatmap_matrix <- full_heatmap_z_input[
+  canonical_gene_order,
+  sample_order,
+  drop = FALSE
+]
+canonical_heatmap_matrix <- pmax(pmin(canonical_heatmap_matrix, 3), -3)
+
+canonical_heatmap_df <- as.data.frame(
+  canonical_heatmap_matrix,
+  check.names = FALSE
+) |>
+  tibble::rownames_to_column("gene_id") |>
+  dplyr::mutate(gene_y = match(gene_id, canonical_gene_order)) |>
+  tidyr::pivot_longer(
+    cols = dplyr::all_of(sample_order),
+    names_to = "sample_id",
+    values_to = "z"
+  ) |>
+  dplyr::mutate(sample_index = match(sample_id, sample_order))
+
+n_canonical_genes <- length(canonical_gene_order)
+canonical_y_limits <- c(n_canonical_genes + 0.5, 0.5)
+
+canonical_tree_segments <- ggdendro::segment(canonical_gene_dendro) |>
+  dplyr::transmute(
+    tree_x = y,
+    gene_y = x,
+    tree_xend = yend,
+    gene_yend = xend
+  )
+
+canonical_vertical_tree_plot <- ggplot2::ggplot(
+  canonical_tree_segments,
+  ggplot2::aes(
+    x = tree_x,
+    y = gene_y,
+    xend = tree_xend,
+    yend = gene_yend
+  )
+) +
+  ggplot2::geom_segment(linewidth = 0.14, color = "#263241",
+                        lineend = "square") +
+  ggplot2::scale_x_reverse(expand = ggplot2::expansion(mult = c(0.01, 0.02))) +
+  ggplot2::scale_y_reverse(limits = canonical_y_limits, expand = c(0, 0)) +
+  ggplot2::labs(x = "Tree height", y = NULL) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    axis.line.y = ggplot2::element_blank(),
+    plot.margin = ggplot2::margin(0, 0, 3, 3)
+  )
+
+canonical_heatmap_plot <- ggplot2::ggplot(
+  canonical_heatmap_df,
+  ggplot2::aes(x = sample_index, y = gene_y, fill = z)
+) +
+  ggplot2::geom_raster() +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black",
+                      linewidth = 0.25) +
+  ggplot2::geom_vline(xintercept = treatment_gaps, color = "black",
+                      linewidth = 0.7) +
+  ggplot2::scale_fill_gradientn(
+    colors = heatmap_colors,
+    limits = c(-3, 3),
+    oob = scales::squish,
+    name = "Row z-score"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = c(0.5, length(sample_order) + 0.5),
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_reverse(limits = canonical_y_limits, expand = c(0, 0)) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_classic(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,
+                                        vjust = 0.5, size = 12),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    axis.line = ggplot2::element_blank(),
+    legend.position = "right",
+    legend.title = ggplot2::element_text(face = "bold"),
+    plot.margin = ggplot2::margin(0, 4, 3, 0)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_colorbar(
+      title.position = "top",
+      barheight = grid::unit(4.5, "cm"),
+      barwidth = grid::unit(0.45, "cm")
+    )
+  )
+
+canonical_sample_annotation_plot <- sample_annotation_plot +
+  ggplot2::scale_x_continuous(
+    limits = c(0.5, length(sample_order) + 0.5),
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0),
+    position = "top"
+  ) +
+  ggplot2::labs(
+    title = paste0(
+      "Full main-chromosome DEG heatmap with aligned gene dendrogram (",
+      n_canonical_genes, " genes)"
+    )
+  ) +
+  ggplot2::theme(legend.position = "none")
+
+canonical_tree_column <- (
+  patchwork::plot_spacer() /
+    canonical_vertical_tree_plot
+) + patchwork::plot_layout(heights = c(1.0, 12))
+canonical_heatmap_column <- (
+  canonical_sample_annotation_plot /
+    canonical_heatmap_plot
+) + patchwork::plot_layout(heights = c(1.0, 12))
+
+canonical_tree_heatmap_figure <- (
+  canonical_tree_column | canonical_heatmap_column
+) + patchwork::plot_layout(widths = c(3.8, 22))
+
+print(canonical_tree_heatmap_figure)
+ggplot2::ggsave(
+  file.path(out_dir, "full_canonical_gene_tree_heatmap.png"),
+  canonical_tree_heatmap_figure,
+  width = 30,
+  height = 24,
+  dpi = 260,
+  limitsize = FALSE
+)
+ggplot2::ggsave(
+  file.path(out_dir, "full_canonical_gene_tree_heatmap.pdf"),
+  canonical_tree_heatmap_figure,
+  width = 30,
+  height = 24,
+  limitsize = FALSE
+)
+
+knitr::kable(
+  canonical_order_check,
+  caption = "Required alignment check for the full dendrogram and heatmap"
+)
+```
+
+### Full unpartitioned cladogram
+
+The landscape version below shows the complete tree without cluster colors,
+labels, or cut lines. It is intended for choosing biologically and visually
+defensible branch boundaries before rerunning enrichment.
+
+```{r full-gene-level-cladogram-unpartitioned, fig.width=28, fig.height=9}
+full_gene_level_cladogram_plot <- ggplot2::ggplot() +
+  ggplot2::geom_segment(
+    data = ggdendro::segment(canonical_gene_dendro),
+    ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
+    linewidth = 0.14,
+    color = "#263241",
+    lineend = "square"
+  ) +
+  ggplot2::labs(
+    title = "Full unpartitioned gene-level cladogram",
+    subtitle = paste0(
+      n_canonical_genes,
+      " main-chromosome DEG leaves; no cluster delimitation imposed"
+    ),
+    x = NULL,
+    y = "Euclidean distance between gene expression profiles"
+  ) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks.x = ggplot2::element_blank(),
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+print(full_gene_level_cladogram_plot)
+ggplot2::ggsave(
+  file.path(out_dir, "full_gene_level_cladogram_unpartitioned.png"),
+  full_gene_level_cladogram_plot,
+  width = 28,
+  height = 9,
+  dpi = 300
+)
+ggplot2::ggsave(
+  file.path(out_dir, "full_gene_level_cladogram_unpartitioned.pdf"),
+  full_gene_level_cladogram_plot,
+  width = 28,
+  height = 9
+)
+```
+
+### Proposed delimitations {.tabset}
+
+The three tabs below apply candidate cuts at `k = 2`, `k = 3`, and `k = 4`
+to the same complete-linkage tree. The dashed vertical line marks the cut height
+on the dendrogram. The colored strip and horizontal boundaries identify the
+resulting contiguous gene blocks on the heatmap. Cluster numbers follow the
+top-to-bottom heatmap order and are only provisional labels.
+
+```{r build-candidate-cut-figures, results='hide'}
+candidate_cut_palette <- c(
+  "Candidate cluster 1" = "#315C8A",
+  "Candidate cluster 2" = "#C85A54",
+  "Candidate cluster 3" = "#2F8F5B",
+  "Candidate cluster 4" = "#D49A2A"
+)
+
+candidate_cut_height <- function(tree, k) {
+  lower_index <- length(tree$height) - k + 1L
+  mean(tree$height[c(lower_index, lower_index + 1L)])
+}
+
+build_candidate_cut_figure <- function(k) {
+  raw_membership <- stats::cutree(row_tree, k = k)[canonical_gene_order]
+  top_to_bottom_ids <- unique(raw_membership)
+  display_membership <- match(raw_membership, top_to_bottom_ids)
+  display_levels <- paste("Candidate cluster", seq_len(k))
+
+  membership_df <- tibble::tibble(
+    gene_id = canonical_gene_order,
+    gene_y = seq_along(canonical_gene_order),
+    candidate_cluster_number = display_membership,
+    candidate_cluster = factor(
+      paste("Candidate cluster", display_membership),
+      levels = display_levels
+    )
+  )
+
+  membership_runs <- rle(display_membership)
+  if (length(membership_runs$lengths) != k) {
+    stop("Candidate tree cut did not produce contiguous heatmap branches for k = ", k)
+  }
+  branch_ends <- cumsum(membership_runs$lengths)
+  branch_starts <- c(1L, head(branch_ends, -1L) + 1L)
+  branch_spans <- tibble::tibble(
+    k = k,
+    candidate_cluster_number = seq_len(k),
+    candidate_cluster = factor(display_levels, levels = display_levels),
+    start = branch_starts,
+    end = branch_ends,
+    midpoint = (branch_starts + branch_ends) / 2,
+    n_genes = membership_runs$lengths
+  )
+  boundaries <- head(branch_ends, -1L) + 0.5
+  cut_height <- candidate_cut_height(row_tree, k)
+
+  candidate_tree_plot <- canonical_vertical_tree_plot +
+    ggplot2::geom_vline(
+      xintercept = cut_height,
+      color = "#8B0000",
+      linetype = "22",
+      linewidth = 0.8
+    ) +
+    ggplot2::geom_hline(
+      yintercept = boundaries,
+      color = "#111827",
+      linewidth = 0.35
+    )
+
+  candidate_strip_plot <- ggplot2::ggplot(
+    membership_df,
+    ggplot2::aes(x = 1, y = gene_y, fill = candidate_cluster)
+  ) +
+    ggplot2::geom_tile(width = 0.92, height = 1) +
+    ggplot2::geom_hline(
+      yintercept = boundaries,
+      color = "#111827",
+      linewidth = 0.8
+    ) +
+    ggplot2::geom_label(
+      data = branch_spans,
+      ggplot2::aes(
+        x = 1,
+        y = midpoint,
+        label = paste0("C", candidate_cluster_number, "\n", n_genes, " genes")
+      ),
+      inherit.aes = FALSE,
+      size = 4.2,
+      fontface = "bold",
+      color = "#111827",
+      fill = "white",
+      label.size = 0.2,
+      label.padding = grid::unit(0.14, "lines")
+    ) +
+    ggplot2::scale_fill_manual(
+      values = candidate_cut_palette[display_levels],
+      drop = FALSE,
+      guide = "none"
+    ) +
+    ggplot2::scale_x_continuous(
+      limits = c(0.5, 1.5),
+      breaks = 1,
+      labels = paste0("k = ", k),
+      position = "top",
+      expand = c(0, 0)
+    ) +
+    ggplot2::scale_y_reverse(limits = canonical_y_limits, expand = c(0, 0)) +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_classic(base_size = 13) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(face = "bold", size = 13),
+      axis.ticks = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.line = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(0, 2, 3, 2)
+    )
+
+  candidate_heatmap_plot <- canonical_heatmap_plot +
+    ggplot2::geom_hline(
+      yintercept = boundaries,
+      color = "#111827",
+      linewidth = 0.8
+    )
+
+  candidate_annotation_plot <- canonical_sample_annotation_plot +
+    ggplot2::labs(
+      title = paste0(
+        "Candidate k = ", k, " delimitation of ",
+        n_canonical_genes, " main-chromosome DEGs"
+      ),
+      subtitle = paste0(
+        "Dashed tree line = cut height ", round(cut_height, 2),
+        "; heatmap boundaries follow the resulting branches"
+      )
+    )
+
+  tree_column <- (
+    patchwork::plot_spacer() /
+      candidate_tree_plot
+  ) + patchwork::plot_layout(heights = c(1.0, 12))
+  strip_column <- (
+    patchwork::plot_spacer() /
+      candidate_strip_plot
+  ) + patchwork::plot_layout(heights = c(1.0, 12))
+  heatmap_column <- (
+    candidate_annotation_plot /
+      candidate_heatmap_plot
+  ) + patchwork::plot_layout(heights = c(1.0, 12))
+
+  figure <- (
+    tree_column | strip_column | heatmap_column
+  ) + patchwork::plot_layout(widths = c(3.8, 2.0, 22))
+
+  list(
+    figure = figure,
+    membership = membership_df,
+    spans = branch_spans,
+    boundaries = boundaries,
+    cut_height = cut_height
+  )
+}
+
+candidate_cut_results <- stats::setNames(
+  lapply(2:4, build_candidate_cut_figure),
+  as.character(2:4)
+)
+
+candidate_assignment_table <- canonical_gene_table |>
+  dplyr::select(canonical_gene_order, gene_id, Description, gene_biotype,
+                DEG_context, comparisons, directions, max_abs_log2FC, min_padj)
+for (k in 2:4) {
+  candidate_assignment_table[[paste0("candidate_k", k)]] <-
+    as.character(candidate_cut_results[[as.character(k)]]$membership$candidate_cluster)
+}
+candidate_cut_span_table <- dplyr::bind_rows(lapply(
+  candidate_cut_results,
+  function(x) x$spans
+))
+
+write.csv(
+  candidate_assignment_table,
+  file.path(out_dir, "candidate_k2_k3_k4_gene_assignments.csv"),
+  row.names = FALSE
+)
+write.csv(
+  candidate_cut_span_table,
+  file.path(out_dir, "candidate_k2_k3_k4_branch_spans.csv"),
+  row.names = FALSE
+)
+
+for (k in 2:4) {
+  candidate_result <- candidate_cut_results[[as.character(k)]]
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("candidate_k", k, "_gene_tree_heatmap.png")),
+    candidate_result$figure,
+    width = 32,
+    height = 24,
+    dpi = 260,
+    limitsize = FALSE
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("candidate_k", k, "_gene_tree_heatmap.pdf")),
+    candidate_result$figure,
+    width = 32,
+    height = 24,
+    limitsize = FALSE
+  )
+}
+```
+
+#### Two clusters
+
+```{r show-candidate-k2, echo=FALSE, fig.width=30, fig.height=22}
+print(candidate_cut_results[["2"]]$figure)
+```
+
+#### Three clusters
+
+```{r show-candidate-k3, echo=FALSE, fig.width=30, fig.height=22}
+print(candidate_cut_results[["3"]]$figure)
+```
+
+#### Four clusters
+
+```{r show-candidate-k4, echo=FALSE, fig.width=30, fig.height=22}
+print(candidate_cut_results[["4"]]$figure)
+```
+
+### Candidate tree cuts
+
+These diagnostics compare several possible horizontal cuts of the same tree.
+The silhouette score summarizes expression cohesion and separation, while the
+branch sizes reveal whether a solution is dominated by very small groups. They
+are decision aids, not an automatic biological definition of a cluster.
+
+```{r candidate-tree-cut-diagnostics}
+candidate_k_diagnostics <- dplyr::bind_rows(lapply(2:10, function(k) {
+  memberships <- stats::cutree(row_tree, k = k)
+  branch_sizes <- sort(table(memberships), decreasing = TRUE)
+  silhouette_values <- cluster::silhouette(memberships, row_distance)[, "sil_width"]
+  tibble::tibble(
+    k = k,
+    mean_silhouette = mean(silhouette_values),
+    median_silhouette = stats::median(silhouette_values),
+    smallest_branch = min(branch_sizes),
+    largest_branch = max(branch_sizes),
+    branch_sizes = paste(branch_sizes, collapse = "; ")
+  )
+}))
+
+write.csv(
+  candidate_k_diagnostics,
+  file.path(out_dir, "candidate_tree_cut_diagnostics.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  candidate_k_diagnostics,
+  digits = 3,
+  caption = "Candidate cuts of the full main-chromosome DEG expression tree"
+)
+```
+
+## Primary two-cluster GO enrichment
+
+The primary interpretation keeps every DEG in the statistically strongest
+`k = 2` division. The narrow subbranches visible inside the two large blocks are
+not removed: they are coherent parts of the expression tree and may represent
+real specialized responses. Removing them solely because they look unusual
+would make the enrichment dependent on visual judgement.
+
+Three foregrounds are tested independently against the same expressed,
+rRNA-filtered main-chromosome background:
+
+1. all significant main-chromosome DEGs, to summarize the overall response;
+2. candidate expression cluster 1;
+3. candidate expression cluster 2.
+
+The 71- and 45-gene subbranches from the `k = 4` view remain nested within these
+two primary clusters. Their separate enrichment can be used later as a
+sensitivity analysis without changing the primary gene sets.
+
+```{r primary-k2-go-enrichment, fig.width=36, fig.height=24}
+k2_membership <- candidate_cut_results[["2"]]$membership
+primary_k2_set_levels <- c(
+  "All main-chromosome DEGs",
+  "Expression cluster 1",
+  "Expression cluster 2"
+)
+primary_k2_gene_sets <- list(
+  "All main-chromosome DEGs" = canonical_gene_order,
+  "Expression cluster 1" = k2_membership$gene_id[
+    k2_membership$candidate_cluster == "Candidate cluster 1"
+  ],
+  "Expression cluster 2" = k2_membership$gene_id[
+    k2_membership$candidate_cluster == "Candidate cluster 2"
+  ]
+)
+
+go_annotated_genes <- unique(maps$term2gene_go$gene)
+primary_k2_set_summary <- dplyr::bind_rows(lapply(
+  names(primary_k2_gene_sets),
+  function(set_name) {
+    genes <- primary_k2_gene_sets[[set_name]]
+    tibble::tibble(
+      foreground_set = set_name,
+      n_genes = length(genes),
+      n_GO_annotated_genes = length(intersect(genes, go_annotated_genes)),
+      GO_annotation_percent = 100 * n_GO_annotated_genes / n_genes
+    )
+  }
+))
+
+primary_k2_go_enrichment <- dplyr::bind_rows(lapply(
+  names(primary_k2_gene_sets),
+  function(set_name) {
+    run_enrichment(
+      genes = primary_k2_gene_sets[[set_name]],
+      universe = expressed_universe,
+      term2gene = maps$term2gene_go,
+      term2name = maps$term2name_go,
+      database = "GO",
+      background_label = "Expressed rRNA-filtered main-chromosome genes"
+    ) |>
+      dplyr::mutate(foreground_set = set_name)
+  }
+))
+
+if (nrow(primary_k2_go_enrichment) > 0) {
+  primary_k2_go_enrichment <- primary_k2_go_enrichment |>
+    dplyr::left_join(
+      maps$term2name_go |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(
+          ID = term,
+          ontology = dplyr::recode(
+            ontology,
+            BP = "Biological process",
+            CC = "Cellular component",
+            MF = "Molecular function",
+            .default = NA_character_
+          )
+        ),
+      by = "ID"
+    ) |>
+    dplyr::filter(!is.na(ontology)) |>
+    dplyr::mutate(
+      foreground_set = factor(foreground_set,
+                              levels = primary_k2_set_levels),
+      ontology = factor(ontology, levels = names(go_ontology_colors))
+    )
+}
+
+primary_k2_go_significant <- primary_k2_go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(foreground_set, ontology, p.adjust)
+
+primary_k2_go_term_gene_index <- primary_k2_go_significant |>
+  dplyr::select(foreground_set, ontology, ID, Description, GeneRatio, BgRatio,
+                pvalue, p.adjust, qvalue, Count, geneID) |>
+  tidyr::separate_rows(geneID, sep = "/") |>
+  dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+  dplyr::left_join(
+    canonical_gene_table |>
+      dplyr::select(gene_id, Description, gene_biotype, DEG_context,
+                    comparisons, directions, max_abs_log2FC, min_padj),
+    by = "gene_id"
+  ) |>
+  dplyr::arrange(foreground_set, ontology, p.adjust, term_id, gene_id)
+
+write.csv(
+  primary_k2_set_summary,
+  file.path(out_dir, "primary_k2_GO_foreground_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  primary_k2_go_enrichment,
+  file.path(out_dir, "primary_k2_GO_enrichment_all_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  primary_k2_go_significant,
+  file.path(out_dir, "primary_k2_GO_enrichment_significant_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  primary_k2_go_term_gene_index,
+  file.path(out_dir, "primary_k2_GO_term_gene_index_long.csv"),
+  row.names = FALSE
+)
+
+primary_k2_go_plot_df <- primary_k2_go_significant |>
+  dplyr::group_by(foreground_set, ontology) |>
+  dplyr::slice_min(p.adjust, n = 10, with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(foreground_set, ontology, p.adjust) |>
+  dplyr::mutate(
+    neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+    term_label = stringr::str_wrap(Description, 52),
+    term_plot_id = paste(foreground_set, ontology, ID, term_label,
+                         sep = "___"),
+    term_plot_id = factor(term_plot_id,
+                          levels = rev(unique(term_plot_id))),
+    facet_panel = paste(foreground_set, ontology, sep = "\n")
+  )
+
+primary_k2_panel_levels <- unlist(lapply(
+  names(go_ontology_colors),
+  function(ontology_name) {
+    paste(primary_k2_set_levels, ontology_name, sep = "\n")
+  }
+))
+primary_k2_go_plot_df$facet_panel <- factor(
+  primary_k2_go_plot_df$facet_panel,
+  levels = primary_k2_panel_levels
+)
+
+clean_primary_go_label <- function(x) {
+  sub("^.*___.*___.*___", "", x)
+}
+
+if (nrow(primary_k2_go_plot_df) > 0) {
+  primary_k2_go_plot <- ggplot2::ggplot(
+    primary_k2_go_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_plot_id)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.4
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = neg_log10_padj,
+                   y = term_plot_id, yend = term_plot_id),
+      linewidth = 0.65,
+      color = "#7A7A7A"
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count, color = ontology),
+      alpha = 0.95
+    ) +
+    ggplot2::facet_wrap(
+      ~ facet_panel,
+      ncol = 3,
+      scales = "free_y"
+    ) +
+    ggplot2::scale_color_manual(values = go_ontology_colors, drop = FALSE) +
+    ggplot2::scale_size_continuous(range = c(4.5, 13)) +
+    ggplot2::scale_y_discrete(labels = clean_primary_go_label) +
+    ggplot2::labs(
+      title = "GO enrichment for all DEGs and the two primary expression clusters",
+      subtitle = paste0(
+        "All foregrounds use the same expressed main-chromosome background; ",
+        "top 10 terms per ontology and foreground"
+      ),
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      color = "GO ontology",
+      size = "DEGs in term"
+    ) +
+    ggplot2::theme_bw(base_size = 14) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(size = 12, color = "#111827"),
+      axis.text.x = ggplot2::element_text(size = 12),
+      strip.text = ggplot2::element_text(size = 14, face = "bold"),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(face = "bold"),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.title = ggplot2::element_text(face = "bold", size = 18)
+    )
+
+  print(primary_k2_go_plot)
+  ggplot2::ggsave(
+    file.path(out_dir, "primary_k2_GO_enrichment_lollipop.png"),
+    primary_k2_go_plot,
+    width = 36,
+    height = 24,
+    dpi = 260,
+    limitsize = FALSE
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, "primary_k2_GO_enrichment_lollipop.pdf"),
+    primary_k2_go_plot,
+    width = 36,
+    height = 24,
+    limitsize = FALSE
+  )
+}
+
+knitr::kable(
+  primary_k2_set_summary,
+  digits = 1,
+  caption = "Primary all-DEG and two-cluster GO foregrounds"
+)
+```
+
+### Significant GO terms
+
+```{r primary-k2-go-table}
+DT::datatable(
+  primary_k2_go_significant |>
+    dplyr::select(foreground_set, ontology, ID, Description, GeneRatio,
+                  BgRatio, pvalue, p.adjust, qvalue, Count,
+                  foreground_genes_tested, background_genes_tested),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = "Significant GO terms for all DEGs and the two primary clusters"
+)
+```
+
+### GO term-to-gene index
+
+```{r primary-k2-go-reverse-index}
+DT::datatable(
+  primary_k2_go_term_gene_index,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 20, scrollX = TRUE),
+  caption = "Genes contributing to each significant primary GO term"
+)
+```
+
+## Figure 3: two expression clusters {#Publication_figure}
+
+The publication composite uses the two primary expression clusters. Panel A
+aligns the 0-0.1% fungal-alignment zoom, treatment and diet annotations, and the
+complete main-chromosome DEG heatmap by sample. Values above 0.1% are capped
+only for display and retain their full percentage as enlarged white labels.
+The row z-score and DEG-context guides sit in a horizontal legend strip below
+panel A so the heatmap keeps its full width and the right side remains free for
+an external graphical annotation. Panel A uses 80% of the exported canvas;
+the remaining 20% is intentionally blank on the right for later figure assembly.
+Panels B and C use only genes called differentially expressed for infected
+versus control within at least one diet, then test cluster 1 and cluster 2
+separately against the expressed, rRNA-filtered main-chromosome background. The
+broader all-DEG GO
+analysis remains available above as supporting context but is not repeated in
+Figure 3. The primary KEGG panel uses the eukaryote-inclusive view: it retains
+eukaryote/metazoan-compatible, conserved cross-domain, and broad KEGG reference
+maps while excluding explicitly microbial/prokaryotic and disease-reference
+labels. Figure 3 is exported with either a KEGG lollipop panel or the locust
+pathway map. A strict insect-focused version remains available as a secondary
+export, while all tested pathway scopes and genes remain in the audit tables.
+
+```{r figure3-k2-build, fig.width=24, fig.height=24}
+figure3_cluster_levels <- c("DEG cluster 1", "DEG cluster 2")
+
+figure3_k2_assignments <- canonical_gene_table |>
+  dplyr::left_join(
+    k2_membership |>
+      dplyr::select(gene_id, candidate_cluster),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    expression_cluster = dplyr::recode(
+      as.character(candidate_cluster),
+      "Candidate cluster 1" = "DEG cluster 1",
+      "Candidate cluster 2" = "DEG cluster 2"
+    ),
+    expression_cluster = factor(expression_cluster,
+                                levels = figure3_cluster_levels),
+    DEG_context = dplyr::coalesce(as.character(DEG_context),
+                                  "Other fat body DEG"),
+    DEG_context = factor(DEG_context, levels = deg_context_levels)
+  ) |>
+  dplyr::arrange(
+    expression_cluster,
+    DEG_context,
+    min_padj,
+    dplyr::desc(max_abs_log2FC),
+    canonical_gene_order
+  ) |>
+  dplyr::group_by(expression_cluster) |>
+  dplyr::mutate(within_cluster_order = dplyr::row_number()) |>
+  dplyr::ungroup()
+
+write.csv(
+  figure3_k2_assignments,
+  file.path(out_dir, "figure3_k2_gene_assignments.csv"),
+  row.names = FALSE
+)
+
+figure3_within_diet_sets <- list(
+  "Expression cluster 1" = figure3_k2_assignments$gene_id[
+    figure3_k2_assignments$expression_cluster == "DEG cluster 1" &
+      figure3_k2_assignments$DEG_context == "Infection within diet"
+  ],
+  "Expression cluster 2" = figure3_k2_assignments$gene_id[
+    figure3_k2_assignments$expression_cluster == "DEG cluster 2" &
+      figure3_k2_assignments$DEG_context == "Infection within diet"
+  ]
+)
+
+figure3_foreground_summary <- tibble::tibble(
+  foreground_set = names(figure3_within_diet_sets),
+  n_cluster_genes = vapply(
+    seq_along(figure3_within_diet_sets),
+    function(i) {
+      sum(as.character(figure3_k2_assignments$expression_cluster) ==
+            figure3_cluster_levels[[i]])
+    },
+    integer(1)
+  ),
+  n_infection_within_diet_genes = vapply(
+    figure3_within_diet_sets,
+    length,
+    integer(1)
+  ),
+  GO_annotated_genes = vapply(
+    figure3_within_diet_sets,
+    function(x) length(intersect(x, unique(maps$term2gene_go$gene))),
+    integer(1)
+  ),
+  KEGG_annotated_genes = vapply(
+    figure3_within_diet_sets,
+    function(x) length(intersect(x, unique(maps$term2gene_kegg$gene))),
+    integer(1)
+  )
+)
+write.csv(
+  figure3_foreground_summary,
+  file.path(out_dir, "figure3_infection_within_diet_foreground_summary.csv"),
+  row.names = FALSE
+)
+
+figure3_heatmap_matrix <- full_heatmap_z[
+  figure3_k2_assignments$gene_id,
+  sample_order,
+  drop = FALSE
+]
+figure3_heatmap_matrix <- pmax(pmin(figure3_heatmap_matrix, 3), -3)
+figure3_heatmap_df <- as.data.frame(
+  figure3_heatmap_matrix,
+  check.names = FALSE
+) |>
+  tibble::rownames_to_column("gene_id") |>
+  dplyr::left_join(
+    figure3_k2_assignments |>
+      dplyr::select(gene_id, expression_cluster, within_cluster_order,
+                    DEG_context),
+    by = "gene_id"
+  ) |>
+  tidyr::pivot_longer(
+    cols = dplyr::all_of(sample_order),
+    names_to = "sample_id",
+    values_to = "z"
+  ) |>
+  dplyr::mutate(sample_index = match(sample_id, sample_order))
+
+figure3_context_strip <- figure3_k2_assignments |>
+  dplyr::transmute(
+    gene_id,
+    expression_cluster,
+    within_cluster_order,
+    DEG_context_plot = dplyr::case_when(
+      DEG_context == "Diet in controls" ~ "~ diet (controls)",
+      DEG_context == "Diet in infected" ~ "~ diet (infected)",
+      DEG_context == "Infection within diet" ~ "~ diet + infection",
+      DEG_context %in% c("Infection + diet",
+                         "Diet in controls + infected") ~ "shared DEGs",
+      TRUE ~ "Other fat body DEG"
+    ),
+    DEG_context_plot = factor(DEG_context_plot,
+                              levels = deg_context_plot_levels)
+  )
+figure3_present_contexts <- deg_context_plot_levels[
+  deg_context_plot_levels %in% as.character(figure3_context_strip$DEG_context_plot)
+]
+
+figure3_sample_annotation_plot <- sample_annotation_plot +
+  ggplot2::labs(title = NULL) +
+  ggplot2::theme(
+    legend.position = "none",
+    axis.text.y = ggplot2::element_text(face = "bold", size = 15),
+    axis.text.y.right = ggplot2::element_text(face = "bold", size = 15),
+    plot.margin = ggplot2::margin(0, 4, 0, 4)
+  )
+
+figure3_mapping_summary <- readr::read_tsv(
+  mapping_summary_file,
+  show_col_types = FALSE
+) |>
+  dplyr::transmute(
+    label = as.character(sample_id),
+    pct_unique_fungus = as.numeric(pct_unique_fungus)
+  )
+
+figure3_fungal_percentage <- sample_metadata |>
+  dplyr::select(
+    label, sample_index, Treatment_plot, Diet_plot, sample_group
+  ) |>
+  dplyr::left_join(figure3_mapping_summary, by = "label")
+if (anyNA(figure3_fungal_percentage$pct_unique_fungus)) {
+  stop("Missing fungal-alignment percentage for one or more Figure 3 samples.")
+}
+
+figure3_percentage_limit <- 0.1
+figure3_control_mean_percentage <- mean(
+  figure3_fungal_percentage$pct_unique_fungus[
+    figure3_fungal_percentage$Treatment_plot == "Control"
+  ],
+  na.rm = TRUE
+)
+figure3_fungal_percentage <- figure3_fungal_percentage |>
+  dplyr::mutate(
+    display_percentage = pmin(
+      pct_unique_fungus,
+      figure3_percentage_limit
+    )
+  )
+
+figure3_fungal_percentage_plot <- ggplot2::ggplot(
+  figure3_fungal_percentage,
+  ggplot2::aes(
+    x = sample_index,
+    y = display_percentage,
+    fill = Treatment_plot
+  )
+) +
+  ggplot2::geom_col(
+    width = 0.82,
+    color = "#111827",
+    linewidth = 0.25
+  ) +
+  ggplot2::geom_hline(
+    yintercept = figure3_control_mean_percentage,
+    color = "#B7791F",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  ggplot2::geom_vline(
+    xintercept = diet_gaps,
+    color = "black",
+    linewidth = 0.25
+  ) +
+  ggplot2::geom_vline(
+    xintercept = treatment_gaps,
+    color = "black",
+    linewidth = 0.7
+  ) +
+  ggplot2::geom_text(
+    data = figure3_fungal_percentage |>
+      dplyr::filter(pct_unique_fungus > figure3_percentage_limit),
+    ggplot2::aes(
+      y = figure3_percentage_limit * 0.94,
+      label = paste0(
+        scales::number(pct_unique_fungus, accuracy = 0.001),
+        "%"
+      )
+    ),
+    color = "white",
+    angle = 90,
+    hjust = 1,
+    vjust = 0.5,
+    size = 6.8,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(Control = "#FAEBD7", Infected = "#8B0000"),
+    guide = "none"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, figure3_percentage_limit),
+    breaks = seq(0, figure3_percentage_limit, by = 0.02),
+    labels = scales::label_number(suffix = "%", accuracy = 0.01),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = "A. Fungal alignment and main-chromosome DEG expression",
+    subtitle = paste0(
+      "Fungal alignment zoom: 0-0.1%; higher values are capped and labeled; ",
+      "dashed line = control mean (",
+      scales::number(
+        figure3_control_mean_percentage,
+        accuracy = 0.00001
+      ),
+      "%)"
+    ),
+    x = NULL,
+    y = "Unique fungal\nalignments (%)"
+  ) +
+  ggplot2::theme_classic(base_size = 16) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks.x = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_text(size = 18),
+    axis.title.y = ggplot2::element_text(face = "bold", size = 27),
+    plot.title = ggplot2::element_text(face = "bold", size = 21),
+    plot.subtitle = ggplot2::element_text(size = 14),
+    plot.margin = ggplot2::margin(5, 4, 0, 4)
+  )
+
+figure3_panel_a <- ggplot2::ggplot(
+  figure3_heatmap_df,
+  ggplot2::aes(x = sample_index, y = within_cluster_order, fill = z)
+) +
+  ggplot2::geom_segment(
+    data = figure3_context_strip,
+    ggplot2::aes(
+      x = -1.1,
+      xend = 0.35,
+      y = within_cluster_order,
+      yend = within_cluster_order,
+      color = DEG_context_plot
+    ),
+    inherit.aes = FALSE,
+    linewidth = 1.15,
+    lineend = "butt"
+  ) +
+  ggplot2::geom_raster() +
+  ggplot2::geom_vline(xintercept = 0.5, color = "#9CA3AF",
+                      linewidth = 0.4) +
+  ggplot2::geom_vline(xintercept = diet_gaps, color = "black",
+                      linewidth = 0.25) +
+  ggplot2::geom_vline(xintercept = treatment_gaps, color = "black",
+                      linewidth = 0.7) +
+  ggplot2::facet_grid(expression_cluster ~ ., scales = "free_y",
+                      space = "free_y", switch = "y") +
+  ggplot2::scale_fill_gradientn(
+    colors = heatmap_colors,
+    limits = c(-3, 3),
+    oob = scales::squish,
+    name = "Row z-score"
+  ) +
+  ggplot2::scale_color_manual(
+    values = deg_context_plot_colors,
+    breaks = figure3_present_contexts,
+    labels = stringr::str_wrap(figure3_present_contexts, 24),
+    drop = TRUE,
+    name = "DEG context"
+  ) +
+  ggplot2::scale_x_continuous(
+    limits = sample_x_limits,
+    breaks = sample_metadata$sample_index,
+    labels = sample_metadata$label,
+    expand = c(0, 0)
+  ) +
+  ggplot2::scale_y_reverse(expand = c(0, 0)) +
+  ggplot2::labs(x = NULL, y = NULL) +
+  ggplot2::theme_classic(base_size = 16) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,
+                                        vjust = 0.5, size = 17),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    strip.placement = "outside",
+    strip.background.y = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#111827"),
+    strip.text.y.left = ggplot2::element_text(angle = 90, face = "bold",
+                                              size = 30),
+    panel.spacing.y = grid::unit(0.25, "lines"),
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.direction = "horizontal",
+    legend.box.just = "center",
+    legend.title = ggplot2::element_text(face = "bold", size = 30),
+    legend.text = ggplot2::element_text(size = 30),
+    legend.spacing.x = grid::unit(0.9, "cm"),
+    legend.margin = ggplot2::margin(6, 6, 4, 6),
+    plot.margin = ggplot2::margin(0, 4, 1, 4)
+  ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_colorbar(
+      order = 1,
+      title.position = "left",
+      title.hjust = 0.5,
+      direction = "horizontal",
+      barheight = grid::unit(0.58, "cm"),
+      barwidth = grid::unit(9, "cm")
+    ),
+    color = ggplot2::guide_legend(
+      order = 2,
+      title.position = "left",
+      nrow = 1,
+      byrow = TRUE,
+      override.aes = list(linewidth = 6)
+    )
+  )
+
+figure3_within_go_enrichment <- dplyr::bind_rows(lapply(
+  names(figure3_within_diet_sets),
+  function(set_name) {
+    run_enrichment(
+      genes = figure3_within_diet_sets[[set_name]],
+      universe = expressed_universe,
+      term2gene = maps$term2gene_go,
+      term2name = maps$term2name_go,
+      database = "GO",
+      background_label = "Expressed rRNA-filtered main-chromosome genes"
+    ) |>
+      dplyr::mutate(foreground_set = set_name)
+  }
+))
+
+figure3_within_go_enrichment <- figure3_within_go_enrichment |>
+  dplyr::left_join(
+    maps$term2name_go |>
+      dplyr::distinct(term, .keep_all = TRUE) |>
+      dplyr::transmute(
+        ID = term,
+        ontology = dplyr::recode(
+          ontology,
+          BP = "Biological process",
+          CC = "Cellular component",
+          MF = "Molecular function",
+          .default = NA_character_
+        )
+      ),
+    by = "ID"
+  ) |>
+  dplyr::filter(!is.na(ontology)) |>
+  dplyr::mutate(
+    ontology = factor(ontology, levels = names(go_ontology_colors))
+  )
+
+figure3_within_go_significant <- figure3_within_go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(foreground_set, ontology, p.adjust)
+
+figure3_within_go_term_gene_index <- figure3_within_go_significant |>
+  dplyr::select(foreground_set, ontology, ID, Description, GeneRatio, BgRatio,
+                pvalue, p.adjust, qvalue, Count, geneID) |>
+  tidyr::separate_rows(geneID, sep = "/") |>
+  dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+  dplyr::left_join(
+    canonical_gene_table |>
+      dplyr::select(gene_id, Description, gene_biotype, DEG_context,
+                    comparisons, directions, max_abs_log2FC, min_padj),
+    by = "gene_id"
+  ) |>
+  dplyr::arrange(foreground_set, ontology, p.adjust, term_id, gene_id)
+
+write.csv(
+  figure3_within_go_enrichment,
+  file.path(out_dir,
+            "figure3_infection_within_diet_GO_enrichment_all_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  figure3_within_go_significant,
+  file.path(out_dir,
+            "figure3_infection_within_diet_GO_enrichment_significant_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  figure3_within_go_term_gene_index,
+  file.path(out_dir,
+            "figure3_infection_within_diet_GO_term_gene_index_long.csv"),
+  row.names = FALSE
+)
+
+figure3_go_df <- figure3_within_go_significant |>
+  dplyr::mutate(
+    expression_cluster = dplyr::recode(
+      as.character(foreground_set),
+      "Expression cluster 1" = "DEG cluster 1",
+      "Expression cluster 2" = "DEG cluster 2"
+    ),
+    expression_cluster = factor(expression_cluster,
+                                levels = figure3_cluster_levels)
+  ) |>
+  dplyr::group_by(expression_cluster, ontology) |>
+  dplyr::slice_min(p.adjust, n = 4, with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(expression_cluster, ontology, p.adjust) |>
+  dplyr::group_by(expression_cluster) |>
+  dplyr::mutate(
+    neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+    term_label = stringr::str_wrap(Description, 52),
+    term_plot_id = paste(term_label, dplyr::row_number(),
+                         expression_cluster, sep = "___")
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    term_plot_id = factor(term_plot_id, levels = rev(unique(term_plot_id)))
+  )
+
+figure3_go_xmax <- max(
+  c(figure3_go_df$neg_log10_padj, -log10(params$alpha)),
+  na.rm = TRUE
+)
+figure3_go_label_space <- max(10, figure3_go_xmax * 3.3)
+figure3_panel_b <- ggplot2::ggplot(
+  figure3_go_df,
+  ggplot2::aes(x = neg_log10_padj, y = term_plot_id)
+) +
+  ggplot2::geom_vline(
+    xintercept = -log10(params$alpha),
+    linetype = "dashed",
+    color = "#6B7280",
+    linewidth = 0.35
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(
+      x = -figure3_go_label_space * 0.98,
+      label = sub("___.*$", "", term_plot_id)
+    ),
+    hjust = 0,
+    size = 8.2,
+    lineheight = 0.95,
+    color = "#111827"
+  ) +
+  ggplot2::geom_segment(
+    ggplot2::aes(x = 0, xend = neg_log10_padj,
+                 yend = term_plot_id, color = ontology),
+    linewidth = 0.75,
+    alpha = 0.8
+  ) +
+  ggplot2::geom_point(
+    ggplot2::aes(size = Count, color = ontology),
+    alpha = 0.95
+  ) +
+  ggplot2::facet_wrap(~ expression_cluster, nrow = 1,
+                      scales = "free_y", drop = FALSE) +
+  ggplot2::scale_color_manual(values = go_ontology_colors, drop = FALSE) +
+  ggplot2::scale_size_continuous(range = c(5.5, 12)) +
+  ggplot2::scale_y_discrete(labels = function(x) rep("", length(x))) +
+  ggplot2::scale_x_continuous(
+    limits = c(-figure3_go_label_space,
+               figure3_go_xmax + max(0.8, figure3_go_xmax * 0.15)),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = "B. GO terms: infection response within diet",
+    x = "-log10 adjusted p-value",
+    y = NULL,
+    color = "GO ontology",
+    size = "Cluster genes in term"
+  ) +
+  ggplot2::theme_classic(base_size = 16) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(size = 15),
+    axis.title.x = ggplot2::element_text(size = 17),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
+    axis.line = ggplot2::element_blank(),
+    axis.line.x.bottom = ggplot2::element_line(color = "black",
+                                               linewidth = 0.45),
+    strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                             color = "#111827"),
+    strip.text = ggplot2::element_text(face = "bold", size = 30),
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.box.just = "center",
+    legend.title = ggplot2::element_text(face = "bold", size = 30),
+    legend.text = ggplot2::element_text(size = 30),
+    legend.key.height = grid::unit(0.9, "cm"),
+    legend.key.width = grid::unit(1.3, "cm"),
+    legend.margin = ggplot2::margin(5, 5, 5, 5),
+    plot.title = ggplot2::element_text(face = "bold", size = 19)
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(
+      order = 1,
+      nrow = 1,
+      byrow = TRUE,
+      title.position = "left"
+    ),
+    size = ggplot2::guide_legend(
+      order = 2,
+      nrow = 1,
+      byrow = TRUE,
+      title.position = "left"
+    )
+  )
+
+figure3_within_kegg_enrichment <- dplyr::bind_rows(lapply(
+  names(figure3_within_diet_sets),
+  function(set_name) {
+    run_enrichment(
+      genes = figure3_within_diet_sets[[set_name]],
+      universe = expressed_universe,
+      term2gene = maps$term2gene_kegg,
+      term2name = maps$term2name_kegg,
+      database = "KEGG_pathway",
+      background_label = "Expressed rRNA-filtered main-chromosome genes"
+    ) |>
+      dplyr::mutate(foreground_set = set_name)
+  }
+))
+
+if (nrow(figure3_within_kegg_enrichment) > 0) {
+  figure3_within_kegg_enrichment <- figure3_within_kegg_enrichment |>
+    dplyr::left_join(
+      maps$term2name_kegg |>
+        dplyr::distinct(term, .keep_all = TRUE) |>
+        dplyr::transmute(ID = term, pathway_theme, pathway_scope),
+      by = "ID"
+    ) |>
+    dplyr::mutate(
+      pathway_theme = dplyr::coalesce(pathway_theme,
+                                      "Other KEGG pathway"),
+      pathway_scope = dplyr::coalesce(
+        pathway_scope,
+        "Unclassified KEGG reference label"
+      )
+    )
+}
+
+figure3_within_kegg_significant <- figure3_within_kegg_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::arrange(foreground_set, p.adjust)
+
+figure3_within_kegg_term_gene_index <- figure3_within_kegg_significant |>
+  dplyr::select(foreground_set, pathway_theme, pathway_scope, ID, Description,
+                GeneRatio, BgRatio, pvalue, p.adjust, qvalue, Count, geneID) |>
+  tidyr::separate_rows(geneID, sep = "/") |>
+  dplyr::rename(term_id = ID, term_name = Description, gene_id = geneID) |>
+  dplyr::left_join(
+    canonical_gene_table |>
+      dplyr::select(gene_id, Description, gene_biotype, DEG_context,
+                    comparisons, directions, max_abs_log2FC, min_padj),
+    by = "gene_id"
+  ) |>
+  dplyr::arrange(foreground_set, p.adjust, term_id, gene_id)
+
+write.csv(
+  figure3_within_kegg_enrichment,
+  file.path(out_dir,
+            "figure3_infection_within_diet_KEGG_enrichment_all_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  figure3_within_kegg_significant,
+  file.path(out_dir,
+            "figure3_infection_within_diet_KEGG_enrichment_significant_terms.csv"),
+  row.names = FALSE
+)
+write.csv(
+  figure3_within_kegg_term_gene_index,
+  file.path(out_dir,
+            "figure3_infection_within_diet_KEGG_term_gene_index_long.csv"),
+  row.names = FALSE
+)
+
+figure3_kegg_insect_ids <- c(
+  "ko00981", # Insect hormone biosynthesis
+  "ko04341", # Hedgehog signaling pathway - fly
+  "ko04624"  # Toll and Imd signaling pathway
+)
+
+figure3_kegg_display_scopes_eukaryote <- c(
+  "Eukaryote/metazoan-compatible",
+  "Core metabolism or cross-domain",
+  "Broad KEGG reference map"
+)
+
+figure3_kegg_insect_audit <- figure3_within_kegg_significant |>
+  dplyr::mutate(
+    insect_focused_pathway = ID %in% figure3_kegg_insect_ids
+  ) |>
+  dplyr::arrange(foreground_set, dplyr::desc(insect_focused_pathway),
+                 p.adjust)
+write.csv(
+  figure3_kegg_insect_audit,
+  file.path(out_dir, "figure3_KEGG_insect_pathway_eligibility.csv"),
+  row.names = FALSE
+)
+
+figure3_kegg_scope_summary <- figure3_within_kegg_significant |>
+  dplyr::mutate(
+    explicit_non_eukaryote_label = stringr::str_detect(
+      stringr::str_to_lower(Description),
+      paste0(
+        "microbial|antibiotic|two-component|bacterial|quorum|",
+        "peptidoglycan|lipopolysaccharide"
+      )
+    ),
+    displayed_in_insect_focused_figure = ID %in% figure3_kegg_insect_ids,
+    displayed_in_eukaryote_inclusive_figure = pathway_scope %in%
+      figure3_kegg_display_scopes_eukaryote &
+      !explicit_non_eukaryote_label
+  ) |>
+  dplyr::group_by(foreground_set, pathway_scope) |>
+  dplyr::summarise(
+    n_significant_pathways = dplyr::n(),
+    n_displayed_insect_focused = sum(displayed_in_insect_focused_figure),
+    n_displayed_eukaryote_inclusive =
+      sum(displayed_in_eukaryote_inclusive_figure),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(foreground_set,
+                 dplyr::desc(n_displayed_insect_focused),
+                 pathway_scope)
+write.csv(
+  figure3_kegg_scope_summary,
+  file.path(out_dir, "figure3_KEGG_pathway_scope_summary.csv"),
+  row.names = FALSE
+)
+
+prepare_figure3_kegg_df <- function(display_scopes = NULL,
+                                    include_ids = NULL,
+                                    exclude_explicit_non_eukaryote = FALSE) {
+  selected <- figure3_within_kegg_significant
+
+  if (!is.null(display_scopes)) {
+    selected <- selected |>
+      dplyr::filter(pathway_scope %in% display_scopes)
+  }
+
+  if (!is.null(include_ids)) {
+    selected <- selected |>
+      dplyr::filter(ID %in% include_ids)
+  }
+
+  if (exclude_explicit_non_eukaryote) {
+    selected <- selected |>
+      dplyr::filter(
+        !stringr::str_detect(
+          stringr::str_to_lower(Description),
+          paste0(
+            "microbial|antibiotic|two-component|bacterial|quorum|",
+            "peptidoglycan|lipopolysaccharide"
+          )
+        )
+      )
+  }
+
+  selected |>
+    dplyr::mutate(
+      expression_cluster = dplyr::recode(
+        foreground_set,
+        "Expression cluster 1" = "DEG cluster 1",
+        "Expression cluster 2" = "DEG cluster 2"
+      ),
+      expression_cluster = factor(expression_cluster,
+                                  levels = figure3_cluster_levels)
+    ) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::slice_min(p.adjust, n = 8, with_ties = FALSE) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(expression_cluster, pathway_theme, p.adjust) |>
+    dplyr::group_by(expression_cluster) |>
+    dplyr::mutate(
+      neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+      pathway_label = stringr::str_wrap(Description, 52),
+      pathway_plot_id = paste(pathway_label, dplyr::row_number(),
+                              expression_cluster, sep = "___")
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      pathway_plot_id = factor(pathway_plot_id,
+                               levels = rev(unique(pathway_plot_id)))
+    )
+}
+
+build_figure3_kegg_panel <- function(kegg_df, panel_title) {
+  if (nrow(kegg_df) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate(
+          "text", x = 0, y = 0,
+          label = "No significant KEGG pathways in either primary cluster",
+          size = 6.5,
+          fontface = "bold"
+        ) +
+        ggplot2::theme_void() +
+        ggplot2::labs(title = panel_title)
+    )
+  }
+
+  kegg_xmax <- max(
+    c(kegg_df$neg_log10_padj, -log10(params$alpha)),
+    na.rm = TRUE
+  )
+  kegg_label_space <- max(9, kegg_xmax * 3.3)
+
+  ggplot2::ggplot(
+    kegg_df,
+    ggplot2::aes(x = neg_log10_padj, y = pathway_plot_id)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(
+        x = -kegg_label_space * 0.98,
+        label = sub("___.*$", "", pathway_plot_id)
+      ),
+      hjust = 0,
+      size = 8.2,
+      lineheight = 0.95,
+      color = "#111827"
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = neg_log10_padj,
+                   yend = pathway_plot_id),
+      color = kegg_lollipop_color,
+      linewidth = 0.8,
+      alpha = 0.8
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count),
+      color = kegg_lollipop_color,
+      alpha = 0.95
+    ) +
+    ggplot2::facet_wrap(~ expression_cluster, nrow = 1,
+                        scales = "free_y", drop = FALSE) +
+    ggplot2::scale_size_continuous(range = c(5.5, 12)) +
+    ggplot2::scale_y_discrete(labels = function(x) rep("", length(x))) +
+    ggplot2::scale_x_continuous(
+      limits = c(-kegg_label_space,
+                 kegg_xmax + max(0.8, kegg_xmax * 0.15)),
+      expand = c(0, 0)
+    ) +
+    ggplot2::labs(
+      title = panel_title,
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      size = "Cluster genes in pathway"
+    ) +
+    ggplot2::theme_classic(base_size = 16) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(size = 15),
+      axis.title.x = ggplot2::element_text(size = 17),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.line = ggplot2::element_blank(),
+      axis.line.x.bottom = ggplot2::element_line(color = "black",
+                                                 linewidth = 0.45),
+      strip.background = ggplot2::element_rect(fill = "#F3F4F6",
+                                               color = "#111827"),
+      strip.text = ggplot2::element_text(face = "bold", size = 30),
+      legend.position = "bottom",
+      legend.box = "vertical",
+      legend.box.just = "center",
+      legend.title = ggplot2::element_text(face = "bold", size = 30),
+      legend.text = ggplot2::element_text(size = 30),
+      legend.key.height = grid::unit(0.9, "cm"),
+      legend.key.width = grid::unit(1.3, "cm"),
+      legend.margin = ggplot2::margin(5, 5, 5, 5),
+      plot.title = ggplot2::element_text(face = "bold", size = 19)
+    ) +
+    ggplot2::guides(
+      size = ggplot2::guide_legend(
+        order = 1,
+        nrow = 1,
+        byrow = TRUE,
+        title.position = "left"
+      )
+    )
+}
+
+figure3_kegg_df <- prepare_figure3_kegg_df(
+  include_ids = figure3_kegg_insect_ids
+)
+figure3_kegg_eukaryote_df <- prepare_figure3_kegg_df(
+  figure3_kegg_display_scopes_eukaryote,
+  exclude_explicit_non_eukaryote = TRUE
+)
+
+figure3_panel_c <- build_figure3_kegg_panel(
+  figure3_kegg_df,
+  "C. Insect KEGG pathways: infection response within diet"
+)
+figure3_panel_c_eukaryote <- build_figure3_kegg_panel(
+  figure3_kegg_eukaryote_df,
+  "C. KEGG pathways: eukaryote-inclusive view"
+)
+
+# Map pathway summaries around a locust. Connector positions are conceptual
+# physiological anchors and do not imply measured sub-tissue localization.
+figure3_pathway_anchor <- function(description) {
+  tibble::tibble(
+    anchor_x = dplyr::case_when(
+      stringr::str_detect(description, "Hedgehog") ~ 0.34,
+      stringr::str_detect(description, "Protein digestion") ~ 0.53,
+      stringr::str_detect(description, "Toll and Imd") ~ 0.55,
+      stringr::str_detect(description, "ABC transporters") ~ 0.68,
+      stringr::str_detect(description, "cytochrome P450") ~ 0.59,
+      stringr::str_detect(description, "Pentose") ~ 0.49,
+      stringr::str_detect(description, "Ascorbate") ~ 0.53,
+      stringr::str_detect(description, "Retinol") ~ 0.46,
+      stringr::str_detect(description, "secondary metabolites") ~ 0.64,
+      TRUE ~ 0.60
+    ),
+    anchor_y = dplyr::case_when(
+      stringr::str_detect(description, "Hedgehog") ~ 0.58,
+      stringr::str_detect(description, "Protein digestion") ~ 0.43,
+      stringr::str_detect(description, "Toll and Imd") ~ 0.50,
+      stringr::str_detect(description, "ABC transporters") ~ 0.47,
+      stringr::str_detect(description, "cytochrome P450") ~ 0.43,
+      stringr::str_detect(description, "Pentose") ~ 0.48,
+      stringr::str_detect(description, "Ascorbate") ~ 0.45,
+      stringr::str_detect(description, "Retinol") ~ 0.42,
+      stringr::str_detect(description, "secondary metabolites") ~ 0.44,
+      TRUE ~ 0.50
+    )
+  )
+}
+
+build_figure3_pathway_illustration <- function(kegg_df, cluster_level,
+                                               connector_color) {
+  selected <- kegg_df |>
+    dplyr::filter(as.character(expression_cluster) == cluster_level) |>
+    dplyr::arrange(pathway_theme, p.adjust) |>
+    dplyr::mutate(pathway_order = dplyr::row_number())
+
+  if (nrow(selected) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate(
+          "text", x = 0.5, y = 0.5,
+          label = "No significant KEGG pathways",
+          size = 5.5,
+          fontface = "bold"
+        ) +
+        ggplot2::theme_void() +
+        ggplot2::labs(title = cluster_level)
+    )
+  }
+
+  n_left <- ceiling(nrow(selected) / 2)
+  selected <- selected |>
+    dplyr::mutate(
+      side = dplyr::if_else(pathway_order <= n_left, "left", "right")
+    ) |>
+    dplyr::group_by(side) |>
+    dplyr::mutate(
+      callout_y = if (dplyr::n() == 1) {
+        0.50
+      } else {
+        seq(0.80, 0.20, length.out = dplyr::n())
+      }
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::bind_cols(figure3_pathway_anchor(selected$Description)) |>
+    dplyr::mutate(
+      label_x = dplyr::if_else(side == "left", 0.015, 0.985),
+      connector_x = dplyr::if_else(side == "left", 0.225, 0.775),
+      text_hjust = dplyr::if_else(side == "left", 0, 1),
+      callout_label = paste0(
+        stringr::str_wrap(Description, width = 26),
+        "\n-log10 adjusted P = ",
+        scales::number(neg_log10_padj, accuracy = 0.01),
+        " | ", Count, " genes"
+      )
+    )
+
+  locust_grob <- grid::rasterGrob(
+    png::readPNG(figure3_locust_path),
+    interpolate = TRUE
+  )
+
+  ggplot2::ggplot() +
+    ggplot2::annotation_custom(
+      locust_grob,
+      xmin = 0.23, xmax = 0.77,
+      ymin = 0.25, ymax = 0.78
+    ) +
+    ggplot2::geom_segment(
+      data = selected,
+      ggplot2::aes(
+        x = anchor_x, y = anchor_y,
+        xend = connector_x, yend = callout_y
+      ),
+      color = connector_color,
+      linewidth = 0.55,
+      alpha = 0.8
+    ) +
+    ggplot2::geom_point(
+      data = selected,
+      ggplot2::aes(x = anchor_x, y = anchor_y),
+      shape = 21,
+      size = 3.6,
+      stroke = 0.55,
+      fill = "white",
+      color = connector_color
+    ) +
+    ggplot2::geom_text(
+      data = selected,
+      ggplot2::aes(
+        x = label_x, y = callout_y,
+        label = callout_label,
+        hjust = text_hjust
+      ),
+      size = 5.4,
+      lineheight = 0.92,
+      color = "#111827"
+    ) +
+    ggplot2::annotate(
+      "rect",
+      xmin = 0, xmax = 1, ymin = 0.92, ymax = 1,
+      fill = "#F3F4F6",
+      color = "#111827",
+      linewidth = 0.45
+    ) +
+    ggplot2::annotate(
+      "text",
+      x = 0.5, y = 0.96,
+      label = cluster_level,
+      fontface = "bold",
+      size = 9
+    ) +
+    ggplot2::coord_cartesian(
+      xlim = c(0, 1), ylim = c(0, 1),
+      expand = FALSE,
+      clip = "off"
+    ) +
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      panel.border = ggplot2::element_rect(
+        color = "#111827", fill = NA, linewidth = 0.45
+      ),
+      plot.margin = ggplot2::margin(4, 8, 4, 8)
+    )
+}
+
+figure3_panel_c_illustration <-
+  (build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 1",
+    "#9A5A14"
+  ) |
+  build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 2",
+    "#2F6F72"
+  )) +
+  patchwork::plot_annotation(
+    title = "C. KEGG pathways across locust physiology",
+    subtitle = paste(
+      "Values below pathways show -log10 adjusted P and cluster gene count;",
+      "connector locations are conceptual, not measured sub-tissue localization"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 19),
+      plot.subtitle = ggplot2::element_text(size = 14, color = "#4B5563")
+    )
+  )
+
+# Title-free variants keep the scientific labels and legends while leaving
+# panel lettering and descriptive headings available for external assembly.
+figure3_fungal_percentage_plot_title_free <-
+  figure3_fungal_percentage_plot +
+  ggplot2::labs(title = NULL, subtitle = NULL)
+figure3_panel_b_title_free <- figure3_panel_b + ggplot2::labs(title = NULL)
+figure3_panel_c_eukaryote_title_free <-
+  figure3_panel_c_eukaryote + ggplot2::labs(title = NULL)
+figure3_panel_c_illustration_title_free <-
+  build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 1",
+    "#9A5A14"
+  ) |
+  build_figure3_pathway_illustration(
+    figure3_kegg_eukaryote_df,
+    "DEG cluster 2",
+    "#2F6F72"
+  )
+
+figure3_panel_a_widths <- c(0.80, 0.20)
+
+figure3_panel_a_heatmap_only_content <-
+  figure3_sample_annotation_plot /
+  figure3_panel_a +
+  patchwork::plot_layout(heights = c(0.95, 6.8))
+
+figure3_panel_a_heatmap_only <-
+  (figure3_panel_a_heatmap_only_content | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
+
+figure3_panel_a_content <-
+  figure3_fungal_percentage_plot /
+  figure3_sample_annotation_plot /
+  figure3_panel_a +
+  patchwork::plot_layout(heights = c(2.4, 1.1, 8.0))
+
+figure3_panel_a_composite <-
+  (figure3_panel_a_content | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
+
+figure3_panel_a_content_title_free <-
+  figure3_fungal_percentage_plot_title_free /
+  figure3_sample_annotation_plot /
+  figure3_panel_a +
+  patchwork::plot_layout(heights = c(2.4, 1.1, 8.0))
+
+figure3_panel_a_composite_title_free <-
+  (figure3_panel_a_content_title_free | patchwork::plot_spacer()) +
+  patchwork::plot_layout(widths = figure3_panel_a_widths)
+
+figure3_k2_composite <-
+  figure3_panel_a_composite /
+  figure3_panel_b /
+  figure3_panel_c +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 3.5)) +
+  patchwork::plot_annotation(
+    title = paste(
+      "Main-chromosome DEG expression programs and functional enrichment",
+      "(insect-focused KEGG view)"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 20)
+    )
+  )
+
+figure3_k2_composite_eukaryote_lollipop <-
+  figure3_panel_a_composite /
+  figure3_panel_b /
+  figure3_panel_c_eukaryote +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 4.4)) +
+  patchwork::plot_annotation(
+    title = paste(
+      "Main-chromosome DEG expression programs and functional enrichment",
+      "(eukaryote-inclusive KEGG view)"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 20)
+    )
+  )
+
+figure3_k2_composite_eukaryote <-
+  figure3_panel_a_composite /
+  figure3_panel_b /
+  figure3_panel_c_illustration +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 7.2)) +
+  patchwork::plot_annotation(
+    title = paste(
+      "Main-chromosome DEG expression programs and functional enrichment",
+      "(eukaryote-inclusive KEGG pathway map)"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 20)
+    )
+  )
+
+figure3_k2_composite_eukaryote_lollipop_title_free <-
+  figure3_panel_a_composite_title_free /
+  figure3_panel_b_title_free /
+  figure3_panel_c_eukaryote_title_free +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 4.4))
+
+figure3_k2_composite_eukaryote_title_free <-
+  figure3_panel_a_composite_title_free /
+  figure3_panel_b_title_free /
+  figure3_panel_c_illustration_title_free +
+  patchwork::plot_layout(heights = c(11.5, 6.5, 7.2))
+
+print(figure3_k2_composite_eukaryote)
+print(figure3_k2_composite)
+print(figure3_k2_composite_eukaryote_lollipop)
+
+figure3_export_specs <- list(
+  "figure3_fungal_percentage_track" = list(
+    plot = figure3_fungal_percentage_plot, width = 24, height = 4
+  ),
+  "figure3_panel_A_two_cluster_heatmap" = list(
+    plot = figure3_panel_a_composite, width = 24, height = 17
+  ),
+  "figure3_panel_A_two_cluster_heatmap_title_free" = list(
+    plot = figure3_panel_a_composite_title_free, width = 24, height = 16.2
+  ),
+  "figure3_panel_A_two_cluster_heatmap_without_fungal_track" = list(
+    plot = figure3_panel_a_heatmap_only, width = 24, height = 11
+  ),
+  "figure3_panel_B_two_cluster_GO" = list(
+    plot = figure3_panel_b, width = 24, height = 11.2
+  ),
+  "figure3_panel_B_two_cluster_GO_title_free" = list(
+    plot = figure3_panel_b_title_free, width = 24, height = 10.7
+  ),
+  "figure3_panel_C_two_cluster_KEGG" = list(
+    plot = figure3_panel_c_illustration, width = 24, height = 9.5
+  ),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration" = list(
+    plot = figure3_panel_c_illustration, width = 24, height = 9.5
+  ),
+  "figure3_panel_C_two_cluster_KEGG_pathway_illustration_title_free" = list(
+    plot = figure3_panel_c_illustration_title_free, width = 24, height = 8.7
+  ),
+  "figure3_panel_C_two_cluster_KEGG_insect_focused" = list(
+    plot = figure3_panel_c, width = 24, height = 4
+  ),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive" = list(
+    plot = figure3_panel_c_eukaryote, width = 24, height = 6.5
+  ),
+  "figure3_panel_C_two_cluster_KEGG_eukaryote_inclusive_title_free" = list(
+    plot = figure3_panel_c_eukaryote_title_free, width = 24, height = 6
+  ),
+  "expression_cluster_gene_level_GO_KEGG_lollipop" = list(
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
+  ),
+  "expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused" = list(
+    plot = figure3_k2_composite, width = 24, height = 27.3
+  ),
+  "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive" = list(
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
+  ),
+  "expression_cluster_gene_level_GO_KEGG_pathway_illustration" = list(
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 33.5
+  ),
+  "expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive_title_free" = list(
+    plot = figure3_k2_composite_eukaryote_lollipop_title_free,
+    width = 24,
+    height = 30.2
+  ),
+  "expression_cluster_gene_level_GO_KEGG_pathway_illustration_title_free" = list(
+    plot = figure3_k2_composite_eukaryote_title_free,
+    width = 24,
+    height = 32.3
+  ),
+  "figure3_with_fungal_percentage_KEGG_lollipop" = list(
+    plot = figure3_k2_composite_eukaryote_lollipop, width = 24, height = 31
+  ),
+  "figure3_with_fungal_percentage_KEGG_locust_map" = list(
+    plot = figure3_k2_composite_eukaryote, width = 24, height = 33.5
+  )
+)
+
+for (export_name in names(figure3_export_specs)) {
+  spec <- figure3_export_specs[[export_name]]
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, ".png")),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    dpi = 260,
+    limitsize = FALSE
+  )
+  ggplot2::ggsave(
+    file.path(out_dir, paste0(export_name, ".pdf")),
+    spec$plot,
+    width = spec$width,
+    height = spec$height,
+    limitsize = FALSE
+  )
+  if (requireNamespace("svglite", quietly = TRUE)) {
+    ggplot2::ggsave(
+      file.path(out_dir, paste0(export_name, ".svg")),
+      spec$plot,
+      width = spec$width,
+      height = spec$height,
+      limitsize = FALSE
+    )
+  }
+}
+
+knitr::kable(
+  figure3_foreground_summary,
+  caption = "Figure 3 infection-within-diet enrichment foregrounds"
+)
+knitr::kable(
+  figure3_kegg_scope_summary,
+  caption = paste(
+    "KEGG pathway scopes retained in or excluded from the insect-focused",
+    "and eukaryote-inclusive Figure 3 versions"
+  )
+)
+```
+
+```{r expression-cluster-go-table}
+if (nrow(cluster_go_significant) > 0) {
+  DT::datatable(
+    cluster_go_significant |>
+      dplyr::arrange(expression_cluster, ontology, p.adjust) |>
+      dplyr::select(expression_cluster, ontology, ID, Description, GeneRatio,
+                    BgRatio, pvalue, p.adjust, qvalue, Count, geneID),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Cluster-specific significant GO terms"
+  )
+}
+```
+
+```{r expression-cluster-go-reverse-index}
+if (nrow(cluster_term_gene_compact) > 0) {
+  DT::datatable(
+    cluster_term_gene_compact,
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Reverse index for expression-cluster GO terms"
+  )
+}
+```
+
+## GO enrichment
+
+```{r go-enrichment-plot, fig.width=18, fig.height=14}
+go_plot_df <- go_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::group_by(background, ontology) |>
+  dplyr::slice_min(p.adjust, n = params$top_terms_per_panel,
+                   with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+    term_label = stringr::str_wrap(Description, 58),
+    term_label = factor(term_label, levels = rev(unique(term_label))),
+    ontology = factor(ontology, levels = names(go_ontology_colors))
+  )
+
+if (nrow(go_plot_df) > 0) {
+  go_plot <- ggplot2::ggplot(
+    go_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_label)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count, color = ontology),
+      alpha = 0.9
+    ) +
+    ggplot2::facet_grid(ontology ~ background,
+                        scales = "free_y", space = "free_y") +
+    ggplot2::scale_color_manual(values = go_ontology_colors, drop = FALSE) +
+    ggplot2::scale_size_continuous(range = c(3.5, 11)) +
+    ggplot2::labs(
+      title = "GO enrichment in the circled heatmap branch",
+      subtitle = "Foreground is the upper branch from the all-samples full DEG heatmap",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      color = "GO ontology",
+      size = "Cluster genes in term"
+    ) +
+    ggplot2::theme_classic(base_size = 14) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(size = 11),
+      strip.text = ggplot2::element_text(face = "bold", size = 12),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+  print(go_plot)
+  ggplot2::ggsave(file.path(out_dir, "circled_cluster_GO_enrichment.png"),
+                  go_plot, width = 18, height = 14, dpi = 300)
+} else {
+  cat("No GO terms passed the adjusted p-value cutoff for this cluster.")
+}
+```
+
+```{r go-enrichment-table}
+if (nrow(go_enrichment) > 0) {
+  DT::datatable(
+    go_enrichment |>
+      dplyr::arrange(p.adjust) |>
+      dplyr::select(background, ontology, ID, Description, GeneRatio, BgRatio,
+                    pvalue, p.adjust, qvalue, Count, geneID),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "GO enrichment for the circled heatmap branch"
+  )
+}
+```
+
+## KEGG pathway enrichment
+
+```{r kegg-enrichment-plot, fig.width=18, fig.height=12}
+kegg_plot_df <- kegg_enrichment |>
+  dplyr::filter(p.adjust <= params$alpha) |>
+  dplyr::group_by(background, pathway_theme) |>
+  dplyr::slice_min(p.adjust, n = params$top_terms_per_panel,
+                   with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    neg_log10_padj = -log10(pmax(p.adjust, .Machine$double.xmin)),
+    term_label = stringr::str_wrap(Description, 55),
+    term_label = factor(term_label, levels = rev(unique(term_label))),
+    pathway_scope = factor(pathway_scope, levels = names(kegg_scope_colors))
+  )
+
+if (nrow(kegg_plot_df) > 0) {
+  kegg_plot <- ggplot2::ggplot(
+    kegg_plot_df,
+    ggplot2::aes(x = neg_log10_padj, y = term_label)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(params$alpha),
+      linetype = "dashed",
+      color = "#6B7280",
+      linewidth = 0.35
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(size = Count),
+      color = kegg_lollipop_color,
+      alpha = 0.9
+    ) +
+    ggplot2::facet_grid(pathway_theme ~ background,
+                        scales = "free_y", space = "free_y") +
+    ggplot2::scale_size_continuous(range = c(4, 12)) +
+    ggplot2::labs(
+      title = "KEGG pathway enrichment in the circled heatmap branch",
+      subtitle = "All KEGG pathway points are shown in brown; pathway scope remains in the exported tables",
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      size = "Cluster genes in pathway"
+    ) +
+    ggplot2::theme_classic(base_size = 14) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(size = 12),
+      strip.text = ggplot2::element_text(face = "bold", size = 11),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    )
+  print(kegg_plot)
+  ggplot2::ggsave(file.path(out_dir, "circled_cluster_KEGG_enrichment.png"),
+                  kegg_plot, width = 18, height = 12, dpi = 300)
+} else {
+  cat("No KEGG pathways passed the adjusted p-value cutoff for this cluster.")
+}
+```
+
+```{r kegg-enrichment-table}
+if (nrow(kegg_enrichment) > 0) {
+  DT::datatable(
+    kegg_enrichment |>
+      dplyr::arrange(p.adjust) |>
+      dplyr::select(background, pathway_theme, pathway_scope, ID, Description,
+                    GeneRatio, BgRatio, pvalue, p.adjust, qvalue, Count,
+                    geneID),
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "KEGG pathway enrichment for the circled heatmap branch"
+  )
+}
+```
+
+## Reverse term-to-gene index
+
+```{r reverse-term-gene-index}
+gene_annotation <- circled_cluster |>
+  dplyr::select(gene_id, DEG_context, phase_class, n_deg_contrasts,
+                comparisons, directions, max_abs_log2FC, min_padj,
+                max_abs_sample_z, sample_with_max_abs_z,
+                sample_deviation_direction) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE) |>
+  dplyr::left_join(
+    gff_annotation |> dplyr::select(gene_id, Description, gene_biotype),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no GFF description"),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+  )
+
+term_gene_long <- dplyr::bind_rows(
+  expand_term_genes(go_enrichment, gene_annotation) |>
+    dplyr::mutate(database = "GO"),
+  expand_term_genes(kegg_enrichment, gene_annotation) |>
+    dplyr::mutate(database = "KEGG_pathway")
+) |>
+  dplyr::arrange(database, background, p.adjust, term_id, gene_id)
+
+term_gene_compact <- term_gene_long |>
+  dplyr::group_by(database, background, term_id, term_name, GeneRatio, BgRatio,
+                  p.adjust, Count) |>
+  dplyr::summarise(
+    DEG_gene_IDs = paste(sort(unique(gene_id)), collapse = "; "),
+    DEG_gene_descriptions = paste(sort(unique(Description)), collapse = "; "),
+    DEG_contexts = paste(sort(unique(DEG_context)), collapse = "; "),
+    strongest_deviation_samples = paste(
+      sort(unique(as.character(sample_with_max_abs_z))),
+      collapse = "; "
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(database, background, p.adjust)
+
+write.csv(term_gene_long,
+          file.path(out_dir,
+                    "circled_cluster_enriched_term_gene_index_long.csv"),
+          row.names = FALSE)
+write.csv(term_gene_compact,
+          file.path(out_dir,
+                    "circled_cluster_enriched_term_gene_index_compact.csv"),
+          row.names = FALSE)
+
+if (nrow(term_gene_compact) > 0) {
+  DT::datatable(
+    term_gene_compact,
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 20, scrollX = TRUE),
+    caption = "Reverse index: enriched terms and the circled-cluster genes contributing to them"
+  )
+} else {
+  cat("No significant enriched terms were available for the reverse gene index.")
+}
+```
+
+## Cluster gene table
+
+```{r cluster-gene-table}
+cluster_gene_display <- circled_cluster |>
+  dplyr::left_join(
+    gff_annotation |> dplyr::select(gene_id, GFF_Description = Description,
+                                    gene_biotype),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    GFF_Description = dplyr::coalesce(GFF_Description, "no GFF description"),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown")
+  ) |>
+  dplyr::select(
+    heatmap_row_order, gene_id, GFF_Description, gene_biotype, DEG_context,
+    phase_class, n_deg_contrasts, comparisons, directions, max_abs_log2FC,
+    min_padj, max_abs_sample_z, sample_with_max_abs_z,
+    sample_deviation_direction
+  )
+
+write.csv(cluster_gene_display,
+          file.path(out_dir, "circled_cluster_gene_table_with_gff_descriptions.csv"),
+          row.names = FALSE)
+
+DT::datatable(
+  cluster_gene_display,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 25, scrollX = TRUE),
+  caption = "Genes in the circled heatmap branch"
+)
+```

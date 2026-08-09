@@ -11,6 +11,7 @@ params:
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
+  results_pattern: "^placed-unplaced-scaffold-analysis_"
   alpha: 0.05
   lfc_threshold: 1
   top_terms: 8
@@ -89,18 +90,18 @@ eggnog_file <- file.path(project_dir, params$eggnog_file)
 gff_file <- file.path(project_dir, params$gff_file)
 results_root <- file.path(project_dir, params$latest_results_root)
 
-placed_result_files <- list.files(
-  results_root,
-  pattern = "^placed_unplaced_all_deseq2_results[.]csv$",
-  recursive = TRUE,
-  full.names = TRUE
-)
-if (length(placed_result_files) == 0) {
-  stop("Build analysis/28-placed-unplaced-scaffold-analysis.Rmd before this page.")
+result_dirs <- list.dirs(results_root, recursive = FALSE, full.names = TRUE)
+result_dirs <- result_dirs[grepl(params$results_pattern, basename(result_dirs))]
+if (length(result_dirs) == 0) {
+  stop("No DESeq2 output folder matched: ", params$results_pattern)
 }
-primary_results_file <- placed_result_files[
-  which.max(file.info(placed_result_files)$mtime)
-]
+primary_results_dir <- result_dirs[which.max(file.info(result_dirs)$mtime)]
+primary_results_file <- file.path(
+  primary_results_dir, "placed_unplaced_all_deseq2_results.csv"
+)
+if (!file.exists(primary_results_file)) {
+  stop("Missing DESeq2 result table: ", primary_results_file)
+}
 placed_results <- read.csv(primary_results_file, check.names = FALSE) |>
   dplyr::filter(
     mapping_branch == "Competitive host",

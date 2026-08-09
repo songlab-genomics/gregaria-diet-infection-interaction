@@ -9,9 +9,10 @@ output:
     toc_float: true
 params:
   workbook_file: "data/external/curated_target_genes/2026-08-06_curated-hypoth_DEGs_v21.xlsx"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  frozen_gene_audit_file: "output/rmd_runs/curated-target-gene-figure_20260806-021426/figure4_curated_gene_audit.csv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
-  latest_results_root: "output/rmd_runs"
-  results_pattern: "^placed-unplaced-scaffold-analysis_"
+  results_file: "output/rmd_runs/placed-unplaced-scaffold-analysis_20260809-154114/placed_unplaced_all_deseq2_results.csv"
   homology_results_pattern: "^scaffold-origin-audit_"
   alpha: 0.05
   lfc_threshold: 1
@@ -90,13 +91,21 @@ page_defaults <- list(
     "data/external/curated_target_genes/",
     "2026-08-06_curated-hypoth_DEGs_v21.xlsx"
   ),
+  metadata_file = "data/metadata/mehreen_metadata_corrected_45.txt",
+  frozen_gene_audit_file = paste0(
+    "output/rmd_runs/curated-target-gene-figure_20260806-021426/",
+    "figure4_curated_gene_audit.csv"
+  ),
   placement_file = paste0(
     "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
     "host-mapping-audit_20260729-163928/unified-model/audit-summary/",
     "host_gene_sequence_placement.tsv"
   ),
+  results_file = paste0(
+    "output/rmd_runs/placed-unplaced-scaffold-analysis_20260809-154114/",
+    "placed_unplaced_all_deseq2_results.csv"
+  ),
   latest_results_root = "output/rmd_runs",
-  results_pattern = "^placed-unplaced-scaffold-analysis_",
   homology_results_pattern = "^scaffold-origin-audit_",
   alpha = 0.05,
   lfc_threshold = 1,
@@ -175,18 +184,14 @@ make_run_dir <- function(root, tag) {
 }
 
 workbook_file <- resolve_path(page_params$workbook_file)
+metadata_file <- resolve_path(page_params$metadata_file)
+frozen_gene_audit_file <- resolve_path(page_params$frozen_gene_audit_file)
 placement_file <- resolve_path(page_params$placement_file)
-source_results_dir <- latest_matching_dir(
-  page_params$latest_results_root,
-  page_params$results_pattern
-)
+results_file <- resolve_path(page_params$results_file)
+source_results_dir <- dirname(results_file)
 homology_results_dir <- latest_matching_dir(
   page_params$latest_results_root,
   page_params$homology_results_pattern
-)
-results_file <- file.path(
-  source_results_dir,
-  "placed_unplaced_all_deseq2_results.csv"
 )
 homology_evidence_file <- file.path(
   homology_results_dir,
@@ -195,15 +200,43 @@ homology_evidence_file <- file.path(
 out_dir <- make_run_dir(page_params$latest_results_root, page_params$output_tag)
 
 required_files <- c(
-  workbook_file, placement_file, results_file, homology_evidence_file
+  metadata_file, placement_file, results_file, homology_evidence_file
 )
 missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
   stop("Missing required input files: ", paste(missing_files, collapse = ", "))
 }
+if (!file.exists(workbook_file) && !file.exists(frozen_gene_audit_file)) {
+  stop(
+    "Neither the curated workbook nor its frozen gene-level audit is available: ",
+    workbook_file, "; ", frozen_gene_audit_file
+  )
+}
 
 alpha <- as.numeric(page_params$alpha)
 lfc_threshold <- as.numeric(page_params$lfc_threshold)
+
+metadata_audit <- read.delim(metadata_file, check.names = FALSE)
+metadata_audit <- metadata_audit[
+  , !is.na(names(metadata_audit)) & nzchar(names(metadata_audit)),
+  drop = FALSE
+]
+expected_assignments <- data.frame(
+  label = c("1024", "1044"),
+  Diet = c("33", "83"),
+  Treatment = c("Infected", "Infected")
+)
+observed_assignments <- metadata_audit[
+  match(expected_assignments$label, as.character(metadata_audit$label)),
+  c("label", "Diet", "Treatment"),
+  drop = FALSE
+]
+observed_assignments[] <- lapply(observed_assignments, as.character)
+rownames(observed_assignments) <- NULL
+if (nrow(metadata_audit) != 45L || anyNA(observed_assignments$label) ||
+    !identical(observed_assignments, expected_assignments)) {
+  stop("Figure 4 requires the corrected 45-sample metadata assignments.")
+}
 
 write_csv_out <- function(x, filename) {
   readr::write_csv(x, file.path(out_dir, filename), na = "")
@@ -241,18 +274,45 @@ For across-diet comparisons, the sign is oriented to the higher-protein diet:
 higher expression in the first condition printed below the bar.
 
 ```{r read-inputs}
-curated_targets <- dplyr::bind_rows(
-  readxl::read_excel(workbook_file, sheet = "Immune") |>
-    dplyr::mutate(source_sheet = "Immune"),
-  readxl::read_excel(workbook_file, sheet = "Protein-Anabolism") |>
-    dplyr::mutate(source_sheet = "Protein-Anabolism")
-) |>
-  dplyr::rename(
-    umbrella = `Umbrella Category`,
-    subcategory = `Sub-Category`,
-    gene_id = `Gene ID`,
-    description_workbook = `Gene Description`
+if (file.exists(workbook_file)) {
+  curated_targets <- dplyr::bind_rows(
+    readxl::read_excel(workbook_file, sheet = "Immune") |>
+      dplyr::mutate(source_sheet = "Immune"),
+    readxl::read_excel(workbook_file, sheet = "Protein-Anabolism") |>
+      dplyr::mutate(source_sheet = "Protein-Anabolism")
+  ) |>
+    dplyr::rename(
+      umbrella = `Umbrella Category`,
+      subcategory = `Sub-Category`,
+      gene_id = `Gene ID`,
+      description_workbook = `Gene Description`
+    )
+} else {
+  # The frozen audit preserves the exact v21 gene membership and categories.
+  # Fold changes are always recalculated from the current DESeq2 tables, so the
+  # missing workbook affects only historical status reconciliation.
+  curated_targets <- readr::read_csv(
+    frozen_gene_audit_file,
+    show_col_types = FALSE
+  ) |>
+    dplyr::distinct(
+      .data$source_sheet, .data$umbrella, .data$subcategory,
+      .data$gene_id, .data$description_workbook
+    )
+
+  historical_columns <- c(
+    "Diet 33 log2FC", "Diet 33 padj",
+    "Diet 50 log2FC", "Diet 50 padj",
+    "Diet 83 log2FC", "Diet 83 padj",
+    "inf33 vs inf50_log2FC", "inf33 vs inf50_padj",
+    "inf83 vs inf33_log2FC", "inf83 vs inf33_padj",
+    "inf83 vs inf50_log2FC", "inf83 vs inf50_padj",
+    "cont33 vs cont50_log2FC", "cont33 vs cont50_padj",
+    "cont83 vs cont33_log2FC", "cont83 vs cont33_padj",
+    "cont83 vs cont50_log2FC", "cont83 vs cont50_padj"
   )
+  for (column in historical_columns) curated_targets[[column]] <- NA_character_
+}
 
 if (anyDuplicated(curated_targets$gene_id)) {
   stop("The curated workbook contains duplicated gene IDs.")
@@ -533,8 +593,22 @@ main_targets_significant <- sum(
     target_gene_summary$currently_significant
 )
 
-protein_row <- category_impact |>
-  dplyr::filter(.data$umbrella == "Protein Synthesis & Translation")
+placement_interpretation <- if (unplaced_targets_n == 0) {
+  paste0(
+    "All targets in the supplied v21 workbook pass the main-chromosome ",
+    "restriction. Differences from the earlier Figure 4 therefore reflect ",
+    "the corrected sample assignments and the current count definition, ",
+    "rather than removal of curated genes by sequence placement."
+  )
+} else {
+  paste0(
+    main_targets, " of ", total_targets,
+    " curated genes pass the main-chromosome restriction; ",
+    unplaced_targets_n,
+    " remain available in the all-scaffold audit but are excluded from the ",
+    "primary manuscript figure."
+  )
+}
 
 write_csv_out(category_impact, "curated_target_placement_summary.csv")
 write_csv_out(target_analysis, "curated_target_gene_reanalysis_long.csv")
@@ -551,12 +625,7 @@ IDs, and the audit contains exactly one row per gene and contrast. For the six
 contrasts displayed in Figure 4, the main-chromosome subset contains exactly
 `r main_targets * 6` gene-by-contrast cells.
 
-The largest change is Protein Synthesis & Translation: only
-`r protein_row$main_chromosome_targets` of its
-`r protein_row$original_targets` targets are retained, while
-`r protein_row$unplaced_targets` are moved to the audit set. This is why the
-across-diet protein-synthesis pattern in the older figure cannot be carried
-forward as a main-chromosome result.
+`r placement_interpretation`
 
 ```{r target-placement-table}
 knitr::kable(
@@ -582,7 +651,19 @@ caused by recalculating the model. The counts above provide the current v21
 target totals and the exact effect of the chromosome restriction without
 hard-coding values from an older workbook version.
 
-[Download the gene-level Figure 4 audit workbook](assets/downloads/figure4_curated_DEG_audit.xlsx).
+```{r export-transcript-exon-audit-download, include=FALSE}
+audit_download_dir <- file.path(project_dir, "docs", "assets", "downloads")
+dir.create(audit_download_dir, recursive = TRUE, showWarnings = FALSE)
+readr::write_csv(
+  gene_audit,
+  file.path(
+    audit_download_dir,
+    "figure4_curated_DEG_audit_transcript_exon.csv"
+  )
+)
+```
+
+[Download the transcript+exon gene-level Figure 4 audit](assets/downloads/figure4_curated_DEG_audit_transcript_exon.csv).
 
 ```{r count-reconciliation-table}
 knitr::kable(
@@ -717,6 +798,12 @@ save_figure(placement_impact_plot, "curated_target_placement_impact", 12, 7.5)
 
 ## Curated target figures {#Curated_target_figures}
 
+The curated workbook contains candidate genes selected because they were
+significant in at least one differential-expression contrast. The figures below
+therefore summarize the direction and frequency of responses within this
+preselected set. They are descriptive visualizations rather than independent
+tests of whether a functional category is enriched for differential expression.
+
 ```{r build-revised-figure4, fig.width=15, fig.height=11.5, results='hide', fig.show='hide'}
 figure_contrasts <- contrast_map |>
   dplyr::filter(.data$show_in_figure)
@@ -752,6 +839,15 @@ format_test_label <- function(p) {
 }
 
 calculate_figure_tests <- function(count_data) {
+  empty_result <- tibble::tibble(
+    source_sheet = character(),
+    umbrella = character(),
+    figure_scope = character(),
+    p_value = double(),
+    p_label = character()
+  )
+  if (nrow(count_data) == 0) return(empty_result)
+
   set.seed(20260805)
   test_rows <- list()
   row_i <- 0L
@@ -798,7 +894,7 @@ calculate_figure_tests <- function(count_data) {
       }
     }
   }
-  dplyr::bind_rows(test_rows)
+  if (length(test_rows) == 0) empty_result else dplyr::bind_rows(test_rows)
 }
 
 figure_tests <- calculate_figure_tests(figure_counts)
@@ -1086,7 +1182,7 @@ diet_colors <- c("33" = "#C8641A", "50" = "#1B6B3A", "83" = "#5A2A82")
 
 build_figure4_panel <- function(
     status_count_data, sheet_name, scope_name, tag,
-    show_y = TRUE, show_legend = FALSE) {
+    show_y = TRUE, show_legend = FALSE, show_tests = TRUE) {
   panel_data <- status_count_data |>
     dplyr::filter(
       .data$source_sheet == sheet_name,
@@ -1117,6 +1213,7 @@ build_figure4_panel <- function(
       .data$umbrella, .data$p_label, .data$n_targets
     ) |>
     dplyr::mutate(
+      p_label = if (show_tests) .data$p_label else "",
       x_label = factor(
         levels(panel_data$x_label)[[2]],
         levels = levels(panel_data$x_label)
@@ -1209,7 +1306,7 @@ build_figure4_panel <- function(
 }
 
 build_figure4_summary_panel <- function(
-    status_count_data, scope_name, tag, show_y = TRUE) {
+    status_count_data, scope_name, tag, show_y = TRUE, show_tests = TRUE) {
   panel_data <- status_count_data |>
     dplyr::filter(.data$figure_scope == scope_name) |>
     dplyr::mutate(
@@ -1235,6 +1332,7 @@ build_figure4_summary_panel <- function(
   panel_annotations <- panel_data |>
     dplyr::distinct(.data$umbrella, .data$p_label, .data$n_targets) |>
     dplyr::mutate(
+      p_label = if (show_tests) .data$p_label else "",
       x_label = factor(
         levels(panel_data$x_label)[[2]],
         levels = levels(panel_data$x_label)
@@ -1378,10 +1476,64 @@ figure4_main_chromosome <- (
     )
   )
 
-figure4_main_chromosome
 save_figure(
   figure4_main_chromosome,
   "figure4_curated_targets_main_chromosomes",
+  15,
+  14.2
+)
+
+# The workbook was assembled from genes significant in at least one contrast.
+# This manuscript version therefore keeps the status bars descriptive and
+# removes category-level p-values that would reuse the selection criterion.
+desc_a <- build_figure4_panel(
+  figure_status_counts, "Immune", "Within-diet infection response", "A",
+  TRUE, FALSE, FALSE
+)
+desc_b <- build_figure4_panel(
+  figure_status_counts, "Immune", "Diet comparison among infected", "B",
+  FALSE, FALSE, FALSE
+)
+desc_c <- build_figure4_panel(
+  figure_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE, FALSE, FALSE
+)
+desc_d <- build_figure4_panel(
+  figure_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE, FALSE, FALSE
+)
+desc_e <- build_figure4_summary_panel(
+  figure_total_status_counts,
+  "Within-diet infection response", "E", TRUE, FALSE
+)
+desc_f <- build_figure4_summary_panel(
+  figure_total_status_counts,
+  "Diet comparison among infected", "F", FALSE, FALSE
+)
+
+figure4_main_chromosome_descriptive <- (
+  (desc_a | desc_b) /
+  (desc_c | desc_d) /
+  (desc_e | desc_f) /
+  patchwork::wrap_elements(full = shared_status_legend)
+) +
+  patchwork::plot_layout(heights = c(1, 1, 0.88, 0.07)) +
+  patchwork::plot_annotation(
+    title = "Curated infection-responsive immune and protein-anabolism genes",
+    subtitle = paste0(
+      "Descriptive main-chromosome view; ", main_targets,
+      " retained targets; transcript+exon DESeq2"
+    ),
+    theme = theme(
+      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+      plot.margin = margin(10, 10, 5, 10)
+    )
+  )
+
+save_figure(
+  figure4_main_chromosome_descriptive,
+  "figure4_curated_targets_main_chromosomes_descriptive",
   15,
   14.2
 )
@@ -1439,35 +1591,43 @@ save_figure(
   14.2
 )
 
-u_a <- build_figure4_panel(
-  unplaced_status_counts, "Immune", "Within-diet infection response", "A",
-  TRUE, FALSE
+all_desc_a <- build_figure4_panel(
+  all_scaffold_status_counts, "Immune", "Within-diet infection response", "A",
+  TRUE, FALSE, FALSE
 )
-u_b <- build_figure4_panel(
-  unplaced_status_counts, "Immune", "Diet comparison among infected", "B",
-  FALSE
+all_desc_b <- build_figure4_panel(
+  all_scaffold_status_counts, "Immune", "Diet comparison among infected", "B",
+  FALSE, FALSE, FALSE
 )
-u_c <- build_figure4_panel(
-  unplaced_status_counts, "Protein-Anabolism",
-  "Within-diet infection response", "C", TRUE
+all_desc_c <- build_figure4_panel(
+  all_scaffold_status_counts, "Protein-Anabolism",
+  "Within-diet infection response", "C", TRUE, FALSE, FALSE
 )
-u_d <- build_figure4_panel(
-  unplaced_status_counts, "Protein-Anabolism",
-  "Diet comparison among infected", "D", FALSE
+all_desc_d <- build_figure4_panel(
+  all_scaffold_status_counts, "Protein-Anabolism",
+  "Diet comparison among infected", "D", FALSE, FALSE, FALSE
+)
+all_desc_e <- build_figure4_summary_panel(
+  all_scaffold_total_status_counts,
+  "Within-diet infection response", "E", TRUE, FALSE
+)
+all_desc_f <- build_figure4_summary_panel(
+  all_scaffold_total_status_counts,
+  "Diet comparison among infected", "F", FALSE, FALSE
 )
 
-figure4_unplaced_scaffolds <- (
-  (u_a | u_b) /
-  (u_c | u_d) /
+figure4_all_scaffolds_descriptive <- (
+  (all_desc_a | all_desc_b) /
+  (all_desc_c | all_desc_d) /
+  (all_desc_e | all_desc_f) /
   patchwork::wrap_elements(full = shared_status_legend)
 ) +
-  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+  patchwork::plot_layout(heights = c(1, 1, 0.88, 0.07)) +
   patchwork::plot_annotation(
-    title = "Curated immune and protein-anabolism targets on unplaced scaffolds",
+    title = "Curated infection-responsive immune and protein-anabolism genes",
     subtitle = paste0(
-      "Competitive-host DESeq2; ", unplaced_targets_n,
-      " audit targets; padj < ", alpha,
-      " and |log2FC| >= ", lfc_threshold
+      "Descriptive all-scaffold view; ", total_targets,
+      " retained targets; transcript+exon DESeq2"
     ),
     theme = theme(
       plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
@@ -1477,27 +1637,66 @@ figure4_unplaced_scaffolds <- (
   )
 
 save_figure(
+  figure4_all_scaffolds_descriptive,
+  "figure4_curated_targets_all_scaffolds_descriptive",
+  15,
+  14.2
+)
+
+if (unplaced_targets_n > 0) {
+  u_a <- build_figure4_panel(
+    unplaced_status_counts, "Immune", "Within-diet infection response", "A",
+    TRUE, FALSE
+  )
+  u_b <- build_figure4_panel(
+    unplaced_status_counts, "Immune", "Diet comparison among infected", "B",
+    FALSE
+  )
+  u_c <- build_figure4_panel(
+    unplaced_status_counts, "Protein-Anabolism",
+    "Within-diet infection response", "C", TRUE
+  )
+  u_d <- build_figure4_panel(
+    unplaced_status_counts, "Protein-Anabolism",
+    "Diet comparison among infected", "D", FALSE
+  )
+
+  figure4_unplaced_scaffolds <- (
+    (u_a | u_b) /
+    (u_c | u_d) /
+    patchwork::wrap_elements(full = shared_status_legend)
+  ) +
+    patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+    patchwork::plot_annotation(
+      title = "Curated immune and protein-anabolism targets on unplaced scaffolds",
+      subtitle = paste0(
+        "Competitive-host DESeq2; ", unplaced_targets_n,
+        " audit targets; padj < ", alpha,
+        " and |log2FC| >= ", lfc_threshold
+      ),
+      theme = theme(
+        plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+        plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+        plot.margin = margin(10, 10, 5, 10)
+      )
+    )
+} else {
+  figure4_unplaced_scaffolds <- ggplot() +
+    annotate(
+      "text", x = 0.5, y = 0.5,
+      label = "No genes in the supplied v21 target list are on unplaced scaffolds.",
+      size = 6
+    ) +
+    xlim(0, 1) + ylim(0, 1) + theme_void() +
+    labs(title = "Unplaced-scaffold curated-target audit") +
+    theme(plot.title = element_text(face = "bold", size = 20, hjust = 0.5))
+}
+
+save_figure(
   figure4_unplaced_scaffolds,
   "figure4_curated_targets_unplaced_scaffolds",
   15,
   11.5
-)
-
-flag_a <- build_figure4_panel(
-  homology_flag_status_counts, "Immune",
-  "Within-diet infection response", "A", TRUE, FALSE
-)
-flag_b <- build_figure4_panel(
-  homology_flag_status_counts, "Immune",
-  "Diet comparison among infected", "B", FALSE
-)
-flag_c <- build_figure4_panel(
-  homology_flag_status_counts, "Protein-Anabolism",
-  "Within-diet infection response", "C", TRUE
-)
-flag_d <- build_figure4_panel(
-  homology_flag_status_counts, "Protein-Anabolism",
-  "Diet comparison among infected", "D", FALSE
 )
 
 homology_flag_target_n <- dplyr::n_distinct(homology_flag_analysis$gene_id)
@@ -1506,26 +1705,55 @@ homology_concordant_n <- sum(
     "Concordant nucleotide and protein flag"
 )
 
-figure4_homology_flags <- (
-  (flag_a | flag_b) /
-  (flag_c | flag_d) /
-  patchwork::wrap_elements(full = shared_status_legend)
-) +
-  patchwork::plot_layout(heights = c(1, 1, 0.075)) +
-  patchwork::plot_annotation(
-    title = "Curated targets with non-grasshopper homology review flags",
-    subtitle = paste0(
-      homology_flag_target_n,
-      " targets selected from unresolved infected diet 33 vs 50 DEGs; only ",
-      homology_concordant_n,
-      " have concordant non-metazoan nucleotide and protein hits"
-    ),
-    theme = theme(
-      plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
-      plot.subtitle = element_text(size = 12.5, hjust = 0.5),
-      plot.margin = margin(10, 10, 5, 10)
-    )
+if (homology_flag_target_n > 0) {
+  flag_a <- build_figure4_panel(
+    homology_flag_status_counts, "Immune",
+    "Within-diet infection response", "A", TRUE, FALSE
   )
+  flag_b <- build_figure4_panel(
+    homology_flag_status_counts, "Immune",
+    "Diet comparison among infected", "B", FALSE
+  )
+  flag_c <- build_figure4_panel(
+    homology_flag_status_counts, "Protein-Anabolism",
+    "Within-diet infection response", "C", TRUE
+  )
+  flag_d <- build_figure4_panel(
+    homology_flag_status_counts, "Protein-Anabolism",
+    "Diet comparison among infected", "D", FALSE
+  )
+
+  figure4_homology_flags <- (
+    (flag_a | flag_b) /
+    (flag_c | flag_d) /
+    patchwork::wrap_elements(full = shared_status_legend)
+  ) +
+    patchwork::plot_layout(heights = c(1, 1, 0.075)) +
+    patchwork::plot_annotation(
+      title = "Curated targets with non-grasshopper homology review flags",
+      subtitle = paste0(
+        homology_flag_target_n,
+        " targets selected from unresolved infected diet 33 vs 50 DEGs; only ",
+        homology_concordant_n,
+        " have concordant non-metazoan nucleotide and protein hits"
+      ),
+      theme = theme(
+        plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+        plot.subtitle = element_text(size = 12.5, hjust = 0.5),
+        plot.margin = margin(10, 10, 5, 10)
+      )
+    )
+} else {
+  figure4_homology_flags <- ggplot() +
+    annotate(
+      "text", x = 0.5, y = 0.5,
+      label = "No genes in the supplied v21 target list meet the homology-review flag.",
+      size = 6
+    ) +
+    xlim(0, 1) + ylim(0, 1) + theme_void() +
+    labs(title = "Curated-target homology audit") +
+    theme(plot.title = element_text(face = "bold", size = 20, hjust = 0.5))
+}
 
 save_figure(
   figure4_homology_flags,
@@ -1540,13 +1768,13 @@ save_figure(
 #### Main chromosomes
 
 ```{r display-figure4-main, echo=FALSE, fig.width=15, fig.height=14.2}
-figure4_main_chromosome
+figure4_main_chromosome_descriptive
 ```
 
 #### All scaffolds
 
 ```{r display-figure4-all-scaffolds, echo=FALSE, fig.width=15, fig.height=14.2}
-figure4_all_scaffolds
+figure4_all_scaffolds_descriptive
 ```
 
 #### Homology review flags
@@ -1774,7 +2002,8 @@ DT::datatable(
 ```{r export-manifest}
 manifest <- tibble::tibble(
   item = c(
-    "Frozen curated workbook",
+    "Curated v21 workbook",
+    "Corrected 45-sample metadata",
     "Official placement table",
     "Current DESeq2 result table",
     "Corrected BLASTn/DIAMOND homology evidence",
@@ -1782,6 +2011,7 @@ manifest <- tibble::tibble(
   ),
   path = c(
     workbook_file,
+    metadata_file,
     placement_file,
     results_file,
     homology_evidence_file,

@@ -5,7 +5,6 @@ set -euo pipefail
 # It counts complete, non-empty outputs but never submits, unlocks, or deletes.
 
 PROJECT_ROOT="${PROJECT_ROOT:-/scratch/mtecher/gregaria-diet-infection-interaction}"
-SAMPLE_TABLE="${DUAL_SAMPLE_TABLE:-${PROJECT_ROOT}/code/config/fatbody_dual_rnaseq_samples.tsv}"
 RUN_ID="${1:-${DUAL_RUN_ID:-}}"
 
 if [ -z "${RUN_ID}" ]; then
@@ -16,11 +15,33 @@ fi
 
 RUN_DIR="${DUAL_DIR:-${PROJECT_ROOT}/output/runs/${RUN_ID}}"
 LOG_DIR="${CLUSTER_LOG_DIR:-${PROJECT_ROOT}/logs/slurm/${RUN_ID}}"
+PROVENANCE="${RUN_DIR}/run_provenance.tsv"
 
 if [ ! -d "${RUN_DIR}" ]; then
   echo "ERROR: run directory not found: ${RUN_DIR}" >&2
   exit 2
 fi
+
+provenance_value() {
+  local key="$1"
+  if [ -s "${PROVENANCE}" ]; then
+    awk -F '\t' -v key="${key}" '$1 == key {print $2; exit}' "${PROVENANCE}"
+  fi
+}
+
+# Prefer explicit settings, then the run's own provenance. This keeps status
+# counts correct for one-sample add-on runs as well as full-cohort runs.
+SAMPLE_TABLE="${DUAL_SAMPLE_TABLE:-$(provenance_value sample_table)}"
+SAMPLE_TABLE="${SAMPLE_TABLE:-${PROJECT_ROOT}/code/config/fatbody_dual_rnaseq_samples.tsv}"
+if [[ "${SAMPLE_TABLE}" != /* ]]; then
+  SAMPLE_TABLE="${PROJECT_ROOT}/code/${SAMPLE_TABLE}"
+fi
+
+REFERENCE_DIR="${DUAL_REFERENCE_CACHE_DIR:-$(provenance_value reference_cache_dir)}"
+if [ -z "${REFERENCE_DIR}" ] || [ "${REFERENCE_DIR}" = "not used" ]; then
+  REFERENCE_DIR="${RUN_DIR}/00-reference"
+fi
+
 if [ ! -s "${SAMPLE_TABLE}" ]; then
   echo "ERROR: sample table not found: ${SAMPLE_TABLE}" >&2
   exit 2
@@ -72,21 +93,23 @@ report_stage() {
 }
 
 host_index=0
-if [ -s "${RUN_DIR}/00-reference/STAR-host-only/Genome" ] \
-  && [ -s "${RUN_DIR}/00-reference/STAR-host-only/SA" ]; then
+if [ -s "${REFERENCE_DIR}/STAR-host-only/Genome" ] \
+  && [ -s "${REFERENCE_DIR}/STAR-host-only/SA" ]; then
   host_index=1
 fi
 
 competitive_index=0
-if [ -s "${RUN_DIR}/00-reference/STAR-competitive/Genome" ] \
-  && [ -s "${RUN_DIR}/00-reference/STAR-competitive/SA" ]; then
+if [ -s "${REFERENCE_DIR}/STAR-competitive/Genome" ] \
+  && [ -s "${REFERENCE_DIR}/STAR-competitive/SA" ]; then
   competitive_index=1
 fi
 
 matrix_count=$(count_paths \
   "${RUN_DIR}/04-count-matrices/host-only/host_transcript_exon_counts.tsv" \
   "${RUN_DIR}/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv" \
-  "${RUN_DIR}/04-count-matrices/competitive-fungus/metarhizium_transcript_exon_counts.tsv")
+  "${RUN_DIR}/04-count-matrices/competitive-fungus/metarhizium_transcript_exon_counts.tsv" \
+  "${RUN_DIR}/04-count-matrices/host-only/host_exon_counts.tsv" \
+  "${RUN_DIR}/04-count-matrices/competitive-host/host_exon_counts.tsv")
 
 mapping_count=$(count_paths \
   "${RUN_DIR}/05-mapping-comparison/host_only_mapping_summary.tsv" \
@@ -101,6 +124,8 @@ transfer_count=$(count_paths \
 echo "Host-pathogen dual RNA-seq progress"
 echo "Run ID: ${RUN_ID}"
 echo "Run directory: ${RUN_DIR}"
+echo "Sample table: ${SAMPLE_TABLE}"
+echo "Reference products: ${REFERENCE_DIR}"
 echo "Samples: ${SAMPLES}"
 echo "Kraken sources: ${KRAKEN_SOURCES}"
 echo
@@ -120,7 +145,11 @@ report_stage "featureCounts: competitive host transcript+exon (primary)" \
   "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-host-transcript-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
 report_stage "featureCounts: competitive fungus transcript+exon (primary)" \
   "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-fungus-transcript-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
-report_stage "Merged count matrices" "${matrix_count}" 3
+report_stage "featureCounts: host-only exon (sensitivity)" \
+  "$(count_nonempty "${RUN_DIR}/03-featurecounts/host-only-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
+report_stage "featureCounts: competitive host exon (sensitivity)" \
+  "$(count_nonempty "${RUN_DIR}/03-featurecounts/competitive-host-exon" "*.featureCounts.txt.summary")" "${SAMPLES}"
+report_stage "Merged count matrices" "${matrix_count}" 5
 report_stage "Mapping comparison tables" "${mapping_count}" 4
 report_stage "Kraken2 reports" \
   "$(count_nonempty "${RUN_DIR}/08-taxonomy" "*.kraken2.report")" "${TAXONOMY_EXPECTED}"

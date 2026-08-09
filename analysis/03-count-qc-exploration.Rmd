@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   min_total_count: 10
   top_variable_genes: 500
   output_tag: "count-qc-exploration"

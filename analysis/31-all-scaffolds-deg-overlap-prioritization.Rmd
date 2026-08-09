@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-deseq2_20260806-004620/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
   results_root: "output/rmd_runs"
   min_count: 10
   min_samples: 3
@@ -39,7 +39,7 @@ Trace recurrent genes back to the contrasts in which they are significant.
 :::
 
 This page compares significant DEG lists from the all-samples, all-scaffold
-model pages. All 44 samples and every expression-filtered non-rRNA host locus
+model pages. All 45 samples and every expression-filtered non-rRNA host locus
 from the fresh competitive mapping are retained. It also runs the
 small condition-specific diet contrasts needed for targeted Venn diagrams:
 diet-to-diet DEGs among control samples and diet-to-diet DEGs among infected

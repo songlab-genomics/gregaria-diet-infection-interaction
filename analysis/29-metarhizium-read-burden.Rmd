@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_fixed.txt"
-  mapping_summary_file: "output/runs/host_pathogen_dual_20260727_000952/05-mapping-comparison/competitive_mapping_summary.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
   cluster_run_dir: ""
   output_tag: "metarhizium-read-burden"
 ---

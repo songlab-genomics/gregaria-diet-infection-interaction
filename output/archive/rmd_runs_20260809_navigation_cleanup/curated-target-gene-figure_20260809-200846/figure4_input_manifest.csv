@@ -1,0 +1,7 @@
+item,path
+Curated v21 workbook,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/external/curated_target_genes/2026-08-06_curated-hypoth_DEGs_v21.xlsx
+Corrected 45-sample metadata,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/metadata/mehreen_metadata_corrected_45.txt
+Official placement table,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv
+Current DESeq2 result table,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260809-154114/placed_unplaced_all_deseq2_results.csv
+Corrected BLASTn/DIAMOND homology evidence,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/scaffold-origin-audit_20260806-010750/corrected_gene_homology_evidence.tsv
+Output directory,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260809-200846
