@@ -8,12 +8,12 @@ output:
     toc: true
     toc_float: true
 params:
-  primary_counts: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv"
-  host_only_counts: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/host-only/host_transcript_exon_counts.tsv"
-  metadata: "data/metadata/mehreen_metadata_corrected_45.txt"
+  primary_counts: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  host_only_counts: "output/rmd_runs/transcript-exon-host-only-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  metadata: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   rrna_list: "data/excluded_loci/gregaria_rrna_list.txt"
   placement: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
-  previous_fresh_results: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_deseq2_all_contrasts.csv"
+  previous_fresh_results: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
   cluster_assignments: "output/rmd_runs/circled-cluster-enrichment_20260724-004440/full_heatmap_expression_cluster_assignments.csv"
   homology_evidence: "output/rmd_runs/scaffold-origin-audit_20260804-152436/corrected_gene_homology_evidence.tsv"
   alpha: 0.05
@@ -34,7 +34,7 @@ Use the official assembly report to separate main chromosomes and unplaced scaff
 ::: {.walkthrough-step}
 **Step 2 - Refit models**
 
-Run matched all-sample DESeq2 analyses for the full and conservative gene universes.
+Run matched 44-sample DESeq2 analyses for the full and conservative gene universes.
 :::
 ::: {.walkthrough-step}
 **Step 3 - Compare results**
@@ -61,8 +61,9 @@ This page therefore uses a conservative two-part analysis:
    placed host genes so a condition-specific unplaced block cannot define the
    library-size correction.
 
-All 45 sequenced samples are retained. No sample is classified or removed as an
-outlier in this analysis. Annotated rRNA loci are removed before modeling.
+The 44-library analysis cohort retains every valid library except 1044, which
+was excluded after the mapping-QC assessment. Annotated rRNA loci are removed
+before modeling.
 
 > **Interpretation boundary:** “unplaced” describes assembly placement, not
 > biological origin. Unplaced genes are preserved in the outputs and in the
@@ -585,7 +586,7 @@ placed_deg_barplot <- ggplot2::ggplot(
   ggplot2::scale_y_continuous(labels = scales::comma, expand = ggplot2::expansion(mult = c(0, 0.08))) +
   ggplot2::labs(
     title = "Primary DEG burden after excluding unplaced scaffolds",
-    subtitle = paste0("Competitive host mapping; all 45 samples; padj < ", alpha, "; |log2FC| >= ", lfc_threshold),
+    subtitle = paste0("Competitive host mapping; all 44 analysis-cohort samples; padj < ", alpha, "; |log2FC| >= ", lfc_threshold),
     x = NULL, y = "Significant placed-host DEGs", fill = NULL
   ) +
   ggplot2::theme_bw(base_size = 13) +
@@ -649,7 +650,7 @@ placed_pca_plot <- ggplot2::ggplot(
   ggplot2::scale_shape_manual(values = c("Control" = 21, "Infected" = 24)) +
   ggplot2::labs(
     title = "Placed-host fat body transcriptome",
-    subtitle = "Competitive mapping; all samples retained; crosses mark condition centroids",
+    subtitle = "Competitive mapping; all analysis-cohort samples retained; crosses mark condition centroids",
     x = paste0("PC1: ", percent_variance[[1]], "% variance"),
     y = paste0("PC2: ", percent_variance[[2]], "% variance"),
     color = "Diet and treatment", fill = "Diet and treatment", shape = "Treatment"
@@ -1085,7 +1086,7 @@ A concise Methods addition consistent with this page is:
 > were restricted to annotated non-rRNA genes assigned to nuclear chromosomes
 > or the mitochondrial genome. Genes annotated on unplaced scaffolds were
 > modeled separately as a sensitivity analysis, using sample normalization
-> factors estimated from the placed host-gene matrix. All 45 sequenced samples
+> factors estimated from the placed host-gene matrix. The 44 analysis-cohort samples
 > were retained, and the same DESeq2 contrast definitions and significance
 > thresholds were applied to both sequence-placement classes.
 

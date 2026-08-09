@@ -11,11 +11,11 @@ params:
   latest_results_root: "output/rmd_runs"
   primary_results_pattern: "^placed-unplaced-scaffold-analysis_"
   enrichment_results_pattern: "^go-term-enrichment_"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   timecourse_fatbody_reference_dir: "data/external/timecourse_fatbody_reference"
   timecourse_head_thorax_counts_dir: "data/raw_read_counts/03-gregaria-DESeq2"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
@@ -751,6 +751,33 @@ knitr::kable(set_summary, caption = "Gene sets used for enrichment")
 
 ```{r run-enrichment}
 maps <- load_term_maps()
+
+# Keep pathway labels reproducible even when an older cached TERM2NAME table
+# contains only the KO identifier. These names are the KEGG pathway labels used
+# by the significant Figure 3 results in either count-definition branch.
+kegg_pathway_name_overrides <- c(
+  "ko00140" = "Steroid hormone biosynthesis",
+  "ko00430" = "Taurine and hypotaurine metabolism",
+  "ko00480" = "Glutathione metabolism",
+  "ko00790" = "Folate biosynthesis",
+  "ko00830" = "Retinol metabolism",
+  "ko00980" = "Metabolism of xenobiotics by cytochrome P450",
+  "ko00981" = "Insect hormone biosynthesis",
+  "ko00982" = "Drug metabolism - cytochrome P450",
+  "ko00983" = "Drug metabolism - other enzymes",
+  "ko04080" = "Neuroactive ligand-receptor interaction",
+  "ko04111" = "Cell cycle - yeast",
+  "ko04341" = "Hedgehog signaling pathway - fly",
+  "ko04624" = "Toll and Imd signaling pathway",
+  "ko04974" = "Protein digestion and absorption",
+  "ko05204" = "Chemical carcinogenesis - DNA adducts"
+)
+maps$term2name_kegg <- maps$term2name_kegg |>
+  dplyr::mutate(
+    name_override = unname(kegg_pathway_name_overrides[as.character(term)]),
+    name = dplyr::coalesce(name_override, name)
+  ) |>
+  dplyr::select(-name_override)
 
 maps$term2gene_go <- maps$term2gene_go |>
   dplyr::filter(gene %in% expressed_universe)
@@ -3537,13 +3564,14 @@ Panels B and C use only genes called differentially expressed for infected
 versus control within at least one diet, then test cluster 1 and cluster 2
 separately against the expressed, rRNA-filtered main-chromosome background. The
 broader all-DEG GO
-analysis remains available above as supporting context but is not repeated in
-Figure 3. The primary KEGG panel uses the eukaryote-inclusive view: it retains
-eukaryote/metazoan-compatible, conserved cross-domain, and broad KEGG reference
-maps while excluding explicitly microbial/prokaryotic and disease-reference
-labels. Figure 3 is exported with either a KEGG lollipop panel or the locust
-pathway map. A strict insect-focused version remains available as a secondary
-export, while all tested pathway scopes and genes remain in the audit tables.
+  analysis remains available above as supporting context but is not repeated in
+  Figure 3. Two complementary KEGG versions are retained. The primary
+  insect/arthropod-focused panel is restricted to pathways whose KEGG definition
+  explicitly concerns insects or a fly model. The eukaryote-inclusive version is
+  retained as a sensitivity view and includes conserved cross-domain and broad
+  reference maps after excluding explicitly microbial/prokaryotic and
+  disease-reference labels. All tested pathways and contributing genes remain in
+  the audit tables.
 
 ```{r figure3-k2-build, fig.width=24, fig.height=24}
 figure3_cluster_levels <- c("DEG cluster 1", "DEG cluster 2")
@@ -4149,6 +4177,21 @@ figure3_kegg_insect_ids <- c(
   "ko04624"  # Toll and Imd signaling pathway
 )
 
+figure3_kegg_insect_definitions <- tibble::tribble(
+  ~ID, ~pathway_name, ~insect_arthropod_basis,
+  "ko00981", "Insect hormone biosynthesis",
+  "KEGG pathway and modules explicitly describe insect molting and juvenile hormones",
+  "ko04341", "Hedgehog signaling pathway - fly",
+  "KEGG pathway is the fly-specific Hedgehog reference map",
+  "ko04624", "Toll and Imd signaling pathway",
+  "KEGG pathway explicitly describes insect innate immune signaling"
+)
+write.csv(
+  figure3_kegg_insect_definitions,
+  file.path(out_dir, "figure3_KEGG_insect_arthropod_pathway_definitions.csv"),
+  row.names = FALSE
+)
+
 figure3_kegg_display_scopes_eukaryote <- c(
   "Eukaryote/metazoan-compatible",
   "Core metabolism or cross-domain",
@@ -4364,7 +4407,7 @@ figure3_kegg_eukaryote_df <- prepare_figure3_kegg_df(
 
 figure3_panel_c <- build_figure3_kegg_panel(
   figure3_kegg_df,
-  "C. Insect KEGG pathways: infection response within diet"
+  "C. Insect/arthropod KEGG pathways: infection response within diet"
 )
 figure3_panel_c_eukaryote <- build_figure3_kegg_panel(
   figure3_kegg_eukaryote_df,
@@ -4601,7 +4644,7 @@ figure3_k2_composite <-
   patchwork::plot_annotation(
     title = paste(
       "Main-chromosome DEG expression programs and functional enrichment",
-      "(insect-focused KEGG view)"
+      "(insect/arthropod-focused KEGG view)"
     ),
     theme = ggplot2::theme(
       plot.title = ggplot2::element_text(face = "bold", size = 20)

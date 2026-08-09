@@ -8,7 +8,7 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"

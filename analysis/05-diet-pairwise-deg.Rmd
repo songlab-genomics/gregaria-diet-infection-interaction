@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   treatment_subset: "All"
   min_total_count: 10
   alpha: 0.05
@@ -40,7 +40,7 @@ Identify diet differences that depend on infection status.
 This page tests pairwise diet contrasts. Set `treatment_subset` to `Control`,
 `Infected`, or `All` in the YAML header before knitting.
 
-All 45 samples are retained, and the fresh competitive-host count matrix keeps
+The 44-sample analysis cohort are retained, and the fresh competitive-host count matrix keeps
 all non-rRNA loci regardless of assembly placement. The matching
 [placed-chromosome diet analysis](15-all-samples-diet-pairwise-deg.html) uses
 the same samples but a narrower gene universe.

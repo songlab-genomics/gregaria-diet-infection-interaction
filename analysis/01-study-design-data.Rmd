@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   reference_gff: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   output_tag: "study-design-data"
 ---
@@ -39,10 +39,10 @@ basic count-table checks used by downstream analyses. It is meant to be
 knitted before running DESeq2 pages so mismatched sample names or incomplete
 metadata are caught early.
 
-The corrected design contains 45 libraries. Sample `1024` is assigned to the
-infected diet-33 group, and the recovered library `1044` is assigned to the
-infected diet-83 group. These assignments are checked explicitly below before
-any expression model is fitted.
+The corrected experiment contains 45 sequenced libraries, but the biological
+analysis cohort contains 44 after excluding mapping-QC outlier `1044`. Sample
+`1024` remains assigned to the infected diet-33 group. These conditions are
+checked explicitly below before any expression model is fitted.
 
 ## Setup
 
@@ -87,8 +87,8 @@ metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected
 
 stopifnot(metadata$Diet[metadata$label == "1024"] == "33")
 stopifnot(metadata$Treatment[metadata$label == "1024"] == "Infected")
-stopifnot(metadata$Diet[metadata$label == "1044"] == "83")
-stopifnot(metadata$Treatment[metadata$label == "1044"] == "Infected")
+stopifnot(nrow(metadata) == 44L)
+stopifnot(!"1044" %in% metadata$label)
 
 # This table shows whether the design is balanced across diet and infection.
 design_table <- with(metadata, table(Diet, Treatment))

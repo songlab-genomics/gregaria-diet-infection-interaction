@@ -9,10 +9,10 @@ output:
     toc_float: true
 params:
   workbook_file: "data/external/curated_target_genes/2026-08-06_curated-hypoth_DEGs_v21.xlsx"
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   frozen_gene_audit_file: "output/rmd_runs/curated-target-gene-figure_20260806-021426/figure4_curated_gene_audit.csv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
-  results_file: "output/rmd_runs/exon-only-deseq2-analysis_20260809-154221/placed_unplaced_all_deseq2_results.csv"
+  results_file: "output/rmd_runs/exon-only-deseq2-analysis_20260809-234532/placed_unplaced_all_deseq2_results.csv"
   homology_results_pattern: "^scaffold-origin-audit_"
   alpha: 0.05
   lfc_threshold: 1
@@ -91,7 +91,7 @@ page_defaults <- list(
     "data/external/curated_target_genes/",
     "2026-08-06_curated-hypoth_DEGs_v21.xlsx"
   ),
-  metadata_file = "data/metadata/mehreen_metadata_corrected_45.txt",
+  metadata_file = "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
   frozen_gene_audit_file = paste0(
     "output/rmd_runs/curated-target-gene-figure_20260806-021426/",
     "figure4_curated_gene_audit.csv"
@@ -102,7 +102,7 @@ page_defaults <- list(
     "host_gene_sequence_placement.tsv"
   ),
   results_file = paste0(
-    "output/rmd_runs/exon-only-deseq2-analysis_20260809-154221/",
+    "output/rmd_runs/exon-only-deseq2-analysis_20260809-234532/",
     "placed_unplaced_all_deseq2_results.csv"
   ),
   latest_results_root = "output/rmd_runs",
@@ -222,9 +222,9 @@ metadata_audit <- metadata_audit[
   drop = FALSE
 ]
 expected_assignments <- data.frame(
-  label = c("1024", "1044"),
-  Diet = c("33", "83"),
-  Treatment = c("Infected", "Infected")
+  label = "1024",
+  Diet = "33",
+  Treatment = "Infected"
 )
 observed_assignments <- metadata_audit[
   match(expected_assignments$label, as.character(metadata_audit$label)),
@@ -233,9 +233,10 @@ observed_assignments <- metadata_audit[
 ]
 observed_assignments[] <- lapply(observed_assignments, as.character)
 rownames(observed_assignments) <- NULL
-if (nrow(metadata_audit) != 45L || anyNA(observed_assignments$label) ||
+if (nrow(metadata_audit) != 44L || "1044" %in% metadata_audit$label ||
+    anyNA(observed_assignments$label) ||
     !identical(observed_assignments, expected_assignments)) {
-  stop("Figure 4 requires the corrected 45-sample metadata assignments.")
+  stop("Figure 4 requires the frozen 44-sample cohort with 1044 excluded.")
 }
 
 write_csv_out <- function(x, filename) {
@@ -2003,7 +2004,7 @@ DT::datatable(
 manifest <- tibble::tibble(
   item = c(
     "Curated v21 workbook",
-    "Corrected 45-sample metadata",
+    "Frozen 44-sample metadata excluding 1044",
     "Official placement table",
     "Current DESeq2 result table",
     "Corrected BLASTn/DIAMOND homology evidence",

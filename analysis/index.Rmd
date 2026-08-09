@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-metadata <- read.delim("data/metadata/mehreen_metadata_corrected_45.txt",
+metadata <- read.delim("data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
                        check.names = FALSE)
 metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
                      drop = FALSE]
@@ -17,7 +17,7 @@ metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
 
 counts_table <- read.delim(
-  "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv",
+  "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv",
   check.names = FALSE
 )
 placement <- read.delim(
@@ -42,8 +42,9 @@ cat('
 <p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
 <h1>Fat body diet-infection RNA-seq analysis</h1>
 <p class="lede">
-This workflowR site retains all 45 fat-body samples and presents two parallel
-count definitions for the same experiment. Within each, the all-scaffold view
+This workflowR site analyzes a frozen 44-library fat-body cohort after excluding
+mapping-QC outlier 1044, and presents two parallel count definitions for the
+same experiment. Within each, the all-scaffold view
 preserves the complete host-reference signal and the placed-chromosome view
 provides the conservative foreground used for publication. Outlier-removal
 analyses are archived as sensitivity checks rather than treated as competing
@@ -88,7 +89,8 @@ Start with the shared design and workflow pages. In each main menu, first choose
 either **Transcript + exon** or **Exon only**, then follow that definition
 consistently through DEG testing, overlap, catalogue, enrichment, and figures.
 Page labels state whether a result uses all scaffolds or placed chromosomes.
-Both count definitions retain every sample and remove annotated rRNA loci.
+Both count definitions retain every sample in the 44-library analysis cohort
+and remove annotated rRNA loci.
 </p>
 </div>
 
@@ -128,7 +130,7 @@ Both count definitions retain every sample and remove annotated rRNA loci.
 <section class="scope-panel placed-scope">
 <span>Parallel sensitivity definition</span>
 <h3>Exon only</h3>
-<p>Gene counts use featureCounts <code>-t exon -g gene_id</code>, with the same 45 samples, rRNA exclusion, models, contrasts, and thresholds.</p>
+<p>Gene counts use featureCounts <code>-t exon -g gene_id</code>, with the same 44-sample analysis cohort, rRNA exclusion, models, contrasts, and thresholds.</p>
 <div class="scope-links">
 <a href="36-exon-only-deseq2-analysis.html">Fat body analysis</a>
 <a href="40-exon-only-deg-overlap.html">Interpretation</a>
@@ -143,7 +145,7 @@ Both count definitions retain every sample and remove annotated rRNA loci.
 <section class="scope-panel all-scope">
 <span>Complete reference view</span>
 <h3>All samples + all scaffolds</h3>
-<p>All 45 samples and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
+<p>The 44-sample analysis cohort and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
 <div class="scope-links">
 <a href="04-deseq2-interaction-model.html">Interaction model</a>
 <a href="05-diet-pairwise-deg.html">Diet DEGs</a>
@@ -156,7 +158,7 @@ Both count definitions retain every sample and remove annotated rRNA loci.
 <section class="scope-panel placed-scope">
 <span>Current manuscript view</span>
 <h3>All samples + placed chromosomes</h3>
-<p>All 45 samples are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
+<p>The 44-sample analysis cohort are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
 <div class="scope-links">
 <a href="14-all-samples-deseq2-interaction-model.html">Interaction model</a>
 <a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
@@ -209,7 +211,7 @@ Both count definitions retain every sample and remove annotated rRNA loci.
   <a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_outlier-removal_sensitivity">
     <span>Sample sensitivity</span>
     <strong>Outlier Removal</strong>
-    <p>Document how DEG calls change under sample removal while retaining all samples as the adopted analysis.</p>
+    <p>Document historical sample-removal sensitivity from the adopted 44-library cohort.</p>
   </a>
 </div>
 

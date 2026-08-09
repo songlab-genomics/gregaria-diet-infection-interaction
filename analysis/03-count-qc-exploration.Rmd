@@ -8,8 +8,11 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  metadata_full_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  main_competitive_star_dir: "output/runs/host_pathogen_dual_20260727_000952/02-competitive-star"
+  sample_1044_competitive_star_dir: "output/runs/host_pathogen_dual_1044_20260808_110441/02-competitive-star"
   min_total_count: 10
   top_variable_genes: 500
   output_tag: "count-qc-exploration"
@@ -19,9 +22,10 @@ params:
 
 ::: {.walkthrough-grid}
 ::: {.walkthrough-step}
-**Step 1 - Filter counts**
+**Step 1 - Define the cohort**
 
-Remove rRNA and uninformative low-count rows while retaining every sample.
+Retain all valid libraries except 1044, whose alignment profile is documented
+below as a supplementary QC exclusion.
 :::
 ::: {.walkthrough-step}
 **Step 2 - Explore samples**
@@ -51,7 +55,7 @@ samples in the same order.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("DESeq2", "ggplot2", "pheatmap", "scales")
+required <- c("DESeq2", "ggplot2", "patchwork", "pheatmap", "scales")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -68,6 +72,17 @@ metadata <- read.delim(file.path(project_dir, params$metadata_file),
 metadata$label <- as.character(metadata$label)
 metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
+
+mapping_metadata <- read.delim(
+  file.path(project_dir, params$metadata_full_file),
+  check.names = FALSE
+)
+mapping_metadata$label <- as.character(mapping_metadata$label)
+mapping_metadata$Diet <- factor(mapping_metadata$Diet, levels = c("33", "50", "83"))
+mapping_metadata$Treatment <- factor(
+  mapping_metadata$Treatment,
+  levels = c("Control", "Infected")
+)
 
 counts_raw <- read.delim(file.path(project_dir, params$counts_file),
                          check.names = FALSE)
@@ -116,6 +131,402 @@ ggplot(library_size, aes(x = interaction(Diet, Treatment),
 write.csv(library_size, file.path(out_dir, "library_size.csv"),
           row.names = FALSE)
 ```
+
+## Mapping quality across diet and infection
+
+The competitive STAR alignment provides a second library-level check that is
+independent of the host gene-count totals. Here, "unique mapping" means that a
+read mapped to one position in the combined locust--*Metarhizium* reference. It
+does not mean that the read mapped specifically to the fungus. STAR's "too
+short" category means that too little of the read aligned with sufficient
+score; it does not necessarily mean that the original FASTQ read was physically
+short.
+
+The first figure compares two definitions in vertically stacked panels. Panel A uses only reads
+with one accepted genomic location. Panel B adds reads that STAR aligned to 2--20
+locations. Reads assigned to more than 20 loci remain excluded from Panel B.
+The following four-panel graph separates the main STAR outcomes. Every library
+is shown in this supplementary QC record, and 1044 is labeled because its
+mapping profile is visibly different from the remaining samples. Sample 1044 is
+excluded from the expression analyses that follow.
+
+```{r mapping-quality-by-design, fig.width=11, fig.height=14}
+star_dirs <- file.path(
+  project_dir,
+  c(params$main_competitive_star_dir,
+    params$sample_1044_competitive_star_dir)
+)
+star_logs <- unlist(lapply(
+  star_dirs,
+  list.files,
+  pattern = "_Log.final.out$",
+  full.names = TRUE
+))
+
+read_star_metric <- function(path, metric) {
+  lines <- readLines(path, warn = FALSE)
+  matched <- lines[grepl(metric, lines, fixed = TRUE)]
+  if (length(matched) != 1) {
+    stop("Expected one STAR metric '", metric, "' in ", path)
+  }
+  value <- trimws(strsplit(matched, "|", fixed = TRUE)[[1]][2])
+  as.numeric(gsub("%", "", value, fixed = TRUE))
+}
+
+mapping_qc <- data.frame(
+  label = sub("_Log.final.out$", "", basename(star_logs)),
+  input_reads = vapply(
+    star_logs, read_star_metric, numeric(1), metric = "Number of input reads"
+  ),
+  unique_pct = vapply(
+    star_logs, read_star_metric, numeric(1), metric = "Uniquely mapped reads %"
+  ),
+  multimapped_pct = vapply(
+    star_logs, read_star_metric, numeric(1),
+    metric = "% of reads mapped to multiple loci"
+  ),
+  unmapped_short_pct = vapply(
+    star_logs, read_star_metric, numeric(1),
+    metric = "% of reads unmapped: too short"
+  ),
+  unmapped_other_pct = vapply(
+    star_logs, read_star_metric, numeric(1),
+    metric = "% of reads unmapped: other"
+  ),
+  stringsAsFactors = FALSE
+)
+
+stopifnot(setequal(mapping_qc$label, mapping_metadata$label))
+mapping_qc <- mapping_qc[match(mapping_metadata$label, mapping_qc$label), ]
+mapping_qc$Diet <- mapping_metadata$Diet
+mapping_qc$Treatment <- mapping_metadata$Treatment
+mapping_qc$unique_plus_multimapped_pct <-
+  mapping_qc$unique_pct + mapping_qc$multimapped_pct
+
+test_mapping_design <- function(data, metric, mapping_definition, scenario) {
+  data$mapping_logit <- qlogis(
+    pmin(pmax(data[[metric]] / 100, 1e-6), 1 - 1e-6)
+  )
+
+  interaction_model <- stats::lm(mapping_logit ~ Diet * Treatment, data = data)
+  interaction_test <- stats::drop1(
+    interaction_model,
+    scope = ~ Diet:Treatment,
+    test = "F"
+  )
+  additive_model <- stats::lm(mapping_logit ~ Diet + Treatment, data = data)
+  main_tests <- stats::drop1(additive_model, test = "F")
+
+  data.frame(
+    mapping_definition = mapping_definition,
+    scenario = scenario,
+    samples = nrow(data),
+    interaction_p = interaction_test["Diet:Treatment", "Pr(>F)"],
+    diet_p = main_tests["Diet", "Pr(>F)"],
+    infection_p = main_tests["Treatment", "Pr(>F)"],
+    stringsAsFactors = FALSE
+  )
+}
+
+format_test_line <- function(test_row) {
+  paste0(
+    "Factorial models: diet x infection p = ",
+    format.pval(test_row$interaction_p, digits = 3, eps = 0.001),
+    "; diet p = ", format.pval(test_row$diet_p, digits = 3, eps = 0.001),
+    "; infection p = ", format.pval(test_row$infection_p, digits = 3, eps = 0.001)
+  )
+}
+
+mapping_figure_tests <- rbind(
+  test_mapping_design(mapping_qc, "unique_pct", "Unique mapping", "All 45 libraries"),
+  test_mapping_design(
+    mapping_qc,
+    "unique_plus_multimapped_pct",
+    "Unique + multimapping",
+    "All 45 libraries"
+  )
+)
+
+treatment_colors <- c(Control = "#FAEBD7", Infected = "#8B0000")
+point_position <- ggplot2::position_jitterdodge(
+  jitter.width = 0.10,
+  dodge.width = 0.72,
+  seed = 33
+)
+
+make_mapping_design_plot <- function(data, metric, title, y_label, test_row) {
+  plot_data <- data
+  plot_data$mapping_percentage <- plot_data[[metric]]
+
+  ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(x = Diet, y = mapping_percentage, fill = Treatment)
+  ) +
+    ggplot2::geom_boxplot(
+      position = ggplot2::position_dodge(width = 0.72),
+      width = 0.62,
+      outlier.shape = NA,
+      color = "black"
+    ) +
+    ggplot2::geom_point(
+      shape = 21,
+      size = 3.2,
+      position = point_position,
+      color = "black"
+    ) +
+    ggplot2::geom_text(
+      data = plot_data[plot_data$label == "1044", ],
+      ggplot2::aes(label = label),
+      position = ggplot2::position_nudge(x = 0.20, y = 0.8),
+      size = 4.2,
+      fontface = "bold",
+      inherit.aes = TRUE
+    ) +
+    ggplot2::scale_fill_manual(values = treatment_colors) +
+    ggplot2::scale_y_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0, 0.08))
+    ) +
+    ggplot2::theme_classic(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold")
+    ) +
+    ggplot2::labs(
+      title = title,
+      subtitle = format_test_line(test_row),
+      x = "Diet",
+      y = y_label,
+      fill = "Treatment"
+    )
+}
+
+p_mapping_unique <- make_mapping_design_plot(
+  mapping_qc,
+  "unique_pct",
+  "Unique mapping",
+  "Uniquely mapped reads (%)",
+  mapping_figure_tests[1, ]
+)
+
+p_mapping_unique_plus_multi <- make_mapping_design_plot(
+  mapping_qc,
+  "unique_plus_multimapped_pct",
+  "Unique + multimapping",
+  "Reads mapped to 1--20 loci (%)",
+  mapping_figure_tests[2, ]
+)
+
+p_mapping_comparison <-
+  p_mapping_unique / p_mapping_unique_plus_multi +
+  patchwork::plot_layout(guides = "collect") +
+  patchwork::plot_annotation(
+    tag_levels = "A",
+    title = "Competitive STAR mapping by diet and infection",
+    subtitle = "All 45 libraries shown for QC; 1044 is excluded from downstream expression analyses",
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(size = 20, face = "bold"),
+      plot.subtitle = ggplot2::element_text(size = 15)
+    )
+  ) &
+  ggplot2::theme(
+    legend.position = "bottom",
+    plot.tag = ggplot2::element_text(size = 19, face = "bold")
+  )
+
+print(p_mapping_comparison)
+
+mapping_plot_exports <- list(
+  competitive_unique_mapping_by_design = p_mapping_unique,
+  competitive_unique_plus_multimapping_by_design = p_mapping_unique_plus_multi,
+  competitive_unique_vs_multimapping_by_design = p_mapping_comparison,
+  figureS3_mapping_quality_exclusion_1044 = p_mapping_comparison
+)
+mapping_plot_dimensions <- list(
+  competitive_unique_mapping_by_design = c(11, 6),
+  competitive_unique_plus_multimapping_by_design = c(11, 6),
+  competitive_unique_vs_multimapping_by_design = c(11, 14),
+  figureS3_mapping_quality_exclusion_1044 = c(11, 14)
+)
+
+for (plot_name in names(mapping_plot_exports)) {
+  dimensions <- mapping_plot_dimensions[[plot_name]]
+  for (extension in c("png", "pdf", "svg")) {
+  ggplot2::ggsave(
+      file.path(out_dir, paste0(plot_name, ".", extension)),
+      mapping_plot_exports[[plot_name]],
+      width = dimensions[1],
+      height = dimensions[2],
+      dpi = 320
+  )
+  }
+}
+```
+
+```{r mapping-outcomes-by-design, fig.width=12, fig.height=9}
+mapping_metrics <- c(
+  unique_pct = "Unique mapping",
+  multimapped_pct = "Multiple loci",
+  unmapped_short_pct = "Unmapped: too short",
+  unmapped_other_pct = "Unmapped: other"
+)
+
+mapping_long <- do.call(rbind, lapply(names(mapping_metrics), function(metric) {
+  data.frame(
+    label = mapping_qc$label,
+    Diet = mapping_qc$Diet,
+    Treatment = mapping_qc$Treatment,
+    metric = mapping_metrics[[metric]],
+    percentage = mapping_qc[[metric]],
+    stringsAsFactors = FALSE
+  )
+}))
+mapping_long$metric <- factor(mapping_long$metric,
+                              levels = unname(mapping_metrics))
+
+p_mapping_outcomes <- ggplot2::ggplot(
+  mapping_long,
+  ggplot2::aes(x = Diet, y = percentage, fill = Treatment)
+) +
+  ggplot2::geom_boxplot(
+    position = ggplot2::position_dodge(width = 0.72),
+    width = 0.62,
+    outlier.shape = NA,
+    color = "black"
+  ) +
+  ggplot2::geom_point(
+    shape = 21,
+    size = 2.7,
+    position = point_position,
+    color = "black"
+  ) +
+  ggplot2::geom_text(
+    data = mapping_long[mapping_long$label == "1044", ],
+    ggplot2::aes(label = label),
+    position = ggplot2::position_nudge(x = 0.20, y = 1.2),
+    size = 3.6,
+    fontface = "bold"
+  ) +
+  ggplot2::facet_wrap(~ metric, ncol = 2, scales = "free_y") +
+  ggplot2::scale_fill_manual(values = treatment_colors) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    strip.background = ggplot2::element_rect(fill = "grey94", color = "black"),
+    strip.text = ggplot2::element_text(face = "bold", size = 13)
+  ) +
+  ggplot2::labs(
+    title = "STAR mapping outcomes across the experimental design",
+    x = "Diet",
+    y = "Reads (%)",
+    fill = "Treatment"
+  )
+
+print(p_mapping_outcomes)
+
+for (extension in c("png", "pdf", "svg")) {
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("competitive_mapping_outcomes_by_design.", extension)),
+    p_mapping_outcomes,
+    width = 12,
+    height = 9,
+    dpi = 320
+  )
+}
+
+write.csv(mapping_qc,
+          file.path(out_dir, "competitive_mapping_quality_all_45_samples.csv"),
+          row.names = FALSE)
+```
+
+### Does mapping quality differ with diet or infection?
+
+Because percentages are bounded between 0 and 100, each mapping proportion is
+logit-transformed before fitting the factorial model. Unique mapping and unique
+plus multimapping are tested separately. We first test the diet-by-infection
+interaction. Since neither interaction is supported, the diet and infection
+terms are then tested in additive models. The all-library rows provide the
+formal tests printed on the supplementary figure. The rows without 1044
+describe the final biological analysis cohort.
+
+```{r mapping-quality-model}
+mapping_definitions <- c(
+  unique_pct = "Unique mapping",
+  unique_plus_multimapped_pct = "Unique + multimapping"
+)
+
+mapping_model_results <- do.call(rbind, lapply(
+  names(mapping_definitions),
+  function(metric) {
+    rbind(
+      test_mapping_design(
+        mapping_qc,
+        metric,
+        mapping_definitions[[metric]],
+        "All 45 libraries shown for QC"
+      ),
+      test_mapping_design(
+        mapping_qc[mapping_qc$label != "1044", ],
+        metric,
+        mapping_definitions[[metric]],
+        "Final 44-sample analysis cohort"
+      )
+    )
+  }
+))
+
+mapping_summary_long <- do.call(rbind, lapply(
+  names(mapping_definitions),
+  function(metric) {
+    data.frame(
+      mapping_definition = mapping_definitions[[metric]],
+      Diet = mapping_qc$Diet,
+      Treatment = mapping_qc$Treatment,
+      percentage = mapping_qc[[metric]]
+    )
+  }
+))
+
+mapping_group_summary <- aggregate(
+  percentage ~ mapping_definition + Diet + Treatment,
+  data = mapping_summary_long,
+  FUN = function(x) c(mean = mean(x), sd = stats::sd(x), n = length(x))
+)
+mapping_group_summary <- data.frame(
+  mapping_definition = mapping_group_summary$mapping_definition,
+  Diet = mapping_group_summary$Diet,
+  Treatment = mapping_group_summary$Treatment,
+  mean_mapping_pct = mapping_group_summary$percentage[, "mean"],
+  sd_mapping_pct = mapping_group_summary$percentage[, "sd"],
+  samples = mapping_group_summary$percentage[, "n"]
+)
+
+knitr::kable(mapping_model_results, digits = 4,
+             caption = "Factorial tests for both competitive mapping definitions")
+knitr::kable(mapping_group_summary, digits = 2,
+             caption = "Mapping percentage by experimental condition")
+
+write.csv(mapping_model_results,
+          file.path(out_dir, "competitive_mapping_design_tests.csv"),
+          row.names = FALSE)
+write.csv(mapping_group_summary,
+          file.path(out_dir, "competitive_mapping_group_summary.csv"),
+          row.names = FALSE)
+```
+
+For unique mapping alone, there is no supported diet-by-infection interaction
+(`r sprintf("p = %.3f", mapping_model_results$interaction_p[1])`). Diet is
+borderline (`r sprintf("p = %.3f", mapping_model_results$diet_p[1])`), whereas
+infected libraries have a lower unique-mapping rate overall
+(`r sprintf("p = %.3f", mapping_model_results$infection_p[1])`). When accepted
+multimapping reads are added, neither the interaction
+(`r sprintf("p = %.3f", mapping_model_results$interaction_p[3])`), diet
+(`r sprintf("p = %.3f", mapping_model_results$diet_p[3])`), nor infection
+(`r sprintf("p = %.3f", mapping_model_results$infection_p[3])`) crosses the
+0.05 threshold in the all-sample model. This is a QC association and should not
+be interpreted as proof that infection caused poor mapping: genome duplication,
+fungal burden, library composition, and other technical differences can all
+alter the proportion of reads accepted by the reference alignment.
 
 ## Low-count filtering
 

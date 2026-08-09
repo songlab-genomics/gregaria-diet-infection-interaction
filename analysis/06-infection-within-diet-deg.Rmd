@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   min_total_count: 10
@@ -44,7 +44,7 @@ Compare the size, direction, and physiology of infection responses across diets.
 This page tests infected versus control samples separately within each diet.
 This is a simple and readable complement to the full interaction model.
 
-This branch retains all 45 samples and all expression-filtered, non-rRNA host
+This branch retains the 44-sample analysis cohort and all expression-filtered, non-rRNA host
 loci from the fresh competitive mapping, including genes on unplaced
 scaffolds. The parallel [placed-chromosome analysis](16-all-samples-infection-within-diet-deg.html)
 uses the same sample set and thresholds but restricts the tested gene universe.

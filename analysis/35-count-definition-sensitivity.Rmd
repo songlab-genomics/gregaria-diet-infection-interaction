@@ -8,9 +8,9 @@ output:
     toc: true
     toc_float: true
 params:
-  exon_counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
-  transcript_exon_counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_transcript_exon_counts.tsv"
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  exon_counts_file: "output/rmd_runs/exon-only-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  transcript_exon_counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   min_count: 10
@@ -26,7 +26,7 @@ params:
 ::: {.walkthrough-step}
 **Step 1 - Hold the experiment constant**
 
-Retain all 45 samples, the competitive host alignment, the same chromosome
+Retain the 44-sample analysis cohort, the competitive host alignment, the same chromosome
 scope, and the same rRNA exclusion list.
 :::
 ::: {.walkthrough-step}
@@ -460,7 +460,7 @@ p_deg_counts <- ggplot2::ggplot(
   ggplot2::labs(
     title = "DEG totals under exon-only and transcript-plus-exon counting",
     subtitle = paste0(
-      "All 45 samples; nuclear chromosomes; rRNA removed; padj < ",
+      "The 44-sample analysis cohort; nuclear chromosomes; rRNA removed; padj < ",
       params$alpha, "; |log2FC| >= ", params$lfc_threshold
     ),
     x = "Significant genes", y = NULL, fill = "Counting mode"
@@ -802,7 +802,7 @@ p_lrt <- lrt_summary |>
   ) +
   ggplot2::labs(
     title = "Formal diet-by-infection interaction is count-definition sensitive",
-    subtitle = "Omnibus LRT, Benjamini-Hochberg FDR < 0.05; all 45 libraries retained",
+    subtitle = "Omnibus LRT, Benjamini-Hochberg FDR < 0.05; 44-library analysis cohort",
     x = NULL,
     y = "Genes with an omnibus interaction",
     fill = "Counting mode"

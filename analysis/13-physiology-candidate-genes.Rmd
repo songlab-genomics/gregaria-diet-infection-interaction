@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
-  all_results_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_deseq2_all_contrasts.csv"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  all_results_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -20,7 +20,7 @@ params:
 
 ## Purpose
 
-This page tests the biological hypothesis in a targeted way using all 45 samples.
+This page tests the biological hypothesis in a targeted way using the 44-sample analysis cohort.
 Instead of starting
 from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
 genes plausibly involved in insect-relevant immune and fat-body processes. The
@@ -203,7 +203,7 @@ knitr::kable(
 
 ## Current all-sample DEG sources
 
-The all-scaffold and placed-chromosome models use the same 45 samples and the
+The all-scaffold and placed-chromosome models use the same 44-sample analysis cohort and the
 same significance thresholds. Their gene universes differ, so their adjusted
 p-values are estimated independently and should be compared as analysis
 scopes, not added together.
@@ -361,7 +361,7 @@ p_candidate <- ggplot2::ggplot(
   ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.15))) +
   ggplot2::labs(
     title = "Diet-specific infection-response DEGs in four physiology themes",
-    subtitle = "All 45 samples retained; panels differ only in the tested gene universe",
+    subtitle = "The 44-sample analysis cohort retained; panels differ only in the tested gene universe",
     x = "Diet", y = "Number of candidate DEGs", fill = NULL
   ) +
   ggplot2::theme_bw(base_size = 14) +

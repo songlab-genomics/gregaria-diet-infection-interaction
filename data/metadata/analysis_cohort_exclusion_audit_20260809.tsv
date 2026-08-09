@@ -1,0 +1,2 @@
+sample_id	treatment	diet	unique_mapping_pct	multimapping_pct	unique_plus_multimapping_pct	unmapped_too_short_pct	analysis_status	rationale
+1044	Infected	83	1.78	1.45	3.23	89.81	excluded_from_biological_models	Extreme mapping-QC outlier; retained in QC and supplementary reporting

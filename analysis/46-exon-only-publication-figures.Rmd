@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/exon-only-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
@@ -37,7 +37,7 @@ img {
 
 This page rebuilds the established publication figure set using only genes
 classified as `Nuclear chromosome` by the official assembly-derived placement
-table. All 45 fat body samples are retained, annotated rRNA loci are excluded,
+table. The 44-library analysis cohort excludes QC outlier 1044, annotated rRNA loci are excluded,
 and expression counts come from the fresh competitive host-pathogen mapping.
 Unplaced-scaffold results remain on the audit page and are not mixed into these
 primary paper figures.
@@ -69,10 +69,10 @@ Write publication-ready PNG, SVG, PDF, and source-table files together.
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 publication_default_params <- list(
-  metadata_file = "data/metadata/mehreen_metadata_corrected_45.txt",
+  metadata_file = "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
   counts_file = paste0(
-    "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/",
-    "competitive-host/host_exon_counts.tsv"
+    "output/rmd_runs/exon-only-primary-excluding1044_20260809-233420/",
+    "host_counts_no_rrna.tsv"
   ),
   placement_file = paste0(
     "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
@@ -787,7 +787,7 @@ p_design <- ggplot2::ggplot(
     label = paste(
       "Female S. gregaria fat body RNA-seq",
       "96 h after control or Metarhizium challenge",
-      "all samples retained; rRNA loci removed bioinformatically",
+      "all analysis-cohort samples retained; rRNA loci removed bioinformatically",
       sep = "\n"
     ),
     label.size = 0.25,
@@ -1811,16 +1811,13 @@ labels. Panels B and C use only genes differentially expressed for infected
 versus control within at least one diet, with cluster 1 and cluster 2 tested
 separately. The overall all-DEG enrichment remains on the analysis page and is
 not repeated here.
-The primary KEGG panel presents the eukaryote-inclusive pathways around a
-locust illustration. Each pathway is connected to a conceptual physiological
-region and reports its `-log10` adjusted P-value and number of cluster genes
-below the pathway name. Connector positions aid interpretation; they do not
-represent measured sub-tissue localization. The pathway set retains
-eukaryote/metazoan-compatible, conserved cross-domain, and broad reference maps
-while excluding explicitly microbial/prokaryotic and disease-reference labels.
-The complete figure is provided in two matched versions: one with KEGG
-lollipops and one with the locust pathway map. The strict insect-focused version
-remains as a secondary export. The complete pathway-scope and pathway-gene
+The primary KEGG panel is insect/arthropod-focused and retains only pathways
+whose KEGG definition explicitly concerns insects or a fly model. A separate
+eukaryote-inclusive lollipop version preserves conserved cross-domain and broad
+reference pathways after excluding explicitly microbial/prokaryotic and
+disease-reference labels. The broader pathways are also available around a
+locust illustration; connector positions are conceptual and do not represent
+measured sub-tissue localization. The complete pathway-scope and pathway-gene
 audits remain available.
 
 ```{r figure-3-composite, echo=FALSE, fig.width=16, fig.height=12}
@@ -1847,6 +1844,10 @@ figure3_asset_specs <- tibble::tribble(
   "Composite: insect-focused KEGG lollipops",
   tools::file_path_sans_ext(figure3_insect_source),
   "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused",
+  "Panel C: insect/arthropod-focused KEGG lollipops",
+  file.path(circled_cluster_dir,
+            "figure3_panel_C_two_cluster_KEGG_insect_focused"),
+  "figure3_panel_C_two_cluster_KEGG_insect_arthropod_focused",
   "Composite: reference-context companion",
   tools::file_path_sans_ext(figure3_reference_source),
   "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_with_references",
@@ -1927,22 +1928,26 @@ figure3_lollipop_png <- file.path(
   out_dir,
   "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png"
 )
+figure3_insect_png <- file.path(
+  out_dir,
+  "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_insect_focused.png"
+)
 knitr::kable(figure3_exports, caption = "Figure 3 copied exports")
 
 ```
 
 ### Figure 3 versions {.tabset}
 
-#### Locust pathway map
+#### Insect/arthropod-focused
 
-```{r figure-3-locust-map-display, echo=FALSE, fig.width=16, fig.height=19}
-if (file.exists(figure3_png)) {
+```{r figure-3-insect-display, echo=FALSE, fig.width=16, fig.height=17}
+if (file.exists(figure3_insect_png)) {
   grid::grid.newpage()
-  grid::grid.raster(png::readPNG(figure3_png))
+  grid::grid.raster(png::readPNG(figure3_insect_png))
 }
 ```
 
-#### KEGG lollipops
+#### Eukaryote-inclusive
 
 ```{r figure-3-kegg-lollipop-display, echo=FALSE, fig.width=16, fig.height=18}
 if (file.exists(figure3_lollipop_png)) {
@@ -1951,10 +1956,19 @@ if (file.exists(figure3_lollipop_png)) {
 }
 ```
 
+#### Eukaryote-inclusive locust map
+
+```{r figure-3-locust-map-display, echo=FALSE, fig.width=16, fig.height=19}
+if (file.exists(figure3_png)) {
+  grid::grid.newpage()
+  grid::grid.raster(png::readPNG(figure3_png))
+}
+```
+
 ## Figure 4: curated immune and protein-anabolism targets
 
 Figure 4 preserves the curated biological categories and recalculates every
-DEG status from the corrected 45-sample competitive-host exon-only analysis.
+DEG status from the corrected 44-sample competitive-host exon-only analysis.
 The supplied v21 workbook contains 111 unique targets (77 immune and 34
 protein-anabolism genes), and all 111 map to main nuclear chromosomes. Each
 target therefore stays in the denominator for every contrast and is shown as
@@ -2546,6 +2560,34 @@ knitr::kable(figure_s2_exports,
              caption = "Figure S2 chromosome-localization exports")
 knitr::kable(s2_unplaced_summary,
              caption = "Audit check: excluded unplaced or missing DEG memberships (expected zero)")
+```
+
+## Figure S3: mapping-quality basis for excluding 1044
+
+Figure S3 preserves all 45 sequenced libraries for the QC comparison, while all
+biological models elsewhere on this page use the 44-library cohort. Panel A
+shows unique mapping and Panel B shows unique plus accepted multimapping; the
+factorial diet, infection, and interaction tests are printed on the panels.
+
+```{r figure-s3-mapping-quality, echo=FALSE, out.width="82%"}
+qc_dir <- latest_dir("^count-qc-exploration_")
+s3_stem <- "figureS3_mapping_quality_exclusion_1044"
+s3_sources <- file.path(qc_dir, paste0(s3_stem, c(".png", ".svg", ".pdf")))
+if (!all(file.exists(s3_sources))) {
+  stop("Missing Figure S3 mapping-QC exports in: ", qc_dir)
+}
+s3_targets <- file.path(out_dir, basename(s3_sources))
+file.copy(s3_sources, s3_targets, overwrite = TRUE)
+s3_png_source <- s3_sources[grepl("[.]png$", s3_sources)]
+grid::grid.newpage()
+grid::grid.raster(png::readPNG(s3_png_source))
+```
+
+```{r figure-s3-export-manifest, echo=FALSE}
+knitr::kable(
+  tibble::tibble(file = basename(s3_targets), present = file.exists(s3_targets)),
+  caption = "Figure S3 mapping-quality exports"
+)
 ```
 
 ## Exported files

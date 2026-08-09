@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/04-count-matrices/competitive-host/host_exon_counts.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/exon-only-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   reference_diet: "50"
@@ -24,7 +24,7 @@ params:
 ## Purpose
 
 This page reruns the complete main-chromosome interaction model from exon-only
-featureCounts. All 45 samples, the rRNA exclusion list, placement filter,
+featureCounts. The 44-sample cohort, rRNA exclusion list, placement filter,
 expression filter, model formula, and significance thresholds match the primary
 transcript-plus-exon page.
 
@@ -37,7 +37,7 @@ Keep non-rRNA genes assigned to the main nuclear chromosomes.
 ::: {.walkthrough-step}
 **Step 2 - Fit interaction**
 
-Test diet, infection, and diet-by-infection effects with all 45 samples.
+Test diet, infection, and diet-by-infection effects with the 44-sample cohort.
 :::
 ::: {.walkthrough-step}
 **Step 3 - Interpret structure**
@@ -46,9 +46,8 @@ Use coefficients and PCA to summarize the conservative host signal.
 :::
 :::
 
-This is the all-samples, main-chromosome version of the interaction model. It keeps every
-library in `mehreen_metadata_corrected_45.txt`, including the samples currently treated
-as outliers in sensitivity analyses.
+This is the analysis-cohort, main-chromosome version of the interaction model.
+It keeps every valid library after excluding QC outlier 1044.
 
 Only genes assigned to a nuclear chromosome in the official assembly-placement
 table are tested. Annotated rRNA, mitochondrial genes, unplaced scaffolds, and

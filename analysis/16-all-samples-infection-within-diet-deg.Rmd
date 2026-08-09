@@ -1,5 +1,5 @@
 ---
-title: "Main-chromosome infection within diet DEGs - all samples"
+title: "Main-chromosome infection within diet DEGs - analysis cohort"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
@@ -30,7 +30,7 @@ params:
 ::: {.walkthrough-step}
 **Step 1 - Restrict placement**
 
-Use main-chromosome non-rRNA genes and retain all 45 fat body samples.
+Use main-chromosome non-rRNA genes and retain the 44-sample fat body cohort.
 :::
 ::: {.walkthrough-step}
 **Step 2 - Test infection**
@@ -44,10 +44,9 @@ Read PCA, DEG burden, heatmaps, and functional candidate summaries together.
 :::
 :::
 
-This is the all-samples, main-chromosome version of the infection-within-diet
-DEG page. It keeps
-every library in `mehreen_metadata_corrected_45.txt`, including the samples currently
-treated as outliers in sensitivity analyses.
+This is the analysis-cohort, main-chromosome version of the
+infection-within-diet DEG page. It keeps every valid library after excluding QC
+outlier 1044.
 
 Every plot and test uses only non-rRNA genes assigned to nuclear chromosomes in
 the official assembly-placement table. Unplaced scaffolds are not allowed to
@@ -296,7 +295,7 @@ pheatmap::pheatmap(
 
 ## Run one infected-control test per diet
 
-One joint `~ 0 + group` DESeq2 model is fitted across all 45 samples, using a
+One joint `~ 0 + group` DESeq2 model is fitted across all 44 analysis-cohort samples, using a
 separate coefficient for every diet-by-treatment group. Each displayed result
 then contrasts infected and control coefficients within one diet. This keeps
 normalization, dispersion estimation, filtering, and multiple-testing behavior

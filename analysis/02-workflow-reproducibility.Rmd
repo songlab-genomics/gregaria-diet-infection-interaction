@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-corrected45_20260809-153146/host_counts_no_rrna.tsv"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   output_tag: "workflow-reproducibility"
 ---
 
@@ -38,10 +38,11 @@ This page is the reproducibility map for the project. It explains where inputs
 live, where new results are written, and how to rerun the workflowR pages
 without relying on hidden helper scripts.
 
-Both count definitions use the same 45 libraries and corrected metadata:
-`1024` is infected diet 33, while the recovered `1044` library is infected
-diet 83. The two branches differ only in which annotation feature types are
-counted, so their DEG results can be compared directly.
+Both count definitions use the same frozen 44-library analysis cohort and
+corrected metadata. Sample `1024` is infected diet 33; library `1044` was
+processed and retained in the QC audit but excluded from biological models.
+The two branches differ only in which annotation feature types are counted, so
+their DEG results can be compared directly.
 
 ## Repository layout
 

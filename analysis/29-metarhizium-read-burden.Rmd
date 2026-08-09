@@ -8,7 +8,7 @@ output:
     toc: true
     toc_float: true
 params:
-  metadata_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
   cluster_run_dir: ""
   output_tag: "metarhizium-read-burden"
@@ -125,6 +125,12 @@ metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)), drop =
 
 mapping_summary <- read.delim(mapping_summary_file, check.names = FALSE) |>
   dplyr::mutate(sample_id = as.character(sample_id))
+missing_mapping <- setdiff(metadata$label, mapping_summary$sample_id)
+if (length(missing_mapping) > 0) {
+  stop("Missing competitive-mapping summaries for: ", paste(missing_mapping, collapse = ", "))
+}
+mapping_summary <- mapping_summary |>
+  dplyr::filter(sample_id %in% metadata$label)
 stopifnot(setequal(mapping_summary$sample_id, metadata$label))
 
 fungal_burden <- mapping_summary |>

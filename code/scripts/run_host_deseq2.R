@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
-# Apply one identical all-samples DESeq2 analysis to either host mapping branch.
-# Samples are never excluded or replaced; annotated rRNA loci are removed first.
+# Apply one identical DESeq2 analysis to either host mapping branch.
+# Declared QC exclusions and annotated rRNA loci are recorded before modeling.
 
 suppressPackageStartupMessages({
   library(DESeq2)
@@ -21,6 +21,17 @@ arg_value <- function(flag) {
   args[[position + 1]]
 }
 
+optional_arg_value <- function(flag, default = "") {
+  position <- match(flag, args)
+  if (is.na(position)) {
+    return(default)
+  }
+  if (position == length(args)) {
+    stop("Missing value after optional argument: ", flag)
+  }
+  args[[position + 1]]
+}
+
 count_file <- arg_value("--counts")
 metadata_file <- arg_value("--metadata")
 rrna_file <- arg_value("--rrna-list")
@@ -30,6 +41,13 @@ alpha <- as.numeric(arg_value("--alpha"))
 lfc_threshold <- as.numeric(arg_value("--lfc-threshold"))
 min_count <- as.integer(arg_value("--min-count"))
 min_samples <- as.integer(arg_value("--min-samples"))
+excluded_samples <- strsplit(
+  optional_arg_value("--excluded-samples", ""),
+  ",",
+  fixed = TRUE
+)[[1]]
+excluded_samples <- trimws(excluded_samples)
+excluded_samples <- excluded_samples[nzchar(excluded_samples)]
 
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -49,14 +67,25 @@ metadata <- readr::read_tsv(metadata_file, show_col_types = FALSE) |>
     treatment = as.character(.data$treatment)
   )
 
-if (!setequal(metadata$sample_id, colnames(count_matrix))) {
-  missing_metadata <- setdiff(colnames(count_matrix), metadata$sample_id)
-  missing_counts <- setdiff(metadata$sample_id, colnames(count_matrix))
+extra_count_samples <- setdiff(colnames(count_matrix), metadata$sample_id)
+missing_count_samples <- setdiff(metadata$sample_id, colnames(count_matrix))
+unexpected_extra_samples <- setdiff(extra_count_samples, excluded_samples)
+declared_but_present <- intersect(excluded_samples, metadata$sample_id)
+
+if (
+  length(missing_count_samples) > 0 ||
+    length(unexpected_extra_samples) > 0 ||
+    length(declared_but_present) > 0
+) {
   stop(
-    "Metadata/count sample mismatch. Missing metadata: ",
-    paste(missing_metadata, collapse = ","),
-    "; missing counts: ",
-    paste(missing_counts, collapse = ",")
+    "Metadata/count sample mismatch. Declared exclusions: ",
+    paste(excluded_samples, collapse = ","),
+    "; unexpected count-only samples: ",
+    paste(unexpected_extra_samples, collapse = ","),
+    "; metadata samples missing counts: ",
+    paste(missing_count_samples, collapse = ","),
+    "; declared exclusions still in metadata: ",
+    paste(declared_but_present, collapse = ",")
   )
 }
 metadata <- metadata |>
@@ -90,6 +119,7 @@ readr::write_tsv(
       "minimum_count",
       "minimum_samples",
       "genes_entering_deseq2",
+      "declared_sample_exclusions",
       "sample_outlier_policy",
       "cooks_filtering"
     ),
@@ -103,7 +133,20 @@ readr::write_tsv(
       min_count,
       min_samples,
       nrow(analysis_counts),
-      "All samples retained; automatic replacement disabled",
+      ifelse(
+        length(excluded_samples) == 0,
+        "None",
+        paste(excluded_samples, collapse = ",")
+      ),
+      ifelse(
+        length(excluded_samples) == 0,
+        "All analysis-cohort samples retained; automatic replacement disabled",
+        paste0(
+          "Declared QC exclusions removed before modeling: ",
+          paste(excluded_samples, collapse = ","),
+          "; all remaining samples retained"
+        )
+      ),
       "Disabled for planned contrasts"
     ))
   ),
