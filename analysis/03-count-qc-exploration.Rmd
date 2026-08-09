@@ -10,6 +10,7 @@ output:
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   metadata_full_file: "data/metadata/mehreen_metadata_corrected_45.txt"
+  mass_file: "data/metadata/mehreen_predissection_mass_45.tsv"
   counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
   main_competitive_star_dir: "output/runs/host_pathogen_dual_20260727_000952/02-competitive-star"
   sample_1044_competitive_star_dir: "output/runs/host_pathogen_dual_1044_20260808_110441/02-competitive-star"
@@ -55,7 +56,7 @@ samples in the same order.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("DESeq2", "ggplot2", "patchwork", "pheatmap", "scales")
+required <- c("DESeq2", "ggplot2", "ggrepel", "patchwork", "pheatmap", "scales")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -82,6 +83,18 @@ mapping_metadata$Diet <- factor(mapping_metadata$Diet, levels = c("33", "50", "8
 mapping_metadata$Treatment <- factor(
   mapping_metadata$Treatment,
   levels = c("Control", "Infected")
+)
+
+mass_metadata <- read.delim(
+  file.path(project_dir, params$mass_file),
+  check.names = FALSE,
+  colClasses = c(label = "character", mass_g = "numeric")
+)
+stopifnot(
+  nrow(mass_metadata) == 45L,
+  !anyDuplicated(mass_metadata$label),
+  !anyNA(mass_metadata$mass_g),
+  setequal(mass_metadata$label, mapping_metadata$label)
 )
 
 counts_raw <- read.delim(file.path(project_dir, params$counts_file),
@@ -527,6 +540,245 @@ multimapping reads are added, neither the interaction
 be interpreted as proof that infection caused poor mapping: genome duplication,
 fungal burden, library composition, and other technical differences can all
 alter the proportion of reads accepted by the reference alignment.
+
+## Recorded mass and mapping quality
+
+The source datasheet records one mass measurement for every sequenced
+individual under the column `Mass before extraction`. We use that measurement
+as the pre-dissection individual-mass covariate requested here. Figure S4 asks
+whether either competitive mapping definition varies systematically with mass.
+Each point is one library and every sample identifier is shown. Solid regression
+lines use all 45 libraries; dashed lines show the fitted relationship after
+removing 1044. Spearman correlations describe the unadjusted monotonic
+association, while a logit-scale linear model tests mass after accounting for
+diet and infection.
+
+```{r mapping-quality-by-mass, fig.width=11, fig.height=15}
+mapping_mass <- merge(
+  mapping_qc,
+  mass_metadata,
+  by = "label",
+  all.x = TRUE,
+  sort = FALSE
+)
+mapping_mass <- mapping_mass[match(mapping_qc$label, mapping_mass$label), ]
+stopifnot(
+  identical(mapping_mass$label, mapping_qc$label),
+  !anyNA(mapping_mass$mass_g)
+)
+
+test_mapping_mass <- function(data, metric, mapping_definition, scenario) {
+  correlation <- suppressWarnings(stats::cor.test(
+    data$mass_g,
+    data[[metric]],
+    method = "spearman",
+    exact = FALSE
+  ))
+  data$mapping_logit <- qlogis(
+    pmin(pmax(data[[metric]] / 100, 1e-6), 1 - 1e-6)
+  )
+  adjusted_model <- stats::lm(
+    mapping_logit ~ mass_g + Diet + Treatment,
+    data = data
+  )
+  adjusted_test <- stats::drop1(adjusted_model, test = "F")
+
+  data.frame(
+    mapping_definition = mapping_definition,
+    scenario = scenario,
+    samples = nrow(data),
+    spearman_rho = unname(correlation$estimate),
+    spearman_p = correlation$p.value,
+    adjusted_mass_p = adjusted_test["mass_g", "Pr(>F)"],
+    stringsAsFactors = FALSE
+  )
+}
+
+mapping_mass_tests <- do.call(rbind, lapply(
+  names(mapping_definitions),
+  function(metric) {
+    rbind(
+      test_mapping_mass(
+        mapping_mass,
+        metric,
+        mapping_definitions[[metric]],
+        "All 45 libraries shown for QC"
+      ),
+      test_mapping_mass(
+        mapping_mass[mapping_mass$label != "1044", ],
+        metric,
+        mapping_definitions[[metric]],
+        "Final 44-sample analysis cohort"
+      )
+    )
+  }
+))
+
+format_mass_test <- function(test_rows) {
+  paste0(
+    "All 45: Spearman rho = ",
+    sprintf("%.2f", test_rows$spearman_rho[1]),
+    ", p = ", format.pval(test_rows$spearman_p[1], digits = 3, eps = 0.001),
+    "; adjusted mass p = ",
+    format.pval(test_rows$adjusted_mass_p[1], digits = 3, eps = 0.001),
+    "\nWithout 1044: rho = ", sprintf("%.2f", test_rows$spearman_rho[2]),
+    ", p = ", format.pval(test_rows$spearman_p[2], digits = 3, eps = 0.001),
+    "; adjusted mass p = ",
+    format.pval(test_rows$adjusted_mass_p[2], digits = 3, eps = 0.001)
+  )
+}
+
+diet_colors <- c("33" = "#E67E22", "50" = "#2E8B57", "83" = "#7B4AA8")
+treatment_shapes <- c(Control = 21, Infected = 24)
+
+make_mapping_mass_plot <- function(data, metric, title, y_label, test_rows) {
+  plot_data <- data
+  plot_data$mapping_percentage <- plot_data[[metric]]
+
+  ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(
+      x = mass_g,
+      y = mapping_percentage,
+      color = Diet,
+      shape = Treatment
+    )
+  ) +
+    ggplot2::geom_smooth(
+      ggplot2::aes(group = 1),
+      method = "lm",
+      formula = y ~ x,
+      se = TRUE,
+      color = "#222222",
+      fill = "grey78",
+      linewidth = 0.8
+    ) +
+    ggplot2::geom_smooth(
+      data = plot_data[plot_data$label != "1044", ],
+      ggplot2::aes(group = 1),
+      method = "lm",
+      formula = y ~ x,
+      se = FALSE,
+      color = "#555555",
+      linetype = "dashed",
+      linewidth = 0.9
+    ) +
+    ggplot2::geom_point(fill = "white", size = 3.2, stroke = 1.1) +
+    ggrepel::geom_text_repel(
+      data = plot_data[plot_data$label != "1044", ],
+      ggplot2::aes(label = label),
+      size = 3.1,
+      box.padding = 0.28,
+      point.padding = 0.15,
+      min.segment.length = 0,
+      max.overlaps = Inf,
+      seed = 83,
+      show.legend = FALSE
+    ) +
+    ggrepel::geom_label_repel(
+      data = plot_data[plot_data$label == "1044", ],
+      ggplot2::aes(label = label),
+      size = 4.0,
+      fontface = "bold",
+      fill = "#FFF3CD",
+      color = "#8B0000",
+      box.padding = 0.45,
+      point.padding = 0.25,
+      min.segment.length = 0,
+      seed = 1044,
+      show.legend = FALSE
+    ) +
+    ggplot2::scale_color_manual(values = diet_colors) +
+    ggplot2::scale_shape_manual(values = treatment_shapes) +
+    ggplot2::scale_x_continuous(
+      breaks = scales::breaks_pretty(n = 6),
+      expand = ggplot2::expansion(mult = c(0.08, 0.08))
+    ) +
+    ggplot2::labs(
+      title = title,
+      subtitle = format_mass_test(test_rows),
+      x = "Recorded individual mass (g)",
+      y = y_label,
+      color = "Diet",
+      shape = "Treatment"
+    ) +
+    ggplot2::theme_classic(base_size = 15) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold", size = 18),
+      plot.subtitle = ggplot2::element_text(size = 12.5, lineheight = 1.05)
+    )
+}
+
+p_mass_unique <- make_mapping_mass_plot(
+  mapping_mass,
+  "unique_pct",
+  "Unique mapping and recorded individual mass",
+  "Uniquely mapped reads (%)",
+  mapping_mass_tests[mapping_mass_tests$mapping_definition == "Unique mapping", ]
+)
+p_mass_unique_plus_multi <- make_mapping_mass_plot(
+  mapping_mass,
+  "unique_plus_multimapped_pct",
+  "Unique plus multimapping and recorded individual mass",
+  "Reads mapped to 1--20 loci (%)",
+  mapping_mass_tests[
+    mapping_mass_tests$mapping_definition == "Unique + multimapping",
+  ]
+)
+
+p_mapping_mass <-
+  p_mass_unique / p_mass_unique_plus_multi +
+  patchwork::plot_layout(guides = "collect") +
+  patchwork::plot_annotation(
+    tag_levels = "A",
+    title = "Competitive STAR mapping in relation to individual mass",
+    subtitle = paste(
+      "All 45 libraries are shown for QC; 1044 remains excluded from",
+      "downstream expression analyses"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(size = 20, face = "bold"),
+      plot.subtitle = ggplot2::element_text(size = 14)
+    )
+  ) &
+  ggplot2::theme(
+    legend.position = "bottom",
+    plot.tag = ggplot2::element_text(size = 19, face = "bold")
+  )
+
+print(p_mapping_mass)
+
+for (extension in c("png", "pdf", "svg")) {
+  ggplot2::ggsave(
+    file.path(
+      out_dir,
+      paste0("figureS4_mapping_quality_by_individual_mass.", extension)
+    ),
+    p_mapping_mass,
+    width = 11,
+    height = 15,
+    dpi = 320
+  )
+}
+
+write.csv(
+  mapping_mass,
+  file.path(out_dir, "mapping_quality_and_individual_mass_45_samples.csv"),
+  row.names = FALSE
+)
+write.csv(
+  mapping_mass_tests,
+  file.path(out_dir, "mapping_quality_mass_association_tests.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  mapping_mass_tests,
+  digits = 4,
+  caption = "Association between recorded individual mass and mapping quality"
+)
+```
 
 ## Low-count filtering
 

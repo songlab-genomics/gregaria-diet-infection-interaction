@@ -2574,6 +2574,42 @@ knitr::kable(
 )
 ```
 
+## Figure S4: individual mass and mapping quality
+
+Figure S4 relates the mass recorded for each individual before extraction to
+the competitive STAR mapping percentages. Panel A uses unique mapping and Panel
+B adds reads accepted at 2--20 loci. All 45 libraries remain visible for this
+QC comparison, with 1044 highlighted. Solid fits use all libraries and dashed
+fits omit 1044. Each panel reports Spearman tests and mass effects adjusted for
+diet and infection; neither mapping definition shows a supported mass effect.
+
+```{r figure-s4-mapping-mass, echo=FALSE, out.width="82%"}
+qc_dir <- latest_dir("^count-qc-exploration_")
+s4_files <- c(
+  "figureS4_mapping_quality_by_individual_mass.png",
+  "figureS4_mapping_quality_by_individual_mass.svg",
+  "figureS4_mapping_quality_by_individual_mass.pdf",
+  "mapping_quality_mass_association_tests.csv",
+  "mapping_quality_and_individual_mass_45_samples.csv"
+)
+s4_sources <- file.path(qc_dir, s4_files)
+if (!all(file.exists(s4_sources))) {
+  stop("Missing Figure S4 mapping-mass exports in: ", qc_dir)
+}
+s4_targets <- file.path(out_dir, basename(s4_sources))
+file.copy(s4_sources, s4_targets, overwrite = TRUE)
+s4_png_source <- s4_sources[grepl("[.]png$", s4_sources)]
+grid::grid.newpage()
+grid::grid.raster(png::readPNG(s4_png_source))
+```
+
+```{r figure-s4-export-manifest, echo=FALSE}
+knitr::kable(
+  tibble::tibble(file = basename(s4_targets), present = file.exists(s4_targets)),
+  caption = "Figure S4 individual-mass and mapping-quality exports"
+)
+```
+
 ## Exported files
 
 ```{r exported-files}
