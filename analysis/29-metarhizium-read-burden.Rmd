@@ -1,5 +1,5 @@
 ---
-title: "Metarhizium read burden across fat body samples"
+title: "Metarhizium burden and non-host taxonomic profiles"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -10,6 +10,7 @@ output:
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
+  taxonomy_manifest_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/08-taxonomy/family_abundance_manifest.tsv"
   cluster_run_dir: ""
   output_tag: "metarhizium-read-burden"
 ---
@@ -31,6 +32,11 @@ Compare absolute fungal reads and their percentage of unique alignments.
 **Step 3 - Interpret burden**
 
 Use fungal RNA as supporting infection evidence, not as a direct biomass measurement.
+:::
+::: {.walkthrough-step}
+**Step 4 - Compare non-host composition**
+
+Use Kraken2 and Bracken to test whether microbial family profiles differ among diets or treatments.
 :::
 :::
 
@@ -58,8 +64,8 @@ qPCR validation was unavailable because no additional tissue remained.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("dplyr", "ggplot2", "scales", "patchwork", "DT", "knitr",
-              "tidyr", "tibble", "stringr")
+required <- c("dplyr", "ggplot2", "ggrepel", "scales", "patchwork", "DT",
+              "knitr", "tidyr", "tibble", "stringr", "vegan")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -68,6 +74,7 @@ if (length(missing) > 0) {
 project_dir <- normalizePath(".", mustWork = TRUE)
 metadata_file <- file.path(project_dir, params$metadata_file)
 mapping_summary_file <- file.path(project_dir, params$mapping_summary_file)
+taxonomy_manifest_file <- file.path(project_dir, params$taxonomy_manifest_file)
 
 latest_run_dir <- function(prefix) {
   run_root <- file.path(project_dir, "output", "rmd_runs")
@@ -92,10 +99,15 @@ cluster_assignment_file <- file.path(
   cluster_run_dir,
   "figure3_k2_gene_assignments.csv"
 )
+mapping_mass_file <- file.path(
+  latest_run_dir("count-qc-exploration"),
+  "mapping_quality_and_individual_mass_45_samples.csv"
+)
 
 input_files <- c(
   metadata_file, mapping_summary_file,
-  cluster_matrix_file, cluster_assignment_file
+  taxonomy_manifest_file, cluster_matrix_file, cluster_assignment_file,
+  mapping_mass_file
 )
 if (!all(file.exists(input_files))) {
   stop("Missing input(s): ", paste(input_files[!file.exists(input_files)], collapse = ", "))
@@ -801,6 +813,783 @@ write.csv(
   row.names = FALSE
 )
 ```
+
+## Kraken2 and Bracken family composition
+
+Competitive alignment measures reads assigned to the focal fungal reference.
+Kraken2 and Bracken provide a broader, complementary view of the non-host
+taxonomic signal. The main composition analysis uses reads that did not align
+to the host-only reference. This enriches microbial signal while retaining
+fungal reads; results from all trimmed and competitive-unmapped reads remain in
+the transferred taxonomy directory as sensitivity branches.
+
+These profiles should not be described automatically as contamination. They can
+contain the challenge fungus, environmental or diet-associated organisms,
+reagent background, and taxonomic assignments caused by incomplete reference
+databases. Metazoan and plant families are therefore excluded from the
+microbial-composition display, including host-like assignments such as
+Hominidae. Relative abundance is calculated among Bracken-estimated reads
+assigned to the retained microbial families, not as a percentage of the entire
+RNA-seq library.
+
+```{r bracken-family-composition-prepare}
+read_kraken_family_lineages <- function(path) {
+  fields <- strsplit(readLines(path, warn = FALSE), "\t", fixed = TRUE)
+  stack <- character()
+  result <- vector("list", length(fields))
+  n_result <- 0L
+
+  for (entry in fields) {
+    if (length(entry) < 6) next
+    rank <- trimws(entry[[4]])
+    taxon_id <- trimws(entry[[5]])
+    raw_name <- entry[[6]]
+    taxon_name <- trimws(raw_name)
+    indent <- nchar(raw_name) - nchar(sub("^[[:space:]]+", "", raw_name))
+    depth <- as.integer(indent / 2)
+
+    if (length(stack) > depth) stack <- stack[seq_len(depth)]
+    stack[depth + 1L] <- taxon_name
+
+    if (rank == "F") {
+      n_result <- n_result + 1L
+      result[[n_result]] <- data.frame(
+        taxonomy_id = taxon_id,
+        family = taxon_name,
+        lineage = paste(stack, collapse = "; "),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+
+  if (n_result == 0L) {
+    return(data.frame(
+      taxonomy_id = character(), family = character(), lineage = character()
+    ))
+  }
+  dplyr::bind_rows(result[seq_len(n_result)])
+}
+
+classify_family_lineage <- function(lineage) {
+  dplyr::case_when(
+    grepl("(^|; )Metazoa(;|$)", lineage) ~ "Metazoa",
+    grepl("Viridiplantae|Streptophyta", lineage) ~ "Plants",
+    grepl("(^|; )Fungi(;|$)", lineage) ~ "Fungi",
+    grepl("(^|; )Bacteria(;|$)", lineage) ~ "Bacteria",
+    grepl("(^|; )Archaea(;|$)", lineage) ~ "Archaea",
+    grepl("Viruses|Duplodnaviria|Riboviria|Monodnaviria", lineage) ~ "Viruses",
+    grepl("(^|; )Eukaryota(;|$)", lineage) ~ "Other microbial eukaryotes",
+    TRUE ~ "Other"
+  )
+}
+
+taxonomy_manifest <- read.delim(
+  taxonomy_manifest_file,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |>
+  dplyr::mutate(sample_id = as.character(sample_id)) |>
+  dplyr::filter(source == "host_unmapped", sample_id %in% metadata$label) |>
+  dplyr::arrange(as.numeric(sample_id))
+
+if (nrow(taxonomy_manifest) != nrow(metadata)) {
+  stop(
+    "Expected one host-unmapped taxonomy entry per retained sample; found ",
+    nrow(taxonomy_manifest), " for ", nrow(metadata), " samples."
+  )
+}
+
+resolve_manifest_path <- function(path) {
+  if (file.exists(path)) return(normalizePath(path))
+  candidate <- file.path(project_dir, path)
+  if (!file.exists(candidate)) stop("Missing taxonomy file: ", path)
+  normalizePath(candidate)
+}
+
+taxonomy_manifest <- taxonomy_manifest |>
+  dplyr::mutate(
+    abundance_file = vapply(abundance_file, resolve_manifest_path, character(1)),
+    kraken_report = vapply(kraken_report, resolve_manifest_path, character(1))
+  )
+
+family_lineages <- dplyr::bind_rows(lapply(
+  taxonomy_manifest$kraken_report,
+  read_kraken_family_lineages
+)) |>
+  dplyr::distinct(taxonomy_id, .keep_all = TRUE) |>
+  dplyr::mutate(taxonomic_group = classify_family_lineage(lineage))
+
+bracken_family <- dplyr::bind_rows(lapply(
+  seq_len(nrow(taxonomy_manifest)),
+  function(i) {
+    read.delim(
+      taxonomy_manifest$abundance_file[[i]],
+      check.names = FALSE,
+      stringsAsFactors = FALSE
+    ) |>
+      dplyr::transmute(
+        label = taxonomy_manifest$sample_id[[i]],
+        taxonomy_id = as.character(taxonomy_id),
+        family = as.character(name),
+        estimated_reads = as.numeric(new_est_reads)
+      )
+  }
+)) |>
+  dplyr::left_join(
+    family_lineages |>
+      dplyr::select(taxonomy_id, lineage, taxonomic_group),
+    by = "taxonomy_id"
+  ) |>
+  dplyr::mutate(
+    taxonomic_group = dplyr::coalesce(taxonomic_group, "Other")
+  ) |>
+  dplyr::filter(
+    estimated_reads > 0,
+    taxonomic_group %in% c(
+      "Fungi", "Bacteria", "Archaea", "Viruses",
+      "Other microbial eukaryotes"
+    )
+  ) |>
+  dplyr::left_join(
+    metadata |>
+      dplyr::select(label, Treatment, Diet, condition),
+    by = "label"
+  )
+
+sample_microbe_totals <- bracken_family |>
+  dplyr::group_by(label) |>
+  dplyr::summarise(microbial_family_reads = sum(estimated_reads), .groups = "drop")
+
+mapping_mass <- read.csv(mapping_mass_file, check.names = FALSE) |>
+  dplyr::mutate(label = as.character(label)) |>
+  dplyr::filter(label %in% metadata$label)
+stopifnot(setequal(mapping_mass$label, metadata$label))
+
+microbial_burden <- sample_microbe_totals |>
+  dplyr::left_join(
+    mapping_mass |>
+      dplyr::select(label, input_reads, mass_g),
+    by = "label"
+  ) |>
+  dplyr::left_join(
+    metadata |>
+      dplyr::select(label, Diet, Treatment, condition),
+    by = "label"
+  ) |>
+  dplyr::mutate(
+    microbial_reads_per_million =
+      microbial_family_reads / input_reads * 1e6,
+    log10_microbial_rpm = log10(microbial_reads_per_million + 1)
+  )
+
+bracken_family <- bracken_family |>
+  dplyr::left_join(sample_microbe_totals, by = "label") |>
+  dplyr::mutate(
+    relative_abundance = estimated_reads / microbial_family_reads
+  )
+
+top_family_levels <- bracken_family |>
+  dplyr::group_by(family) |>
+  dplyr::summarise(total_reads = sum(estimated_reads), .groups = "drop") |>
+  dplyr::slice_max(total_reads, n = 12, with_ties = FALSE) |>
+  dplyr::arrange(dplyr::desc(total_reads)) |>
+  dplyr::pull(family)
+
+sample_order_microbes <- metadata |>
+  dplyr::arrange(condition, as.numeric(label)) |>
+  dplyr::pull(label)
+
+bracken_display <- bracken_family |>
+  dplyr::mutate(
+    display_family = dplyr::if_else(
+      family %in% top_family_levels,
+      family,
+      "Other microbial families"
+    )
+  ) |>
+  dplyr::group_by(
+    label, Treatment, Diet, condition, microbial_family_reads, display_family
+  ) |>
+  dplyr::summarise(estimated_reads = sum(estimated_reads), .groups = "drop") |>
+  dplyr::group_by(label) |>
+  dplyr::mutate(
+    relative_abundance = estimated_reads / sum(estimated_reads)
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    label = factor(label, levels = sample_order_microbes),
+    display_family = factor(
+      display_family,
+      levels = c(top_family_levels, "Other microbial families")
+    )
+  )
+
+write.csv(
+  bracken_family,
+  file.path(out_dir, "bracken_host_unmapped_family_abundance_long.csv"),
+  row.names = FALSE
+)
+write.csv(
+  bracken_display,
+  file.path(out_dir, "bracken_host_unmapped_family_display_table.csv"),
+  row.names = FALSE
+)
+```
+
+```{r bracken-family-composition-figure, fig.width=22, fig.height=18}
+family_palette <- setNames(
+  grDevices::hcl.colors(length(levels(bracken_display$display_family)), "Dark 3"),
+  levels(bracken_display$display_family)
+)
+family_palette["Other microbial families"] <- "#B8BDC5"
+if ("Clavicipitaceae" %in% names(family_palette)) {
+  family_palette["Clavicipitaceae"] <- "#39B54A"
+}
+
+family_absolute_plot <- ggplot2::ggplot(
+  bracken_display,
+  ggplot2::aes(x = label, y = estimated_reads, fill = display_family)
+) +
+  ggplot2::geom_col(width = 0.82) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_fill_manual(values = family_palette, drop = FALSE) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.05))
+  ) +
+  ggplot2::labs(
+    title = "A. Bracken-estimated microbial family reads",
+    subtitle = "Host-unmapped reads; metazoan and plant families excluded",
+    x = NULL,
+    y = "Estimated family-assigned reads",
+    fill = "Microbial family"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, size = 8),
+    legend.position = "right"
+  )
+
+family_relative_plot <- ggplot2::ggplot(
+  bracken_display,
+  ggplot2::aes(x = label, y = relative_abundance, fill = display_family)
+) +
+  ggplot2::geom_col(width = 0.82) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  ggplot2::scale_fill_manual(values = family_palette, drop = FALSE) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = "B. Relative microbial family composition",
+    subtitle = "Percentage of retained Bracken-estimated microbial family reads",
+    x = NULL,
+    y = "Relative abundance",
+    fill = "Microbial family"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, size = 8),
+    legend.position = "right"
+  )
+
+family_matrix <- xtabs(
+  estimated_reads ~ label + family,
+  data = bracken_family
+)
+family_matrix <- family_matrix[metadata$label, , drop = FALSE]
+family_relative_matrix <- vegan::decostand(family_matrix, method = "total")
+family_bray <- vegan::vegdist(family_relative_matrix, method = "bray")
+family_pcoa <- stats::cmdscale(family_bray, eig = TRUE, k = 2)
+positive_eigenvalues <- family_pcoa$eig[family_pcoa$eig > 0]
+family_pcoa_variance <- 100 * positive_eigenvalues / sum(positive_eigenvalues)
+
+family_pcoa_scores <- data.frame(
+  label = rownames(family_pcoa$points),
+  PCoA1 = family_pcoa$points[, 1],
+  PCoA2 = family_pcoa$points[, 2],
+  stringsAsFactors = FALSE
+) |>
+  dplyr::left_join(
+    metadata |>
+      dplyr::select(label, Treatment, Diet, condition),
+    by = "label"
+  )
+
+family_centroids <- family_pcoa_scores |>
+  dplyr::group_by(Diet, Treatment) |>
+  dplyr::summarise(
+    PCoA1 = mean(PCoA1),
+    PCoA2 = mean(PCoA2),
+    .groups = "drop"
+  )
+
+family_pcoa_plot <- ggplot2::ggplot(
+  family_pcoa_scores,
+  ggplot2::aes(x = PCoA1, y = PCoA2, color = Diet, shape = Treatment)
+) +
+  ggplot2::geom_point(size = 3.1, alpha = 0.82) +
+  ggplot2::geom_line(
+    data = family_centroids,
+    ggplot2::aes(group = Diet),
+    linewidth = 0.9,
+    show.legend = FALSE
+  ) +
+  ggplot2::geom_point(
+    data = family_centroids,
+    size = 5,
+    stroke = 1.2,
+    fill = "white",
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_color_manual(
+    values = c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
+  ) +
+  ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
+  ggplot2::labs(
+    title = "C. Bray-Curtis ordination of microbial family profiles",
+    subtitle = "Open points are diet-by-treatment centroids; lines connect control and infected centroids",
+    x = paste0("PCoA1 (", round(family_pcoa_variance[[1]], 1), "%)"),
+    y = paste0("PCoA2 (", round(family_pcoa_variance[[2]], 1), "%)"),
+    color = "Diet",
+    shape = "Treatment"
+  ) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(legend.position = "bottom")
+
+bracken_family_composition_figure <-
+  family_absolute_plot /
+  family_relative_plot /
+  family_pcoa_plot +
+  patchwork::plot_layout(heights = c(1, 1, 0.8), guides = "collect") &
+  ggplot2::theme(legend.position = "bottom")
+
+print(bracken_family_composition_figure)
+
+ggplot2::ggsave(
+  file.path(out_dir, "figureS2_bracken_host_unmapped_family_composition.png"),
+  bracken_family_composition_figure,
+  width = 22, height = 18, dpi = 300, limitsize = FALSE
+)
+ggplot2::ggsave(
+  file.path(out_dir, "figureS2_bracken_host_unmapped_family_composition.pdf"),
+  bracken_family_composition_figure,
+  width = 22, height = 18, limitsize = FALSE
+)
+if (requireNamespace("svglite", quietly = TRUE)) {
+  ggplot2::ggsave(
+    file.path(out_dir, "figureS2_bracken_host_unmapped_family_composition.svg"),
+    bracken_family_composition_figure,
+    width = 22, height = 18, limitsize = FALSE
+  )
+}
+
+write.csv(
+  family_pcoa_scores,
+  file.path(out_dir, "bracken_host_unmapped_family_pcoa_scores.csv"),
+  row.names = FALSE
+)
+```
+
+### Figure S2 large-label narrow version
+
+This alternative export keeps the same data and ordination but uses a taller,
+narrower canvas for presentation and manuscript assembly. Sample labels are
+shown only for points whose distance from the overall PCoA median exceeds the
+median distance plus three median absolute deviations. This reproducible rule
+identifies visibly displaced profiles without labelling every library.
+
+```{r bracken-family-composition-figure-large-text, fig.width=16, fig.height=24}
+pcoa_median <- c(
+  PCoA1 = stats::median(family_pcoa_scores$PCoA1),
+  PCoA2 = stats::median(family_pcoa_scores$PCoA2)
+)
+
+family_pcoa_scores_labeled <- family_pcoa_scores |>
+  dplyr::mutate(
+    distance_from_pcoa_median = sqrt(
+      (PCoA1 - pcoa_median[["PCoA1"]])^2 +
+        (PCoA2 - pcoa_median[["PCoA2"]])^2
+    )
+  )
+
+pcoa_label_cutoff <- stats::median(
+  family_pcoa_scores_labeled$distance_from_pcoa_median
+) + 3 * stats::mad(family_pcoa_scores_labeled$distance_from_pcoa_median)
+
+family_pcoa_offset_labels <- family_pcoa_scores_labeled |>
+  dplyr::filter(distance_from_pcoa_median > pcoa_label_cutoff)
+
+large_text_family_palette <- family_palette
+large_text_family_colors <- c(
+  "Plasmodiidae" = "#E8899B",
+  "Vibrionaceae" = "#E89A62",
+  "Streptomycetaceae" = "#D8B23F",
+  "Clavicipitaceae" = "#5DBB72",
+  "Cryptococcaceae" = "#91B94A",
+  "Enterobacteriaceae" = "#1EA66F",
+  "Dictyosteliaceae" = "#35B7A6",
+  "Sarcocystidae" = "#42AFC2",
+  "Baculoviridae" = "#4C9ED9",
+  "Lysobacteraceae" = "#6D91C7",
+  "Bacillaceae" = "#9A82D4",
+  "Saccharomycetaceae" = "#C77BCB",
+  "Other microbial families" = "#BFC5CC"
+)
+large_text_family_palette[
+  intersect(names(large_text_family_palette), names(large_text_family_colors))
+] <- large_text_family_colors[
+  intersect(names(large_text_family_palette), names(large_text_family_colors))
+]
+
+large_text_theme <- ggplot2::theme(
+  plot.title = ggplot2::element_text(size = 22, face = "bold"),
+  axis.title = ggplot2::element_text(size = 25, face = "bold"),
+  axis.text.y = ggplot2::element_text(size = 15),
+  axis.text.x = ggplot2::element_text(size = 12),
+  strip.text = ggplot2::element_text(size = 17, face = "bold"),
+  legend.title = ggplot2::element_text(size = 18, face = "bold"),
+  legend.text = ggplot2::element_text(size = 16),
+  legend.key.height = grid::unit(0.65, "cm"),
+  legend.key.width = grid::unit(0.65, "cm")
+)
+
+family_absolute_plot_large <- family_absolute_plot +
+  ggplot2::labs(subtitle = NULL) +
+  ggplot2::scale_fill_manual(values = large_text_family_palette, drop = FALSE) +
+  large_text_theme
+
+family_relative_plot_large <- family_relative_plot +
+  ggplot2::labs(subtitle = NULL) +
+  ggplot2::scale_fill_manual(values = large_text_family_palette, drop = FALSE) +
+  large_text_theme
+
+family_pcoa_plot_large <- ggplot2::ggplot(
+  family_pcoa_scores_labeled,
+  ggplot2::aes(x = PCoA1, y = PCoA2, color = Diet, shape = Treatment)
+) +
+  ggplot2::geom_point(size = 5.2, alpha = 0.9, stroke = 1.1) +
+  ggplot2::geom_line(
+    data = family_centroids,
+    ggplot2::aes(group = Diet),
+    linewidth = 1.35,
+    show.legend = FALSE
+  ) +
+  ggplot2::geom_point(
+    data = family_centroids,
+    size = 7.2,
+    stroke = 1.6,
+    fill = "white",
+    show.legend = FALSE
+  ) +
+  ggrepel::geom_label_repel(
+    data = family_pcoa_offset_labels,
+    ggplot2::aes(label = label),
+    size = 5.3,
+    fontface = "bold",
+    color = "#222222",
+    fill = grDevices::adjustcolor("white", alpha.f = 0.92),
+    box.padding = 0.55,
+    point.padding = 0.35,
+    min.segment.length = 0,
+    segment.color = "#555555",
+    seed = 83,
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_color_manual(
+    values = c("33" = "#E28A3B", "50" = "#369D67", "83" = "#8060AE")
+  ) +
+  ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
+  ggplot2::labs(
+    title = "C. Bray-Curtis ordination of microbial family profiles",
+    subtitle = NULL,
+    x = paste0("PCoA1 (", round(family_pcoa_variance[[1]], 1), "%)"),
+    y = paste0("PCoA2 (", round(family_pcoa_variance[[2]], 1), "%)"),
+    color = "Diet",
+    shape = "Treatment"
+  ) +
+  ggplot2::theme_classic(base_size = 18) +
+  large_text_theme +
+  ggplot2::theme(legend.position = "bottom")
+
+bracken_family_composition_figure_large_text <-
+  family_absolute_plot_large /
+  family_relative_plot_large /
+  family_pcoa_plot_large +
+  patchwork::plot_layout(heights = c(1.05, 1.05, 1.15), guides = "collect") &
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.box.just = "center",
+    legend.title = ggplot2::element_text(size = 18, face = "bold"),
+    legend.text = ggplot2::element_text(size = 16),
+    legend.key.height = grid::unit(0.65, "cm"),
+    legend.key.width = grid::unit(0.65, "cm")
+  )
+
+print(bracken_family_composition_figure_large_text)
+
+large_text_stem <- file.path(
+  out_dir,
+  "figureS2_bracken_host_unmapped_family_composition_large_text_narrow"
+)
+ggplot2::ggsave(
+  paste0(large_text_stem, ".png"),
+  bracken_family_composition_figure_large_text,
+  width = 16, height = 24, dpi = 300, limitsize = FALSE
+)
+ggplot2::ggsave(
+  paste0(large_text_stem, ".pdf"),
+  bracken_family_composition_figure_large_text,
+  width = 16, height = 24, limitsize = FALSE
+)
+if (requireNamespace("svglite", quietly = TRUE)) {
+  ggplot2::ggsave(
+    paste0(large_text_stem, ".svg"),
+    bracken_family_composition_figure_large_text,
+    width = 16, height = 24, limitsize = FALSE
+  )
+}
+
+write.csv(
+  family_pcoa_offset_labels,
+  file.path(out_dir, "bracken_host_unmapped_family_pcoa_offset_labels.csv"),
+  row.names = FALSE
+)
+```
+
+### Composition tests
+
+PERMANOVA tests whether the multivariate family composition differs with diet,
+infection treatment, or their interaction. The dispersion test is reported
+alongside it because PERMANOVA can be influenced by unequal within-group
+variability. These tests describe the taxonomic signal in the RNA-seq reads;
+they are not a dedicated microbiome survey and do not establish organismal
+colonization.
+
+```{r bracken-family-composition-tests}
+family_test_metadata <- metadata |>
+  dplyr::filter(label %in% rownames(family_relative_matrix)) |>
+  dplyr::arrange(match(label, rownames(family_relative_matrix))) |>
+  dplyr::mutate(
+    Diet = factor(Diet, levels = c("33", "50", "83")),
+    Treatment = factor(Treatment, levels = c("Control", "Infected")),
+    condition = interaction(Diet, Treatment, drop = TRUE)
+  )
+
+set.seed(20260810)
+family_permanova <- vegan::adonis2(
+  family_bray ~ Diet * Treatment,
+  data = family_test_metadata,
+  permutations = 999,
+  by = "terms"
+)
+family_permanova_table <- as.data.frame(family_permanova) |>
+  tibble::rownames_to_column("term") |>
+  dplyr::rename(
+    df = Df,
+    sum_of_squares = SumOfSqs,
+    R2 = R2,
+    F = F,
+    p_value = `Pr(>F)`
+  )
+
+family_dispersion <- vegan::betadisper(
+  family_bray,
+  group = family_test_metadata$condition
+)
+set.seed(20260810)
+family_dispersion_test <- vegan::permutest(family_dispersion, permutations = 999)
+family_dispersion_table <- data.frame(
+  test = "PERMDISP among diet-by-treatment groups",
+  F = unname(family_dispersion_test$tab[1, "F"]),
+  p_value = unname(family_dispersion_test$tab[1, "Pr(>F)"])
+)
+
+burden_interaction_model <- stats::lm(
+  log10_microbial_rpm ~ Diet * Treatment,
+  data = microbial_burden
+)
+burden_interaction_drop <- stats::drop1(
+  burden_interaction_model,
+  test = "F"
+)
+burden_additive_model <- stats::lm(
+  log10_microbial_rpm ~ Diet + Treatment,
+  data = microbial_burden
+)
+burden_additive_drop <- stats::drop1(burden_additive_model, test = "F")
+
+burden_design_tests <- data.frame(
+  term = c("Diet x Infection", "Diet", "Infection"),
+  model = c(
+    "Full factorial model",
+    "Additive model after unsupported interaction",
+    "Additive model after unsupported interaction"
+  ),
+  F = c(
+    burden_interaction_drop["Diet:Treatment", "F value"],
+    burden_additive_drop["Diet", "F value"],
+    burden_additive_drop["Treatment", "F value"]
+  ),
+  p_value = c(
+    burden_interaction_drop["Diet:Treatment", "Pr(>F)"],
+    burden_additive_drop["Diet", "Pr(>F)"],
+    burden_additive_drop["Treatment", "Pr(>F)"]
+  )
+)
+
+burden_mass_interaction_model <- stats::lm(
+  log10_microbial_rpm ~ mass_g * Treatment + Diet,
+  data = microbial_burden
+)
+burden_mass_interaction_drop <- stats::drop1(
+  burden_mass_interaction_model,
+  test = "F"
+)
+burden_mass_additive_model <- stats::lm(
+  log10_microbial_rpm ~ mass_g + Treatment + Diet,
+  data = microbial_burden
+)
+burden_mass_additive_drop <- stats::drop1(
+  burden_mass_additive_model,
+  test = "F"
+)
+burden_mass_tests <- data.frame(
+  term = c("Mass x Infection", "Mass"),
+  model = c(
+    "Mass-by-infection model adjusted for diet",
+    "Additive model after unsupported mass-by-infection interaction"
+  ),
+  F = c(
+    burden_mass_interaction_drop["mass_g:Treatment", "F value"],
+    burden_mass_additive_drop["mass_g", "F value"]
+  ),
+  p_value = c(
+    burden_mass_interaction_drop["mass_g:Treatment", "Pr(>F)"],
+    burden_mass_additive_drop["mass_g", "Pr(>F)"]
+  )
+)
+
+burden_group_summary <- microbial_burden |>
+  dplyr::group_by(Treatment) |>
+  dplyr::summarise(
+    samples = dplyr::n(),
+    median_microbial_reads_per_million =
+      stats::median(microbial_reads_per_million),
+    mean_microbial_reads_per_million = mean(microbial_reads_per_million),
+    IQR_microbial_reads_per_million =
+      stats::IQR(microbial_reads_per_million),
+    .groups = "drop"
+  )
+
+write.csv(
+  family_permanova_table,
+  file.path(out_dir, "bracken_host_unmapped_family_permanova.csv"),
+  row.names = FALSE
+)
+write.csv(
+  family_dispersion_table,
+  file.path(out_dir, "bracken_host_unmapped_family_dispersion_test.csv"),
+  row.names = FALSE
+)
+write.csv(
+  microbial_burden,
+  file.path(out_dir, "bracken_host_unmapped_burden_by_sample.csv"),
+  row.names = FALSE
+)
+write.csv(
+  burden_design_tests,
+  file.path(out_dir, "bracken_host_unmapped_burden_design_tests.csv"),
+  row.names = FALSE
+)
+write.csv(
+  burden_mass_tests,
+  file.path(out_dir, "bracken_host_unmapped_burden_mass_tests.csv"),
+  row.names = FALSE
+)
+write.csv(
+  burden_group_summary,
+  file.path(out_dir, "bracken_host_unmapped_burden_group_summary.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  family_permanova_table |>
+    dplyr::mutate(
+      dplyr::across(c(sum_of_squares, R2, F, p_value), ~ round(.x, 4))
+    ),
+  caption = "PERMANOVA of host-unmapped Bracken family composition"
+)
+knitr::kable(
+  family_dispersion_table |>
+    dplyr::mutate(dplyr::across(c(F, p_value), ~ round(.x, 4))),
+  caption = "Dispersion check for the family-composition PERMANOVA"
+)
+knitr::kable(
+  burden_design_tests,
+  digits = 4,
+  caption = paste(
+    "Diet and infection tests for Bracken-estimated microbial family reads",
+    "per million input reads"
+  )
+)
+knitr::kable(
+  burden_mass_tests,
+  digits = 4,
+  caption = "Body-mass tests for normalized non-host taxonomic burden"
+)
+```
+
+### Results and interpretation
+
+The same broad family-level assignments recur across most libraries, although
+the absolute number of host-unmapped reads assigned by Bracken varies markedly
+among individuals. Diet did not explain a supported fraction of the relative
+family composition (`r sprintf("R2 = %.3f, P = %.3f", family_permanova_table$R2[family_permanova_table$term == "Diet"], family_permanova_table$p_value[family_permanova_table$term == "Diet"])`).
+In contrast, control and infected libraries differed in their multivariate
+taxonomic profiles (`r sprintf("R2 = %.3f, P = %.3f", family_permanova_table$R2[family_permanova_table$term == "Treatment"], family_permanova_table$p_value[family_permanova_table$term == "Treatment"])`),
+while the diet-by-infection interaction was not supported
+(`r sprintf("P = %.3f", family_permanova_table$p_value[family_permanova_table$term == "Diet:Treatment"])`).
+The dispersion test was not significant
+(`r sprintf("P = %.3f", family_dispersion_table$p_value)`), indicating that the
+treatment result was not explained simply by unequal within-group spread.
+
+The normalized abundance of retained microbial-family assignments was also
+higher in infected libraries (median
+`r scales::comma(round(burden_group_summary$median_microbial_reads_per_million[burden_group_summary$Treatment == "Infected"]))`
+reads per million input reads) than controls (median
+`r scales::comma(round(burden_group_summary$median_microbial_reads_per_million[burden_group_summary$Treatment == "Control"]))`).
+The diet-by-infection interaction was unsupported
+(`r sprintf("P = %.3f", burden_design_tests$p_value[burden_design_tests$term == "Diet x Infection"])`),
+whereas the infection effect was supported after accounting for diet
+(`r sprintf("P = %.4f", burden_design_tests$p_value[burden_design_tests$term == "Infection"])`).
+Recorded mass did not explain normalized non-host burden in the additive model
+(`r sprintf("P = %.3f", burden_mass_tests$p_value[burden_mass_tests$term == "Mass"])`),
+and the mass-by-infection interaction remained just above the prespecified
+threshold (`r sprintf("P = %.3f", burden_mass_tests$p_value[burden_mass_tests$term == "Mass x Infection"])`).
+
+Thus, the profiles do not support a broad diet-associated restructuring of the
+taxonomic signal, but neither should they be interpreted as completely invariant
+among treatments. Because these assignments come from total-RNA libraries rather
+than a dedicated microbiome assay, they are best treated as supporting
+metatranscriptomic evidence. Individual family calls can reflect the challenge
+fungus, other microorganisms, residual host sequence, or database ambiguity and
+do not by themselves demonstrate viable colonization.
 
 ## Combined export
 

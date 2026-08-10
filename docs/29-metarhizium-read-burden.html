@@ -11,9 +11,9 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-09" />
+<meta name="date" content="2026-08-11" />
 
-<title>Metarhizium read burden across fat body samples</title>
+<title>Metarhizium burden and non-host taxonomic profiles</title>
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -562,7 +562,7 @@ div.tocify {
           <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
         </li>
         <li>
-          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+          <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomic profiles</a>
         </li>
       </ul>
     </li>
@@ -664,10 +664,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Metarhizium read burden across fat body
-samples</h1>
+<h1 class="title toc-ignore">Metarhizium burden and non-host taxonomic
+profiles</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-09</h4>
+<h4 class="date">2026-08-11</h4>
 
 </div>
 
@@ -696,7 +696,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-09
+<strong>Last updated:</strong> 2026-08-11
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -831,15 +831,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree8b8101ca1729f8afc6575dcd126d7315824f1f1dtargetblank8b8101ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/8b8101ca1729f8afc6575dcd126d7315824f1f1d" target="_blank">8b8101c</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree8b8101ca1729f8afc6575dcd126d7315824f1f1dtargetblank8b8101ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -849,7 +849,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/8b8101ca1729f8afc6575dcd126d7315824f1f1d" target="_blank">8b8101c</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -865,6 +865,7 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    analysis/.Rhistory
     Ignored:    analysis/output/
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
@@ -881,48 +882,98 @@ Ignored files:
     Ignored:    scripts/manuscript/__pycache__/
 
 Untracked files:
-    Untracked:  code/config/fatbody_dual_rnaseq_samples_analysis_44_excluding_1044.tsv
-    Untracked:  data/metadata/analysis_cohort_exclusion_audit_20260809.tsv
-    Untracked:  data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt
     Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-020715/placed_unplaced_all_deseq2_results.csv
     Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-022116/placed_unplaced_all_deseq2_results.csv
     Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/placed-unplaced-scaffold-analysis_20260806-010555/placed_unplaced_all_deseq2_results.csv
+    Untracked:  scripts/manuscript/build_methods_results_audit_20260810.py
 
 Unstaged changes:
-    Modified:   analysis/01-study-design-data.Rmd
-    Modified:   analysis/02-workflow-reproducibility.Rmd
     Modified:   analysis/03-count-qc-exploration.Rmd
-    Modified:   analysis/04-deseq2-interaction-model.Rmd
-    Modified:   analysis/05-diet-pairwise-deg.Rmd
-    Modified:   analysis/06-infection-within-diet-deg.Rmd
-    Modified:   analysis/07-deg-overlap-prioritization.Rmd
     Modified:   analysis/08-publication-figures.Rmd
-    Modified:   analysis/11-outlier-sensitivity.Rmd
-    Modified:   analysis/13-physiology-candidate-genes.Rmd
-    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
-    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
-    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
-    Modified:   analysis/25-enrichment-term-gene-index.Rmd
-    Modified:   analysis/26-circled-cluster-enrichment.Rmd
-    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
     Modified:   analysis/29-metarhizium-read-burden.Rmd
-    Modified:   analysis/30-curated-target-gene-figure.Rmd
-    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
-    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
-    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
-    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
-    Modified:   analysis/35-count-definition-sensitivity.Rmd
-    Modified:   analysis/36-exon-only-deseq2-analysis.Rmd
-    Modified:   analysis/37-exon-only-interaction-model.Rmd
-    Modified:   analysis/38-exon-only-diet-pairwise-deg.Rmd
-    Modified:   analysis/39-exon-only-infection-within-diet-deg.Rmd
-    Modified:   analysis/40-exon-only-deg-overlap.Rmd
-    Modified:   analysis/43-exon-only-enrichment-term-gene-index.Rmd
-    Modified:   analysis/44-exon-only-expression-clusters.Rmd
-    Modified:   analysis/45-exon-only-curated-target-genes.Rmd
     Modified:   analysis/46-exon-only-publication-figures.Rmd
+    Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
-    Modified:   code/scripts/run_host_deseq2.R
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/Chapter_3_CBPB_changes_highlighted_20260808.docx
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/Chapter_3_CBPB_revised_20260808.docx
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/Chapter_3_CBPB_revised_20260808.pdf
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/Chapter_3_CBPB_revised_20260808.pdf
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/contact-01-08.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/contact-09-16.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/contact-17-24.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/contact-25-31.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-1.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-10.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-11.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-12.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-13.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-14.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-15.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-16.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-17.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-18.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-19.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-2.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-20.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-21.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-22.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-23.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-24.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-25.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-26.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-27.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-28.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-29.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-3.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-30.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-31.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-4.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-5.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-6.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-7.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-8.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_clean/page-9.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-1.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-10.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-11.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-12.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-13.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-14.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-15.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-16.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-17.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-18.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-19.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-2.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-20.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-21.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-22.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-23.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-24.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-25.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-26.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-27.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-28.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-29.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-3.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-30.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-31.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-4.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-5.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-6.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-7.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-8.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/page-9.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/rendered_highlighted/qa-selected-pages.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS1.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS2.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS3.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS4.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS5.png
+    Deleted:    manuscript/revisions/20260808_cbpb_shared_infection_revision/supplementary_figures/figureS6.png
+    Modified:   scripts/manuscript/revise_cbpb_manuscript.py
+    Modified:   scripts/manuscript/revise_cbpd_manuscript.py
 
 </code></pre>
 <p>
@@ -968,6 +1019,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/analysis/29-metarhizium-read-burden.Rmd" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+<td>
+remove 1044 as bad mapping
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/29-metarhizium-read-burden.html" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+<td>
+remove 1044 as bad mapping
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1111,6 +1196,11 @@ alignments.</p>
 <p>Use fungal RNA as supporting infection evidence, not as a direct
 biomass measurement.</p>
 </div>
+<div class="walkthrough-step">
+<p><strong>Step 4 - Compare non-host composition</strong></p>
+<p>Use Kraken2 and Bracken to test whether microbial family profiles
+differ among diets or treatments.</p>
+</div>
 </div>
 <p>This page quantifies the RNA-seq evidence for <em>Metarhizium
 robertsii</em> in each fat body library. It uses the competitive
@@ -1138,8 +1228,8 @@ additional tissue remained.</p>
 <h2>Setup and input validation</h2>
 <pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required &lt;- c(&quot;dplyr&quot;, &quot;ggplot2&quot;, &quot;scales&quot;, &quot;patchwork&quot;, &quot;DT&quot;, &quot;knitr&quot;,
-              &quot;tidyr&quot;, &quot;tibble&quot;, &quot;stringr&quot;)
+required &lt;- c(&quot;dplyr&quot;, &quot;ggplot2&quot;, &quot;ggrepel&quot;, &quot;scales&quot;, &quot;patchwork&quot;, &quot;DT&quot;,
+              &quot;knitr&quot;, &quot;tidyr&quot;, &quot;tibble&quot;, &quot;stringr&quot;, &quot;vegan&quot;)
 missing &lt;- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) &gt; 0) {
   stop(&quot;Install required packages before knitting: &quot;, paste(missing, collapse = &quot;, &quot;))
@@ -1148,6 +1238,7 @@ if (length(missing) &gt; 0) {
 project_dir &lt;- normalizePath(&quot;.&quot;, mustWork = TRUE)
 metadata_file &lt;- file.path(project_dir, params$metadata_file)
 mapping_summary_file &lt;- file.path(project_dir, params$mapping_summary_file)
+taxonomy_manifest_file &lt;- file.path(project_dir, params$taxonomy_manifest_file)
 
 latest_run_dir &lt;- function(prefix) {
   run_root &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;)
@@ -1172,10 +1263,15 @@ cluster_assignment_file &lt;- file.path(
   cluster_run_dir,
   &quot;figure3_k2_gene_assignments.csv&quot;
 )
+mapping_mass_file &lt;- file.path(
+  latest_run_dir(&quot;count-qc-exploration&quot;),
+  &quot;mapping_quality_and_individual_mass_45_samples.csv&quot;
+)
 
 input_files &lt;- c(
   metadata_file, mapping_summary_file,
-  cluster_matrix_file, cluster_assignment_file
+  taxonomy_manifest_file, cluster_matrix_file, cluster_assignment_file,
+  mapping_mass_file
 )
 if (!all(file.exists(input_files))) {
   stop(&quot;Missing input(s): &quot;, paste(input_files[!file.exists(input_files)], collapse = &quot;, &quot;))
@@ -1318,6 +1414,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-1.png" target="_blank">8b8101c</a>
 </td>
 <td>
@@ -1449,6 +1556,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-zoom-7000-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-mapped-reads-zoom-7000-1.png" target="_blank">8b8101c</a>
 </td>
 <td>
@@ -1501,6 +1619,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-full-and-zoom-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-genome-full-and-zoom-1.png" target="_blank">8b8101c</a>
@@ -1594,6 +1723,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-1.png" target="_blank">8b8101c</a>
@@ -1730,6 +1870,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-zoom-0-1-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-alignment-percentage-zoom-0-1-1.png" target="_blank">8b8101c</a>
 </td>
 <td>
@@ -1782,6 +1933,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-full-and-zoom-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-full-and-zoom-1.png" target="_blank">8b8101c</a>
@@ -2173,6 +2335,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-above-deg-heatmap-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/fungal-percentage-above-deg-heatmap-1.png" target="_blank">8b8101c</a>
 </td>
 <td>
@@ -2218,6 +2391,908 @@ Maeva TECHER
   row.names = FALSE
 )</code></pre>
 </div>
+<div id="kraken2-and-bracken-family-composition" class="section level2">
+<h2>Kraken2 and Bracken family composition</h2>
+<p>Competitive alignment measures reads assigned to the focal fungal
+reference. Kraken2 and Bracken provide a broader, complementary view of
+the non-host taxonomic signal. The main composition analysis uses reads
+that did not align to the host-only reference. This enriches microbial
+signal while retaining fungal reads; results from all trimmed and
+competitive-unmapped reads remain in the transferred taxonomy directory
+as sensitivity branches.</p>
+<p>These profiles should not be described automatically as
+contamination. They can contain the challenge fungus, environmental or
+diet-associated organisms, reagent background, and taxonomic assignments
+caused by incomplete reference databases. Metazoan and plant families
+are therefore excluded from the microbial-composition display, including
+host-like assignments such as Hominidae. Relative abundance is
+calculated among Bracken-estimated reads assigned to the retained
+microbial families, not as a percentage of the entire RNA-seq
+library.</p>
+<pre class="r"><code>read_kraken_family_lineages &lt;- function(path) {
+  fields &lt;- strsplit(readLines(path, warn = FALSE), &quot;\t&quot;, fixed = TRUE)
+  stack &lt;- character()
+  result &lt;- vector(&quot;list&quot;, length(fields))
+  n_result &lt;- 0L
+
+  for (entry in fields) {
+    if (length(entry) &lt; 6) next
+    rank &lt;- trimws(entry[[4]])
+    taxon_id &lt;- trimws(entry[[5]])
+    raw_name &lt;- entry[[6]]
+    taxon_name &lt;- trimws(raw_name)
+    indent &lt;- nchar(raw_name) - nchar(sub(&quot;^[[:space:]]+&quot;, &quot;&quot;, raw_name))
+    depth &lt;- as.integer(indent / 2)
+
+    if (length(stack) &gt; depth) stack &lt;- stack[seq_len(depth)]
+    stack[depth + 1L] &lt;- taxon_name
+
+    if (rank == &quot;F&quot;) {
+      n_result &lt;- n_result + 1L
+      result[[n_result]] &lt;- data.frame(
+        taxonomy_id = taxon_id,
+        family = taxon_name,
+        lineage = paste(stack, collapse = &quot;; &quot;),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+
+  if (n_result == 0L) {
+    return(data.frame(
+      taxonomy_id = character(), family = character(), lineage = character()
+    ))
+  }
+  dplyr::bind_rows(result[seq_len(n_result)])
+}
+
+classify_family_lineage &lt;- function(lineage) {
+  dplyr::case_when(
+    grepl(&quot;(^|; )Metazoa(;|$)&quot;, lineage) ~ &quot;Metazoa&quot;,
+    grepl(&quot;Viridiplantae|Streptophyta&quot;, lineage) ~ &quot;Plants&quot;,
+    grepl(&quot;(^|; )Fungi(;|$)&quot;, lineage) ~ &quot;Fungi&quot;,
+    grepl(&quot;(^|; )Bacteria(;|$)&quot;, lineage) ~ &quot;Bacteria&quot;,
+    grepl(&quot;(^|; )Archaea(;|$)&quot;, lineage) ~ &quot;Archaea&quot;,
+    grepl(&quot;Viruses|Duplodnaviria|Riboviria|Monodnaviria&quot;, lineage) ~ &quot;Viruses&quot;,
+    grepl(&quot;(^|; )Eukaryota(;|$)&quot;, lineage) ~ &quot;Other microbial eukaryotes&quot;,
+    TRUE ~ &quot;Other&quot;
+  )
+}
+
+taxonomy_manifest &lt;- read.delim(
+  taxonomy_manifest_file,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |&gt;
+  dplyr::mutate(sample_id = as.character(sample_id)) |&gt;
+  dplyr::filter(source == &quot;host_unmapped&quot;, sample_id %in% metadata$label) |&gt;
+  dplyr::arrange(as.numeric(sample_id))
+
+if (nrow(taxonomy_manifest) != nrow(metadata)) {
+  stop(
+    &quot;Expected one host-unmapped taxonomy entry per retained sample; found &quot;,
+    nrow(taxonomy_manifest), &quot; for &quot;, nrow(metadata), &quot; samples.&quot;
+  )
+}
+
+resolve_manifest_path &lt;- function(path) {
+  if (file.exists(path)) return(normalizePath(path))
+  candidate &lt;- file.path(project_dir, path)
+  if (!file.exists(candidate)) stop(&quot;Missing taxonomy file: &quot;, path)
+  normalizePath(candidate)
+}
+
+taxonomy_manifest &lt;- taxonomy_manifest |&gt;
+  dplyr::mutate(
+    abundance_file = vapply(abundance_file, resolve_manifest_path, character(1)),
+    kraken_report = vapply(kraken_report, resolve_manifest_path, character(1))
+  )
+
+family_lineages &lt;- dplyr::bind_rows(lapply(
+  taxonomy_manifest$kraken_report,
+  read_kraken_family_lineages
+)) |&gt;
+  dplyr::distinct(taxonomy_id, .keep_all = TRUE) |&gt;
+  dplyr::mutate(taxonomic_group = classify_family_lineage(lineage))
+
+bracken_family &lt;- dplyr::bind_rows(lapply(
+  seq_len(nrow(taxonomy_manifest)),
+  function(i) {
+    read.delim(
+      taxonomy_manifest$abundance_file[[i]],
+      check.names = FALSE,
+      stringsAsFactors = FALSE
+    ) |&gt;
+      dplyr::transmute(
+        label = taxonomy_manifest$sample_id[[i]],
+        taxonomy_id = as.character(taxonomy_id),
+        family = as.character(name),
+        estimated_reads = as.numeric(new_est_reads)
+      )
+  }
+)) |&gt;
+  dplyr::left_join(
+    family_lineages |&gt;
+      dplyr::select(taxonomy_id, lineage, taxonomic_group),
+    by = &quot;taxonomy_id&quot;
+  ) |&gt;
+  dplyr::mutate(
+    taxonomic_group = dplyr::coalesce(taxonomic_group, &quot;Other&quot;)
+  ) |&gt;
+  dplyr::filter(
+    estimated_reads &gt; 0,
+    taxonomic_group %in% c(
+      &quot;Fungi&quot;, &quot;Bacteria&quot;, &quot;Archaea&quot;, &quot;Viruses&quot;,
+      &quot;Other microbial eukaryotes&quot;
+    )
+  ) |&gt;
+  dplyr::left_join(
+    metadata |&gt;
+      dplyr::select(label, Treatment, Diet, condition),
+    by = &quot;label&quot;
+  )
+
+sample_microbe_totals &lt;- bracken_family |&gt;
+  dplyr::group_by(label) |&gt;
+  dplyr::summarise(microbial_family_reads = sum(estimated_reads), .groups = &quot;drop&quot;)
+
+mapping_mass &lt;- read.csv(mapping_mass_file, check.names = FALSE) |&gt;
+  dplyr::mutate(label = as.character(label)) |&gt;
+  dplyr::filter(label %in% metadata$label)
+stopifnot(setequal(mapping_mass$label, metadata$label))
+
+microbial_burden &lt;- sample_microbe_totals |&gt;
+  dplyr::left_join(
+    mapping_mass |&gt;
+      dplyr::select(label, input_reads, mass_g),
+    by = &quot;label&quot;
+  ) |&gt;
+  dplyr::left_join(
+    metadata |&gt;
+      dplyr::select(label, Diet, Treatment, condition),
+    by = &quot;label&quot;
+  ) |&gt;
+  dplyr::mutate(
+    microbial_reads_per_million =
+      microbial_family_reads / input_reads * 1e6,
+    log10_microbial_rpm = log10(microbial_reads_per_million + 1)
+  )
+
+bracken_family &lt;- bracken_family |&gt;
+  dplyr::left_join(sample_microbe_totals, by = &quot;label&quot;) |&gt;
+  dplyr::mutate(
+    relative_abundance = estimated_reads / microbial_family_reads
+  )
+
+top_family_levels &lt;- bracken_family |&gt;
+  dplyr::group_by(family) |&gt;
+  dplyr::summarise(total_reads = sum(estimated_reads), .groups = &quot;drop&quot;) |&gt;
+  dplyr::slice_max(total_reads, n = 12, with_ties = FALSE) |&gt;
+  dplyr::arrange(dplyr::desc(total_reads)) |&gt;
+  dplyr::pull(family)
+
+sample_order_microbes &lt;- metadata |&gt;
+  dplyr::arrange(condition, as.numeric(label)) |&gt;
+  dplyr::pull(label)
+
+bracken_display &lt;- bracken_family |&gt;
+  dplyr::mutate(
+    display_family = dplyr::if_else(
+      family %in% top_family_levels,
+      family,
+      &quot;Other microbial families&quot;
+    )
+  ) |&gt;
+  dplyr::group_by(
+    label, Treatment, Diet, condition, microbial_family_reads, display_family
+  ) |&gt;
+  dplyr::summarise(estimated_reads = sum(estimated_reads), .groups = &quot;drop&quot;) |&gt;
+  dplyr::group_by(label) |&gt;
+  dplyr::mutate(
+    relative_abundance = estimated_reads / sum(estimated_reads)
+  ) |&gt;
+  dplyr::ungroup() |&gt;
+  dplyr::mutate(
+    label = factor(label, levels = sample_order_microbes),
+    display_family = factor(
+      display_family,
+      levels = c(top_family_levels, &quot;Other microbial families&quot;)
+    )
+  )
+
+write.csv(
+  bracken_family,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_abundance_long.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  bracken_display,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_display_table.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+<pre class="r"><code>family_palette &lt;- setNames(
+  grDevices::hcl.colors(length(levels(bracken_display$display_family)), &quot;Dark 3&quot;),
+  levels(bracken_display$display_family)
+)
+family_palette[&quot;Other microbial families&quot;] &lt;- &quot;#B8BDC5&quot;
+if (&quot;Clavicipitaceae&quot; %in% names(family_palette)) {
+  family_palette[&quot;Clavicipitaceae&quot;] &lt;- &quot;#39B54A&quot;
+}
+
+family_absolute_plot &lt;- ggplot2::ggplot(
+  bracken_display,
+  ggplot2::aes(x = label, y = estimated_reads, fill = display_family)
+) +
+  ggplot2::geom_col(width = 0.82) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_fill_manual(values = family_palette, drop = FALSE) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(),
+    expand = ggplot2::expansion(mult = c(0, 0.05))
+  ) +
+  ggplot2::labs(
+    title = &quot;A. Bracken-estimated microbial family reads&quot;,
+    subtitle = &quot;Host-unmapped reads; metazoan and plant families excluded&quot;,
+    x = NULL,
+    y = &quot;Estimated family-assigned reads&quot;,
+    fill = &quot;Microbial family&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, size = 8),
+    legend.position = &quot;right&quot;
+  )
+
+family_relative_plot &lt;- ggplot2::ggplot(
+  bracken_display,
+  ggplot2::aes(x = label, y = relative_abundance, fill = display_family)
+) +
+  ggplot2::geom_col(width = 0.82) +
+  ggplot2::facet_grid(
+    cols = ggplot2::vars(condition),
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_fill_manual(values = family_palette, drop = FALSE) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1),
+    expand = c(0, 0)
+  ) +
+  ggplot2::labs(
+    title = &quot;B. Relative microbial family composition&quot;,
+    subtitle = &quot;Percentage of retained Bracken-estimated microbial family reads&quot;,
+    x = NULL,
+    y = &quot;Relative abundance&quot;,
+    fill = &quot;Microbial family&quot;
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(),
+    strip.text = ggplot2::element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, size = 8),
+    legend.position = &quot;right&quot;
+  )
+
+family_matrix &lt;- xtabs(
+  estimated_reads ~ label + family,
+  data = bracken_family
+)
+family_matrix &lt;- family_matrix[metadata$label, , drop = FALSE]
+family_relative_matrix &lt;- vegan::decostand(family_matrix, method = &quot;total&quot;)
+family_bray &lt;- vegan::vegdist(family_relative_matrix, method = &quot;bray&quot;)
+family_pcoa &lt;- stats::cmdscale(family_bray, eig = TRUE, k = 2)
+positive_eigenvalues &lt;- family_pcoa$eig[family_pcoa$eig &gt; 0]
+family_pcoa_variance &lt;- 100 * positive_eigenvalues / sum(positive_eigenvalues)
+
+family_pcoa_scores &lt;- data.frame(
+  label = rownames(family_pcoa$points),
+  PCoA1 = family_pcoa$points[, 1],
+  PCoA2 = family_pcoa$points[, 2],
+  stringsAsFactors = FALSE
+) |&gt;
+  dplyr::left_join(
+    metadata |&gt;
+      dplyr::select(label, Treatment, Diet, condition),
+    by = &quot;label&quot;
+  )
+
+family_centroids &lt;- family_pcoa_scores |&gt;
+  dplyr::group_by(Diet, Treatment) |&gt;
+  dplyr::summarise(
+    PCoA1 = mean(PCoA1),
+    PCoA2 = mean(PCoA2),
+    .groups = &quot;drop&quot;
+  )
+
+family_pcoa_plot &lt;- ggplot2::ggplot(
+  family_pcoa_scores,
+  ggplot2::aes(x = PCoA1, y = PCoA2, color = Diet, shape = Treatment)
+) +
+  ggplot2::geom_point(size = 3.1, alpha = 0.82) +
+  ggplot2::geom_line(
+    data = family_centroids,
+    ggplot2::aes(group = Diet),
+    linewidth = 0.9,
+    show.legend = FALSE
+  ) +
+  ggplot2::geom_point(
+    data = family_centroids,
+    size = 5,
+    stroke = 1.2,
+    fill = &quot;white&quot;,
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_color_manual(
+    values = c(&quot;33&quot; = &quot;#E6862E&quot;, &quot;50&quot; = &quot;#2F8F5B&quot;, &quot;83&quot; = &quot;#7B4FA3&quot;)
+  ) +
+  ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
+  ggplot2::labs(
+    title = &quot;C. Bray-Curtis ordination of microbial family profiles&quot;,
+    subtitle = &quot;Open points are diet-by-treatment centroids; lines connect control and infected centroids&quot;,
+    x = paste0(&quot;PCoA1 (&quot;, round(family_pcoa_variance[[1]], 1), &quot;%)&quot;),
+    y = paste0(&quot;PCoA2 (&quot;, round(family_pcoa_variance[[2]], 1), &quot;%)&quot;),
+    color = &quot;Diet&quot;,
+    shape = &quot;Treatment&quot;
+  ) +
+  ggplot2::theme_classic(base_size = 14) +
+  ggplot2::theme(legend.position = &quot;bottom&quot;)
+
+bracken_family_composition_figure &lt;-
+  family_absolute_plot /
+  family_relative_plot /
+  family_pcoa_plot +
+  patchwork::plot_layout(heights = c(1, 1, 0.8), guides = &quot;collect&quot;) &amp;
+  ggplot2::theme(legend.position = &quot;bottom&quot;)
+
+print(bracken_family_composition_figure)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/bracken-family-composition-figure-1.png" alt="" width="2112" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot2::ggsave(
+  file.path(out_dir, &quot;figureS2_bracken_host_unmapped_family_composition.png&quot;),
+  bracken_family_composition_figure,
+  width = 22, height = 18, dpi = 300, limitsize = FALSE
+)
+ggplot2::ggsave(
+  file.path(out_dir, &quot;figureS2_bracken_host_unmapped_family_composition.pdf&quot;),
+  bracken_family_composition_figure,
+  width = 22, height = 18, limitsize = FALSE
+)
+if (requireNamespace(&quot;svglite&quot;, quietly = TRUE)) {
+  ggplot2::ggsave(
+    file.path(out_dir, &quot;figureS2_bracken_host_unmapped_family_composition.svg&quot;),
+    bracken_family_composition_figure,
+    width = 22, height = 18, limitsize = FALSE
+  )
+}
+
+write.csv(
+  family_pcoa_scores,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_pcoa_scores.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+<div id="figure-s2-large-label-narrow-version" class="section level3">
+<h3>Figure S2 large-label narrow version</h3>
+<p>This alternative export keeps the same data and ordination but uses a
+taller, narrower canvas for presentation and manuscript assembly. Sample
+labels are shown only for points whose distance from the overall PCoA
+median exceeds the median distance plus three median absolute
+deviations. This reproducible rule identifies visibly displaced profiles
+without labelling every library.</p>
+<pre class="r"><code>pcoa_median &lt;- c(
+  PCoA1 = stats::median(family_pcoa_scores$PCoA1),
+  PCoA2 = stats::median(family_pcoa_scores$PCoA2)
+)
+
+family_pcoa_scores_labeled &lt;- family_pcoa_scores |&gt;
+  dplyr::mutate(
+    distance_from_pcoa_median = sqrt(
+      (PCoA1 - pcoa_median[[&quot;PCoA1&quot;]])^2 +
+        (PCoA2 - pcoa_median[[&quot;PCoA2&quot;]])^2
+    )
+  )
+
+pcoa_label_cutoff &lt;- stats::median(
+  family_pcoa_scores_labeled$distance_from_pcoa_median
+) + 3 * stats::mad(family_pcoa_scores_labeled$distance_from_pcoa_median)
+
+family_pcoa_offset_labels &lt;- family_pcoa_scores_labeled |&gt;
+  dplyr::filter(distance_from_pcoa_median &gt; pcoa_label_cutoff)
+
+large_text_family_palette &lt;- family_palette
+large_text_family_colors &lt;- c(
+  &quot;Plasmodiidae&quot; = &quot;#E8899B&quot;,
+  &quot;Vibrionaceae&quot; = &quot;#E89A62&quot;,
+  &quot;Streptomycetaceae&quot; = &quot;#D8B23F&quot;,
+  &quot;Clavicipitaceae&quot; = &quot;#5DBB72&quot;,
+  &quot;Cryptococcaceae&quot; = &quot;#91B94A&quot;,
+  &quot;Enterobacteriaceae&quot; = &quot;#1EA66F&quot;,
+  &quot;Dictyosteliaceae&quot; = &quot;#35B7A6&quot;,
+  &quot;Sarcocystidae&quot; = &quot;#42AFC2&quot;,
+  &quot;Baculoviridae&quot; = &quot;#4C9ED9&quot;,
+  &quot;Lysobacteraceae&quot; = &quot;#6D91C7&quot;,
+  &quot;Bacillaceae&quot; = &quot;#9A82D4&quot;,
+  &quot;Saccharomycetaceae&quot; = &quot;#C77BCB&quot;,
+  &quot;Other microbial families&quot; = &quot;#BFC5CC&quot;
+)
+large_text_family_palette[
+  intersect(names(large_text_family_palette), names(large_text_family_colors))
+] &lt;- large_text_family_colors[
+  intersect(names(large_text_family_palette), names(large_text_family_colors))
+]
+
+large_text_theme &lt;- ggplot2::theme(
+  plot.title = ggplot2::element_text(size = 22, face = &quot;bold&quot;),
+  axis.title = ggplot2::element_text(size = 25, face = &quot;bold&quot;),
+  axis.text.y = ggplot2::element_text(size = 15),
+  axis.text.x = ggplot2::element_text(size = 12),
+  strip.text = ggplot2::element_text(size = 17, face = &quot;bold&quot;),
+  legend.title = ggplot2::element_text(size = 18, face = &quot;bold&quot;),
+  legend.text = ggplot2::element_text(size = 16),
+  legend.key.height = grid::unit(0.65, &quot;cm&quot;),
+  legend.key.width = grid::unit(0.65, &quot;cm&quot;)
+)
+
+family_absolute_plot_large &lt;- family_absolute_plot +
+  ggplot2::labs(subtitle = NULL) +
+  ggplot2::scale_fill_manual(values = large_text_family_palette, drop = FALSE) +
+  large_text_theme
+
+family_relative_plot_large &lt;- family_relative_plot +
+  ggplot2::labs(subtitle = NULL) +
+  ggplot2::scale_fill_manual(values = large_text_family_palette, drop = FALSE) +
+  large_text_theme
+
+family_pcoa_plot_large &lt;- ggplot2::ggplot(
+  family_pcoa_scores_labeled,
+  ggplot2::aes(x = PCoA1, y = PCoA2, color = Diet, shape = Treatment)
+) +
+  ggplot2::geom_point(size = 5.2, alpha = 0.9, stroke = 1.1) +
+  ggplot2::geom_line(
+    data = family_centroids,
+    ggplot2::aes(group = Diet),
+    linewidth = 1.35,
+    show.legend = FALSE
+  ) +
+  ggplot2::geom_point(
+    data = family_centroids,
+    size = 7.2,
+    stroke = 1.6,
+    fill = &quot;white&quot;,
+    show.legend = FALSE
+  ) +
+  ggrepel::geom_label_repel(
+    data = family_pcoa_offset_labels,
+    ggplot2::aes(label = label),
+    size = 5.3,
+    fontface = &quot;bold&quot;,
+    color = &quot;#222222&quot;,
+    fill = grDevices::adjustcolor(&quot;white&quot;, alpha.f = 0.92),
+    box.padding = 0.55,
+    point.padding = 0.35,
+    min.segment.length = 0,
+    segment.color = &quot;#555555&quot;,
+    seed = 83,
+    show.legend = FALSE
+  ) +
+  ggplot2::scale_color_manual(
+    values = c(&quot;33&quot; = &quot;#E28A3B&quot;, &quot;50&quot; = &quot;#369D67&quot;, &quot;83&quot; = &quot;#8060AE&quot;)
+  ) +
+  ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
+  ggplot2::labs(
+    title = &quot;C. Bray-Curtis ordination of microbial family profiles&quot;,
+    subtitle = NULL,
+    x = paste0(&quot;PCoA1 (&quot;, round(family_pcoa_variance[[1]], 1), &quot;%)&quot;),
+    y = paste0(&quot;PCoA2 (&quot;, round(family_pcoa_variance[[2]], 1), &quot;%)&quot;),
+    color = &quot;Diet&quot;,
+    shape = &quot;Treatment&quot;
+  ) +
+  ggplot2::theme_classic(base_size = 18) +
+  large_text_theme +
+  ggplot2::theme(legend.position = &quot;bottom&quot;)
+
+bracken_family_composition_figure_large_text &lt;-
+  family_absolute_plot_large /
+  family_relative_plot_large /
+  family_pcoa_plot_large +
+  patchwork::plot_layout(heights = c(1.05, 1.05, 1.15), guides = &quot;collect&quot;) &amp;
+  ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    legend.box = &quot;vertical&quot;,
+    legend.box.just = &quot;center&quot;,
+    legend.title = ggplot2::element_text(size = 18, face = &quot;bold&quot;),
+    legend.text = ggplot2::element_text(size = 16),
+    legend.key.height = grid::unit(0.65, &quot;cm&quot;),
+    legend.key.width = grid::unit(0.65, &quot;cm&quot;)
+  )
+
+print(bracken_family_composition_figure_large_text)</code></pre>
+<p><img src="figure/29-metarhizium-read-burden.Rmd/bracken-family-composition-figure-large-text-1.png" alt="" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>large_text_stem &lt;- file.path(
+  out_dir,
+  &quot;figureS2_bracken_host_unmapped_family_composition_large_text_narrow&quot;
+)
+ggplot2::ggsave(
+  paste0(large_text_stem, &quot;.png&quot;),
+  bracken_family_composition_figure_large_text,
+  width = 16, height = 24, dpi = 300, limitsize = FALSE
+)
+ggplot2::ggsave(
+  paste0(large_text_stem, &quot;.pdf&quot;),
+  bracken_family_composition_figure_large_text,
+  width = 16, height = 24, limitsize = FALSE
+)
+if (requireNamespace(&quot;svglite&quot;, quietly = TRUE)) {
+  ggplot2::ggsave(
+    paste0(large_text_stem, &quot;.svg&quot;),
+    bracken_family_composition_figure_large_text,
+    width = 16, height = 24, limitsize = FALSE
+  )
+}
+
+write.csv(
+  family_pcoa_offset_labels,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_pcoa_offset_labels.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+</div>
+<div id="composition-tests" class="section level3">
+<h3>Composition tests</h3>
+<p>PERMANOVA tests whether the multivariate family composition differs
+with diet, infection treatment, or their interaction. The dispersion
+test is reported alongside it because PERMANOVA can be influenced by
+unequal within-group variability. These tests describe the taxonomic
+signal in the RNA-seq reads; they are not a dedicated microbiome survey
+and do not establish organismal colonization.</p>
+<pre class="r"><code>family_test_metadata &lt;- metadata |&gt;
+  dplyr::filter(label %in% rownames(family_relative_matrix)) |&gt;
+  dplyr::arrange(match(label, rownames(family_relative_matrix))) |&gt;
+  dplyr::mutate(
+    Diet = factor(Diet, levels = c(&quot;33&quot;, &quot;50&quot;, &quot;83&quot;)),
+    Treatment = factor(Treatment, levels = c(&quot;Control&quot;, &quot;Infected&quot;)),
+    condition = interaction(Diet, Treatment, drop = TRUE)
+  )
+
+set.seed(20260810)
+family_permanova &lt;- vegan::adonis2(
+  family_bray ~ Diet * Treatment,
+  data = family_test_metadata,
+  permutations = 999,
+  by = &quot;terms&quot;
+)
+family_permanova_table &lt;- as.data.frame(family_permanova) |&gt;
+  tibble::rownames_to_column(&quot;term&quot;) |&gt;
+  dplyr::rename(
+    df = Df,
+    sum_of_squares = SumOfSqs,
+    R2 = R2,
+    F = F,
+    p_value = `Pr(&gt;F)`
+  )
+
+family_dispersion &lt;- vegan::betadisper(
+  family_bray,
+  group = family_test_metadata$condition
+)
+set.seed(20260810)
+family_dispersion_test &lt;- vegan::permutest(family_dispersion, permutations = 999)
+family_dispersion_table &lt;- data.frame(
+  test = &quot;PERMDISP among diet-by-treatment groups&quot;,
+  F = unname(family_dispersion_test$tab[1, &quot;F&quot;]),
+  p_value = unname(family_dispersion_test$tab[1, &quot;Pr(&gt;F)&quot;])
+)
+
+burden_interaction_model &lt;- stats::lm(
+  log10_microbial_rpm ~ Diet * Treatment,
+  data = microbial_burden
+)
+burden_interaction_drop &lt;- stats::drop1(
+  burden_interaction_model,
+  test = &quot;F&quot;
+)
+burden_additive_model &lt;- stats::lm(
+  log10_microbial_rpm ~ Diet + Treatment,
+  data = microbial_burden
+)
+burden_additive_drop &lt;- stats::drop1(burden_additive_model, test = &quot;F&quot;)
+
+burden_design_tests &lt;- data.frame(
+  term = c(&quot;Diet x Infection&quot;, &quot;Diet&quot;, &quot;Infection&quot;),
+  model = c(
+    &quot;Full factorial model&quot;,
+    &quot;Additive model after unsupported interaction&quot;,
+    &quot;Additive model after unsupported interaction&quot;
+  ),
+  F = c(
+    burden_interaction_drop[&quot;Diet:Treatment&quot;, &quot;F value&quot;],
+    burden_additive_drop[&quot;Diet&quot;, &quot;F value&quot;],
+    burden_additive_drop[&quot;Treatment&quot;, &quot;F value&quot;]
+  ),
+  p_value = c(
+    burden_interaction_drop[&quot;Diet:Treatment&quot;, &quot;Pr(&gt;F)&quot;],
+    burden_additive_drop[&quot;Diet&quot;, &quot;Pr(&gt;F)&quot;],
+    burden_additive_drop[&quot;Treatment&quot;, &quot;Pr(&gt;F)&quot;]
+  )
+)
+
+burden_mass_interaction_model &lt;- stats::lm(
+  log10_microbial_rpm ~ mass_g * Treatment + Diet,
+  data = microbial_burden
+)
+burden_mass_interaction_drop &lt;- stats::drop1(
+  burden_mass_interaction_model,
+  test = &quot;F&quot;
+)
+burden_mass_additive_model &lt;- stats::lm(
+  log10_microbial_rpm ~ mass_g + Treatment + Diet,
+  data = microbial_burden
+)
+burden_mass_additive_drop &lt;- stats::drop1(
+  burden_mass_additive_model,
+  test = &quot;F&quot;
+)
+burden_mass_tests &lt;- data.frame(
+  term = c(&quot;Mass x Infection&quot;, &quot;Mass&quot;),
+  model = c(
+    &quot;Mass-by-infection model adjusted for diet&quot;,
+    &quot;Additive model after unsupported mass-by-infection interaction&quot;
+  ),
+  F = c(
+    burden_mass_interaction_drop[&quot;mass_g:Treatment&quot;, &quot;F value&quot;],
+    burden_mass_additive_drop[&quot;mass_g&quot;, &quot;F value&quot;]
+  ),
+  p_value = c(
+    burden_mass_interaction_drop[&quot;mass_g:Treatment&quot;, &quot;Pr(&gt;F)&quot;],
+    burden_mass_additive_drop[&quot;mass_g&quot;, &quot;Pr(&gt;F)&quot;]
+  )
+)
+
+burden_group_summary &lt;- microbial_burden |&gt;
+  dplyr::group_by(Treatment) |&gt;
+  dplyr::summarise(
+    samples = dplyr::n(),
+    median_microbial_reads_per_million =
+      stats::median(microbial_reads_per_million),
+    mean_microbial_reads_per_million = mean(microbial_reads_per_million),
+    IQR_microbial_reads_per_million =
+      stats::IQR(microbial_reads_per_million),
+    .groups = &quot;drop&quot;
+  )
+
+write.csv(
+  family_permanova_table,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_permanova.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  family_dispersion_table,
+  file.path(out_dir, &quot;bracken_host_unmapped_family_dispersion_test.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  microbial_burden,
+  file.path(out_dir, &quot;bracken_host_unmapped_burden_by_sample.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  burden_design_tests,
+  file.path(out_dir, &quot;bracken_host_unmapped_burden_design_tests.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  burden_mass_tests,
+  file.path(out_dir, &quot;bracken_host_unmapped_burden_mass_tests.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  burden_group_summary,
+  file.path(out_dir, &quot;bracken_host_unmapped_burden_group_summary.csv&quot;),
+  row.names = FALSE
+)
+
+knitr::kable(
+  family_permanova_table |&gt;
+    dplyr::mutate(
+      dplyr::across(c(sum_of_squares, R2, F, p_value), ~ round(.x, 4))
+    ),
+  caption = &quot;PERMANOVA of host-unmapped Bracken family composition&quot;
+)</code></pre>
+<table>
+<caption>PERMANOVA of host-unmapped Bracken family composition</caption>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">df</th>
+<th align="right">sum_of_squares</th>
+<th align="right">R2</th>
+<th align="right">F</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Diet</td>
+<td align="right">2</td>
+<td align="right">0.0668</td>
+<td align="right">0.0235</td>
+<td align="right">0.5541</td>
+<td align="right">0.812</td>
+</tr>
+<tr class="even">
+<td align="left">Treatment</td>
+<td align="right">1</td>
+<td align="right">0.3285</td>
+<td align="right">0.1153</td>
+<td align="right">5.4506</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">Diet:Treatment</td>
+<td align="right">2</td>
+<td align="right">0.1624</td>
+<td align="right">0.0570</td>
+<td align="right">1.3471</td>
+<td align="right">0.248</td>
+</tr>
+<tr class="even">
+<td align="left">Residual</td>
+<td align="right">38</td>
+<td align="right">2.2903</td>
+<td align="right">0.8042</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="right">43</td>
+<td align="right">2.8480</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>knitr::kable(
+  family_dispersion_table |&gt;
+    dplyr::mutate(dplyr::across(c(F, p_value), ~ round(.x, 4))),
+  caption = &quot;Dispersion check for the family-composition PERMANOVA&quot;
+)</code></pre>
+<table>
+<caption>Dispersion check for the family-composition PERMANOVA</caption>
+<thead>
+<tr class="header">
+<th align="left">test</th>
+<th align="right">F</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">PERMDISP among diet-by-treatment groups</td>
+<td align="right">0.7392</td>
+<td align="right">0.625</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>knitr::kable(
+  burden_design_tests,
+  digits = 4,
+  caption = paste(
+    &quot;Diet and infection tests for Bracken-estimated microbial family reads&quot;,
+    &quot;per million input reads&quot;
+  )
+)</code></pre>
+<table style="width:100%;">
+<caption>Diet and infection tests for Bracken-estimated microbial family
+reads per million input reads</caption>
+<colgroup>
+<col width="21%" />
+<col width="57%" />
+<col width="10%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="left">model</th>
+<th align="right">F</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Diet x Infection</td>
+<td align="left">Full factorial model</td>
+<td align="right">1.0225</td>
+<td align="right">0.3694</td>
+</tr>
+<tr class="even">
+<td align="left">Diet</td>
+<td align="left">Additive model after unsupported interaction</td>
+<td align="right">2.5714</td>
+<td align="right">0.0890</td>
+</tr>
+<tr class="odd">
+<td align="left">Infection</td>
+<td align="left">Additive model after unsupported interaction</td>
+<td align="right">14.5670</td>
+<td align="right">0.0005</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>knitr::kable(
+  burden_mass_tests,
+  digits = 4,
+  caption = &quot;Body-mass tests for normalized non-host taxonomic burden&quot;
+)</code></pre>
+<table>
+<caption>Body-mass tests for normalized non-host taxonomic
+burden</caption>
+<colgroup>
+<col width="17%" />
+<col width="66%" />
+<col width="7%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="left">model</th>
+<th align="right">F</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Mass x Infection</td>
+<td align="left">Mass-by-infection model adjusted for diet</td>
+<td align="right">4.0611</td>
+<td align="right">0.051</td>
+</tr>
+<tr class="even">
+<td align="left">Mass</td>
+<td align="left">Additive model after unsupported mass-by-infection
+interaction</td>
+<td align="right">0.2586</td>
+<td align="right">0.614</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="results-and-interpretation" class="section level3">
+<h3>Results and interpretation</h3>
+<p>The same broad family-level assignments recur across most libraries,
+although the absolute number of host-unmapped reads assigned by Bracken
+varies markedly among individuals. Diet did not explain a supported
+fraction of the relative family composition (R2 = 0.023, P = 0.812). In
+contrast, control and infected libraries differed in their multivariate
+taxonomic profiles (R2 = 0.115, P = 0.001), while the diet-by-infection
+interaction was not supported (P = 0.248). The dispersion test was not
+significant (P = 0.625), indicating that the treatment result was not
+explained simply by unequal within-group spread.</p>
+<p>The normalized abundance of retained microbial-family assignments was
+also higher in infected libraries (median 54,902 reads per million input
+reads) than controls (median 20,458). The diet-by-infection interaction
+was unsupported (P = 0.369), whereas the infection effect was supported
+after accounting for diet (P = 0.0005). Recorded mass did not explain
+normalized non-host burden in the additive model (P = 0.614), and the
+mass-by-infection interaction remained just above the prespecified
+threshold (P = 0.051).</p>
+<p>Thus, the profiles do not support a broad diet-associated
+restructuring of the taxonomic signal, but neither should they be
+interpreted as completely invariant among treatments. Because these
+assignments come from total-RNA libraries rather than a dedicated
+microbiome assay, they are best treated as supporting metatranscriptomic
+evidence. Individual family calls can reflect the challenge fungus,
+other microorganisms, residual host sequence, or database ambiguity and
+do not by themselves demonstrate viable colonization.</p>
+</div>
+</div>
 <div id="combined-export" class="section level2">
 <h2>Combined export</h2>
 <pre class="r"><code>combined_plot &lt;- fungal_genome_plot / fungal_percentage_plot +
@@ -2250,6 +3325,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/20984dfa946a4323e5fd8ca5c13b817e5c89ffa3/docs/figure/29-metarhizium-read-burden.Rmd/combined-export-1.png" target="_blank">20984df</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/8b8101ca1729f8afc6575dcd126d7315824f1f1d/docs/figure/29-metarhizium-read-burden.Rmd/combined-export-1.png" target="_blank">8b8101c</a>
@@ -2355,8 +3441,8 @@ for (export_name in names(export_specs)) {
   options = list(pageLength = 15, scrollX = TRUE),
   caption = &quot;Competitive-mapping evidence for M. robertsii by sample&quot;
 )</code></pre>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-11f791fcfaca4190eb8e" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-11f791fcfaca4190eb8e">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Control&quot;,&quot;Infected&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;33&quot;,&quot;50&quot;,&quot;83&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"8\" data-max=\"965784\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"4.359439254e-05\" data-max=\"3.12975903737515\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Competitive-mapping evidence for M. robertsii by sample<\/caption>","data":[["1029","1058","1025","1057","1054","1016","1023","1027","1049","1030","1018","1015","1046","1051","1055","1009","1039","1024","1028","1007","1050","1021","1045","1033","1003","1043","1052","1002","1035","1042","1031","1004","1020","1014","1005","1037","1040","1011","1036","1034","1041","1032","1038","1006"],["Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Control","Infected","Infected","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Control","Infected","Control","Control","Infected","Infected","Control","Control","Control","Control","Control","Control","Control","Control","Control","Control"],["83","50","50","33","33","50","83","33","50","33","33","33","50","33","50","33","33","33","50","50","83","33","33","33","33","50","50","83","83","33","50","50","83","83","83","50","50","83","33","50","83","83","83","33"],[965784,478026,286680,225150,19262,6742,4584,4156,2346,996,692,456,286,276,264,256,238,222,214,212,194,182,174,160,158,150,134,132,126,114,102,100,98,90,84,72,70,60,46,32,32,30,16,8],[2.78622245847903,3.129759037375147,0.7836073540024944,0.6380475987192685,0.06354109697426348,0.04841599204202526,0.0274488158027575,0.01881957264536173,0.006720191781554924,0.001836109391858079,0.001384423439753283,0.001778736561859816,0.0009732001437477864,0.0008744790512840141,0.0008395402334233496,0.0007898220080570483,0.0005618368495664366,0.001085225071280222,0.0006609811783756239,0.0007874603623283421,0.0006031970875903424,0.0005204810434512446,0.0005040479832822927,0.0003504028274704954,0.0007519586022993275,0.0003912912446731893,0.0005098259826952886,0.0007478518380866778,0.0003403697301311061,0.0003344074069011246,0.0003030851753136768,0.0003282830056882909,0.0003681702539473111,0.0004690065612454563,0.000352236570131622,0.000190327588938298,0.0001965283050312454,0.0002570132600422898,0.000124930938313095,9.649444137739544e-05,0.0001343855441470161,8.106591737259092e-05,5.223207573076428e-05,4.35943925404763e-05]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>Treatment<\/th>\n      <th>Diet<\/th>\n      <th>unique_fungus<\/th>\n      <th>pct_unique_fungus<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"name":"label","targets":0},{"name":"Treatment","targets":1},{"name":"Diet","targets":2},{"name":"unique_fungus","targets":3},{"name":"pct_unique_fungus","targets":4}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-f9ee4d03bf8addcd3ec2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f9ee4d03bf8addcd3ec2">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Control&quot;,&quot;Infected&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;33&quot;,&quot;50&quot;,&quot;83&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"8\" data-max=\"965784\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"4.359439254e-05\" data-max=\"3.12975903737515\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Competitive-mapping evidence for M. robertsii by sample<\/caption>","data":[["1029","1058","1025","1057","1054","1016","1023","1027","1049","1030","1018","1015","1046","1051","1055","1009","1039","1024","1028","1007","1050","1021","1045","1033","1003","1043","1052","1002","1035","1042","1031","1004","1020","1014","1005","1037","1040","1011","1036","1034","1041","1032","1038","1006"],["Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Infected","Control","Infected","Infected","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Infected","Infected","Infected","Control","Control","Infected","Infected","Control","Control","Infected","Control","Control","Infected","Infected","Control","Control","Control","Control","Control","Control","Control","Control","Control","Control"],["83","50","50","33","33","50","83","33","50","33","33","33","50","33","50","33","33","33","50","50","83","33","33","33","33","50","50","83","83","33","50","50","83","83","83","50","50","83","33","50","83","83","83","33"],[965784,478026,286680,225150,19262,6742,4584,4156,2346,996,692,456,286,276,264,256,238,222,214,212,194,182,174,160,158,150,134,132,126,114,102,100,98,90,84,72,70,60,46,32,32,30,16,8],[2.78622245847903,3.129759037375147,0.7836073540024944,0.6380475987192685,0.06354109697426348,0.04841599204202526,0.0274488158027575,0.01881957264536173,0.006720191781554924,0.001836109391858079,0.001384423439753283,0.001778736561859816,0.0009732001437477864,0.0008744790512840141,0.0008395402334233496,0.0007898220080570483,0.0005618368495664366,0.001085225071280222,0.0006609811783756239,0.0007874603623283421,0.0006031970875903424,0.0005204810434512446,0.0005040479832822927,0.0003504028274704954,0.0007519586022993275,0.0003912912446731893,0.0005098259826952886,0.0007478518380866778,0.0003403697301311061,0.0003344074069011246,0.0003030851753136768,0.0003282830056882909,0.0003681702539473111,0.0004690065612454563,0.000352236570131622,0.000190327588938298,0.0001965283050312454,0.0002570132600422898,0.000124930938313095,9.649444137739544e-05,0.0001343855441470161,8.106591737259092e-05,5.223207573076428e-05,4.35943925404763e-05]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>Treatment<\/th>\n      <th>Diet<\/th>\n      <th>unique_fungus<\/th>\n      <th>pct_unique_fungus<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"name":"label","targets":0},{"name":"Treatment","targets":1},{"name":"Diet","targets":2},{"name":"unique_fungus","targets":3},{"name":"pct_unique_fungus","targets":4}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="interpretation" class="section level2">
 <h2>Interpretation</h2>
@@ -2379,7 +3465,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.5.2
+Running under: macOS Tahoe 26.6.1
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -2398,22 +3484,25 @@ other attached packages:
 [1] workflowr_1.7.2
 
 loaded via a namespace (and not attached):
- [1] sass_0.4.10        generics_0.1.4     tidyr_1.3.2        stringi_1.8.7     
- [5] digest_0.6.39      magrittr_2.0.5     evaluate_1.0.5     grid_4.6.0        
- [9] RColorBrewer_1.1-3 fastmap_1.2.0      rprojroot_2.1.1    jsonlite_2.0.0    
-[13] processx_3.9.0     whisker_0.4.1      promises_1.5.0     httr_1.4.8        
-[17] purrr_1.2.2        crosstalk_1.2.2    scales_1.4.0       textshaping_1.0.5 
-[21] jquerylib_0.1.4    cli_3.6.6          rlang_1.2.0        withr_3.0.2       
-[25] cachem_1.1.0       yaml_2.3.12        otel_0.2.0         tools_4.6.0       
-[29] dplyr_1.2.1        ggplot2_4.0.3      httpuv_1.6.17      DT_0.34.0         
-[33] vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5    git2r_0.36.2      
-[37] stringr_1.6.0      fs_2.1.0           htmlwidgets_1.6.4  ragg_1.5.2        
-[41] pkgconfig_2.0.3    callr_3.7.6        pillar_1.11.1      bslib_0.10.0      
-[45] later_1.4.8        gtable_0.3.6       glue_1.8.1         Rcpp_1.1.1-1.1    
-[49] systemfonts_1.3.2  xfun_0.57          tibble_3.3.1       tidyselect_1.2.1  
-[53] rstudioapi_0.18.0  knitr_1.51         dichromat_2.0-0.1  farver_2.1.2      
-[57] htmltools_0.5.9    patchwork_1.3.2    svglite_2.2.2      labeling_0.4.3    
-[61] rmarkdown_2.31     compiler_4.6.0     getPass_0.2-4      S7_0.2.2          </code></pre>
+ [1] gtable_0.3.6       xfun_0.57          bslib_0.10.0       ggplot2_4.0.3     
+ [5] htmlwidgets_1.6.4  ggrepel_0.9.8      processx_3.9.0     lattice_0.22-9    
+ [9] callr_3.7.6        vctrs_0.7.3        tools_4.6.0        crosstalk_1.2.2   
+[13] generics_0.1.4     parallel_4.6.0     tibble_3.3.1       cluster_2.1.8.2   
+[17] pkgconfig_2.0.3    Matrix_1.7-5       RColorBrewer_1.1-3 S7_0.2.2          
+[21] lifecycle_1.0.5    compiler_4.6.0     farver_2.1.2       stringr_1.6.0     
+[25] git2r_0.36.2       textshaping_1.0.5  getPass_0.2-4      permute_0.9-10    
+[29] httpuv_1.6.17      htmltools_0.5.9    sass_0.4.10        yaml_2.3.12       
+[33] later_1.4.8        pillar_1.11.1      jquerylib_0.1.4    whisker_0.4.1     
+[37] tidyr_1.3.2        MASS_7.3-65        DT_0.34.0          cachem_1.1.0      
+[41] vegan_2.7-3        nlme_3.1-169       tidyselect_1.2.1   digest_0.6.39     
+[45] stringi_1.8.7      dplyr_1.2.1        purrr_1.2.2        labeling_0.4.3    
+[49] splines_4.6.0      rprojroot_2.1.1    fastmap_1.2.0      grid_4.6.0        
+[53] cli_3.6.6          magrittr_2.0.5     patchwork_1.3.2    dichromat_2.0-0.1 
+[57] withr_3.0.2        scales_1.4.0       promises_1.5.0     rmarkdown_2.31    
+[61] httr_1.4.8         otel_0.2.0         ragg_1.5.2         evaluate_1.0.5    
+[65] knitr_1.51         mgcv_1.9-4         rlang_1.2.0        Rcpp_1.1.1-1.1    
+[69] glue_1.8.1         svglite_2.2.2      rstudioapi_0.18.0  jsonlite_2.0.0    
+[73] R6_2.6.1           systemfonts_1.3.2  fs_2.1.0          </code></pre>
 </div>
 </div>
 </div>

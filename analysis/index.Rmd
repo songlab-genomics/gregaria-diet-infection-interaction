@@ -208,10 +208,10 @@ and remove annotated rRNA loci.
     <strong>Unplaced Scaffolds</strong>
     <p>Review assembly, Kraken/FCS, cross-species, BLASTn, and DIAMOND evidence.</p>
   </a>
-  <a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_outlier-removal_sensitivity">
-    <span>Sample sensitivity</span>
-    <strong>Outlier Removal</strong>
-    <p>Document historical sample-removal sensitivity from the adopted 44-library cohort.</p>
+  <a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_mapping-quality_basis_for_excluding_1044">
+    <span>Sample quality control</span>
+    <strong>Exclusion of 1044</strong>
+    <p>Show the technical mapping failure that excluded 1044 while retaining every other library.</p>
   </a>
 </div>
 

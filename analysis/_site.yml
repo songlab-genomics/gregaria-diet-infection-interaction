@@ -117,7 +117,7 @@ navbar:
             href: 28-placed-unplaced-scaffold-analysis.html
           - text: "Unplaced scaffold origin audit"
             href: 27-scaffold-origin-audit.html
-          - text: "Metarhizium read burden"
+          - text: "Fungal burden and taxonomic profiles"
             href: 29-metarhizium-read-burden.html
       - text: "Exon only"
         menu:

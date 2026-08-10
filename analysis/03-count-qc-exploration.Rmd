@@ -541,17 +541,21 @@ be interpreted as proof that infection caused poor mapping: genome duplication,
 fungal burden, library composition, and other technical differences can all
 alter the proportion of reads accepted by the reference alignment.
 
-## Recorded mass and mapping quality
+## Exploratory mapping-quality and mass association
 
 The source datasheet records one mass measurement for every sequenced
 individual under the column `Mass before extraction`. We use that measurement
-as the pre-dissection individual-mass covariate requested here. Figure S4 asks
+as the pre-dissection individual-mass covariate requested here. This exploratory analysis asks
 whether either competitive mapping definition varies systematically with mass.
-Each point is one library and every sample identifier is shown. Solid regression
-lines use all 45 libraries; dashed lines show the fitted relationship after
-removing 1044. Spearman correlations describe the unadjusted monotonic
-association, while a logit-scale linear model tests mass after accounting for
-diet and infection.
+Each point is one library and every sample identifier is shown. The three diet
+panels each contain a separate regression for controls (dashed) and infected
+locusts (solid). All six fits use the final 44-library cohort; library 1044 is
+shown for quality-control context but does not influence a fitted line.
+Spearman correlations describe the overall unadjusted monotonic association,
+while a logit-scale linear model tests mass after accounting for diet and
+infection. The within-group regressions are exploratory because the six groups
+contain only 5--10 individuals; their slopes, R-squared values and P values are
+exported with the figure.
 
 ```{r mapping-quality-by-mass, fig.width=11, fig.height=15}
 mapping_mass <- merge(
@@ -630,43 +634,82 @@ format_mass_test <- function(test_rows) {
 
 diet_colors <- c("33" = "#E67E22", "50" = "#2E8B57", "83" = "#7B4AA8")
 treatment_shapes <- c(Control = 21, Infected = 24)
+treatment_colors <- c(Control = "#667784", Infected = "#8B0000")
+treatment_fills <- c(Control = "#FAEBD7", Infected = "#8B0000")
+treatment_linetypes <- c(Control = "dashed", Infected = "solid")
+
+test_mapping_mass_by_group <- function(data, metric, mapping_definition) {
+  group_data <- data[data$label != "1044", , drop = FALSE]
+  group_data$mapping_percentage <- group_data[[metric]]
+
+  group_rows <- split(
+    group_data,
+    interaction(group_data$Diet, group_data$Treatment, drop = TRUE)
+  )
+
+  do.call(rbind, lapply(group_rows, function(group_df) {
+    fit <- stats::lm(mapping_percentage ~ mass_g, data = group_df)
+    fit_summary <- summary(fit)
+    slope_row <- coef(fit_summary)["mass_g", ]
+    data.frame(
+      mapping_definition = mapping_definition,
+      Diet = as.character(group_df$Diet[1]),
+      Treatment = as.character(group_df$Treatment[1]),
+      samples = nrow(group_df),
+      slope_percentage_points_per_g = unname(slope_row["Estimate"]),
+      slope_standard_error = unname(slope_row["Std. Error"]),
+      slope_p = unname(slope_row["Pr(>|t|)"]),
+      r_squared = unname(fit_summary$r.squared),
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+
+mapping_mass_group_tests <- do.call(rbind, lapply(
+  names(mapping_definitions),
+  function(metric) {
+    test_mapping_mass_by_group(
+      mapping_mass,
+      metric,
+      mapping_definitions[[metric]]
+    )
+  }
+))
 
 make_mapping_mass_plot <- function(data, metric, title, y_label, test_rows) {
   plot_data <- data
   plot_data$mapping_percentage <- plot_data[[metric]]
+  fit_data <- plot_data[plot_data$label != "1044", , drop = FALSE]
 
   ggplot2::ggplot(
     plot_data,
     ggplot2::aes(
       x = mass_g,
       y = mapping_percentage,
-      color = Diet,
+      color = Treatment,
+      fill = Treatment,
       shape = Treatment
     )
   ) +
     ggplot2::geom_smooth(
-      ggplot2::aes(group = 1),
+      data = fit_data,
+      ggplot2::aes(
+        group = Treatment,
+        color = Treatment,
+        fill = Treatment,
+        linetype = Treatment
+      ),
       method = "lm",
       formula = y ~ x,
       se = TRUE,
-      color = "#222222",
-      fill = "grey78",
-      linewidth = 0.8
+      alpha = 0.12,
+      linewidth = 1.05
     ) +
-    ggplot2::geom_smooth(
-      data = plot_data[plot_data$label != "1044", ],
-      ggplot2::aes(group = 1),
-      method = "lm",
-      formula = y ~ x,
-      se = FALSE,
-      color = "#555555",
-      linetype = "dashed",
-      linewidth = 0.9
-    ) +
-    ggplot2::geom_point(fill = "white", size = 3.2, stroke = 1.1) +
+    ggplot2::geom_point(size = 3.4, stroke = 1.15) +
     ggrepel::geom_text_repel(
       data = plot_data[plot_data$label != "1044", ],
       ggplot2::aes(label = label),
+      color = "#252525",
       size = 3.1,
       box.padding = 0.28,
       point.padding = 0.15,
@@ -688,25 +731,41 @@ make_mapping_mass_plot <- function(data, metric, title, y_label, test_rows) {
       seed = 1044,
       show.legend = FALSE
     ) +
-    ggplot2::scale_color_manual(values = diet_colors) +
+    ggplot2::facet_wrap(
+      ~ Diet,
+      nrow = 1,
+      labeller = ggplot2::labeller(Diet = function(x) paste("Diet", x))
+    ) +
+    ggplot2::scale_color_manual(values = treatment_colors) +
+    ggplot2::scale_fill_manual(values = treatment_fills) +
     ggplot2::scale_shape_manual(values = treatment_shapes) +
+    ggplot2::scale_linetype_manual(values = treatment_linetypes) +
     ggplot2::scale_x_continuous(
       breaks = scales::breaks_pretty(n = 6),
       expand = ggplot2::expansion(mult = c(0.08, 0.08))
     ) +
     ggplot2::labs(
       title = title,
-      subtitle = format_mass_test(test_rows),
+      subtitle = paste0(
+        format_mass_test(test_rows),
+        "\nWithin each diet: dashed = control; solid = infected; fits exclude 1044"
+      ),
       x = "Recorded individual mass (g)",
       y = y_label,
-      color = "Diet",
-      shape = "Treatment"
+      color = "Treatment",
+      fill = "Treatment",
+      shape = "Treatment",
+      linetype = "Treatment"
     ) +
     ggplot2::theme_classic(base_size = 15) +
     ggplot2::theme(
       legend.position = "bottom",
       plot.title = ggplot2::element_text(face = "bold", size = 18),
-      plot.subtitle = ggplot2::element_text(size = 12.5, lineheight = 1.05)
+      plot.subtitle = ggplot2::element_text(size = 12.5, lineheight = 1.05),
+      strip.background = ggplot2::element_rect(
+        fill = "#F2F4F5", color = "#5F6B73", linewidth = 0.6
+      ),
+      strip.text = ggplot2::element_text(face = "bold", size = 14)
     )
 }
 
@@ -753,10 +812,10 @@ for (extension in c("png", "pdf", "svg")) {
   ggplot2::ggsave(
     file.path(
       out_dir,
-      paste0("figureS4_mapping_quality_by_individual_mass.", extension)
+      paste0("mapping_quality_by_individual_mass.", extension)
     ),
     p_mapping_mass,
-    width = 11,
+    width = 16,
     height = 15,
     dpi = 320
   )
@@ -772,13 +831,260 @@ write.csv(
   file.path(out_dir, "mapping_quality_mass_association_tests.csv"),
   row.names = FALSE
 )
+write.csv(
+  mapping_mass_group_tests,
+  file.path(out_dir, "mapping_quality_mass_group_regression_tests.csv"),
+  row.names = FALSE
+)
 
 knitr::kable(
   mapping_mass_tests,
   digits = 4,
   caption = "Association between recorded individual mass and mapping quality"
 )
+
+knitr::kable(
+  mapping_mass_group_tests,
+  digits = 4,
+  caption = paste(
+    "Exploratory within-diet regressions of mapping quality on mass",
+    "for control and infected locusts"
+  )
+)
 ```
+
+Among the 44 retained libraries, factorial models found no supported
+diet-by-infection interaction for unique mapping
+(`r sprintf("P = %.3f", mapping_model_results$interaction_p[mapping_model_results$mapping_definition == "Unique mapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`)
+and no diet main effect
+(`r sprintf("P = %.3f", mapping_model_results$diet_p[mapping_model_results$mapping_definition == "Unique mapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`).
+Infection was associated with lower unique mapping (control mean
+`r sprintf("%.2f%%", mean(mapping_mass$unique_pct[mapping_mass$label != "1044" & mapping_mass$Treatment == "Control"]))`;
+infected mean
+`r sprintf("%.2f%%", mean(mapping_mass$unique_pct[mapping_mass$label != "1044" & mapping_mass$Treatment == "Infected"]))`;
+`r sprintf("P = %.3f", mapping_model_results$infection_p[mapping_model_results$mapping_definition == "Unique mapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`).
+The same pattern was observed after accepted multimapping reads were included:
+the interaction (`r sprintf("P = %.3f", mapping_model_results$interaction_p[mapping_model_results$mapping_definition == "Unique + multimapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`)
+and diet (`r sprintf("P = %.3f", mapping_model_results$diet_p[mapping_model_results$mapping_definition == "Unique + multimapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`)
+were unsupported, whereas infected libraries had lower combined mapping yield
+(control mean
+`r sprintf("%.2f%%", mean(mapping_mass$unique_plus_multimapped_pct[mapping_mass$label != "1044" & mapping_mass$Treatment == "Control"]))`;
+infected mean
+`r sprintf("%.2f%%", mean(mapping_mass$unique_plus_multimapped_pct[mapping_mass$label != "1044" & mapping_mass$Treatment == "Infected"]))`;
+`r sprintf("P = %.3f", mapping_model_results$infection_p[mapping_model_results$mapping_definition == "Unique + multimapping" & mapping_model_results$scenario == "Final 44-sample analysis cohort"])`).
+
+Recorded mass did not explain mapping yield within this cohort. For unique
+mapping, the Spearman association was
+`r sprintf("rho = %.3f, P = %.3f", mapping_mass_tests$spearman_rho[mapping_mass_tests$mapping_definition == "Unique mapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"], mapping_mass_tests$spearman_p[mapping_mass_tests$mapping_definition == "Unique mapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"])`,
+and the mass effect adjusted for diet and infection was
+`r sprintf("P = %.3f", mapping_mass_tests$adjusted_mass_p[mapping_mass_tests$mapping_definition == "Unique mapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"])`.
+After accepted multimapping reads were included, the corresponding values were
+`r sprintf("rho = %.3f, P = %.3f", mapping_mass_tests$spearman_rho[mapping_mass_tests$mapping_definition == "Unique + multimapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"], mapping_mass_tests$spearman_p[mapping_mass_tests$mapping_definition == "Unique + multimapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"])`
+and adjusted `r sprintf("P = %.3f", mapping_mass_tests$adjusted_mass_p[mapping_mass_tests$mapping_definition == "Unique + multimapping" & mapping_mass_tests$scenario == "Final 44-sample analysis cohort"])`.
+
+## Body mass by diet and infection
+
+For the experiment-level mass test, recorded individual mass is the response.
+We first test the `Diet x Infection` interaction in the 44-library analysis
+cohort. Because the interaction is not supported, diet and infection are then
+tested in an additive model. Sample 1044 remains excluded from this biological
+analysis because it was removed on independent mapping-quality grounds.
+
+```{r individual-mass-by-design, fig.width=10, fig.height=7.5}
+mass_design <- mapping_mass[mapping_mass$label != "1044", , drop = FALSE]
+mass_design$Diet <- factor(mass_design$Diet, levels = c("33", "50", "83"))
+mass_design$Treatment <- factor(
+  mass_design$Treatment,
+  levels = c("Control", "Infected")
+)
+
+mass_interaction_model <- stats::lm(
+  mass_g ~ Diet * Treatment,
+  data = mass_design
+)
+mass_interaction_test <- stats::drop1(mass_interaction_model, test = "F")
+mass_interaction_p <- mass_interaction_test[
+  "Diet:Treatment", "Pr(>F)"
+]
+
+mass_additive_model <- stats::lm(
+  mass_g ~ Diet + Treatment,
+  data = mass_design
+)
+mass_additive_test <- stats::drop1(mass_additive_model, test = "F")
+mass_diet_p <- mass_additive_test["Diet", "Pr(>F)"]
+mass_infection_p <- mass_additive_test["Treatment", "Pr(>F)"]
+
+mass_test_table <- data.frame(
+  term = c("Diet x Infection", "Diet", "Infection"),
+  model = c(
+    "Full factorial model",
+    "Additive model after unsupported interaction",
+    "Additive model after unsupported interaction"
+  ),
+  numerator_df = c(
+    mass_interaction_test["Diet:Treatment", "Df"],
+    mass_additive_test["Diet", "Df"],
+    mass_additive_test["Treatment", "Df"]
+  ),
+  F = c(
+    mass_interaction_test["Diet:Treatment", "F value"],
+    mass_additive_test["Diet", "F value"],
+    mass_additive_test["Treatment", "F value"]
+  ),
+  p_value = c(mass_interaction_p, mass_diet_p, mass_infection_p),
+  stringsAsFactors = FALSE
+)
+
+mass_summary <- mass_design |>
+  dplyr::group_by(Diet, Treatment) |>
+  dplyr::summarise(
+    samples = dplyr::n(),
+    mean_mass_g = mean(mass_g),
+    sd_mass_g = stats::sd(mass_g),
+    se_mass_g = sd_mass_g / sqrt(samples),
+    .groups = "drop"
+  )
+
+infection_coefficient <- stats::coef(mass_additive_model)["TreatmentInfected"]
+infection_ci <- stats::confint(
+  mass_additive_model,
+  "TreatmentInfected",
+  level = 0.95
+)
+mass_effect_table <- data.frame(
+  comparison = "Infected - Control, adjusted for diet",
+  estimate_g = unname(infection_coefficient),
+  confidence_level = 0.95,
+  lower_ci_g = unname(infection_ci[1]),
+  upper_ci_g = unname(infection_ci[2]),
+  p_value = mass_infection_p
+)
+
+mass_design_plot <- ggplot2::ggplot(
+  mass_design,
+  ggplot2::aes(x = Diet, y = mass_g, fill = Treatment, shape = Treatment)
+) +
+  ggplot2::geom_boxplot(
+    ggplot2::aes(group = interaction(Diet, Treatment)),
+    width = 0.62,
+    position = ggplot2::position_dodge(width = 0.74),
+    alpha = 0.72,
+    outlier.shape = NA,
+    color = "#202020",
+    linewidth = 0.65
+  ) +
+  ggplot2::geom_point(
+    position = ggplot2::position_jitterdodge(
+      jitter.width = 0.12,
+      jitter.height = 0,
+      dodge.width = 0.74,
+      seed = 20260811
+    ),
+    size = 3.4,
+    stroke = 0.85,
+    color = "#202020",
+    alpha = 0.9
+  ) +
+  ggplot2::stat_summary(
+    ggplot2::aes(group = Treatment),
+    fun = mean,
+    geom = "point",
+    position = ggplot2::position_dodge(width = 0.74),
+    shape = 23,
+    size = 4.2,
+    stroke = 1,
+    fill = "white",
+    color = "#111111"
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(Control = "#FAEBD7", Infected = "#8B0000")
+  ) +
+  ggplot2::scale_shape_manual(values = c(Control = 21, Infected = 24)) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_number(accuracy = 0.01),
+    expand = ggplot2::expansion(mult = c(0.04, 0.11))
+  ) +
+  ggplot2::labs(
+    title = "Recorded individual mass by diet and infection treatment",
+    subtitle = paste0(
+      "Diet x infection: P = ", sprintf("%.3f", mass_interaction_p),
+      "; diet: P = ", sprintf("%.3f", mass_diet_p),
+      "; infection: P = ", sprintf("%.3f", mass_infection_p),
+      "\nAdjusted infected-control difference = ",
+      sprintf("%.3f", infection_coefficient), " g (95% CI ",
+      sprintf("%.3f", infection_ci[1]), " to ",
+      sprintf("%.3f", infection_ci[2]), ")"
+    ),
+    x = "Diet (protein:carbohydrate ratio)",
+    y = "Recorded individual mass (g)",
+    fill = "Treatment",
+    shape = "Treatment"
+  ) +
+  ggplot2::theme_classic(base_size = 16) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold", size = 19),
+    plot.subtitle = ggplot2::element_text(size = 13, lineheight = 1.08),
+    axis.title = ggplot2::element_text(size = 16),
+    axis.text = ggplot2::element_text(size = 14)
+  )
+
+print(mass_design_plot)
+
+for (extension in c("png", "pdf", "svg")) {
+  ggplot2::ggsave(
+    file.path(
+      out_dir,
+      paste0("individual_mass_by_diet_infection.", extension)
+    ),
+    mass_design_plot,
+    width = 10,
+    height = 7.5,
+    dpi = 320
+  )
+}
+
+write.csv(
+  mass_design,
+  file.path(out_dir, "individual_mass_analysis_44_samples.csv"),
+  row.names = FALSE
+)
+write.csv(
+  mass_summary,
+  file.path(out_dir, "individual_mass_group_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  mass_test_table,
+  file.path(out_dir, "individual_mass_diet_infection_tests.csv"),
+  row.names = FALSE
+)
+write.csv(
+  mass_effect_table,
+  file.path(out_dir, "individual_mass_infection_effect.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  mass_test_table,
+  digits = 4,
+  caption = "Diet, infection, and diet-by-infection tests for recorded mass"
+)
+knitr::kable(
+  mass_summary,
+  digits = 4,
+  caption = "Recorded mass summary for each diet-by-treatment group"
+)
+```
+
+There is no supported diet-by-infection interaction
+(`r sprintf("P = %.3f", mass_interaction_p)`) and no diet main effect
+(`r sprintf("P = %.3f", mass_diet_p)`). Infected animals are lighter overall
+after accounting for diet (`r sprintf("P = %.3f", mass_infection_p)`), with an
+adjusted infected-minus-control difference of
+`r sprintf("%.3f g", infection_coefficient)` (95% CI
+`r sprintf("%.3f to %.3f g", infection_ci[1], infection_ci[2])`).
 
 ## Low-count filtering
 

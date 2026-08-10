@@ -680,27 +680,18 @@ fit_direct_scenario <- function(excluded_samples, scenario_name) {
   }))
 }
 
-current_outliers <- c("1007", "1036", "1037", "1039")
-no_outlier_results <- fit_direct_scenario(
-  current_outliers,
-  "Current outliers removed"
-)
-scenario_results <- dplyr::bind_rows(all_sample_results, no_outlier_results)
+# The current analysis retains every QC-passed library; only 1044 was removed
+# upstream for technical mapping failure.
+scenario_results <- all_sample_results
 scenario_results_file <- file.path(
   out_dir,
   "main_chromosome_sample_filter_scenario_results.csv"
 )
 write.csv(scenario_results, scenario_results_file, row.names = FALSE)
 
-scenario_sample_counts <- dplyr::bind_rows(
-  metadata_for_models |>
-    dplyr::count(Diet, Treatment, name = "n_samples") |>
-    dplyr::mutate(scenario = "All samples"),
-  metadata_for_models |>
-    dplyr::filter(!label %in% current_outliers) |>
-    dplyr::count(Diet, Treatment, name = "n_samples") |>
-    dplyr::mutate(scenario = "Current outliers removed")
-)
+scenario_sample_counts <- metadata_for_models |>
+  dplyr::count(Diet, Treatment, name = "n_samples") |>
+  dplyr::mutate(scenario = "All QC-passed samples")
 scenario_sample_counts_file <- file.path(
   out_dir,
   "main_chromosome_sample_counts_by_scenario.csv"
@@ -2059,16 +2050,11 @@ if (file.exists(figure4_placement_png)) {
 }
 ```
 
-## Figure S1: outlier-removal sensitivity
+<!-- The historical PCA-based removal of 1007, 1036, 1037, and 1039 is retained
+below as non-evaluated provenance. These QC-passed samples remain in every
+current biological analysis; the visible historical reports are in the archive. -->
 
-Figure S1 compares DEG calls across sample-filtering scenarios. It is a
-diagnostic companion to the main all-samples analysis: panel A shows how many
-samples remain in each diet-by-infection group, panel B shows how the number of
-DEGs changes across contrasts, and panel C shows whether genes are retained,
-lost, or gained after removing the current outlier set (`1007`, `1036`, `1037`,
-and `1039`).
-
-```{r figure-s1-outlier-sensitivity, fig.width=14, fig.height=13, results='asis'}
+```{r archived-pca-sample-removal, eval=FALSE, include=FALSE}
 s1_scenario_results <- read.csv(scenario_results_file, check.names = FALSE)
 s1_sample_counts <- read.csv(scenario_sample_counts_file, check.names = FALSE)
 
@@ -2315,21 +2301,96 @@ knitr::kable(figure_s1_exports,
              caption = "Figure S1 outlier-sensitivity exports")
 ```
 
-## Figure S2: DEG localization on chromosomes
+## Figure S1: mapping-quality basis for excluding 1044
 
-Figure S2 maps the primary main-chromosome DEGs from each broad context onto the
-chromosome coordinates in the RefSeq GFF. Unplaced scaffolds are outside this
-publication figure by design and remain documented on the scaffold-origin and
-placement-sensitivity pages.
+Figure S1 preserves all 45 sequenced libraries for the technical QC comparison,
+while all biological models use the 44-library cohort after excluding 1044.
+Panel A shows unique mapping and panel B shows unique plus accepted
+multimapping. The factorial diet, infection, and interaction tests are printed
+on the panels. Samples `1007`, `1036`, `1037`, and `1039` remain included.
 
-An ideal parallel validation would have quantified selected host loci and
-*Metarhizium* load by qPCR from matched fat body tissue. That wet-lab validation
-cannot be performed for this dataset because no remaining tissue is available,
-so the origin of the unplaced-scaffold signal must be evaluated
-bioinformatically with scaffold annotation, fungal similarity searches, and
-competitive host-pathogen remapping.
+```{r figure-s1-mapping-quality, echo=FALSE, out.width="82%"}
+qc_dir <- latest_dir("^count-qc-exploration_")
+s1_mapping_stem <- "figureS3_mapping_quality_exclusion_1044"
+s1_mapping_sources <- file.path(
+  qc_dir,
+  paste0(s1_mapping_stem, c(".png", ".svg", ".pdf"))
+)
+if (!all(file.exists(s1_mapping_sources))) {
+  stop("Missing Figure S1 mapping-QC source exports in: ", qc_dir)
+}
+s1_mapping_targets <- file.path(
+  out_dir,
+  sub("^figureS3_", "figureS1_", basename(s1_mapping_sources))
+)
+file.copy(s1_mapping_sources, s1_mapping_targets, overwrite = TRUE)
+s1_mapping_png <- s1_mapping_sources[grepl("[.]png$", s1_mapping_sources)]
+grid::grid.newpage()
+grid::grid.raster(png::readPNG(s1_mapping_png))
+```
 
-```{r figure-s2-deg-genome-localization, fig.width=16, fig.height=10.5, results='asis'}
+```{r figure-s1-mapping-export-manifest, echo=FALSE}
+knitr::kable(
+  tibble::tibble(
+    file = basename(s1_mapping_targets),
+    present = file.exists(s1_mapping_targets)
+  ),
+  caption = "Figure S1 mapping-quality exports"
+)
+```
+
+## Figure S2: non-host taxonomic profiles
+
+Figure S2 summarizes Kraken2/Bracken family assignments among reads that did
+not align to the host-only reference. Metazoan and plant families are excluded
+from the display. Panels A and B show absolute Bracken-estimated family reads
+and their relative composition; panel C shows Bray-Curtis ordination. This is
+supporting metatranscriptomic evidence rather than a dedicated microbiome assay.
+
+```{r figure-s2-bracken, echo=FALSE, out.width="96%"}
+taxonomy_dir <- latest_dir("^metarhizium-read-burden_")
+s2_taxonomy_files <- c(
+  "figureS2_bracken_host_unmapped_family_composition.png",
+  "figureS2_bracken_host_unmapped_family_composition.svg",
+  "figureS2_bracken_host_unmapped_family_composition.pdf",
+  "figureS2_bracken_host_unmapped_family_composition_large_text_narrow.png",
+  "figureS2_bracken_host_unmapped_family_composition_large_text_narrow.svg",
+  "figureS2_bracken_host_unmapped_family_composition_large_text_narrow.pdf",
+  "bracken_host_unmapped_family_abundance_long.csv",
+  "bracken_host_unmapped_family_display_table.csv",
+  "bracken_host_unmapped_family_pcoa_scores.csv",
+  "bracken_host_unmapped_family_pcoa_offset_labels.csv",
+  "bracken_host_unmapped_family_permanova.csv",
+  "bracken_host_unmapped_family_dispersion_test.csv",
+  "bracken_host_unmapped_burden_by_sample.csv",
+  "bracken_host_unmapped_burden_design_tests.csv",
+  "bracken_host_unmapped_burden_mass_tests.csv",
+  "bracken_host_unmapped_burden_group_summary.csv"
+)
+s2_taxonomy_sources <- file.path(taxonomy_dir, s2_taxonomy_files)
+if (!all(file.exists(s2_taxonomy_sources))) {
+  stop("Missing Figure S2 Kraken/Bracken source exports in: ", taxonomy_dir)
+}
+s2_taxonomy_targets <- file.path(out_dir, basename(s2_taxonomy_sources))
+file.copy(s2_taxonomy_sources, s2_taxonomy_targets, overwrite = TRUE)
+grid::grid.newpage()
+grid::grid.raster(png::readPNG(s2_taxonomy_sources[[4]]))
+```
+
+```{r figure-s2-bracken-export-manifest, echo=FALSE}
+knitr::kable(
+  tibble::tibble(
+    file = basename(s2_taxonomy_targets),
+    present = file.exists(s2_taxonomy_targets)
+  ),
+  caption = "Figure S2 Kraken2/Bracken taxonomic-profile exports"
+)
+```
+
+<!-- Chromosomal DEG localization remains an unnumbered candidate supplementary
+figure until the composition of Figure S3 and later supplements is decided. -->
+
+```{r candidate-deg-genome-localization, eval=FALSE, include=FALSE}
 s2_scenario_degs <- read.csv(scenario_results_file, check.names = FALSE) |>
   dplyr::filter(
     scenario == "All samples",
@@ -2408,7 +2469,7 @@ s2_deg_coordinates <- s2_deg_long |>
   )
 
 write.csv(s2_deg_coordinates,
-          file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
+          file.path(out_dir, "figureS4_deg_coordinates_by_context.csv"),
           row.names = FALSE)
 
 s2_unplaced_summary <- s2_deg_coordinates |>
@@ -2417,7 +2478,7 @@ s2_unplaced_summary <- s2_deg_coordinates |>
   dplyr::arrange(DEG_context, chromosome_class)
 
 write.csv(s2_unplaced_summary,
-          file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv"),
+          file.path(out_dir, "figureS4_unplaced_or_missing_deg_summary.csv"),
           row.names = FALSE)
 
 s2_coordinate_class_counts <- s2_deg_coordinates |>
@@ -2434,7 +2495,7 @@ s2_coordinate_class_counts <- s2_deg_coordinates |>
   dplyr::ungroup()
 
 write.csv(s2_coordinate_class_counts,
-          file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
+          file.path(out_dir, "figureS4_coordinate_class_counts.csv"),
           row.names = FALSE)
 
 s2_chromosome_degs <- s2_deg_coordinates |>
@@ -2460,7 +2521,7 @@ s2_chromosome_counts <- s2_chromosome_degs |>
   )
 
 write.csv(s2_chromosome_counts,
-          file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
+          file.path(out_dir, "figureS4_chromosome_deg_density.csv"),
           row.names = FALSE)
 
 p_s2_locations <- ggplot2::ggplot() +
@@ -2522,7 +2583,7 @@ p_s2_coordinate_class <- ggplot2::ggplot(
 figure_s2 <- p_s2_locations / p_s2_coordinate_class +
   patchwork::plot_layout(heights = c(0.78, 0.22)) +
   patchwork::plot_annotation(
-    title = "Figure S2. Chromosomal localization of DEG contexts",
+    title = "Figure S4. Chromosomal localization of DEG contexts",
     subtitle = "Primary paper DEG sets contain only official nuclear-chromosome genes",
     theme = ggplot2::theme(
       plot.title = ggplot2::element_text(face = "bold", size = 18),
@@ -2530,46 +2591,41 @@ figure_s2 <- p_s2_locations / p_s2_coordinate_class +
     )
   )
 
-save_png_svg(figure_s2, "figureS2_deg_chromosome_localization",
+save_png_svg(figure_s2, "figureS4_deg_chromosome_localization",
              width = 16, height = 10.5)
 figure_s2
 
 figure_s2_exports <- data.frame(
-  figure = c("Figure S2 composite PNG", "Figure S2 composite SVG",
-             "Figure S2 DEG coordinates", "Chromosome density table",
-             "Figure S2 coordinate class counts",
-             "Figure S2 unplaced/missing summary"),
+  figure = c("Figure S4 composite PNG", "Figure S4 composite SVG",
+             "Figure S4 DEG coordinates", "Chromosome density table",
+             "Figure S4 coordinate class counts",
+             "Figure S4 unplaced/missing summary"),
   path = c(
-    file.path(out_dir, "figureS2_deg_chromosome_localization.png"),
-    file.path(out_dir, "figureS2_deg_chromosome_localization.svg"),
-    file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
-    file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
-    file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
-    file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv")
+    file.path(out_dir, "figureS4_deg_chromosome_localization.png"),
+    file.path(out_dir, "figureS4_deg_chromosome_localization.svg"),
+    file.path(out_dir, "figureS4_deg_coordinates_by_context.csv"),
+    file.path(out_dir, "figureS4_chromosome_deg_density.csv"),
+    file.path(out_dir, "figureS4_coordinate_class_counts.csv"),
+    file.path(out_dir, "figureS4_unplaced_or_missing_deg_summary.csv")
   ),
   present = file.exists(c(
-    file.path(out_dir, "figureS2_deg_chromosome_localization.png"),
-    file.path(out_dir, "figureS2_deg_chromosome_localization.svg"),
-    file.path(out_dir, "figureS2_deg_coordinates_by_context.csv"),
-    file.path(out_dir, "figureS2_chromosome_deg_density.csv"),
-    file.path(out_dir, "figureS2_coordinate_class_counts.csv"),
-    file.path(out_dir, "figureS2_unplaced_or_missing_deg_summary.csv")
+    file.path(out_dir, "figureS4_deg_chromosome_localization.png"),
+    file.path(out_dir, "figureS4_deg_chromosome_localization.svg"),
+    file.path(out_dir, "figureS4_deg_coordinates_by_context.csv"),
+    file.path(out_dir, "figureS4_chromosome_deg_density.csv"),
+    file.path(out_dir, "figureS4_coordinate_class_counts.csv"),
+    file.path(out_dir, "figureS4_unplaced_or_missing_deg_summary.csv")
   ))
 )
 knitr::kable(figure_s2_exports,
-             caption = "Figure S2 chromosome-localization exports")
+             caption = "Figure S4 chromosome-localization exports")
 knitr::kable(s2_unplaced_summary,
              caption = "Audit check: excluded unplaced or missing DEG memberships (expected zero)")
 ```
 
-## Figure S3: mapping-quality basis for excluding 1044
+<!-- Historical source-copy block retained for provenance; Figure S1 above is current. -->
 
-Figure S3 preserves all 45 sequenced libraries for the QC comparison, while all
-biological models elsewhere on this page use the 44-library cohort. Panel A
-shows unique mapping and Panel B shows unique plus accepted multimapping; the
-factorial diet, infection, and interaction tests are printed on the panels.
-
-```{r figure-s3-mapping-quality, echo=FALSE, out.width="82%"}
+```{r historical-figure-s3-mapping-quality, eval=FALSE, include=FALSE}
 qc_dir <- latest_dir("^count-qc-exploration_")
 s3_stem <- "figureS3_mapping_quality_exclusion_1044"
 s3_sources <- file.path(qc_dir, paste0(s3_stem, c(".png", ".svg", ".pdf")))
@@ -2583,46 +2639,10 @@ grid::grid.newpage()
 grid::grid.raster(png::readPNG(s3_png_source))
 ```
 
-```{r figure-s3-export-manifest, echo=FALSE}
+```{r historical-figure-s3-export-manifest, eval=FALSE, include=FALSE}
 knitr::kable(
   tibble::tibble(file = basename(s3_targets), present = file.exists(s3_targets)),
   caption = "Figure S3 mapping-quality exports"
-)
-```
-
-## Figure S4: individual mass and mapping quality
-
-Figure S4 relates the mass recorded for each individual before extraction to
-the competitive STAR mapping percentages. Panel A uses unique mapping and Panel
-B adds reads accepted at 2--20 loci. All 45 libraries remain visible for this
-QC comparison, with 1044 highlighted. Solid fits use all libraries and dashed
-fits omit 1044. Each panel reports Spearman tests and mass effects adjusted for
-diet and infection; neither mapping definition shows a supported mass effect.
-
-```{r figure-s4-mapping-mass, echo=FALSE, out.width="82%"}
-qc_dir <- latest_dir("^count-qc-exploration_")
-s4_files <- c(
-  "figureS4_mapping_quality_by_individual_mass.png",
-  "figureS4_mapping_quality_by_individual_mass.svg",
-  "figureS4_mapping_quality_by_individual_mass.pdf",
-  "mapping_quality_mass_association_tests.csv",
-  "mapping_quality_and_individual_mass_45_samples.csv"
-)
-s4_sources <- file.path(qc_dir, s4_files)
-if (!all(file.exists(s4_sources))) {
-  stop("Missing Figure S4 mapping-mass exports in: ", qc_dir)
-}
-s4_targets <- file.path(out_dir, basename(s4_sources))
-file.copy(s4_sources, s4_targets, overwrite = TRUE)
-s4_png_source <- s4_sources[grepl("[.]png$", s4_sources)]
-grid::grid.newpage()
-grid::grid.raster(png::readPNG(s4_png_source))
-```
-
-```{r figure-s4-export-manifest, echo=FALSE}
-knitr::kable(
-  tibble::tibble(file = basename(s4_targets), present = file.exists(s4_targets)),
-  caption = "Figure S4 individual-mass and mapping-quality exports"
 )
 ```
 

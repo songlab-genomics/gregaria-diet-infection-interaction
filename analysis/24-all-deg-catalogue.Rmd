@@ -14,8 +14,13 @@ params:
   latest_results_root: "output/rmd_runs"
   results_pattern: "^placed-unplaced-scaffold-analysis_"
   cluster_results_pattern: "^main-chromosome-cluster-enrichment_"
+  exon_results_pattern: "^exon-only-deseq2-analysis_"
+  primary_counts: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  metadata: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   alpha: 0.05
   lfc_threshold: 1
+  large_lfc_threshold: 2
+  high_expression_threshold: 100
   output_tag: "main-chromosome-all-deg-catalogue"
 ---
 
@@ -57,7 +62,7 @@ eggNOG is still used only for the GO, KEGG, and PFAM annotation columns.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("dplyr", "tidyr", "stringr", "DT", "knitr", "ggplot2",
+required <- c("dplyr", "tidyr", "stringr", "DT", "knitr", "ggplot2", "ggrepel",
               "scales", "readr", "tibble")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
@@ -129,7 +134,7 @@ parse_gff_gene_annotation <- function(path) {
                     quote = "", stringsAsFactors = FALSE)
   names(gff)[1:9] <- c("seqid", "source", "type", "start", "end", "score",
                        "strand", "phase", "attributes")
-  gff |>
+  decoded <- gff |>
     dplyr::filter(type == "gene") |>
     dplyr::transmute(
       gene_id = dplyr::coalesce(
@@ -141,6 +146,21 @@ parse_gff_gene_annotation <- function(path) {
     ) |>
     dplyr::filter(!is.na(gene_id)) |>
     dplyr::distinct(gene_id, .keep_all = TRUE)
+
+  decoded$gene_id <- vapply(
+    decoded$gene_id,
+    utils::URLdecode,
+    character(1),
+    USE.NAMES = FALSE
+  )
+  has_description <- !is.na(decoded$gff_description)
+  decoded$gff_description[has_description] <- vapply(
+    decoded$gff_description[has_description],
+    utils::URLdecode,
+    character(1),
+    USE.NAMES = FALSE
+  )
+  decoded
 }
 
 first_nonempty <- function(x, fallback = "unannotated") {
@@ -183,6 +203,16 @@ slugify <- function(x) {
     stringr::str_replace_all("[^a-z0-9]+", "_") |>
     stringr::str_replace_all("^_|_$", "")
 }
+
+read_count_matrix <- function(path) {
+  table <- readr::read_tsv(path, show_col_types = FALSE)
+  if (!"gene_id" %in% names(table)) stop("Count matrix lacks gene_id: ", path)
+  ids <- as.character(table$gene_id)
+  matrix <- as.matrix(table[, setdiff(names(table), "gene_id")])
+  storage.mode(matrix) <- "numeric"
+  rownames(matrix) <- ids
+  matrix
+}
 ```
 
 ## Input files
@@ -190,12 +220,29 @@ slugify <- function(x) {
 ```{r input-files}
 placed_dir <- latest_dir(params$results_pattern)
 scenario_results_file <- file.path(placed_dir, "placed_unplaced_all_deseq2_results.csv")
+size_factor_file <- file.path(
+  placed_dir,
+  "competitive_host_placed_gene_size_factors.tsv"
+)
+exon_dir <- latest_dir(params$exon_results_pattern)
+exon_results_file <- file.path(exon_dir, "placed_unplaced_all_deseq2_results.csv")
+primary_counts_file <- file.path(project_dir, params$primary_counts)
+metadata_file <- file.path(project_dir, params$metadata)
 
 input_files <- data.frame(
-  input = c("Joint main-chromosome DESeq2 table", "Official gene placement",
-            "eggNOG functional annotation", "GFF gene descriptions"),
-  path = c(scenario_results_file, placement_file, eggnog_file, gff_file),
+  input = c(
+    "Joint main-chromosome DESeq2 table", "Placed-gene DESeq2 size factors",
+    "Transcript-plus-exon count matrix", "Analysis metadata",
+    "Exon-only DESeq2 sensitivity table", "Official gene placement",
+    "eggNOG functional annotation", "GFF gene descriptions"
+  ),
+  path = c(
+    scenario_results_file, size_factor_file, primary_counts_file, metadata_file,
+    exon_results_file, placement_file, eggnog_file, gff_file
+  ),
   present = c(file.exists(scenario_results_file),
+              file.exists(size_factor_file), file.exists(primary_counts_file),
+              file.exists(metadata_file), file.exists(exon_results_file),
               file.exists(placement_file), file.exists(eggnog_file),
               file.exists(gff_file))
 )
@@ -290,7 +337,7 @@ deg_catalogue <- deg_raw |>
     Description = dplyr::coalesce(Description, "no GFF description")
   ) |>
   dplyr::select(
-    gene_id, Description,
+    gene_id, contrast_id, Description,
     gene_biotype,
     comparison_type, comparison, numerator_condition, denominator_condition,
     higher_in, lower_in, signed_direction, log2FoldChange, lfcSE, baseMean,
@@ -588,6 +635,665 @@ if (file.exists(cluster_assignment_file)) {
 } else {
   message("Cluster proportion plots skipped because the cluster assignment file was not found.")
 }
+```
+
+## High-effect, high-expression candidates {.tabset}
+
+DEG totals describe the breadth of a response, but they do not identify genes
+that combine a large change with abundant expression. This exploratory ranking
+therefore adds condition-specific expression to the DESeq2 results. It is not a
+second significance test and does not replace the complete catalogue below.
+
+A high-priority candidate must meet the study-wide DEG thresholds
+(`padj < 0.05` and `|log2FC| >= 1`), show at least a fourfold difference
+(`|log2FC| >= 2`), and have a mean of at least 100 size-factor-normalized
+fragments in the higher-expression condition. Within each contrast, candidates
+are then ranked jointly by effect size, expression, and adjusted significance.
+The thresholds are deliberately shown here so they can be changed without
+altering the DESeq2 models.
+
+```{r candidate-ranking}
+metadata_candidates <- readr::read_tsv(metadata_file, show_col_types = FALSE) |>
+  dplyr::transmute(
+    sample_id = as.character(.data$label),
+    diet = as.character(.data$Diet),
+    treatment = as.character(.data$Treatment)
+  )
+
+raw_candidate_counts <- read_count_matrix(primary_counts_file)
+size_factors <- readr::read_tsv(size_factor_file, show_col_types = FALSE) |>
+  dplyr::transmute(
+    sample_id = as.character(.data$sample_id),
+    size_factor = as.numeric(.data$placed_gene_size_factor)
+  )
+
+if (!setequal(metadata_candidates$sample_id, colnames(raw_candidate_counts)) ||
+    !setequal(metadata_candidates$sample_id, size_factors$sample_id)) {
+  stop("Candidate-ranking counts, metadata, and size factors have different samples.")
+}
+
+sample_order <- metadata_candidates$sample_id
+raw_candidate_counts <- raw_candidate_counts[, sample_order, drop = FALSE]
+sample_size_factors <- size_factors$size_factor[
+  match(sample_order, size_factors$sample_id)
+]
+normalized_candidate_counts <- sweep(
+  raw_candidate_counts,
+  2,
+  sample_size_factors,
+  "/"
+)
+
+samples_for <- function(treatment = NULL, diet = NULL) {
+  keep <- rep(TRUE, nrow(metadata_candidates))
+  if (!is.null(treatment)) keep <- keep & metadata_candidates$treatment == treatment
+  if (!is.null(diet)) keep <- keep & metadata_candidates$diet == as.character(diet)
+  metadata_candidates$sample_id[keep]
+}
+
+contrast_sample_sets <- list(
+  infection_diet33 = list(
+    numerator = samples_for("Infected", "33"),
+    denominator = samples_for("Control", "33")
+  ),
+  infection_diet50 = list(
+    numerator = samples_for("Infected", "50"),
+    denominator = samples_for("Control", "50")
+  ),
+  infection_diet83 = list(
+    numerator = samples_for("Infected", "83"),
+    denominator = samples_for("Control", "83")
+  ),
+  control_diet33_vs50 = list(
+    numerator = samples_for("Control", "33"),
+    denominator = samples_for("Control", "50")
+  ),
+  control_diet83_vs33 = list(
+    numerator = samples_for("Control", "83"),
+    denominator = samples_for("Control", "33")
+  ),
+  control_diet83_vs50 = list(
+    numerator = samples_for("Control", "83"),
+    denominator = samples_for("Control", "50")
+  ),
+  infected_diet33_vs50 = list(
+    numerator = samples_for("Infected", "33"),
+    denominator = samples_for("Infected", "50")
+  ),
+  infected_diet83_vs33 = list(
+    numerator = samples_for("Infected", "83"),
+    denominator = samples_for("Infected", "33")
+  ),
+  infected_diet83_vs50 = list(
+    numerator = samples_for("Infected", "83"),
+    denominator = samples_for("Infected", "50")
+  ),
+  infection_average_all_diets = list(
+    numerator = samples_for("Infected"),
+    denominator = samples_for("Control")
+  )
+)
+
+condition_mean <- function(gene_id, contrast_id, side) {
+  samples <- contrast_sample_sets[[contrast_id]][[side]]
+  if (!gene_id %in% rownames(normalized_candidate_counts)) return(NA_real_)
+  mean(normalized_candidate_counts[gene_id, samples], na.rm = TRUE)
+}
+
+candidate_pool <- deg_catalogue |>
+  dplyr::filter(.data$contrast_id %in% names(contrast_sample_sets))
+
+candidate_pool$mean_normalized_numerator <- mapply(
+  condition_mean,
+  candidate_pool$gene_id,
+  candidate_pool$contrast_id,
+  MoreArgs = list(side = "numerator")
+)
+candidate_pool$mean_normalized_denominator <- mapply(
+  condition_mean,
+  candidate_pool$gene_id,
+  candidate_pool$contrast_id,
+  MoreArgs = list(side = "denominator")
+)
+
+candidate_pool <- candidate_pool |>
+  dplyr::mutate(
+    mean_normalized_higher_condition = dplyr::if_else(
+      .data$log2FoldChange > 0,
+      .data$mean_normalized_numerator,
+      .data$mean_normalized_denominator
+    ),
+    large_high_expression =
+      abs(.data$log2FoldChange) >= as.numeric(params$large_lfc_threshold) &
+      .data$mean_normalized_higher_condition >=
+        as.numeric(params$high_expression_threshold)
+  ) |>
+  dplyr::group_by(.data$contrast_id) |>
+  dplyr::mutate(
+    effect_percentile = dplyr::percent_rank(abs(.data$log2FoldChange)),
+    expression_percentile = dplyr::percent_rank(
+      log10(.data$mean_normalized_higher_condition + 1)
+    ),
+    significance_percentile = dplyr::percent_rank(-log10(.data$padj)),
+    priority_score = rowMeans(
+      cbind(
+        .data$effect_percentile,
+        .data$expression_percentile,
+        .data$significance_percentile
+      ),
+      na.rm = TRUE
+    )
+  ) |>
+  dplyr::ungroup()
+
+exon_sensitivity <- read.csv(exon_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    .data$mapping_branch == "Competitive host",
+    .data$analysis_scope == "Placed/host-assigned"
+  ) |>
+  dplyr::transmute(
+    gene_id,
+    contrast_id,
+    exon_log2FoldChange = log2FoldChange,
+    exon_padj = padj,
+    exon_significant = significant
+  )
+
+candidate_pool <- candidate_pool |>
+  dplyr::left_join(exon_sensitivity, by = c("gene_id", "contrast_id")) |>
+  dplyr::mutate(
+    exon_same_direction = !is.na(.data$exon_log2FoldChange) &
+      sign(.data$exon_log2FoldChange) == sign(.data$log2FoldChange),
+    exon_concordant_DEG = .data$exon_significant %in% TRUE &
+      .data$exon_same_direction
+  )
+
+high_priority_candidates <- candidate_pool |>
+  dplyr::filter(.data$large_high_expression) |>
+  dplyr::arrange(.data$comparison_type, .data$comparison,
+                 dplyr::desc(.data$priority_score))
+
+readr::write_csv(
+  high_priority_candidates,
+  file.path(out_dir, "high_effect_high_expression_candidate_catalogue.csv"),
+  na = ""
+)
+
+candidate_summary <- candidate_pool |>
+  dplyr::group_by(.data$comparison_type, .data$comparison) |>
+  dplyr::summarise(
+    significant_DEGs = dplyr::n(),
+    high_effect_high_expression = sum(.data$large_high_expression),
+    exon_concordant_high_priority = sum(
+      .data$large_high_expression & .data$exon_concordant_DEG,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  )
+readr::write_csv(
+  candidate_summary,
+  file.path(out_dir, "high_expression_candidate_summary.csv"),
+  na = ""
+)
+
+knitr::kable(
+  candidate_summary,
+  caption = "Large-effect, high-expression candidates by direct contrast"
+)
+```
+
+### Diet-associated candidates
+
+The plot below ranks genes that differ among diets in control animals or among
+infected animals. Point position gives the DESeq2 effect size, while point size
+shows mean normalized expression in whichever diet has higher expression. The
+same gene can appear in more than one panel when it separates multiple diets.
+
+```{r diet-high-expression-candidates, fig.width=15, fig.height=15}
+diet_candidates <- high_priority_candidates |>
+  dplyr::filter(
+    .data$comparison_type %in%
+      c("Diet contrasts among control", "Diet contrasts among infected")
+  ) |>
+  dplyr::group_by(.data$comparison) |>
+  dplyr::slice_max(.data$priority_score, n = 5, with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    candidate_label = paste0(.data$Description, " [", .data$gene_id, "]")
+  )
+
+readr::write_csv(
+  diet_candidates,
+  file.path(out_dir, "top_diet_high_expression_candidates.csv"),
+  na = ""
+)
+
+p_diet_candidates <- ggplot2::ggplot(
+  diet_candidates,
+  ggplot2::aes(
+    x = .data$log2FoldChange,
+    y = stats::reorder(.data$candidate_label, .data$log2FoldChange),
+    size = .data$mean_normalized_higher_condition,
+    color = .data$log2FoldChange
+  )
+) +
+  ggplot2::geom_vline(xintercept = 0, color = "#6B7280", linewidth = 0.45) +
+  ggplot2::geom_segment(
+    ggplot2::aes(x = 0, xend = .data$log2FoldChange, yend = .data$candidate_label),
+    color = "#B8B8B8",
+    linewidth = 0.55
+  ) +
+  ggplot2::geom_point(alpha = 0.9) +
+  ggplot2::facet_wrap(~ comparison, scales = "free_y", ncol = 2) +
+  ggplot2::scale_color_gradient2(
+    low = "#2166AC", mid = "#F7F7F7", high = "#B2182B", midpoint = 0
+  ) +
+  ggplot2::scale_size_continuous(
+    trans = "log10",
+    range = c(3.5, 10),
+    labels = scales::label_comma()
+  ) +
+  ggplot2::labs(
+    title = "Large and abundant diet-associated expression differences",
+    subtitle = "Top five ranked candidates per diet contrast; main chromosomes only",
+    x = "log2 fold change: numerator relative to denominator",
+    y = NULL,
+    color = "log2 fold change",
+    size = "Mean normalized fragments\nin higher condition"
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    strip.text = ggplot2::element_text(face = "bold", size = 12),
+    axis.text.y = ggplot2::element_text(size = 10),
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+save_png_svg(
+  p_diet_candidates,
+  "top_diet_high_expression_candidates",
+  width = 15,
+  height = 15,
+  dpi = 300
+)
+p_diet_candidates
+```
+
+The strongest annotated diet candidates include
+`r paste(unique(diet_candidates$Description[diet_candidates$Description != "no GFF description"])[1:5], collapse = "; ")`.
+These are candidates for follow-up, not evidence that diet directly regulates
+the annotated biological process.
+
+### Infection-induced candidates
+
+For infection, the clearest candidates are genes that are both induced and
+abundant in infected fat body. The matrix below shows the strongest candidates
+that met those criteria across all three diets. Color gives the infection log2
+fold change and point size is the mean normalized expression among infected
+samples of that diet.
+
+```{r infection-high-expression-candidates, fig.width=16, fig.height=12}
+infection_gene_summary <- candidate_pool |>
+  dplyr::filter(
+    .data$contrast_id %in% c("infection_diet33", "infection_diet50", "infection_diet83"),
+    .data$log2FoldChange > 0,
+    .data$large_high_expression
+  ) |>
+  dplyr::group_by(.data$gene_id, .data$Description, .data$gene_biotype) |>
+  dplyr::summarise(
+    diets_with_high_priority_induction = dplyr::n_distinct(.data$contrast_id),
+    maximum_priority_score = max(.data$priority_score, na.rm = TRUE),
+    maximum_infected_mean = max(.data$mean_normalized_numerator, na.rm = TRUE),
+    minimum_infection_log2FC = min(.data$log2FoldChange, na.rm = TRUE),
+    exon_concordant_diets = sum(.data$exon_concordant_DEG, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(.data$diets_with_high_priority_induction),
+    dplyr::desc(.data$maximum_priority_score),
+    dplyr::desc(.data$maximum_infected_mean)
+  ) |>
+  dplyr::slice_head(n = 20) |>
+  dplyr::mutate(
+    candidate_label = paste0(.data$Description, " [", .data$gene_id, "]")
+  )
+
+all_primary_results <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    .data$mapping_branch == "Competitive host",
+    .data$analysis_scope == "Placed/host-assigned",
+    .data$contrast_id %in% c("infection_diet33", "infection_diet50", "infection_diet83"),
+    .data$gene_id %in% infection_gene_summary$gene_id
+  ) |>
+  dplyr::left_join(
+    infection_gene_summary |>
+      dplyr::select(.data$gene_id, .data$candidate_label),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    diet = stringr::str_remove(.data$contrast_id, "infection_diet"),
+    significant_DEG = !is.na(.data$padj) &
+      .data$padj < as.numeric(params$alpha) &
+      abs(.data$log2FoldChange) >= as.numeric(params$lfc_threshold)
+  )
+
+all_primary_results$infected_mean <- mapply(
+  condition_mean,
+  all_primary_results$gene_id,
+  all_primary_results$contrast_id,
+  MoreArgs = list(side = "numerator")
+)
+
+infection_label_order <- rev(infection_gene_summary$candidate_label)
+all_primary_results <- all_primary_results |>
+  dplyr::mutate(
+    candidate_label = factor(.data$candidate_label, levels = infection_label_order),
+    diet = factor(.data$diet, levels = c("33", "50", "83"))
+  )
+
+readr::write_csv(
+  infection_gene_summary,
+  file.path(out_dir, "top_infection_induced_high_expression_candidates.csv"),
+  na = ""
+)
+
+p_infection_candidates <- ggplot2::ggplot(
+  all_primary_results,
+  ggplot2::aes(
+    x = .data$diet,
+    y = .data$candidate_label,
+    color = .data$log2FoldChange,
+    size = .data$infected_mean
+  )
+) +
+  ggplot2::geom_point(alpha = 0.92) +
+  ggplot2::scale_color_gradient2(
+    low = "#2166AC", mid = "#F7F7F7", high = "#B2182B", midpoint = 0
+  ) +
+  ggplot2::scale_size_continuous(
+    trans = "log10",
+    range = c(3.5, 11),
+    labels = scales::label_comma()
+  ) +
+  ggplot2::labs(
+    title = "Highly induced and abundant infection-response candidates",
+    subtitle = "Candidates selected from placed-chromosome DEGs; all diet-specific estimates are shown",
+    x = "Diet",
+    y = NULL,
+    color = "Infected vs control\nlog2 fold change",
+    size = "Mean normalized fragments\nin infected samples"
+  ) +
+  ggplot2::guides(
+    size = ggplot2::guide_legend(order = 1, nrow = 1),
+    color = ggplot2::guide_colorbar(
+      order = 2,
+      title.position = "top",
+      barwidth = grid::unit(7, "cm")
+    )
+  ) +
+  ggplot2::theme_bw(base_size = 13) +
+  ggplot2::theme(
+    axis.text.y = ggplot2::element_text(size = 10.5),
+    legend.position = "bottom",
+    legend.box = "vertical",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+save_png_svg(
+  p_infection_candidates,
+  "top_infection_induced_high_expression_candidates",
+  width = 16,
+  height = 12,
+  dpi = 300
+)
+p_infection_candidates
+```
+
+Among the strongest annotated infection-induced candidates are
+`r paste(unique(infection_gene_summary$Description[infection_gene_summary$Description != "no GFF description"])[1:7], collapse = "; ")`.
+Genes appearing across all three diets provide the most reproducible candidates
+for a general infection response, whereas genes restricted to one diet are
+better treated as possible diet-dependent responses.
+
+### Candidate volcano plots
+
+These volcano plots place the prioritized genes back into the complete tested
+gene universe. Gray points were not called as DEGs; blue and red points are the
+ordinary significant DEGs, and gold points are the large-effect,
+high-expression candidates defined above. Solid vertical lines show the
+study-wide `|log2FC| = 1` DEG threshold, while dotted lines show the more
+stringent `|log2FC| = 2` candidate threshold. Labels are limited to the
+highest-ranked candidates in each contrast, but every prioritized candidate is
+highlighted and available in the searchable table.
+
+```{r candidate-volcano-data}
+volcano_contrasts <- names(contrast_sample_sets)
+
+volcano_data <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(
+    .data$mapping_branch == "Competitive host",
+    .data$analysis_scope == "Placed/host-assigned",
+    .data$contrast_id %in% volcano_contrasts,
+    !is.na(.data$padj),
+    !is.na(.data$log2FoldChange)
+  ) |>
+  dplyr::inner_join(contrast_map, by = "contrast_id") |>
+  dplyr::left_join(
+    annotation |>
+      dplyr::select(.data$gene_id, .data$Description, .data$gene_biotype),
+    by = "gene_id"
+  ) |>
+  dplyr::left_join(
+    candidate_pool |>
+      dplyr::select(
+        .data$gene_id, .data$contrast_id,
+        .data$large_high_expression, .data$priority_score,
+        .data$mean_normalized_higher_condition,
+        .data$exon_concordant_DEG
+      ),
+    by = c("gene_id", "contrast_id")
+  ) |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(.data$Description, "no GFF description"),
+    large_high_expression = dplyr::coalesce(
+      .data$large_high_expression,
+      FALSE
+    ),
+    minus_log10_padj = -log10(pmax(.data$padj, .Machine$double.xmin)),
+    DEG_status = dplyr::case_when(
+      .data$large_high_expression ~ "High-effect, high-expression",
+      .data$significant & .data$log2FoldChange > 0 ~ "Significant: higher in numerator",
+      .data$significant & .data$log2FoldChange < 0 ~ "Significant: higher in denominator",
+      TRUE ~ "Not significant"
+    ),
+    volcano_label = dplyr::if_else(
+      stringr::str_detect(.data$Description, "^(uncharacterized|no GFF)"),
+      .data$gene_id,
+      paste0(.data$Description, " [", .data$gene_id, "]")
+    ) |>
+      stringr::str_wrap(width = 38)
+  )
+
+volcano_colors <- c(
+  "Not significant" = "#C9CDD2",
+  "Significant: higher in denominator" = "#3B82C4",
+  "Significant: higher in numerator" = "#D8584C",
+  "High-effect, high-expression" = "#F2B134"
+)
+
+make_volcano_plot <- function(plot_data, label_data, title, ncol) {
+  ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(x = .data$log2FoldChange, y = .data$minus_log10_padj)
+  ) +
+    ggplot2::geom_hline(
+      yintercept = -log10(as.numeric(params$alpha)),
+      linetype = "dashed",
+      color = "#5F6368",
+      linewidth = 0.45
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(-as.numeric(params$lfc_threshold),
+                     as.numeric(params$lfc_threshold)),
+      color = "#5F6368",
+      linewidth = 0.45
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(-as.numeric(params$large_lfc_threshold),
+                     as.numeric(params$large_lfc_threshold)),
+      linetype = "dotted",
+      color = "#B7791F",
+      linewidth = 0.65
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(color = .data$DEG_status),
+      size = 1.05,
+      alpha = 0.58
+    ) +
+    ggplot2::geom_point(
+      data = plot_data |>
+        dplyr::filter(.data$large_high_expression),
+      shape = 21,
+      fill = "#F2B134",
+      color = "#202124",
+      stroke = 0.45,
+      size = 2.4,
+      alpha = 0.92
+    ) +
+    ggrepel::geom_label_repel(
+      data = label_data,
+      ggplot2::aes(label = .data$volcano_label),
+      size = 3.3,
+      label.size = 0.18,
+      fill = scales::alpha("white", 0.9),
+      color = "#202124",
+      min.segment.length = 0,
+      box.padding = 0.35,
+      point.padding = 0.2,
+      max.overlaps = Inf,
+      seed = 19,
+      show.legend = FALSE
+    ) +
+    ggplot2::facet_wrap(~ comparison, ncol = ncol, scales = "free_y") +
+    ggplot2::scale_color_manual(values = volcano_colors, drop = FALSE) +
+    ggplot2::labs(
+      title = title,
+      subtitle = "Gold points combine at least fourfold change with abundant normalized expression",
+      x = "log2 fold change: numerator relative to denominator",
+      y = expression(-log[10](adjusted~italic(P))),
+      color = NULL
+    ) +
+    ggplot2::theme_bw(base_size = 13) +
+    ggplot2::theme(
+      strip.text = ggplot2::element_text(face = "bold", size = 12),
+      legend.position = "bottom",
+      plot.title = ggplot2::element_text(face = "bold"),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+}
+```
+
+```{r infection-candidate-volcano, fig.width=18, fig.height=8}
+infection_volcano_data <- volcano_data |>
+  dplyr::filter(
+    .data$contrast_id %in% c("infection_diet33", "infection_diet50", "infection_diet83")
+  )
+
+infection_volcano_labels <- infection_volcano_data |>
+  dplyr::filter(.data$large_high_expression) |>
+  dplyr::group_by(.data$contrast_id) |>
+  dplyr::slice_max(.data$priority_score, n = 7, with_ties = FALSE) |>
+  dplyr::ungroup()
+
+p_infection_volcano <- make_volcano_plot(
+  infection_volcano_data,
+  infection_volcano_labels,
+  "Infection-response volcano plots with prioritized candidates",
+  ncol = 3
+)
+
+save_png_svg(
+  p_infection_volcano,
+  "infection_high_expression_candidate_volcanoes",
+  width = 18,
+  height = 8,
+  dpi = 300
+)
+p_infection_volcano
+```
+
+```{r diet-candidate-volcano, fig.width=18, fig.height=14}
+diet_volcano_data <- volcano_data |>
+  dplyr::filter(
+    .data$comparison_type %in%
+      c("Diet contrasts among control", "Diet contrasts among infected")
+  )
+
+diet_volcano_labels <- diet_volcano_data |>
+  dplyr::filter(.data$large_high_expression) |>
+  dplyr::group_by(.data$contrast_id) |>
+  dplyr::slice_max(.data$priority_score, n = 5, with_ties = FALSE) |>
+  dplyr::ungroup()
+
+p_diet_volcano <- make_volcano_plot(
+  diet_volcano_data,
+  diet_volcano_labels,
+  "Diet-comparison volcano plots with prioritized candidates",
+  ncol = 2
+)
+
+save_png_svg(
+  p_diet_volcano,
+  "diet_high_expression_candidate_volcanoes",
+  width = 18,
+  height = 14,
+  dpi = 300
+)
+p_diet_volcano
+```
+
+### Searchable candidate table
+
+```{r searchable-high-expression-candidates}
+candidate_display <- high_priority_candidates |>
+  dplyr::mutate(
+    log2FoldChange = round(.data$log2FoldChange, 3),
+    padj = signif(.data$padj, 3),
+    mean_normalized_numerator = round(.data$mean_normalized_numerator, 1),
+    mean_normalized_denominator = round(.data$mean_normalized_denominator, 1),
+    mean_normalized_higher_condition = round(
+      .data$mean_normalized_higher_condition,
+      1
+    ),
+    exon_log2FoldChange = round(.data$exon_log2FoldChange, 3),
+    exon_padj = signif(.data$exon_padj, 3)
+  ) |>
+  dplyr::select(
+    .data$gene_id, .data$Description, .data$gene_biotype,
+    .data$comparison_type, .data$comparison, .data$higher_in,
+    .data$log2FoldChange, .data$padj,
+    .data$mean_normalized_numerator, .data$mean_normalized_denominator,
+    .data$mean_normalized_higher_condition,
+    .data$exon_log2FoldChange, .data$exon_padj, .data$exon_concordant_DEG
+  )
+
+DT::datatable(
+  candidate_display,
+  rownames = FALSE,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 20,
+    scrollX = TRUE,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv")
+  )
+) |>
+  DT::formatStyle(
+    "log2FoldChange",
+    color = DT::styleInterval(0, c("#1E88E5", "#E41A1C")),
+    fontWeight = "bold"
+  )
 ```
 
 ## Searchable DEG catalogue

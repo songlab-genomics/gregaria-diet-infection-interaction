@@ -30,13 +30,14 @@ SUPPLEMENT_DIR = REVISION_DIR / "supplementary_figures"
 RUN_PUBLICATION = PROJECT / "output" / "rmd_runs" / "publication-figures_20260807-171511"
 RUN_COUNT_SENSITIVITY = PROJECT / "output" / "rmd_runs" / "count-definition-sensitivity_20260807-155445"
 RUN_FUNGAL = PROJECT / "output" / "rmd_runs" / "metarhizium-read-burden_20260807-143116"
+RUN_QC = PROJECT / "output" / "rmd_runs" / "count-qc-exploration_20260810-144845"
 
 FIGURES = {
     "figure1": RUN_PUBLICATION / "figure1_fatbody_pca_centroid_shifts.png",
     "figure2": RUN_PUBLICATION / "figure2_deg_burden_context_phase_venns.png",
     "figure3": RUN_PUBLICATION / "figure3_expression_cluster_gene_level_GO_KEGG_lollipop_eukaryote_inclusive.png",
     "figure4": RUN_PUBLICATION / "figure4_curated_targets_main_chromosomes.png",
-    "figureS1": RUN_PUBLICATION / "figureS1_outlier_removal_sensitivity.png",
+    "figureS1": RUN_QC / "figureS3_mapping_quality_exclusion_1044.png",
     "figureS2": RUN_PUBLICATION / "figureS2_deg_chromosome_localization.png",
     "figureS3": RUN_COUNT_SENSITIVITY / "count_definition_deg_totals.png",
     "figureS4": RUN_FUNGAL / "metarhizium_alignment_burden_combined.png",
@@ -272,7 +273,10 @@ def main():
         "(minReplicatesForReplace = Inf), and Cook's-distance filtering was disabled for planned contrasts "
         "(cooksCutoff = FALSE), so all 44 samples contributed to the primary estimates. A gene was called "
         "differentially expressed at a Benjamini-Hochberg adjusted P value below 0.05 and an absolute log2 fold "
-        "change of at least 1. Variance-stabilized counts were used for PCA and heatmaps, not for DESeq2 testing."
+        "change of at least 1. DESeq2 estimated sample-specific size factors from the integer count matrix to "
+        "account for differences in sequencing depth and library composition during model fitting. "
+        "Variance-stabilized values derived from the normalized counts were used only for PCA and heatmaps, "
+        "not as input to differential-expression testing."
     )
     replace_text(
         p[82],
@@ -293,9 +297,9 @@ def main():
     )
     replace_text(
         p[84],
-        "The primary analysis retained every library. A supplementary sample-retention sensitivity analysis "
-        "repeated the principal DEG contrasts after removing samples 1007, 1036, 1037, and 1039, which had been "
-        "flagged during exploratory quality control. Additional sensitivities compared exon-only with "
+        "Sample 1044 was excluded before biological modelling because of its technical mapping failure. Samples "
+        "1007, 1036, 1037, and 1039 passed sequencing and mapping quality control and were retained despite their "
+        "positions in exploratory ordination; no PCA-defined sample was removed. Additional sensitivities compared exon-only with "
         "transcript-plus-exon counts and main-chromosome with all-scaffold analyses. None of these sensitivity "
         "branches replaced the all-sample, transcript-plus-exon, main-chromosome primary analysis."
     )
@@ -344,8 +348,29 @@ def main():
         "cluster without averaging individual-gene expression, preserving sample-level heterogeneity in the heatmap."
     )
 
-    # Add the fungal-RNA proxy immediately before the Results heading.
-    fungal_heading = p[94].insert_paragraph_before("2.9 Fungal alignment proxy", style="Heading 3")
+    # Add the independent phase-reference comparison and fungal-RNA proxy before Results.
+    phase_heading = p[94].insert_paragraph_before(
+        "2.9 Assessment of phase change as a potential confounder", style="Heading 3"
+    )
+    phase_text = p[94].insert_paragraph_before(
+        "Because the infection protocol required locusts to be maintained individually under semi-isolated conditions "
+        "for 96 h, we assessed whether an early density-dependent phase response could contribute to heterogeneous "
+        "fat-body expression and therefore act as a potential confounding factor. The union of genes significant "
+        "in at least one within-diet infection contrast was compared with independent solitarious-versus-gregarious "
+        "DEG sets from S. gregaria head and thorax. The reference study also used female final-instar nymphs sampled "
+        "three days post-molt and the same total-RNA, rRNA-depletion library-preparation workflow. Head and thorax "
+        "were evaluated separately; genes detected in both tissues were treated as the most conservative cross-tissue "
+        "phase-associated signature, while one-tissue overlaps were retained as tissue-dependent phase evidence. "
+        "These overlaps identify genes whose expression could reflect infection, an early response to reduced social "
+        "density, or both; they do not establish which process caused the response. Genes absent from both sets were "
+        "considered unsupported by the available phase references, rather than proven infection-specific. This "
+        "comparison assessed phase change as a possible confounder but did not establish that a phase transition "
+        "occurred in the experimental fat body."
+    )
+    phase_heading.paragraph_format.keep_with_next = True
+    phase_text.paragraph_format.space_after = Pt(8)
+
+    fungal_heading = p[94].insert_paragraph_before("2.10 Fungal alignment proxy", style="Heading 3")
     fungal_text = p[94].insert_paragraph_before(
         "Uniquely aligned fragments assigned to the fungal component of the competitive reference were summarized "
         "as counts and as a percentage of uniquely aligned competitive-reference fragments. Because the mapping "
@@ -413,8 +438,10 @@ def main():
         "within each diet, diet contrasts among controls, and diet contrasts among infected locusts. Red values are "
         "higher in the named numerator condition and blue values are higher in the denominator. The lower-left Venn "
         "diagram partitions the three within-diet infection DEG sets. The lower-right diagram compares their union "
-        "with external head and thorax solitarious-versus-gregarious DEG sets; this overlap provides phase-related "
-        "context but does not establish phase effects in fat body. Annotated rRNA genes were absent from every set."
+        "with external head and thorax solitarious-versus-gregarious DEG sets. Genes shared with both tissues provide "
+        "the most conservative cross-tissue phase-associated subset; one-tissue overlaps provide tissue-dependent "
+        "phase context. Absence from both sets indicates a lack of support in these references, not proof of infection "
+        "specificity. Annotated rRNA genes were absent from every set."
     )
     blank(p[103])
     blank(p[106])
@@ -559,12 +586,15 @@ def main():
     )
     replace_text(
         p[130],
-        "Some fat-body infection DEGs overlapped genes previously associated with solitarious-versus-gregarious "
-        "differences in head and thorax. The experiment involved individual housing for 96 h, so this comparison "
-        "was motivated by the possibility that early density-related responses contributed to the observed "
-        "transcriptome. However, the phase-reference data came from different tissues and experimental contexts. "
-        "The overlap is best viewed as a flag for genes with broader phase sensitivity, not evidence that the "
-        "experimental locusts completed a phase transition or that phase caused their infection response."
+        "The marked expression of some DEG groups in only a few individuals raised the possibility that heterogeneous "
+        "responses to 96 h of semi-isolation contributed to the apparent infection signal. Genes shared by the "
+        "infection response and both reference "
+        "tissues provide the strongest cross-tissue phase-associated subset, whereas overlap with only head or thorax "
+        "may reflect tissue-dependent phase associations or shared stress responses. Infection DEGs absent from both "
+        "sets lack support in the available phase references, but cannot be regarded as definitively infection-specific "
+        "because the independent study sampled different tissues. Thus, phase-related expression may confound a "
+        "subset of infection-responsive genes, but the comparison neither demonstrates a completed phase transition "
+        "nor shows that solitarization explains the overall fat-body infection response."
     )
     replace_text(
         p[131],
@@ -610,9 +640,9 @@ def main():
     supplement_captions = [
         (
             "figureS1", 6.1, "Figure S1.",
-            "Sample-retention sensitivity analysis. Primary DEG totals from all 44 libraries are compared with a "
-            "secondary analysis excluding samples 1007, 1036, 1037, and 1039. This analysis evaluates the influence "
-            "of atypical libraries; no sample was excluded from the primary results."
+            "Mapping-quality basis for excluding sample 1044. All 45 sequenced libraries are shown for unique mapping "
+            "and unique plus accepted multimapping. Sample 1044 failed technical host-alignment QC and was excluded; "
+            "all other libraries were retained in the biological analyses."
         ),
         (
             "figureS2", 6.15, "Figure S2.",
