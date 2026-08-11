@@ -1,3 +1,0 @@
-"counting_mode","samples","input_gene_rows","listed_rRNA_rows_removed","genes_after_rRNA_removal","nuclear_chromosome_genes","rRNA_rows_remaining","median_assigned_counts_per_sample","genes_entering_DESeq2"
-"Exon only",44,95606,12402,83204,19724,0,3207195.5,11140
-"Transcript + exon",44,95606,12402,83204,19724,0,10961426.5,14132

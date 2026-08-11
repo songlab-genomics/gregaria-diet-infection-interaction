@@ -1,8 +1,0 @@
-key,value
-output_dir,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/unplaced-scaffold-origin-screen_20260725-143720
-coordinate_file,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/publication-figures_20260724-025103/figureS2_deg_coordinates_by_context.csv
-catalogue_file,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/all-deg-catalogue_20260723-164715/all_samples_deg_catalogue.csv
-gff_file,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff
-n_unplaced_deg_memberships,1857
-n_unplaced_deg_genes,1805
-n_unplaced_scaffolds,80

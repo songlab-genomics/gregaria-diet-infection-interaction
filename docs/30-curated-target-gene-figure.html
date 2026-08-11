@@ -374,6 +374,9 @@ div.tocify {
     <li>
       <a href="03-count-qc-exploration.html">Count QC and exploration</a>
     </li>
+    <li>
+      <a href="47-paper-statistical-reference.html">Statistical analysis reference</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -567,7 +570,7 @@ div.tocify {
           <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
         </li>
         <li>
-          <a href="29-metarhizium-read-burden.html">Metarhizium read burden</a>
+          <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomic profiles</a>
         </li>
       </ul>
     </li>
@@ -578,65 +581,6 @@ div.tocify {
           <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
         </li>
       </ul>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Archive
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="archive.html">Archived analysis index</a>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Outlier-removal pages</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="17-outliers-removed-deseq2-interaction-model.html">Outlier-removed interaction</a>
-        </li>
-        <li>
-          <a href="18-outliers-removed-diet-pairwise-deg.html">Outlier-removed diet DEGs</a>
-        </li>
-        <li>
-          <a href="19-outliers-removed-infection-within-diet-deg.html">Outlier-removed infection DEGs</a>
-        </li>
-        <li>
-          <a href="12-deg-sample-filter-scenarios.html">Sample-filter scenarios</a>
-        </li>
-        <li>
-          <a href="09-outliers-load-enrichment.html">Earlier quality and load sensitivity</a>
-        </li>
-        <li>
-          <a href="22-deg-logical-set-construction.html">Earlier tissue and phase logic</a>
-        </li>
-        <li>
-          <a href="20-phase-signature-overlap.html">Earlier phase signature - all samples</a>
-        </li>
-        <li>
-          <a href="21-phase-signature-overlap-no-outliers.html">Earlier phase signature - outliers removed</a>
-        </li>
-        <li>
-          <a href="overlap.html">Original DEG overlap and prioritization</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <a href="file_prep.html">Original file preparation</a>
-    </li>
-    <li>
-      <a href="deg.html">Original DEG with rRNA</a>
-    </li>
-    <li>
-      <a href="deg-no-rrna.html">Original DEG without rRNA</a>
-    </li>
-    <li>
-      <a href="deg-no-rrna-sva.html">Original DEG without rRNA + SVA</a>
-    </li>
-    <li>
-      <a href="overlap.html">Original overlap page</a>
     </li>
   </ul>
 </li>
@@ -1323,7 +1267,7 @@ page_defaults &lt;- list(
   ),
   metadata_file = &quot;data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt&quot;,
   frozen_gene_audit_file = paste0(
-    &quot;output/rmd_runs/curated-target-gene-figure_20260806-021426/&quot;,
+    &quot;output/rmd_runs/curated-target-gene-figure_20260810-150032/&quot;,
     &quot;figure4_curated_gene_audit.csv&quot;
   ),
   placement_file = paste0(
@@ -1332,7 +1276,7 @@ page_defaults &lt;- list(
     &quot;host_gene_sequence_placement.tsv&quot;
   ),
   results_file = paste0(
-    &quot;output/rmd_runs/placed-unplaced-scaffold-analysis_20260809-234435/&quot;,
+    &quot;output/rmd_runs/placed-unplaced-scaffold-analysis_20260810-145930/&quot;,
     &quot;placed_unplaced_all_deseq2_results.csv&quot;
   ),
   latest_results_root = &quot;output/rmd_runs&quot;,
@@ -3945,7 +3889,7 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="even">
 <td align="left">Current DESeq2 result table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260809-234435/placed_unplaced_all_deseq2_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260810-145930/placed_unplaced_all_deseq2_results.csv</td>
 </tr>
 <tr class="odd">
 <td align="left">Corrected BLASTn/DIAMOND homology evidence</td>

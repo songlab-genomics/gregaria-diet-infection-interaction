@@ -13,6 +13,8 @@ navbar:
         href: 02-workflow-reproducibility.html
       - text: "Count QC and exploration"
         href: 03-count-qc-exploration.html
+      - text: "Statistical analysis reference"
+        href: 47-paper-statistical-reference.html
   - text: "Fat Body Experiment"
     menu:
       - text: "Transcript + exon"
@@ -123,40 +125,6 @@ navbar:
         menu:
           - text: "Exon only vs transcript + exon"
             href: 35-count-definition-sensitivity.html
-  - text: "Archive"
-    menu:
-      - text: "Archived analysis index"
-        href: archive.html
-      - text: "Outlier-removal pages"
-        menu:
-          - text: "Outlier-removed interaction"
-            href: 17-outliers-removed-deseq2-interaction-model.html
-          - text: "Outlier-removed diet DEGs"
-            href: 18-outliers-removed-diet-pairwise-deg.html
-          - text: "Outlier-removed infection DEGs"
-            href: 19-outliers-removed-infection-within-diet-deg.html
-          - text: "Sample-filter scenarios"
-            href: 12-deg-sample-filter-scenarios.html
-          - text: "Earlier quality and load sensitivity"
-            href: 09-outliers-load-enrichment.html
-          - text: "Earlier tissue and phase logic"
-            href: 22-deg-logical-set-construction.html
-          - text: "Earlier phase signature - all samples"
-            href: 20-phase-signature-overlap.html
-          - text: "Earlier phase signature - outliers removed"
-            href: 21-phase-signature-overlap-no-outliers.html
-          - text: "Original DEG overlap and prioritization"
-            href: overlap.html
-      - text: "Original file preparation"
-        href: file_prep.html
-      - text: "Original DEG with rRNA"
-        href: deg.html
-      - text: "Original DEG without rRNA"
-        href: deg-no-rrna.html
-      - text: "Original DEG without rRNA + SVA"
-        href: deg-no-rrna-sva.html
-      - text: "Original overlap page"
-        href: overlap.html
   - text: "License"
     href: license.html
   right:

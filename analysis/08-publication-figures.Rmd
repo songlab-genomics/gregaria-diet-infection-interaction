@@ -14,6 +14,7 @@ params:
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  manual_candidate_file: "data/external/curated_target_genes/2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx"
   latest_results_root: "output/rmd_runs"
   primary_results_pattern: "^placed-unplaced-scaffold-analysis_"
   cluster_results_pattern: "^main-chromosome-cluster-enrichment_"
@@ -84,6 +85,10 @@ publication_default_params <- list(
   eggnog_file = paste0(
     "data/GO_Annotations/",
     "GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
+  ),
+  manual_candidate_file = paste0(
+    "data/external/curated_target_genes/",
+    "2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx"
   ),
   latest_results_root = "output/rmd_runs",
   primary_results_pattern = "^placed-unplaced-scaffold-analysis_",
@@ -163,7 +168,7 @@ find_publication_project <- function() {
 
 required <- c("DESeq2", "SummarizedExperiment", "dplyr", "tidyr", "tibble", "stringr",
               "ggplot2", "ggrepel", "patchwork", "scales",
-              "ggVennDiagram", "UpSetR", "ggplotify", "png", "grid")
+              "ggVennDiagram", "UpSetR", "ggplotify", "cowplot", "png", "grid", "readxl")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -185,6 +190,10 @@ placement_file <- file.path(project_dir, publication_params$placement_file)
 rrna_file <- file.path(project_dir, publication_params$rrna_file)
 gff_file <- file.path(project_dir, publication_params$gff_file)
 eggnog_file <- file.path(project_dir, publication_params$eggnog_file)
+manual_candidate_file <- file.path(
+  project_dir,
+  publication_params$manual_candidate_file
+)
 
 diet_colors <- c("33" = "#E6862E", "50" = "#2F8F5B", "83" = "#7B4FA3")
 treatment_colors <- c("Control" = "#FAEBD7", "Infected" = "#8B0000")
@@ -525,6 +534,7 @@ figure4_homology_flags_source <- file.path(
 
 base_inputs <- c(
   metadata_file, counts_file, placement_file, rrna_file, gff_file, eggnog_file,
+  manual_candidate_file,
   primary_results_file, head_phase_file, thorax_phase_file,
   figure3_composite_source, figure3_lollipop_source, figure3_insect_source,
   figure3_reference_source, figure4_curated_source, figure4_all_scaffolds_source,
@@ -711,19 +721,20 @@ write.csv(model_coefficients, model_coefficients_file, row.names = FALSE)
 inputs <- data.frame(
   input = c("metadata", "fresh competitive host counts",
             "official main-chromosome placement", "rRNA exclusion list",
-            "GFF annotation", "eggNOG annotation",
+            "GFF annotation", "eggNOG annotation", "manual candidate workbook",
             "main-chromosome DESeq2 scenario table",
             "sample-filter scenario counts",
             "main-chromosome average infection results", "Head phase DEGs",
             "Thorax phase DEGs", "Figure 3 composite source"),
   path = c(metadata_file, counts_file, placement_file, rrna_file,
-           gff_file, eggnog_file,
+           gff_file, eggnog_file, manual_candidate_file,
            scenario_results_file, scenario_sample_counts_file,
            model_coefficients_file,
            head_phase_file, thorax_phase_file, figure3_composite_source),
   present = c(file.exists(metadata_file), file.exists(counts_file),
               file.exists(placement_file), file.exists(rrna_file),
               file.exists(gff_file), file.exists(eggnog_file),
+              file.exists(manual_candidate_file),
               file.exists(scenario_results_file),
               file.exists(scenario_sample_counts_file),
               file.exists(model_coefficients_file),
@@ -2346,10 +2357,12 @@ knitr::kable(
 ## Figure S2: non-host taxonomic profiles
 
 Figure S2 summarizes Kraken2/Bracken family assignments among reads that did
-not align to the host-only reference. Metazoan and plant families are excluded
-from the display. Panels A and B show absolute Bracken-estimated family reads
-and their relative composition; panel C shows Bray-Curtis ordination. This is
-supporting metatranscriptomic evidence rather than a dedicated microbiome assay.
+not align to the host-only reference. Metazoan and plant families are excluded;
+the retained profiles comprise fungi, bacteria, archaea, viruses, and other
+microbial eukaryotes. Panels A and B show absolute Bracken-estimated reads and
+their relative composition among retained non-host taxonomic families; panel C
+shows Bray-Curtis ordination. This is supporting metatranscriptomic evidence
+rather than a dedicated microbiome assay.
 
 ```{r figure-s2-bracken, echo=FALSE, out.width="96%"}
 taxonomy_dir <- latest_dir("^metarhizium-read-burden_")
@@ -2391,8 +2404,760 @@ knitr::kable(
 )
 ```
 
+## Figure S3: gene-level responses of physiological candidates
+
+Two versions are exported from the same statistical results. The first colors
+only the fixed set of 115 **Manual curation candidate** genes. The second colors
+all 366 physiological candidates: the 115 manual candidates plus 251
+**eggNOG-supported candidate** genes. The eggNOG-supported tier retains genes
+only when they are absent from the manual set, significant in at least one
+displayed contrast, and supported by an explicit eggNOG description, name, GO
+term, KEGG annotation, or PFAM domain. Dark candidate points denote manual
+candidates; lighter points denote eggNOG-supported candidates. The source table
+records the exact field and keyword supporting every eggNOG-based assignment.
+
+Panel A shows the averaged infection effect followed by infection within each
+diet. Panels B and C show the three direct diet comparisons among control and
+infected locusts, respectively. Every tested main-chromosome, non-rRNA gene
+remains visible: pale gray points are non-significant genes, dark gray points
+are other significant DEGs, and larger colored circles are physiological
+candidates.
+Positive fold changes indicate higher expression in infected locusts or in the
+first-listed diet; negative values indicate higher expression in controls or in
+the second-listed diet. Vertical dashed lines mark absolute log2 fold change of
+1, and the horizontal dashed line marks adjusted P = 0.05. Because candidate
+themes were informed by annotation review of this dataset, the visualization is
+exploratory rather than an independent enrichment test.
+
+Labels follow an objective rule. Among significant physiological candidates
+with a mean normalized count of at least 10 and an informative description, up
+to three genes are labelled per contrast, with manual curation candidates ranked
+before eggNOG-supported candidates and then by absolute unshrunken log2 fold change.
+Adjusted P values determine significance; the label ranking is descriptive and
+does not constitute an additional statistical test.
+
+```{r figure-s3-volcano-data}
+s3_direct <- read.csv(scenario_results_file, check.names = FALSE) |>
+  dplyr::filter(scenario == "All samples") |>
+  dplyr::left_join(
+    direct_contrasts |>
+      dplyr::select(contrast_id, comparison),
+    by = "comparison"
+  ) |>
+  dplyr::transmute(
+    contrast_id,
+    comparison_type,
+    comparison,
+    gene_id,
+    baseMean,
+    log2FoldChange,
+    pvalue,
+    padj,
+    significant = !is.na(padj) &
+      padj < publication_params$alpha &
+      abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+s3_average <- read.csv(model_coefficients_file, check.names = FALSE) |>
+  dplyr::transmute(
+    contrast_id = "infection_average_all_diets",
+    comparison_type = "Average infection response",
+    comparison = "All diets: infected vs control",
+    gene_id,
+    baseMean,
+    log2FoldChange,
+    pvalue,
+    padj,
+    significant = !is.na(padj) &
+      padj < publication_params$alpha &
+      abs(log2FoldChange) >= publication_params$lfc_threshold
+  )
+
+s3_contrast_levels <- c(
+  "infection_average_all_diets",
+  "infection_diet33", "infection_diet50", "infection_diet83",
+  "control_diet33_vs50", "control_diet83_vs33", "control_diet83_vs50",
+  "infected_diet33_vs50", "infected_diet83_vs33", "infected_diet83_vs50"
+)
+s3_facet_labels <- c(
+  "infection_average_all_diets" = "All diets\nInfected vs control",
+  "infection_diet33" = "Diet 33\nInfected vs control",
+  "infection_diet50" = "Diet 50\nInfected vs control",
+  "infection_diet83" = "Diet 83\nInfected vs control",
+  "control_diet33_vs50" = "Controls\nDiet 33 vs 50",
+  "control_diet83_vs33" = "Controls\nDiet 83 vs 33",
+  "control_diet83_vs50" = "Controls\nDiet 83 vs 50",
+  "infected_diet33_vs50" = "Infected\nDiet 33 vs 50",
+  "infected_diet83_vs33" = "Infected\nDiet 83 vs 33",
+  "infected_diet83_vs50" = "Infected\nDiet 83 vs 50"
+)
+
+s3_candidate_theme_levels <- c(
+  "Immune pathways",
+  "Protein storage and synthesis",
+  "Carbohydrate storage and metabolism",
+  "Lipid metabolism",
+  "Detoxification and stress response"
+)
+s3_candidate_theme_colors <- c(
+  "Immune pathways" = "#C43C39",
+  "Protein storage and synthesis" = "#356FA3",
+  "Carbohydrate storage and metabolism" = "#D4A017",
+  "Lipid metabolism" = "#238B6B",
+  "Detoxification and stress response" = "#7B4FA3"
+)
+s3_evidence_levels <- c(
+  "Manual curation candidate",
+  "eggNOG-supported candidate"
+)
+s3_evidence_alpha <- c(
+  "Manual curation candidate" = 1,
+  "eggNOG-supported candidate" = 0.42
+)
+s3_label_base_mean_min <- 10
+
+s3_manual_candidates <- dplyr::bind_rows(
+  readxl::read_excel(manual_candidate_file, sheet = "Immune"),
+  readxl::read_excel(manual_candidate_file, sheet = "Protein-Anabolism")
+) |>
+  dplyr::transmute(
+    gene_id = trimws(as.character(`Gene ID`)),
+    manual_description = trimws(as.character(`Gene Description`)),
+    manual_theme = trimws(as.character(`Umbrella Category`)),
+    manual_subcategory = trimws(as.character(`Sub-Category`)),
+    candidate_theme = dplyr::case_when(
+      stringr::str_detect(
+        manual_theme,
+        "Immune|Humoral|Cellular"
+      ) ~ "Immune pathways",
+      stringr::str_detect(
+        manual_theme,
+        "Nitrogen|Protein Synthesis|Storage Hexamerins"
+      ) ~ "Protein storage and synthesis",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  dplyr::filter(stringr::str_starts(gene_id, "LOC")) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+if (nrow(s3_manual_candidates) != 115) {
+  stop(
+    "The manual candidate workbook should contain 115 unique LOC Gene IDs; found ",
+    nrow(s3_manual_candidates), "."
+  )
+}
+
+s3_supplement_regex <- c(
+  "Immune pathways" = paste0(
+    "antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|",
+    "metchnikowin|thaumatin|termicin|lysozyme|toll|imd|relish|myd88|",
+    "cactus|dorsal|nf-kappa|nf kappa|jak|stat|immune|peptidoglycan|",
+    "pgrp|gram-negative|gram negative|beta-1,3-glucan|glucan binding|",
+    "phenoloxidase|prophenoloxidase|melanization|lectin|hemocyanin|",
+    "complement|serpin"
+  ),
+  "Protein storage and synthesis" = paste0(
+    "protein synthesis|translation|ribosom|elongation factor|",
+    "initiation factor|aminoacyl|trna synthetase|vitellogenin|",
+    "hexamerin|arylphorin|storage protein"
+  ),
+  "Carbohydrate storage and metabolism" =
+    "glycogen|glycogenin|branching enzyme|starch",
+  "Lipid metabolism" = paste0(
+    "lipid|fatty acid|fatty-acid|acyl-coa|acyl coa|",
+    "acetyl-coa carboxylase|elongase|desaturase|glycerolipid|",
+    "phospholipid|triacylglycerol|diacylglycerol|sterol|lipase"
+  ),
+  "Detoxification and stress response" = paste0(
+    "detox|cytochrome p450|\\bcyp[0-9a-z]|glutathione|gst|",
+    "carboxylesterase|esterase|udp-glucuronosyltransferase|\\bugt\\b|",
+    "abc transporter|oxidoreductase|peroxidase|catalase|superoxide|",
+    "heat shock|stress"
+  )
+)
+
+s3_classify_supplement <- function(annotation_text) {
+  text <- stringr::str_to_lower(dplyr::coalesce(annotation_text, ""))
+  dplyr::case_when(
+    stringr::str_detect(text, s3_supplement_regex[["Immune pathways"]]) ~
+      "Immune pathways",
+    stringr::str_detect(
+      text,
+      s3_supplement_regex[["Protein storage and synthesis"]]
+    ) ~ "Protein storage and synthesis",
+    stringr::str_detect(
+      text,
+      s3_supplement_regex[["Carbohydrate storage and metabolism"]]
+    ) ~ "Carbohydrate storage and metabolism",
+    stringr::str_detect(text, s3_supplement_regex[["Lipid metabolism"]]) ~
+      "Lipid metabolism",
+    stringr::str_detect(
+      text,
+      s3_supplement_regex[["Detoxification and stress response"]]
+    ) ~ "Detoxification and stress response",
+    TRUE ~ NA_character_
+  )
+}
+
+s3_nonempty_annotation <- function(x) {
+  !is.na(x) & trimws(as.character(x)) != "" & trimws(as.character(x)) != "-"
+}
+
+s3_join_evidence <- function(description, preferred_name, gos, ko, pathway,
+                             pfams, return_types = FALSE) {
+  values <- Map(
+    c,
+    description, preferred_name, gos, ko, pathway, pfams
+  )
+  field_labels <- c(
+    "eggNOG description", "eggNOG preferred name", "GO terms",
+    "KEGG orthology", "KEGG pathways", "PFAM domains"
+  )
+  vapply(values, function(row_values) {
+    keep <- s3_nonempty_annotation(row_values)
+    if (!any(keep)) return(NA_character_)
+    if (return_types) return(paste(field_labels[keep], collapse = "; "))
+    paste(paste0(field_labels[keep], ": ", row_values[keep]), collapse = "; ")
+  }, character(1))
+}
+
+s3_match_supplement_keyword <- function(annotation_text, theme) {
+  mapply(function(text, selected_theme) {
+    if (is.na(selected_theme) || !selected_theme %in% names(s3_supplement_regex)) {
+      return(NA_character_)
+    }
+    stringr::str_extract(
+      stringr::str_to_lower(dplyr::coalesce(text, "")),
+      s3_supplement_regex[[selected_theme]]
+    )
+  }, annotation_text, theme, USE.NAMES = FALSE)
+}
+
+s3_volcano_base <- dplyr::bind_rows(s3_average, s3_direct) |>
+  dplyr::filter(
+    contrast_id %in% s3_contrast_levels,
+    !is.na(log2FoldChange),
+    !is.na(padj)
+  ) |>
+  dplyr::left_join(
+    gene_annotation |>
+      dplyr::select(
+        gene_id, Description, gene_biotype, annotation_text,
+        eggNOG_Description, eggNOG_name, GOs, KEGG_ko,
+        KEGG_Pathway, PFAMs
+      ),
+    by = "gene_id"
+  ) |>
+  dplyr::mutate(
+    Description = dplyr::coalesce(Description, "no GFF description"),
+    gene_biotype = dplyr::coalesce(gene_biotype, "unknown"),
+    minus_log10_padj = -log10(pmax(padj, .Machine$double.xmin)),
+    importance_score = abs(log2FoldChange) *
+      log10(pmax(baseMean, 0) + 1) *
+      minus_log10_padj,
+    contrast_id = factor(contrast_id, levels = s3_contrast_levels),
+    facet_label = factor(
+      unname(s3_facet_labels[as.character(contrast_id)]),
+      levels = unname(s3_facet_labels[s3_contrast_levels])
+    ),
+    eggnog_annotation_text = stringr::str_squish(paste(
+      eggNOG_Description, eggNOG_name, GOs, KEGG_ko,
+      KEGG_Pathway, PFAMs, sep = " | "
+    ))
+  )
+
+s3_candidate_volcano_data <- s3_volcano_base |>
+  dplyr::left_join(s3_manual_candidates, by = "gene_id") |>
+  dplyr::mutate(
+    supplementary_theme = s3_classify_supplement(eggnog_annotation_text),
+    supplementary_matched_keyword = s3_match_supplement_keyword(
+      eggnog_annotation_text,
+      supplementary_theme
+    ),
+    eggnog_support_type = s3_join_evidence(
+      eggNOG_Description, eggNOG_name, GOs, KEGG_ko,
+      KEGG_Pathway, PFAMs, return_types = TRUE
+    ),
+    eggnog_supporting_annotation = s3_join_evidence(
+      eggNOG_Description, eggNOG_name, GOs, KEGG_ko,
+      KEGG_Pathway, PFAMs, return_types = FALSE
+    ),
+    evidence_tier = dplyr::case_when(
+      !is.na(manual_theme) ~ "Manual curation candidate",
+      !is.na(supplementary_theme) & !is.na(eggnog_support_type) ~
+        "eggNOG-supported candidate",
+      TRUE ~ NA_character_
+    ),
+    candidate_theme = dplyr::case_when(
+      evidence_tier == "Manual curation candidate" ~ candidate_theme,
+      evidence_tier == "eggNOG-supported candidate" ~ supplementary_theme,
+      TRUE ~ NA_character_
+    ),
+    candidate_description = dplyr::coalesce(manual_description, Description),
+    candidate_subcategory = manual_subcategory,
+    candidate_reason = dplyr::case_when(
+      evidence_tier == "Manual curation candidate" ~ paste0(
+        "Manual curation candidate: ", manual_theme,
+        dplyr::if_else(
+          is.na(manual_subcategory) | manual_subcategory == "",
+          "", paste0(" / ", manual_subcategory)
+        )
+      ),
+      evidence_tier == "eggNOG-supported candidate" ~ paste0(
+        "eggNOG-supported candidate: ", supplementary_theme,
+        "; matched keyword: ", supplementary_matched_keyword,
+        ". Support fields: ", eggnog_support_type
+      ),
+      TRUE ~ NA_character_
+    ),
+    evidence_tier = factor(evidence_tier, levels = s3_evidence_levels),
+    candidate_theme = factor(candidate_theme, levels = s3_candidate_theme_levels),
+    functional_highlight = significant & !is.na(evidence_tier) &
+      !is.na(candidate_theme)
+  )
+
+s3_make_label_data <- function(plot_data) {
+  plot_data |>
+    dplyr::filter(
+      functional_highlight,
+      baseMean >= s3_label_base_mean_min,
+      !stringr::str_detect(
+        stringr::str_to_lower(candidate_description),
+        "^(uncharacterized|no gff description)"
+      )
+    ) |>
+    dplyr::group_by(contrast_id) |>
+    dplyr::arrange(
+      dplyr::desc(evidence_tier == "Manual curation candidate"),
+      dplyr::desc(abs(log2FoldChange)),
+      dplyr::desc(baseMean),
+      padj,
+      .by_group = TRUE
+    ) |>
+    dplyr::slice_head(n = 3) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      candidate_label = paste0(candidate_description, " [", gene_id, "]"),
+      candidate_label = stringr::str_wrap(candidate_label, width = 38)
+    )
+}
+
+s3_candidate_label_data <- s3_make_label_data(s3_candidate_volcano_data)
+
+s3_make_highlighted_table <- function(plot_data, label_data) {
+  plot_data |>
+    dplyr::filter(functional_highlight) |>
+    dplyr::mutate(
+      labeled_in_figure = paste(contrast_id, gene_id) %in%
+        paste(label_data$contrast_id, label_data$gene_id)
+    ) |>
+    dplyr::arrange(contrast_id, candidate_theme,
+                   dplyr::desc(importance_score)) |>
+    dplyr::select(
+      contrast_id, comparison_type, comparison, gene_id, Description,
+      candidate_description, gene_biotype, candidate_theme,
+      evidence_tier, candidate_subcategory, candidate_reason,
+      supplementary_matched_keyword, eggnog_support_type,
+      eggnog_supporting_annotation, eggNOG_Description, eggNOG_name,
+      GOs, KEGG_ko, KEGG_Pathway, PFAMs,
+      baseMean, log2FoldChange, pvalue, padj, importance_score,
+      labeled_in_figure
+    )
+}
+
+s3_candidate_highlighted_table <- s3_make_highlighted_table(
+  s3_candidate_volcano_data,
+  s3_candidate_label_data
+)
+
+s3_candidate_gene_master <- s3_candidate_volcano_data |>
+  dplyr::filter(!is.na(evidence_tier), !is.na(candidate_theme)) |>
+  dplyr::group_by(
+    gene_id, Description, gene_biotype, evidence_tier, candidate_theme,
+    manual_theme, manual_subcategory, candidate_description,
+    candidate_reason, supplementary_matched_keyword, eggnog_support_type,
+    eggnog_supporting_annotation, eggNOG_Description, eggNOG_name,
+    GOs, KEGG_ko, KEGG_Pathway, PFAMs
+  ) |>
+  dplyr::summarise(
+    significant_in_any_displayed_contrast = any(functional_highlight),
+    n_significant_contrasts = sum(functional_highlight),
+    significant_contrasts = paste(
+      as.character(contrast_id[functional_highlight]), collapse = "; "
+    ),
+    minimum_significant_padj = if (any(functional_highlight)) {
+      min(padj[functional_highlight], na.rm = TRUE)
+    } else {
+      NA_real_
+    },
+    maximum_significant_abs_log2fc = if (any(functional_highlight)) {
+      max(abs(log2FoldChange[functional_highlight]), na.rm = TRUE)
+    } else {
+      NA_real_
+    },
+    .groups = "drop"
+  ) |>
+  dplyr::filter(
+    evidence_tier == "Manual curation candidate" |
+      significant_in_any_displayed_contrast
+  ) |>
+  dplyr::arrange(evidence_tier, candidate_theme, gene_id)
+
+s3_candidate_tier_counts <- s3_candidate_gene_master |>
+  dplyr::count(evidence_tier, name = "n_genes")
+
+if (nrow(s3_candidate_gene_master) != 366) {
+  stop(
+    "The complete physiological candidate set should contain 366 genes; found ",
+    nrow(s3_candidate_gene_master), "."
+  )
+}
+
+s3_manual_plot_data <- s3_candidate_volcano_data |>
+  dplyr::mutate(
+    functional_highlight = significant &
+      as.character(evidence_tier) == "Manual curation candidate"
+  )
+s3_manual_label_data <- s3_make_label_data(s3_manual_plot_data)
+
+s3_candidate_contrast_results <- s3_candidate_volcano_data |>
+  dplyr::filter(gene_id %in% s3_candidate_gene_master$gene_id) |>
+  dplyr::mutate(
+    selected_candidate_deg = functional_highlight,
+    higher_in = dplyr::if_else(
+      log2FoldChange > 0,
+      stringr::str_extract(comparison, "^[^:]+|^[^ ]+"),
+      "Denominator condition"
+    )
+  ) |>
+  dplyr::select(
+    evidence_tier, candidate_theme, manual_theme,
+    candidate_subcategory, gene_id, Description, gene_biotype,
+    contrast_id, comparison_type, comparison, baseMean, log2FoldChange,
+    pvalue, padj, significant, selected_candidate_deg,
+    candidate_reason, supplementary_matched_keyword,
+    eggnog_support_type, eggnog_supporting_annotation
+  ) |>
+  dplyr::arrange(evidence_tier, candidate_theme, gene_id, contrast_id)
+
+write.csv(
+  s3_candidate_gene_master,
+  file.path(out_dir, "figureS3_candidate_evidence_master.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_candidate_contrast_results,
+  file.path(out_dir, "figureS3_candidate_contrast_results.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_candidate_highlighted_table,
+  file.path(out_dir, "figureS3_evidence_tiered_highlighted_DEGs.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_candidate_highlighted_table,
+  file.path(out_dir, "figureS3_functionally_highlighted_DEGs.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_candidate_label_data,
+  file.path(out_dir, "figureS3_evidence_tiered_labeled_genes.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_make_highlighted_table(s3_manual_plot_data, s3_manual_label_data),
+  file.path(out_dir, "figureS3_manual_115_highlighted_DEGs.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_manual_label_data,
+  file.path(out_dir, "figureS3_manual_115_labeled_genes.csv"),
+  row.names = FALSE
+)
+write.csv(
+  s3_candidate_tier_counts,
+  file.path(out_dir, "figureS3_candidate_tier_counts.csv"),
+  row.names = FALSE
+)
+```
+
+```{r figure-s3-volcano-plots, include=FALSE}
+make_s3_volcano <- function(plot_data, label_data, panel_title, ncol,
+                            theme_breaks, evidence_breaks) {
+  label_data <- label_data |>
+    dplyr::filter(contrast_id %in% unique(plot_data$contrast_id))
+  x_limit <- max(1, ceiling(max(abs(plot_data$log2FoldChange), na.rm = TRUE)))
+
+  ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(x = log2FoldChange, y = minus_log10_padj)
+  ) +
+    ggplot2::geom_hline(
+      yintercept = -log10(publication_params$alpha),
+      linetype = "dashed",
+      linewidth = 0.42,
+      color = "#6B7280"
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(-publication_params$lfc_threshold,
+                     publication_params$lfc_threshold),
+      linetype = "dashed",
+      linewidth = 0.42,
+      color = "#6B7280"
+    ) +
+    ggplot2::geom_point(
+      data = plot_data |>
+        dplyr::filter(!significant),
+      color = "#D1D5DB",
+      size = 0.58,
+      alpha = 0.42
+    ) +
+    ggplot2::geom_point(
+      data = plot_data |>
+        dplyr::filter(significant, !functional_highlight),
+      color = "#4B5563",
+      size = 0.82,
+      alpha = 0.58
+    ) +
+    ggplot2::geom_point(
+      data = plot_data |>
+        dplyr::filter(functional_highlight),
+      ggplot2::aes(fill = candidate_theme, alpha = evidence_tier),
+      shape = 21,
+      color = "#111827",
+      stroke = 0.38,
+      size = 2.45
+    ) +
+    ggrepel::geom_label_repel(
+      data = label_data,
+      ggplot2::aes(label = candidate_label),
+      size = 3.65,
+      label.size = 0.16,
+      fill = scales::alpha("white", 0.92),
+      color = "#111827",
+      min.segment.length = 0,
+      box.padding = 0.48,
+      point.padding = 0.22,
+      max.overlaps = Inf,
+      seed = 23,
+      show.legend = FALSE
+    ) +
+    ggplot2::facet_wrap(~ facet_label, ncol = ncol, scales = "free_y") +
+    ggplot2::scale_x_continuous(limits = c(-x_limit, x_limit)) +
+    ggplot2::scale_fill_manual(
+      values = s3_candidate_theme_colors,
+      breaks = theme_breaks,
+      limits = theme_breaks,
+      drop = FALSE
+    ) +
+    ggplot2::scale_alpha_manual(
+      values = s3_evidence_alpha,
+      breaks = evidence_breaks,
+      limits = evidence_breaks,
+      drop = FALSE
+    ) +
+    theme_pub(base_size = 15) +
+    ggplot2::theme(
+      strip.text = ggplot2::element_text(size = 14.5, face = "bold"),
+      axis.text = ggplot2::element_text(size = 12.5, color = "#111827"),
+      axis.title = ggplot2::element_text(size = 15),
+      panel.grid.minor = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.text = ggplot2::element_text(size = 12.5),
+      legend.title = ggplot2::element_text(size = 14, face = "bold"),
+      plot.title = ggplot2::element_text(size = 18, face = "bold")
+    ) +
+    ggplot2::guides(
+      fill = ggplot2::guide_legend(
+        nrow = 2, order = 1,
+        byrow = TRUE,
+        override.aes = list(shape = 21, size = 5, color = "#111827")
+      ),
+      alpha = ggplot2::guide_legend(
+        nrow = 1, order = 2,
+        override.aes = list(shape = 21, size = 5, fill = "#4B5563")
+      )
+    ) +
+    ggplot2::labs(
+      title = panel_title,
+      x = "Unshrunken log2 fold change: numerator relative to denominator",
+      y = expression(-log[10](adjusted~italic(P))),
+      fill = "Physiological category",
+      alpha = "Candidate evidence"
+    )
+}
+
+s3_build_version <- function(plot_data, label_data, export_prefix,
+                             figure_title,
+                             theme_breaks = s3_candidate_theme_levels,
+                             evidence_breaks = s3_evidence_levels) {
+  panel_a_data <- plot_data |>
+    dplyr::filter(
+      contrast_id %in% c(
+        "infection_average_all_diets",
+        "infection_diet33", "infection_diet50", "infection_diet83"
+      )
+    )
+  panel_b_data <- plot_data |>
+    dplyr::filter(stringr::str_starts(as.character(contrast_id), "control_diet"))
+  panel_c_data <- plot_data |>
+    dplyr::filter(stringr::str_starts(as.character(contrast_id), "infected_diet"))
+
+  panel_a <- make_s3_volcano(
+    panel_a_data, label_data, "A. Infection-responsive genes", 2,
+    theme_breaks, evidence_breaks
+  )
+  panel_b <- make_s3_volcano(
+    panel_b_data, label_data, "B. Diet-associated genes among controls", 3,
+    theme_breaks, evidence_breaks
+  )
+  panel_c <- make_s3_volcano(
+    panel_c_data, label_data,
+    "C. Diet-associated genes among infected locusts", 3,
+    theme_breaks, evidence_breaks
+  )
+
+  save_png_svg(
+    panel_a,
+    paste0(export_prefix, "_panelA_infection_volcanoes"),
+    width = 14.5,
+    height = 13.5
+  )
+  save_png_svg(
+    panel_b,
+    paste0(export_prefix, "_panelB_control_diet_volcanoes"),
+    width = 18,
+    height = 9.2
+  )
+  save_png_svg(
+    panel_c,
+    paste0(export_prefix, "_panelC_infected_diet_volcanoes"),
+    width = 18,
+    height = 9.2
+  )
+
+  shared_legend <- cowplot::get_legend(
+    panel_a +
+      ggplot2::theme(
+        legend.position = "bottom",
+        legend.box = "vertical",
+        legend.box.just = "center"
+      )
+  )
+
+  plot_body <- patchwork::wrap_plots(
+    panel_a + ggplot2::theme(legend.position = "none"),
+    panel_b + ggplot2::theme(legend.position = "none"),
+    panel_c + ggplot2::theme(legend.position = "none"),
+    ncol = 1,
+    heights = c(0.44, 0.28, 0.28)
+  )
+
+  composite <- patchwork::wrap_plots(
+    plot_body,
+    patchwork::wrap_elements(full = shared_legend),
+    ncol = 1,
+    heights = c(0.94, 0.06)
+  )
+
+  composite <- composite +
+    patchwork::plot_annotation(
+      title = figure_title,
+      subtitle = paste0(
+        "Primary transcript-plus-exon analysis; 44 QC-passed libraries; ",
+        "rRNA excluded; nuclear chromosomes only"
+      ),
+      theme = ggplot2::theme(
+        plot.title = ggplot2::element_text(face = "bold", size = 21),
+        plot.subtitle = ggplot2::element_text(size = 14)
+      )
+    )
+
+  save_png_svg(
+    composite,
+    paste0(export_prefix, "_candidate_volcanoes"),
+    width = 20,
+    height = 26
+  )
+
+  list(panel_a = panel_a, panel_b = panel_b, panel_c = panel_c,
+       composite = composite)
+}
+
+s3_manual_115_version <- s3_build_version(
+  s3_manual_plot_data,
+  s3_manual_label_data,
+  "figureS3_manual_115",
+  "Figure S3. Gene-level responses of 115 manual curation candidates",
+  theme_breaks = c(
+    "Immune pathways",
+    "Protein storage and synthesis"
+  ),
+  evidence_breaks = "Manual curation candidate"
+)
+
+s3_manual_plus_eggnog_366_version <- s3_build_version(
+  s3_candidate_volcano_data,
+  s3_candidate_label_data,
+  "figureS3_manual_plus_eggnog_366",
+  paste(
+    "Figure S3. Gene-level responses of manual and",
+    "eggNOG-supported physiological candidates"
+  )
+)
+```
+
+### Manual curation candidates (115 genes)
+
+```{r figure-s3-manual-display, echo=FALSE, fig.width=18, fig.height=26}
+s3_manual_115_version$composite
+```
+
+### Manual and eggNOG-supported candidates (366 genes)
+
+```{r figure-s3-evidence-tiered-display, echo=FALSE, fig.width=18, fig.height=26}
+s3_manual_plus_eggnog_366_version$composite
+```
+
+```{r figure-s3-export-manifest, echo=FALSE}
+s3_export_files <- c(
+  "figureS3_manual_115_candidate_volcanoes.png",
+  "figureS3_manual_115_candidate_volcanoes.svg",
+  "figureS3_manual_115_panelA_infection_volcanoes.png",
+  "figureS3_manual_115_panelA_infection_volcanoes.svg",
+  "figureS3_manual_115_panelB_control_diet_volcanoes.png",
+  "figureS3_manual_115_panelB_control_diet_volcanoes.svg",
+  "figureS3_manual_115_panelC_infected_diet_volcanoes.png",
+  "figureS3_manual_115_panelC_infected_diet_volcanoes.svg",
+  "figureS3_manual_plus_eggnog_366_candidate_volcanoes.png",
+  "figureS3_manual_plus_eggnog_366_candidate_volcanoes.svg",
+  "figureS3_manual_plus_eggnog_366_panelA_infection_volcanoes.png",
+  "figureS3_manual_plus_eggnog_366_panelA_infection_volcanoes.svg",
+  "figureS3_manual_plus_eggnog_366_panelB_control_diet_volcanoes.png",
+  "figureS3_manual_plus_eggnog_366_panelB_control_diet_volcanoes.svg",
+  "figureS3_manual_plus_eggnog_366_panelC_infected_diet_volcanoes.png",
+  "figureS3_manual_plus_eggnog_366_panelC_infected_diet_volcanoes.svg",
+  "figureS3_candidate_evidence_master.csv",
+  "figureS3_candidate_contrast_results.csv",
+  "figureS3_candidate_tier_counts.csv",
+  "figureS3_manual_115_highlighted_DEGs.csv",
+  "figureS3_manual_115_labeled_genes.csv",
+  "figureS3_evidence_tiered_highlighted_DEGs.csv",
+  "figureS3_functionally_highlighted_DEGs.csv",
+  "figureS3_evidence_tiered_labeled_genes.csv"
+)
+knitr::kable(
+  tibble::tibble(
+    file = s3_export_files,
+    present = file.exists(file.path(out_dir, s3_export_files))
+  ),
+  caption = "Figure S3 plot and source-data exports"
+)
+```
+
 <!-- Chromosomal DEG localization remains an unnumbered candidate supplementary
-figure until the composition of Figure S3 and later supplements is decided. -->
+figure for possible inclusion as Figure S4 or a later supplement. -->
 
 ```{r candidate-deg-genome-localization, eval=FALSE, include=FALSE}
 s2_scenario_degs <- read.csv(scenario_results_file, check.names = FALSE) |>
@@ -2649,6 +3414,23 @@ knitr::kable(
   caption = "Figure S3 mapping-quality exports"
 )
 ```
+
+## Paper supplementary data workbook
+
+The paper-ready source tables are consolidated in one searchable workbook:
+[download the transcript-plus-exon supplementary tables](assets/downloads/paper_supplementary_tables_transcript_exon.xlsx).
+It contains the 45-library metadata and mapping-quality record (including the
+documented exclusion of library 1044), the complete main-chromosome DEG
+catalogue, GO and KEGG enrichment results with their contributing gene IDs,
+the physiological-candidate evidence table, and every displayed contrast for
+those candidates. The primary tier contains 115 manual curation candidates; the
+lighter tier contains 251 eggNOG-supported candidates that were significant in
+at least one displayed contrast. Non-significant candidate results are retained in the contrast-level
+sheet so that absence of a response in a particular comparison remains visible.
+
+The workbook can be regenerated from the current report exports with
+`scripts/prepare_paper_supplementary_tables.py` followed by
+`scripts/build_paper_supplementary_workbook.mjs`.
 
 ## Exported files
 

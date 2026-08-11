@@ -1,5 +1,0 @@
-item,path
-Frozen curated workbook,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/data/external/curated_target_genes/2026-07-26_curated-hypoth_DEGs_v14.xlsx
-Official placement table,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv
-Current DESeq2 result table,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260804-152445/placed_unplaced_all_deseq2_results.csv
-Output directory,/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260805-231220

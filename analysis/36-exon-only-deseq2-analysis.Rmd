@@ -14,8 +14,8 @@ params:
   rrna_list: "data/excluded_loci/gregaria_rrna_list.txt"
   placement: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
   previous_fresh_results: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
-  cluster_assignments: "output/rmd_runs/circled-cluster-enrichment_20260724-004440/full_heatmap_expression_cluster_assignments.csv"
-  homology_evidence: "output/rmd_runs/scaffold-origin-audit_20260804-152436/corrected_gene_homology_evidence.tsv"
+  cluster_assignments: "output/rmd_runs/exon-only-cluster-enrichment_20260811-121306/full_heatmap_expression_cluster_assignments.csv"
+  homology_evidence: "output/rmd_runs/scaffold-origin-audit_20260811-195052/corrected_gene_homology_evidence.tsv"
   alpha: 0.05
   lfc_threshold: 1
   min_count: 10

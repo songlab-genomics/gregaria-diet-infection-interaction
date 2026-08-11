@@ -1,5 +1,0 @@
-"original_branch","n_genes","n_with_GFF_description","n_with_GO","percent_with_GO","n_with_KEGG","percent_with_KEGG","significant_GO_BP","significant_GO_CC","significant_GO_MF","significant_KEGG_pathways"
-"Branch 1",918,918,271,29.5,275,30,24,20,5,13
-"Branch 2",71,71,17,23.9,22,31,0,0,0,0
-"Branch 3",45,45,16,35.6,10,22.2,0,0,0,0
-"Branch 4",951,951,329,34.6,253,26.6,74,6,11,0

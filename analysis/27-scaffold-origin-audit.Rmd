@@ -90,9 +90,9 @@ homology_file <- file.path(
 candidate_gene_file <- file.path(
   review_dir, "extracted", "00-input", "candidate_deg_genes.tsv"
 )
-validation_file <- file.path(review_dir, "archive_validation.tsv")
+validation_file <- file.path(review_dir, "transfer_validation.tsv")
 homology_validation_file <- file.path(
-  homology_review_dir, "archive_validation.tsv"
+  homology_review_dir, "transfer_validation.tsv"
 )
 homology_gene_file <- file.path(
   homology_extract_dir, "04-evidence", "gene_homology_summary.tsv"
@@ -151,8 +151,8 @@ input_files <- data.frame(
     "Corrected scaffold evidence",
     "Corrected cross-species homology",
     "Candidate DEG genes",
-    "Earlier transfer archive validation",
-    "Homology transfer archive validation",
+    "Earlier transfer validation",
+    "Homology transfer validation",
     "BLASTn raw hits",
     "DIAMOND/BLAST top-hit summary",
     "Gene homology summary",
@@ -175,20 +175,20 @@ if (!all(input_files$present)) {
   stop("One or more scaffold-audit inputs are missing.")
 }
 
-archive_validation <- readr::read_tsv(validation_file, show_col_types = FALSE)
-if (!all(archive_validation$size_ok & archive_validation$sha256_ok)) {
-  stop("The earlier scaffold-audit archive failed validation.")
+transfer_validation <- readr::read_tsv(validation_file, show_col_types = FALSE)
+if (!all(transfer_validation$size_ok & transfer_validation$sha256_ok)) {
+  stop("The earlier scaffold-audit transfer failed validation.")
 }
 
 homology_validation <- readr::read_tsv(
   homology_validation_file, show_col_types = FALSE
 )
 if (!all(homology_validation$size_ok & homology_validation$sha256_ok)) {
-  stop("The BLASTn/DIAMOND archive failed validation.")
+  stop("The BLASTn/DIAMOND transfer failed validation.")
 }
 ```
 
-All `r nrow(archive_validation)` files from the earlier scaffold audit and all
+All `r nrow(transfer_validation)` files from the earlier scaffold audit and all
 `r nrow(homology_validation)` files from the BLASTn/DIAMOND transfer passed both
 size and SHA-256 checks before analysis.
 

@@ -1,0 +1,1126 @@
+---
+title: "Statistical analysis reference"
+author: "Emily Baker and Maeva A. Techer"
+date: "`r Sys.Date()`"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_float: true
+params:
+  metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
+  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
+  head_phase_file: "data/external/phase_reference/gregaria_head_phase_degs.csv"
+  thorax_phase_file: "data/external/phase_reference/gregaria_thorax_phase_degs.csv"
+  alpha: 0.05
+  lfc_threshold: 1
+  min_count: 10
+  min_samples: 3
+  output_tag: "paper-statistical-reference"
+---
+
+## Purpose
+
+This page is the statistical map for the paper. It brings the model formulas,
+decision thresholds, current results, and biological interpretation into one
+place without replacing the full analysis pages. The aim is to make every
+reported statement easy to trace from an input table to an R model and then to
+a cautious conclusion.
+
+::: {.walkthrough-grid}
+::: {.walkthrough-step}
+**Step 1 - Define the question**
+
+Identify the response variable, experimental terms, and analysis population.
+:::
+::: {.walkthrough-step}
+**Step 2 - Fit the model**
+
+Use the model appropriate for proportions, mass, counts, or compositions.
+:::
+::: {.walkthrough-step}
+**Step 3 - Report the evidence**
+
+Pair an effect size or test statistic with its uncertainty and P value.
+:::
+::: {.walkthrough-step}
+**Step 4 - Interpret carefully**
+
+State what the result supports and what the design cannot establish.
+:::
+:::
+
+## Setup and frozen inputs
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+required <- c("dplyr", "readr", "tibble", "tidyr", "knitr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing) > 0) {
+  stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
+}
+
+project_dir <- normalizePath(".", mustWork = TRUE)
+run_stamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
+out_dir <- file.path(
+  project_dir, "output", "rmd_runs",
+  paste(params$output_tag, run_stamp, sep = "_")
+)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+latest_dir <- function(prefix) {
+  root <- file.path(project_dir, "output", "rmd_runs")
+  candidates <- list.dirs(root, recursive = FALSE, full.names = TRUE)
+  candidates <- candidates[startsWith(basename(candidates), paste0(prefix, "_"))]
+  if (length(candidates) == 0) stop("No output directory found for: ", prefix)
+  candidates[order(file.info(candidates)$mtime, decreasing = TRUE)][1]
+}
+
+read_required_csv <- function(path) {
+  if (!file.exists(path)) stop("Missing required result table: ", path)
+  read.csv(path, check.names = FALSE)
+}
+
+format_p <- function(x) {
+  ifelse(
+    is.na(x), "NA",
+    ifelse(x < 0.001, formatC(x, format = "e", digits = 2),
+           formatC(x, format = "f", digits = 3))
+  )
+}
+
+pretty_table <- function(x, caption = NULL, digits = 3) {
+  table <- knitr::kable(
+    x, format = "html", caption = caption, digits = digits,
+    row.names = FALSE, escape = TRUE
+  )
+  if (requireNamespace("kableExtra", quietly = TRUE)) {
+    table <- kableExtra::kable_styling(
+      table,
+      bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+      full_width = FALSE,
+      position = "left"
+    )
+  }
+  table
+}
+
+qc_dir <- latest_dir("count-qc-exploration")
+interaction_dir <- latest_dir("main-chromosome-all-samples-deseq2-interaction-model")
+diet_dir <- latest_dir("main-chromosome-all-samples-diet-pairwise-deg_All")
+infection_dir <- latest_dir("main-chromosome-all-samples-infection-within-diet-deg")
+publication_dir <- latest_dir("publication-figures")
+enrichment_dir <- latest_dir("go-term-enrichment")
+taxonomy_dir <- latest_dir("metarhizium-read-burden")
+
+source_manifest <- data.frame(
+  analysis = c(
+    "Mapping and body mass", "Full DESeq2 interaction", "Diet contrasts",
+    "Infection within diet", "Publication contrasts and overlap",
+    "GO and KEGG enrichment", "Non-host taxonomic profiles"
+  ),
+  source_page = c(
+    "analysis/03-count-qc-exploration.Rmd",
+    "analysis/14-all-samples-deseq2-interaction-model.Rmd",
+    "analysis/15-all-samples-diet-pairwise-deg.Rmd",
+    "analysis/16-all-samples-infection-within-diet-deg.Rmd",
+    "analysis/08-publication-figures.Rmd",
+    "analysis/10-go-term-enrichment.Rmd",
+    "analysis/29-metarhizium-read-burden.Rmd"
+  ),
+  result_directory = c(
+    qc_dir, interaction_dir, diet_dir, infection_dir,
+    publication_dir, enrichment_dir, taxonomy_dir
+  )
+)
+write.csv(source_manifest, file.path(out_dir, "statistical_source_manifest.csv"),
+          row.names = FALSE)
+pretty_table(source_manifest, "Canonical analysis pages and result directories")
+```
+
+Every knit creates a new audit folder. The page reads the newest completed
+result directory for each canonical analysis, but it records those exact paths
+in `statistical_source_manifest.csv` so the reported values remain traceable.
+
+## Analysis scope and decision rules
+
+```{r analysis-scope}
+input_audit <- read_required_csv(
+  file.path(interaction_dir, "main_chromosome_input_audit.csv")
+)
+
+analysis_rules <- data.frame(
+  item = c(
+    "Analysis cohort", "Primary count definition", "Mapping branch",
+    "Gene placement", "rRNA handling", "Expression filter",
+    "DEG criterion", "Multiple testing", "Ordination"
+  ),
+  current_choice = c(
+    paste0(input_audit$samples_retained, " QC-passed libraries; sample 1044 excluded"),
+    "featureCounts -t transcript,exon -g gene_id",
+    "Competitive host-pathogen alignment; primary alignments only",
+    "Genes assigned to the 12 nuclear chromosomes",
+    "All identifiers on the project rRNA exclusion list removed before modelling",
+    paste0("Count >= ", params$min_count, " in at least ", params$min_samples, " libraries"),
+    paste0("BH-adjusted P < ", params$alpha,
+           " and absolute log2 fold-change >= ", params$lfc_threshold),
+    "Benjamini-Hochberg correction within each contrast",
+    "VST for PCA and heatmaps only; raw counts enter DESeq2"
+  )
+)
+pretty_table(analysis_rules, "Current paper analysis conventions")
+```
+
+The count matrix contains `r format(input_audit$raw_count_rows, big.mark = ",")`
+non-rRNA gene identifiers. Restricting it to official nuclear chromosomes leaves
+`r format(input_audit$main_chromosome_non_rRNA_rows, big.mark = ",")` loci before
+expression filtering and `r format(input_audit$genes_entering_DESeq2, big.mark = ",")`
+genes entering the primary DESeq2 model.
+
+### What is a test and what is a display?
+
+```{r evidence-types}
+evidence_types <- data.frame(
+  output = c(
+    "Mapping-quality models", "Body-mass model", "DESeq2 contrasts",
+    "GO/KEGG over-representation", "PERMANOVA and PERMDISP",
+    "Chromosome distribution", "PCA and heatmaps", "Venn/UpSet diagrams",
+    "Curated candidate-gene panels"
+  ),
+  role = c(
+    rep("Inferential", 6), rep("Descriptive", 3)
+  ),
+  interpretation = c(
+    "Tests diet, infection, and diet-by-infection effects on mapping yield",
+    "Tests diet, infection, and their interaction on recorded mass",
+    "Tests one gene at a time while controlling the false-discovery rate",
+    "Tests whether annotated terms are over-represented in a DEG foreground",
+    "Tests taxonomic-composition location and dispersion",
+    "Tests whether DEGs are distributed in proportion to the tested background",
+    "Shows dominant expression structure; no P value is assigned",
+    "Shows set membership and overlap; overlap alone is not causal evidence",
+    "Connects statistical results to hypotheses; selection is intentionally curated"
+  )
+)
+pretty_table(evidence_types, "Statistical and descriptive evidence used in the paper")
+```
+
+## Mapping quality
+
+### Question
+
+Did diet, infection treatment, or their interaction affect the percentage of
+reads mapping to the locust reference? Mapping percentages are bounded between
+0 and 100, so the proportions were logit-transformed before fitting Gaussian
+linear models.
+
+```{r mapping-models}
+mapping_all <- read_required_csv(
+  file.path(qc_dir, "competitive_mapping_quality_all_45_samples.csv")
+)
+mapping_44 <- mapping_all |>
+  dplyr::filter(label != "1044") |>
+  dplyr::mutate(
+    Diet = factor(Diet, levels = c("33", "50", "83")),
+    Treatment = factor(Treatment, levels = c("Control", "Infected"))
+  )
+
+run_mapping_model <- function(data, metric) {
+  proportion <- pmin(pmax(data[[metric]] / 100, 1e-6), 1 - 1e-6)
+  data$mapping_logit <- qlogis(proportion)
+
+  factorial <- stats::lm(mapping_logit ~ Diet * Treatment, data = data)
+  interaction_test <- stats::drop1(
+    factorial, scope = ~ Diet:Treatment, test = "F"
+  )
+
+  additive <- stats::lm(mapping_logit ~ Diet + Treatment, data = data)
+  main_tests <- stats::drop1(additive, test = "F")
+
+  data.frame(
+    mapping_definition = metric,
+    interaction_p = interaction_test["Diet:Treatment", "Pr(>F)"],
+    diet_p = main_tests["Diet", "Pr(>F)"],
+    infection_p = main_tests["Treatment", "Pr(>F)"]
+  )
+}
+
+mapping_recomputed <- dplyr::bind_rows(
+  run_mapping_model(mapping_44, "unique_pct"),
+  run_mapping_model(mapping_44, "unique_plus_multimapped_pct")
+) |>
+  dplyr::mutate(
+    mapping_definition = c("Unique mapping", "Unique + multimapping")
+  )
+
+mapping_exported <- read_required_csv(
+  file.path(qc_dir, "competitive_mapping_design_tests.csv")
+) |>
+  dplyr::filter(scenario == "Final 44-sample analysis cohort") |>
+  dplyr::select(mapping_definition, interaction_p, diet_p, infection_p)
+
+stopifnot(isTRUE(all.equal(
+  mapping_recomputed[, names(mapping_exported)], mapping_exported,
+  tolerance = 1e-10, check.attributes = FALSE
+)))
+
+mapping_report <- mapping_exported |>
+  dplyr::mutate(
+    `Diet x infection P` = format_p(interaction_p),
+    `Diet P` = format_p(diet_p),
+    `Infection P` = format_p(infection_p)
+  ) |>
+  dplyr::select(`Mapping definition` = mapping_definition,
+                `Diet x infection P`, `Diet P`, `Infection P`)
+pretty_table(mapping_report, "Mapping-quality factorial tests in the 44-library cohort")
+```
+
+**Result and interpretation.** Infection treatment was associated with lower
+mapping yield for both uniquely mapped reads (P = 0.028) and unique plus
+accepted multimapping reads (P = 0.046). Neither diet nor the interaction was
+supported. This points to a treatment-associated difference in the fraction of
+reads assigned to the locust genome, but mapping yield is a technical and
+biological mixture and is not itself a measure of fungal load.
+
+## Body mass and mapping yield
+
+### Question
+
+Did diet or infection affect recorded individual mass, and could body mass
+explain mapping differences?
+
+```{r mass-models}
+mass_data <- read_required_csv(
+  file.path(qc_dir, "individual_mass_analysis_44_samples.csv")
+) |>
+  dplyr::mutate(
+    Diet = factor(Diet, levels = c("33", "50", "83")),
+    Treatment = factor(Treatment, levels = c("Control", "Infected"))
+  )
+
+mass_factorial <- stats::lm(mass_g ~ Diet * Treatment, data = mass_data)
+mass_interaction <- stats::drop1(
+  mass_factorial, scope = ~ Diet:Treatment, test = "F"
+)
+mass_additive <- stats::lm(mass_g ~ Diet + Treatment, data = mass_data)
+mass_main <- stats::drop1(mass_additive, test = "F")
+mass_ci <- stats::confint(mass_additive, "TreatmentInfected", level = 0.95)
+
+mass_tests <- data.frame(
+  term = c("Diet x Infection", "Diet", "Infection"),
+  F = c(
+    mass_interaction["Diet:Treatment", "F value"],
+    mass_main["Diet", "F value"],
+    mass_main["Treatment", "F value"]
+  ),
+  p_value = c(
+    mass_interaction["Diet:Treatment", "Pr(>F)"],
+    mass_main["Diet", "Pr(>F)"],
+    mass_main["Treatment", "Pr(>F)"]
+  )
+)
+
+mass_exported <- read_required_csv(
+  file.path(qc_dir, "individual_mass_diet_infection_tests.csv")
+)
+stopifnot(isTRUE(all.equal(
+  mass_tests$p_value, mass_exported$p_value,
+  tolerance = 1e-10, check.attributes = FALSE
+)))
+
+mass_effect <- read_required_csv(
+  file.path(qc_dir, "individual_mass_infection_effect.csv")
+)
+mass_report <- mass_tests |>
+  dplyr::mutate(P = format_p(p_value)) |>
+  dplyr::select(Term = term, F, P)
+pretty_table(mass_report, "Factorial tests for recorded individual mass")
+pretty_table(
+  mass_effect |>
+    dplyr::transmute(
+      Comparison = comparison,
+      `Difference (g)` = estimate_g,
+      `95% CI` = sprintf("%.3f to %.3f", lower_ci_g, upper_ci_g),
+      P = format_p(p_value)
+    ),
+  "Adjusted infection-treatment difference in mass"
+)
+```
+
+```{r mapping-mass-models}
+run_mapping_mass_test <- function(data, metric) {
+  spearman <- stats::cor.test(
+    data$mass_g, data[[metric]], method = "spearman", exact = FALSE
+  )
+  data$mapping_logit <- qlogis(
+    pmin(pmax(data[[metric]] / 100, 1e-6), 1 - 1e-6)
+  )
+  adjusted <- stats::lm(
+    mapping_logit ~ mass_g + Diet + Treatment, data = data
+  )
+  adjusted_test <- stats::drop1(adjusted, test = "F")
+  data.frame(
+    mapping_definition = metric,
+    spearman_rho = unname(spearman$estimate),
+    spearman_p = spearman$p.value,
+    adjusted_mass_p = adjusted_test["mass_g", "Pr(>F)"]
+  )
+}
+
+mapping_mass_recomputed <- dplyr::bind_rows(
+  run_mapping_mass_test(mass_data, "unique_pct"),
+  run_mapping_mass_test(mass_data, "unique_plus_multimapped_pct")
+) |>
+  dplyr::mutate(
+    mapping_definition = c("Unique mapping", "Unique + multimapping")
+  )
+
+mapping_mass_exported <- read_required_csv(
+  file.path(qc_dir, "mapping_quality_mass_association_tests.csv")
+) |>
+  dplyr::filter(scenario == "Final 44-sample analysis cohort") |>
+  dplyr::select(mapping_definition, spearman_rho, spearman_p,
+                adjusted_mass_p)
+
+stopifnot(isTRUE(all.equal(
+  mapping_mass_recomputed[, names(mapping_mass_exported)],
+  mapping_mass_exported,
+  tolerance = 1e-10, check.attributes = FALSE
+)))
+
+mapping_mass_report <- mapping_mass_exported |>
+  dplyr::mutate(
+    `Spearman rho` = round(spearman_rho, 3),
+    `Spearman P` = format_p(spearman_p),
+    `Adjusted mass P` = format_p(adjusted_mass_p)
+  ) |>
+  dplyr::select(`Mapping definition` = mapping_definition,
+                `Spearman rho`, `Spearman P`, `Adjusted mass P`)
+pretty_table(mapping_mass_report, "Association between mass and mapping yield")
+```
+
+**Result and interpretation.** Infection was associated with a mean mass
+difference of -0.189 g after accounting for diet (95% CI -0.368 to -0.010 g;
+P = 0.039). Diet and the diet-by-infection interaction were not supported.
+Mass was not significantly associated with either mapping definition, with or
+without adjustment for diet and infection. The lower host mapping in infected
+libraries therefore was not explained by recorded body mass in this cohort.
+
+## Differential expression
+
+### Why raw counts are the model input
+
+DESeq2 does normalize before testing. Raw integer counts are supplied to the
+negative-binomial model, and DESeq2 estimates sample-specific size factors by
+its median-of-ratios method. Variance-stabilized counts are used only for PCA
+and heatmaps because they are designed for distances and visualization, not for
+the count likelihood used by differential-expression tests.
+
+### Full factorial model
+
+The full model asks whether the infection response changes with diet:
+
+```{r deseq2-interaction-code, eval=FALSE}
+dds <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_genes, ],
+  colData = metadata,
+  design = ~ Diet + Treatment + Diet:Treatment
+)
+dds <- DESeq2::DESeq(
+  dds, minReplicatesForReplace = Inf, quiet = TRUE
+)
+
+# Example: diet 83 changes the infection response relative to diet 50.
+res_interaction_83 <- DESeq2::results(
+  dds,
+  name = "Diet83.TreatmentInfected",
+  alpha = 0.05,
+  cooksCutoff = FALSE
+)
+```
+
+The code above is executed in
+[Main-chromosome interaction model](14-all-samples-deseq2-interaction-model.html).
+With diet 50 and controls as reference levels, the main treatment coefficient
+is the infected-versus-control response in diet 50. Interaction coefficients
+measure how that response differs in diets 33 or 83.
+
+```{r interaction-results}
+interaction_counts <- read_required_csv(
+  file.path(interaction_dir, "significant_gene_counts.csv")
+)
+pretty_table(
+  interaction_counts,
+  "Significant coefficients in the full diet-by-infection model"
+)
+```
+
+**Result and interpretation.** The infection response in diet 33 did not have
+significant interaction coefficients relative to diet 50 at the current DEG
+threshold. Diet 83 had 38 significant interaction coefficients relative to
+diet 50. These coefficients provide the direct gene-level test of response
+heterogeneity; differences in the number of DEGs called separately within each
+diet are descriptive and should not be interpreted as interaction tests by
+themselves.
+
+### Infection within each diet and average infection response
+
+The within-diet contrasts use a no-intercept group model so every requested
+comparison is an explicit difference between two observed conditions.
+
+```{r deseq2-direct-contrast-code, eval=FALSE}
+metadata$group <- factor(paste0(
+  "diet", metadata$Diet, "_", tolower(metadata$Treatment)
+))
+
+dds_group <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_genes, ],
+  colData = metadata,
+  design = ~ 0 + group
+)
+dds_group <- DESeq2::DESeq(
+  dds_group, minReplicatesForReplace = Inf, quiet = TRUE
+)
+
+# Positive log2FC means higher expression in infected diet-50 locusts.
+res_diet50 <- DESeq2::results(
+  dds_group,
+  contrast = c("group", "diet50_infected", "diet50_control"),
+  alpha = 0.05,
+  cooksCutoff = FALSE
+)
+
+is_deg <- !is.na(res_diet50$padj) &
+  res_diet50$padj < 0.05 & abs(res_diet50$log2FoldChange) >= 1
+```
+
+The group model and within-diet contrasts are executed in
+[Infection within diet](16-all-samples-infection-within-diet-deg.html). The
+average infected-versus-control contrast across diets and all Figure 2
+contrasts are assembled in
+[Publication figure exports](08-publication-figures.html).
+
+```{r infection-deg-results}
+infection_summary <- read_required_csv(
+  file.path(infection_dir, "infection_within_diet_summary.csv")
+)
+infection_direction <- read_required_csv(
+  file.path(infection_dir, "infection_within_diet_direction_counts.csv")
+)
+infection_biotype <- read_required_csv(
+  file.path(infection_dir, "infection_deg_burden_by_biotype_counts.csv")
+)
+average_infection <- read_required_csv(
+  file.path(publication_dir, "main_chromosome_average_infection_results.csv")
+)
+
+average_sig <- average_infection |>
+  dplyr::filter(!is.na(padj), padj < params$alpha,
+                abs(log2FoldChange) >= params$lfc_threshold)
+average_summary <- data.frame(
+  contrast = "All diets: infected vs control",
+  total_DEGs = nrow(average_sig),
+  higher_in_infected = sum(average_sig$log2FoldChange > 0),
+  higher_in_control = sum(average_sig$log2FoldChange < 0)
+)
+
+within_summary <- infection_direction |>
+  tidyr::pivot_wider(
+    names_from = direction, values_from = n_significant_genes,
+    values_fill = 0
+  ) |>
+  dplyr::left_join(infection_summary, by = "diet") |>
+  dplyr::transmute(
+    contrast = paste0("Diet ", diet, ": infected vs control"),
+    total_DEGs = n_significant_genes,
+    higher_in_infected = `Higher in infected`,
+    higher_in_control = `Higher in control`
+  )
+
+deg_summary <- dplyr::bind_rows(average_summary, within_summary)
+pretty_table(deg_summary, "Primary infection-response DEG counts")
+
+lncrna_summary <- infection_biotype |>
+  dplyr::filter(Gene_class == "Long non-coding RNA") |>
+  dplyr::group_by(diet) |>
+  dplyr::summarise(lncRNA_DEGs = sum(n_significant_genes), .groups = "drop")
+pretty_table(lncrna_summary, "Long non-coding RNA DEGs within each diet")
+```
+
+**Result and interpretation.** The average infection contrast contained 1,696
+DEGs (907 higher in infected locusts and 789 higher in controls). Infection
+altered 1,036 genes in diet 33, 2,000 in diet 50, and 1,013 in diet 83. The
+balanced diet therefore had the largest within-diet DEG burden, but the formal
+interaction model remains the appropriate test of whether diet modifies the
+infection response.
+
+### Diet contrasts
+
+```{r deseq2-diet-code, eval=FALSE}
+# All-sample adjusted diet model.
+dds_diet <- DESeq2::DESeqDataSetFromMatrix(
+  countData = counts[keep_genes, ],
+  colData = metadata,
+  design = ~ Treatment + Diet
+)
+dds_diet <- DESeq2::DESeq(dds_diet, quiet = TRUE)
+res_33_vs_50 <- DESeq2::results(
+  dds_diet, contrast = c("Diet", "33", "50"),
+  alpha = 0.05, cooksCutoff = FALSE
+)
+
+# Within controls or within infected animals, use design = ~ Diet after
+# subsetting to the relevant treatment.
+```
+
+```{r diet-results}
+diet_summary <- read_required_csv(
+  file.path(diet_dir, "diet_pairwise_summary.csv")
+)
+pretty_table(
+  diet_summary,
+  "Diet DEGs after adjustment for infection status in the all-sample model"
+)
+
+exact_contrasts <- read_required_csv(
+  file.path(publication_dir, "figure2_panel_A_exact_contrast_deg_gene_table.csv")
+)
+exact_contrast_summary <- exact_contrasts |>
+  dplyr::mutate(
+    direction = dplyr::if_else(
+      log2FoldChange > 0,
+      paste0("Higher in ", numerator),
+      paste0("Higher in ", denominator)
+    )
+  ) |>
+  dplyr::count(DEG_context, comparison, direction, name = "n_DEGs")
+pretty_table(
+  exact_contrast_summary,
+  "Directional DEG counts for every exact comparison in Figure 2"
+)
+```
+
+The adjusted all-sample diet contrasts found fewer DEGs than the infection
+contrasts. The exact control-only and infected-only comparisons remain
+important because they distinguish baseline diet differences from diet
+differences expressed during infection.
+
+## Chromosomal distribution of infection DEGs
+
+### Question
+
+Were infection-responsive genes concentrated on one chromosome, or distributed
+throughout the placed host genome? The expected count for each chromosome is
+based on the number of genes from that chromosome that actually entered the
+DESeq2 tests, not on chromosome length.
+
+```{r chromosome-distribution-test}
+placement <- readr::read_tsv(
+  file.path(project_dir, params$placement_file), show_col_types = FALSE
+) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+within_all <- read_required_csv(
+  file.path(infection_dir, "all_infection_within_diet_results.csv")
+)
+sig_gene_ids <- unique(c(
+  average_infection$gene_id[
+    !is.na(average_infection$padj) &
+      average_infection$padj < params$alpha &
+      abs(average_infection$log2FoldChange) >= params$lfc_threshold
+  ],
+  within_all$gene_id[
+    !is.na(within_all$padj) &
+      within_all$padj < params$alpha &
+      abs(within_all$log2FoldChange) >= params$lfc_threshold
+  ]
+))
+testable_gene_ids <- unique(c(
+  average_infection$gene_id[!is.na(average_infection$padj)],
+  within_all$gene_id[!is.na(within_all$padj)]
+))
+
+chromosome_background <- placement |>
+  dplyr::filter(
+    gene_id %in% testable_gene_ids,
+    sequence_class == "Nuclear chromosome"
+  ) |>
+  dplyr::count(assigned_molecule, name = "testable_genes")
+
+chromosome_degs <- placement |>
+  dplyr::filter(
+    gene_id %in% sig_gene_ids,
+    sequence_class == "Nuclear chromosome"
+  ) |>
+  dplyr::count(assigned_molecule, name = "DEGs")
+
+chromosome_table <- chromosome_background |>
+  dplyr::left_join(chromosome_degs, by = "assigned_molecule") |>
+  dplyr::mutate(
+    DEGs = dplyr::coalesce(DEGs, 0L),
+    non_DEGs = testable_genes - DEGs,
+    DEG_percent = 100 * DEGs / testable_genes
+  )
+
+chromosome_matrix <- rbind(
+  DEG = chromosome_table$DEGs,
+  non_DEG = chromosome_table$non_DEGs
+)
+chromosome_test <- suppressWarnings(stats::chisq.test(chromosome_matrix))
+cramers_v <- sqrt(
+  unname(chromosome_test$statistic) / sum(chromosome_matrix)
+)
+
+chromosome_test_summary <- data.frame(
+  unique_infection_DEGs = length(sig_gene_ids),
+  testable_genes = length(testable_gene_ids),
+  chromosomes_with_DEGs = sum(chromosome_table$DEGs > 0),
+  chi_square = unname(chromosome_test$statistic),
+  df = unname(chromosome_test$parameter),
+  p_value = chromosome_test$p.value,
+  cramers_v = cramers_v
+)
+write.csv(chromosome_table,
+          file.path(out_dir, "infection_deg_chromosome_counts.csv"),
+          row.names = FALSE)
+write.csv(chromosome_test_summary,
+          file.path(out_dir, "infection_deg_chromosome_test.csv"),
+          row.names = FALSE)
+
+pretty_table(chromosome_test_summary,
+             "Chromosome-distribution test for infection-responsive genes")
+```
+
+**Result and interpretation.** Across the average and within-diet infection
+contrasts, `r format(length(sig_gene_ids), big.mark = ",")` unique DEGs occurred
+on all `r sum(chromosome_table$DEGs > 0)` nuclear chromosomes. Their distribution
+differed from the expression-tested background
+($\chi^2_{`r unname(chromosome_test$parameter)`}$ =
+`r round(unname(chromosome_test$statistic), 2)`, P =
+`r format_p(chromosome_test$p.value)`), but the effect was weak (Cramer's V =
+`r round(cramers_v, 3)`). This supports a genome-wide response with modest
+chromosomal heterogeneity, rather than a response confined to one chromosome.
+
+## GO and KEGG enrichment
+
+### Test and background
+
+For each DEG set, an over-representation test asks whether a GO term or KEGG
+reference pathway contains more DEGs than expected from the annotated genes in
+the expression-tested background. Upregulated and downregulated genes are
+combined in the main enrichment views. Enrichment does not test whether every
+gene in a term changes in the same direction.
+
+```{r enrichment-code, eval=FALSE}
+run_enrichment <- function(genes, term2gene, term2name, universe) {
+  genes <- unique(genes[genes %in% universe])
+  if (length(genes) < 5) return(NULL)
+
+  clusterProfiler::enricher(
+    gene = genes,
+    universe = universe,
+    TERM2GENE = term2gene,
+    TERM2NAME = term2name[, c("term", "name")],
+    pvalueCutoff = 0.1,
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.2
+  )
+}
+```
+
+This exact function is executed in
+[GO and KEGG enrichment](10-go-term-enrichment.html). The broader export retains
+terms under its exploratory configuration; the paper-facing summary below
+applies the stricter requirement of BH-adjusted P < 0.05.
+
+```{r enrichment-results}
+go_enrichment <- read_required_csv(
+  file.path(enrichment_dir, "GO_enrichment_all_sets.csv")
+) |>
+  dplyr::filter(p.adjust < params$alpha)
+kegg_enrichment <- read_required_csv(
+  file.path(enrichment_dir, "KEGG_pathway_enrichment_all_sets.csv")
+) |>
+  dplyr::filter(p.adjust < params$alpha)
+
+enrichment_summary <- dplyr::bind_rows(
+  go_enrichment |>
+    dplyr::count(set, name = "significant_terms") |>
+    dplyr::mutate(database = "GO"),
+  kegg_enrichment |>
+    dplyr::count(set, name = "significant_terms") |>
+    dplyr::mutate(database = "KEGG reference pathway")
+) |>
+  dplyr::select(database, DEG_set = set, significant_terms)
+pretty_table(enrichment_summary,
+             "Enriched terms with BH-adjusted P below 0.05")
+
+top_enrichment <- dplyr::bind_rows(
+  go_enrichment |>
+    dplyr::mutate(database = "GO"),
+  kegg_enrichment |>
+    dplyr::mutate(database = "KEGG")
+) |>
+  dplyr::group_by(database, set) |>
+  dplyr::slice_min(p.adjust, n = 3, with_ties = FALSE) |>
+  dplyr::ungroup() |>
+  dplyr::transmute(
+    Database = database, `DEG set` = set, Term = Description,
+    `DEGs in term` = Count, `Adjusted P` = format_p(p.adjust)
+  )
+pretty_table(top_enrichment,
+             "Three strongest adjusted enrichment results per DEG set")
+```
+
+GO terms provide ontology-based summaries of biological process, cellular
+component, and molecular function. KEGG entries here are KO reference maps
+derived from eggNOG annotations, not direct *S. gregaria*-specific pathway
+measurements. The pathway-scope labels and arthropod-focused figure variants
+should therefore be used when making organism-level claims.
+
+## Phase-reference overlap
+
+### Question
+
+Could semi-isolation during the infection protocol have contributed a broader
+phase-associated expression signal? Infection DEGs were compared with
+independent solitarious-versus-gregarious DEG sets from head and thorax. The
+most conservative phase-reference set is the intersection shared by both
+reference tissues.
+
+```{r phase-overlap-code}
+phase_membership <- read_required_csv(
+  file.path(publication_dir, "figure2_infection_phase_overlap_membership.csv")
+)
+
+infection_phase_genes <- phase_membership$gene_id[
+  phase_membership$`Infection within diets`
+]
+head_phase_genes <- phase_membership$gene_id[phase_membership$`Head phase DEGs`]
+thorax_phase_genes <- phase_membership$gene_id[
+  phase_membership$`Thorax phase DEGs`
+]
+shared_phase_genes <- intersect(head_phase_genes, thorax_phase_genes)
+infection_shared_phase <- intersect(infection_phase_genes, shared_phase_genes)
+
+phase_overlap_summary <- data.frame(
+  set = c(
+    "Infection within diets", "Head phase", "Thorax phase",
+    "Phase shared by head and thorax",
+    "Infection also shared by head and thorax phase references"
+  ),
+  genes = c(
+    length(unique(infection_phase_genes)),
+    length(unique(head_phase_genes)),
+    length(unique(thorax_phase_genes)),
+    length(shared_phase_genes),
+    length(infection_shared_phase)
+  )
+)
+pretty_table(phase_overlap_summary, "Phase-reference overlap audit")
+```
+
+**Result and interpretation.** The conservative phase-reference set contained
+`r length(shared_phase_genes)` genes shared between head and thorax, and
+`r length(infection_shared_phase)` of these also occurred among the fat-body
+infection DEGs. This overlap shows that part of the infection-associated signal
+uses genes responsive to density phase in two independent tissues. It identifies
+a plausible shared physiological programme and a potential source of
+confounding, but it cannot establish that the experimental fat bodies underwent
+a phase transition or separate infection from semi-isolation causally.
+
+No overlap P value is assigned here. The phase sets come from different tissues
+and an independent experiment with limited reference replication; presenting
+the observed membership is more defensible than imposing a universe that would
+make a formal overlap test appear more precise than the design allows.
+
+### Which infection-responsive genes overlap the phase references?
+
+The Venn counts come from explicit gene identifiers. The table below joins
+those identifiers to the official host annotation, the within-diet infection
+results, and the independent head and thorax phase results. Positive infection
+log2 fold-changes mean higher expression in infected fat bodies. The phase
+direction labels retain the direction reported by the independent reference
+analysis.
+
+```{r phase-overlap-gene-catalogue}
+head_phase_results <- read_required_csv(
+  file.path(project_dir, params$head_phase_file)
+) |>
+  dplyr::filter(significant) |>
+  dplyr::transmute(
+    gene_id,
+    head_phase_log2FC = log2FoldChange,
+    head_phase_padj = padj,
+    head_phase_direction = direction
+  )
+
+thorax_phase_results <- read_required_csv(
+  file.path(project_dir, params$thorax_phase_file)
+) |>
+  dplyr::filter(significant) |>
+  dplyr::transmute(
+    gene_id,
+    thorax_phase_log2FC = log2FoldChange,
+    thorax_phase_padj = padj,
+    thorax_phase_direction = direction
+  )
+
+infection_sig_by_diet <- within_all |>
+  dplyr::filter(
+    !is.na(padj), padj < params$alpha,
+    abs(log2FoldChange) >= params$lfc_threshold
+  ) |>
+  dplyr::mutate(
+    infection_direction = dplyr::if_else(
+      log2FoldChange > 0, "Higher in infected", "Higher in control"
+    ),
+    diet_result = paste0(
+      "Diet ", diet, ": ", infection_direction,
+      " (log2FC ", sprintf("%.2f", log2FoldChange), ")"
+    )
+  )
+
+infection_gene_summary <- infection_sig_by_diet |>
+  dplyr::arrange(gene_id, as.numeric(diet)) |>
+  dplyr::group_by(gene_id) |>
+  dplyr::summarise(
+    infection_DEG_diets = paste(diet, collapse = ", "),
+    infection_results = paste(diet_result, collapse = "; "),
+    min_infection_padj = min(padj),
+    max_abs_infection_log2FC = max(abs(log2FoldChange)),
+    .groups = "drop"
+  )
+
+phase_gene_catalogue <- phase_membership |>
+  dplyr::filter(`Infection within diets`) |>
+  dplyr::mutate(
+    phase_overlap_category = dplyr::case_when(
+      `Head phase DEGs` & `Thorax phase DEGs` ~
+        "Shared head + thorax phase overlap",
+      `Head phase DEGs` ~ "Head phase overlap only",
+      `Thorax phase DEGs` ~ "Thorax phase overlap only",
+      TRUE ~ "No head/thorax phase overlap"
+    )
+  ) |>
+  dplyr::select(
+    gene_id, phase_overlap_category,
+    head_phase_DEG = `Head phase DEGs`,
+    thorax_phase_DEG = `Thorax phase DEGs`
+  ) |>
+  dplyr::left_join(
+    placement |>
+      dplyr::select(
+        gene_id, description, gene_biotype,
+        chromosome = assigned_molecule
+      ),
+    by = "gene_id"
+  ) |>
+  dplyr::left_join(infection_gene_summary, by = "gene_id") |>
+  dplyr::left_join(head_phase_results, by = "gene_id") |>
+  dplyr::left_join(thorax_phase_results, by = "gene_id") |>
+  dplyr::arrange(
+    factor(
+      phase_overlap_category,
+      levels = c(
+        "Shared head + thorax phase overlap",
+        "Head phase overlap only", "Thorax phase overlap only",
+        "No head/thorax phase overlap"
+      )
+    ),
+    min_infection_padj
+  )
+
+write.csv(
+  phase_gene_catalogue,
+  file.path(out_dir, "infection_phase_overlap_annotated_gene_catalogue.csv"),
+  row.names = FALSE
+)
+
+phase_category_audit <- phase_gene_catalogue |>
+  dplyr::count(phase_overlap_category, name = "infection_DEGs") |>
+  dplyr::mutate(
+    percent_of_infection_DEGs = 100 * infection_DEGs / sum(infection_DEGs)
+  )
+pretty_table(
+  phase_category_audit,
+  "Infection DEGs assigned to each phase-reference category"
+)
+
+phase_overlap_gene_table <- phase_gene_catalogue |>
+  dplyr::filter(phase_overlap_category != "No head/thorax phase overlap") |>
+  dplyr::select(
+    gene_id, description, gene_biotype, chromosome,
+    phase_overlap_category, infection_DEG_diets, infection_results,
+    head_phase_direction, head_phase_log2FC,
+    thorax_phase_direction, thorax_phase_log2FC,
+    min_infection_padj
+  )
+
+if (requireNamespace("DT", quietly = TRUE)) {
+  DT::datatable(
+    phase_overlap_gene_table,
+    rownames = FALSE,
+    filter = "top",
+    options = list(pageLength = 15, scrollX = TRUE),
+    caption = "Infection-responsive genes with head and/or thorax phase-reference overlap"
+  )
+} else {
+  pretty_table(
+    utils::head(phase_overlap_gene_table, 25),
+    "First 25 infection-responsive genes with phase-reference overlap"
+  )
+}
+```
+
+The exported catalogue contains all 2,581 infection-responsive genes, including
+the 2,117 genes with no phase-reference overlap. The searchable table displayed
+here focuses on the 464 genes supported by at least one phase-reference tissue.
+
+## Non-host taxonomic profiles
+
+### Questions
+
+1. Does the relative composition of non-host taxonomic families differ with
+   diet, infection treatment, or their interaction?
+2. Are apparent compositional differences explained by unequal dispersion?
+3. Does total normalized non-host read burden differ across the design?
+
+```{r taxonomy-code, eval=FALSE}
+set.seed(20260810)
+family_permanova <- vegan::adonis2(
+  family_bray ~ Diet * Treatment,
+  data = family_test_metadata,
+  permutations = 999,
+  by = "terms"
+)
+
+family_dispersion <- vegan::betadisper(
+  family_bray,
+  group = family_test_metadata$condition
+)
+set.seed(20260810)
+family_dispersion_test <- vegan::permutest(
+  family_dispersion, permutations = 999
+)
+
+burden_factorial <- lm(log10_microbial_rpm ~ Diet * Treatment,
+                       data = microbial_burden)
+burden_interaction <- drop1(burden_factorial, test = "F")
+burden_additive <- lm(log10_microbial_rpm ~ Diet + Treatment,
+                      data = microbial_burden)
+burden_main <- drop1(burden_additive, test = "F")
+```
+
+The complete construction of the Bracken family matrix and Bray-Curtis distance
+object is executed in
+[Fungal burden and taxonomic profiles](29-metarhizium-read-burden.html).
+
+```{r taxonomy-results}
+permanova <- read_required_csv(
+  file.path(taxonomy_dir, "bracken_host_unmapped_family_permanova.csv")
+)
+permdisp <- read_required_csv(
+  file.path(taxonomy_dir, "bracken_host_unmapped_family_dispersion_test.csv")
+)
+burden_tests <- read_required_csv(
+  file.path(taxonomy_dir, "bracken_host_unmapped_burden_design_tests.csv")
+)
+burden_groups <- read_required_csv(
+  file.path(taxonomy_dir, "bracken_host_unmapped_burden_group_summary.csv")
+)
+
+pretty_table(
+  permanova |>
+    dplyr::filter(term %in% c("Diet", "Treatment", "Diet:Treatment")) |>
+    dplyr::transmute(Term = term, df, R2, F, P = format_p(p_value)),
+  "PERMANOVA of non-host family composition"
+)
+pretty_table(
+  permdisp |>
+    dplyr::transmute(Test = test, F, P = format_p(p_value)),
+  "Dispersion test accompanying PERMANOVA"
+)
+pretty_table(
+  burden_tests |>
+    dplyr::transmute(Term = term, Model = model, F, P = format_p(p_value)),
+  "Linear-model tests of normalized non-host read burden"
+)
+pretty_table(
+  burden_groups,
+  "Normalized non-host read burden by infection treatment"
+)
+```
+
+**Result and interpretation.** Infection treatment explained 11.5% of the
+Bray-Curtis variation in non-host family composition (PERMANOVA P = 0.001),
+whereas diet and the interaction were unsupported. Group dispersion did not
+differ (PERMDISP P = 0.625), reducing concern that the PERMANOVA result was
+driven only by unequal variability. Normalized non-host burden was also higher
+in infected libraries (P < 0.001), with no significant diet-by-infection
+interaction. These RNA-seq classifications support treatment-associated
+non-host signal, but they are not a dedicated microbiome survey and do not by
+themselves establish viable colonization.
+
+## Paper-ready statistical summary
+
+```{r paper-summary}
+paper_summary <- data.frame(
+  topic = c(
+    "Unique host mapping", "Unique plus multimapping", "Recorded mass",
+    "Average infection response", "Within-diet infection response",
+    "Diet-by-infection interaction", "Chromosome distribution",
+    "Non-host family composition", "Non-host burden", "Phase-reference overlap"
+  ),
+  result = c(
+    "Infection P = 0.028; diet and interaction unsupported",
+    "Infection P = 0.046; diet and interaction unsupported",
+    "Infected - control = -0.189 g (95% CI -0.368 to -0.010), P = 0.039",
+    "1,696 DEGs: 907 higher in infected and 789 higher in controls",
+    "1,036, 2,000, and 1,013 DEGs in diets 33, 50, and 83",
+    "0 significant diet-33 interaction genes and 38 diet-83 interaction genes relative to diet 50",
+    paste0("All 12 chromosomes; chi-square P ", format_p(chromosome_test$p.value),
+           ", Cramer's V = ", round(cramers_v, 3)),
+    "Treatment R2 = 0.115, PERMANOVA P = 0.001; PERMDISP P = 0.625",
+    "Infection P < 0.001; diet and interaction unsupported",
+    paste0(length(infection_shared_phase),
+           " infection DEGs shared with the head-and-thorax phase intersection")
+  ),
+  reporting_caution = c(
+    "Mapping percentage is not fungal load",
+    "Multimapping reads were not assigned to genes by featureCounts",
+    "Mass was recorded before dissection and is not a fat-body-specific trait",
+    "This is the average response across diets",
+    "DEG-count differences are not formal interaction tests",
+    "Interaction coefficients test response modification directly",
+    "The significant deviation is weak in effect size",
+    "Taxonomic assignment from RNA-seq is not a microbiome assay",
+    "Non-host reads can reflect several biological and technical sources",
+    "Cross-study overlap is descriptive and cannot prove phase transition"
+  )
+)
+write.csv(paper_summary, file.path(out_dir, "paper_statistical_results_summary.csv"),
+          row.names = FALSE)
+pretty_table(paper_summary, "Statistical statements and their interpretation limits")
+```
+
+## Reproducibility notes
+
+- All DESeq2 pages retain full gene-level tables, including non-significant
+  genes, so thresholds and rankings can be audited without reconstructing the
+  model from a figure.
+- Each contrast receives its own Benjamini-Hochberg correction. Adjusted P
+  values should not be compared as if they arose from one combined family of
+  tests across all contrasts.
+- The exon-only branch is a sensitivity analysis with the same sample cohort,
+  placement rule, rRNA exclusion, filters, models, and DEG thresholds.
+- PCA, heatmaps, Venn diagrams, and curated biological themes help explain the
+  data but do not replace the corresponding model tests.
+
+```{r session-info}
+writeLines(capture.output(sessionInfo()), file.path(out_dir, "sessionInfo.txt"))
+sessionInfo()
+```

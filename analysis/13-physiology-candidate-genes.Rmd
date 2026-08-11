@@ -12,6 +12,7 @@ params:
   all_results_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
+  curated_candidate_file: "data/external/curated_target_genes/2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx"
   latest_results_root: "output/rmd_runs"
   alpha: 0.05
   lfc_threshold: 1
@@ -20,20 +21,21 @@ params:
 
 ## Purpose
 
-This page tests the biological hypothesis in a targeted way using the 44-sample analysis cohort.
-Instead of starting
-from broad GO or KEGG enrichment labels, it searches the eggNOG annotation for
-genes plausibly involved in insect-relevant immune and fat-body processes. The
-same summaries are shown for the all-scaffold and placed-chromosome gene
-universes so the effect of assembly placement remains visible.
+This page tests the biological hypothesis in a targeted way using the 44-sample
+analysis cohort. The primary set contains 115 genes labelled **Manual curation
+candidate** for immune and protein-anabolism functions. A second, explicitly
+labelled tier adds **eggNOG-supported candidate** genes that are absent from the manual set but
+have relevant eggNOG descriptions, GO terms, KEGG annotations, or PFAM domains.
+The exact supporting annotation and matched rule are retained for every
+eggNOG-supported assignment.
 
 1. Protein and amino-acid availability that could affect fungal growth.
 2. Energy stores and starvation resistance in the locust fat body.
 3. Immune and stress responses during infection.
 
-This is a candidate-gene screen, not a formal enrichment test. It is designed to
-produce an interpretable gene list that can be checked manually and refined as
-we agree on more insect-specific marker genes.
+This is a candidate-gene screen, not a formal enrichment test. Darker candidate
+marks denote manual curation candidates and lighter marks denote
+eggNOG-supported candidates.
 
 ::: {.walkthrough-grid}
 ::: {.walkthrough-step}
@@ -58,7 +60,8 @@ Compare how diet changes the infection response within each physiological theme.
 ```{r setup}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
-required <- c("dplyr", "tidyr", "stringr", "ggplot2", "forcats", "DT")
+required <- c("dplyr", "tidyr", "stringr", "ggplot2", "forcats", "DT",
+              "readxl")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop("Install required packages before knitting: ", paste(missing, collapse = ", "))
@@ -73,6 +76,7 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 counts_file <- file.path(project_dir, params$counts_file)
 eggnog_file <- file.path(project_dir, params$eggnog_file)
 gff_file <- file.path(project_dir, params$gff_file)
+curated_candidate_file <- file.path(project_dir, params$curated_candidate_file)
 results_root <- file.path(project_dir, params$latest_results_root)
 
 theme_colors <- c(
@@ -86,23 +90,34 @@ direction_colors <- c("Upregulated" = "#E41A1C",
 
 ## Candidate terms
 
-These keyword groups deliberately favor insect physiology terms and fat-body
-functions over broad pathway labels. The matched word is retained for each gene
-so the screen remains auditable.
+These rules are used only to identify the **eggNOG-supported candidate** tier.
+They do not alter membership in the 115-gene manual curation set. The matched
+rule and exact eggNOG fields are retained for every eggNOG-supported gene.
 
 ```{r candidate-keywords}
 candidate_terms <- tibble::tribble(
   ~theme, ~term_group, ~pattern,
-  "Protein and amino-acid availability", "Storage proteins", "storage protein|hexamerin|arylphorin|vitellogenin|yolk protein",
-  "Protein and amino-acid availability", "Proteolysis", "protease|peptidase|trypsin|cathepsin|carboxypeptidase|metalloprotease|serine protease",
-  "Protein and amino-acid availability", "Amino-acid transport/metabolism", "amino acid|amino-acid|peptide transport|solute carrier|transaminase|aminotransferase",
-  "Energy stores and starvation resistance", "Lipid transport/storage", "lipophorin|apolipophorin|lipid|fatty acid|triacylglycerol|triglyceride|acyl-coa|beta-oxidation|lipase",
-  "Energy stores and starvation resistance", "Carbohydrate stores", "glycogen|trehalose|trehalase|glucose|glycolysis|gluconeogenesis|pentose phosphate|citrate cycle|tca cycle",
-  "Energy stores and starvation resistance", "Endocrine nutrition", "insulin|insulin-like|adipokinetic|juvenile hormone|tor signaling|target of rapamycin",
-  "Immune and stress response", "Pattern recognition", "peptidoglycan recognition|pgrp|gram-negative binding|gnbp|beta-1,3-glucan|lectin|fibrinogen|scavenger receptor",
-  "Immune and stress response", "Toll/IMD/JAK-STAT", "toll|imd|relish|cactus|jak|stat|dorsal|myd88|tube|pell[e]?",
-  "Immune and stress response", "Effector and melanization", "defensin|cecropin|attacin|gloverin|lysozyme|antimicrobial|phenoloxidase|prophenoloxidase|melanization|serpin|clip-domain",
-  "Immune and stress response", "Stress/detoxification", "heat shock|glutathione|peroxidase|cytochrome p450|detoxification|oxidative stress|reactive oxygen|autophagy|thioester"
+  "Immune pathways", "Recognition, signalling, and effectors", paste0(
+    "antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|lysozyme|",
+    "toll|imd|relish|myd88|cactus|dorsal|jak|stat|immune|peptidoglycan|",
+    "pgrp|gram-negative|beta-1,3-glucan|glucan binding|phenoloxidase|",
+    "prophenoloxidase|melanization|lectin|serpin"
+  ),
+  "Protein storage and synthesis", "Protein and amino-acid functions", paste0(
+    "protein synthesis|translation|ribosom|elongation factor|initiation factor|",
+    "aminoacyl|trna synthetase|vitellogenin|hexamerin|arylphorin|storage protein"
+  ),
+  "Carbohydrate storage and metabolism", "Carbohydrate storage", "glycogen|glycogenin|branching enzyme|starch",
+  "Lipid metabolism", "Lipid synthesis, transport, and storage", paste0(
+    "lipid|fatty acid|fatty-acid|acyl-coa|acyl coa|acetyl-coa carboxylase|",
+    "elongase|desaturase|glycerolipid|phospholipid|triacylglycerol|",
+    "diacylglycerol|sterol|lipase"
+  ),
+  "Detoxification and stress response", "Detoxification and stress", paste0(
+    "detox|cytochrome p450|glutathione|gst|carboxylesterase|esterase|",
+    "udp-glucuronosyltransferase|abc transporter|oxidoreductase|peroxidase|",
+    "catalase|superoxide|heat shock|stress"
+  )
 )
 
 knitr::kable(candidate_terms, caption = "Candidate keyword rules")
@@ -172,32 +187,124 @@ candidate_hits <- dplyr::bind_rows(lapply(seq_len(nrow(candidate_terms)), functi
   annotation[hit, ] |>
     dplyr::transmute(
       gene_id, Preferred_name, Description, PFAMs,
+      GOs, KEGG_ko, KEGG_Pathway,
       theme = term$theme,
       term_group = term$term_group,
-      matched_pattern = term$pattern
+      matched_pattern = term$pattern,
+      matched_keyword = stringr::str_extract(
+        stringr::str_to_lower(annotation_text),
+        stringr::regex(term$pattern, ignore_case = TRUE)
+      )
     )
 })) |>
   dplyr::distinct()
 
-candidate_gene_summary <- candidate_hits |>
-  dplyr::group_by(gene_id, Preferred_name, Description) |>
+curated_candidates <- dplyr::bind_rows(
+  readxl::read_excel(curated_candidate_file, sheet = "Immune"),
+  readxl::read_excel(curated_candidate_file, sheet = "Protein-Anabolism")
+) |>
+  dplyr::transmute(
+    gene_id = trimws(as.character(`Gene ID`)),
+    curated_description = trimws(as.character(`Gene Description`)),
+    curated_umbrella = trimws(as.character(`Umbrella Category`)),
+    curated_subcategory = trimws(as.character(`Sub-Category`)),
+    physiology_theme = dplyr::case_when(
+      stringr::str_detect(
+        curated_umbrella,
+        "Immune|Humoral|Cellular"
+      ) ~ "Immune pathways",
+      stringr::str_detect(
+        curated_umbrella,
+        "Nitrogen|Protein Synthesis|Storage Hexamerins"
+      ) ~ "Protein storage and synthesis",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  dplyr::filter(stringr::str_starts(gene_id, "LOC")) |>
+  dplyr::distinct(gene_id, .keep_all = TRUE)
+
+if (nrow(curated_candidates) != 115) {
+  stop("Expected 115 unique genes in the manual candidate workbook; found ",
+       nrow(curated_candidates), ".")
+}
+
+additional_candidate_summary <- candidate_hits |>
+  dplyr::filter(!gene_id %in% curated_candidates$gene_id) |>
+  dplyr::group_by(
+    gene_id, Preferred_name, Description, GOs, KEGG_ko,
+    KEGG_Pathway, PFAMs, theme
+  ) |>
   dplyr::summarise(
-    themes = paste(sort(unique(theme)), collapse = "; "),
     term_groups = paste(sort(unique(term_group)), collapse = "; "),
     matched_patterns = paste(sort(unique(matched_pattern)), collapse = "; "),
+    matched_keywords = paste(sort(unique(matched_keyword)), collapse = "; "),
     .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    evidence_tier = "eggNOG-supported candidate",
+    candidate_reason = paste0(
+      "eggNOG-supported candidate: ", theme,
+      "; matched keyword(s): ", matched_keywords
+    )
+  )
+
+candidate_gene_summary <- dplyr::bind_rows(
+  curated_candidates |>
+    dplyr::transmute(
+      gene_id,
+      Preferred_name = NA_character_,
+      Description = curated_description,
+      GOs = NA_character_,
+      KEGG_ko = NA_character_,
+      KEGG_Pathway = NA_character_,
+      PFAMs = NA_character_,
+      physiology_theme,
+      evidence_tier = "Manual curation candidate",
+      curated_umbrella,
+      curated_subcategory,
+      matched_keywords = NA_character_,
+      candidate_reason = paste0(
+        "Manual curation candidate: ", curated_umbrella,
+        " / ", curated_subcategory
+      )
+    ),
+  additional_candidate_summary |>
+    dplyr::transmute(
+      gene_id, Preferred_name, Description, GOs, KEGG_ko,
+      KEGG_Pathway, PFAMs,
+      physiology_theme = theme,
+      evidence_tier,
+      curated_umbrella = NA_character_,
+      curated_subcategory = NA_character_,
+      matched_keywords,
+      candidate_reason
+    )
+  ) |>
+  dplyr::mutate(
+    evidence_tier = factor(
+      evidence_tier,
+      levels = c("Manual curation candidate", "eggNOG-supported candidate")
+    )
   )
 
 write.csv(candidate_hits, file.path(out_dir, "candidate_keyword_hits_long.csv"),
           row.names = FALSE)
 write.csv(candidate_gene_summary,
-          file.path(out_dir, "candidate_gene_annotation_summary.csv"),
+          file.path(out_dir, "physiological_candidate_evidence_master.csv"),
           row.names = FALSE)
 
 knitr::kable(
-  candidate_hits |>
-    dplyr::count(theme, term_group, name = "n_candidate_genes"),
-  caption = "Candidate genes detected by keyword group"
+  dplyr::bind_rows(
+    curated_candidates |>
+      dplyr::count(physiology_theme, name = "n_candidate_genes") |>
+      dplyr::mutate(evidence_tier = "Manual curation candidate"),
+    additional_candidate_summary |>
+      dplyr::count(theme, name = "n_candidate_genes") |>
+      dplyr::rename(physiology_theme = theme) |>
+      dplyr::mutate(evidence_tier = "eggNOG-supported candidate")
+  ) |>
+    dplyr::select(evidence_tier, physiology_theme, n_candidate_genes),
+  caption = "Candidate genes by evidence tier and physiological category"
 )
 ```
 
@@ -247,57 +354,25 @@ knitr::kable(
 )
 ```
 
-## Four physiology themes
+## Evidence-tiered physiological candidates
 
-These four themes reflect the current biological hypotheses for fat body:
-immune pathways, protein storage and synthesis, lipid metabolism, and
-detoxification. Classification is based on local GFF/eggNOG description and
-domain text and is therefore a transparent candidate screen rather than a
-formal ontology.
+The 115 manual curation candidates define the primary immune and
+protein-anabolism set. The eggNOG-supported candidate tier extends those
+hypotheses to carbohydrate, lipid, detoxification, and additional immune or
+protein genes. Only the eggNOG-supported tier is generated by annotation rules.
 
 ```{r four-theme-candidate-screen}
-classify_physiology_theme <- function(x) {
-  x <- stringr::str_to_lower(dplyr::coalesce(x, ""))
-  dplyr::case_when(
-    stringr::str_detect(x, paste(
-      "antimicrobial|defensin|attacin|cecropin|diptericin|gloverin|lysozyme|",
-      "toll|imd|relish|myd88|cactus|dorsal|jak|stat|immune|peptidoglycan|",
-      "pgrp|glucan|phenoloxidase|melanization|lectin|serpin", sep = ""
-    )) ~ "Immune pathway",
-    stringr::str_detect(x, paste(
-      "protein synthesis|translation|ribosom|elongation factor|initiation factor|",
-      "aminoacyl|trna synthetase|vitellogenin|hexamerin|arylphorin|storage protein",
-      sep = ""
-    )) ~ "Protein storage and synthesis",
-    stringr::str_detect(x, paste(
-      "lipid|fatty acid|acyl-coa|acetyl-coa carboxylase|elongase|desaturase|",
-      "glycerolipid|phospholipid|triacylglycerol|sterol|lipase", sep = ""
-    )) ~ "Lipid metabolism",
-    stringr::str_detect(x, paste(
-      "detox|cytochrome p450|glutathione|carboxylesterase|esterase|",
-      "udp-glucuronosyltransferase|abc transporter|oxidoreductase|peroxidase|",
-      "catalase|superoxide|heat shock|stress", sep = ""
-    )) ~ "Detoxification",
-    TRUE ~ NA_character_
-  )
-}
-
-physiology_annotation <- annotation |>
-  dplyr::transmute(
-    gene_id,
-    Description,
-    Preferred_name,
-    PFAMs,
-    annotation_text,
-    physiology_theme = classify_physiology_theme(annotation_text)
-  ) |>
-  dplyr::filter(!is.na(physiology_theme))
-
 theme_levels <- c(
-  "Immune pathway", "Protein storage and synthesis",
-  "Lipid metabolism", "Detoxification"
+  "Immune pathways", "Protein storage and synthesis",
+  "Carbohydrate storage and metabolism", "Lipid metabolism",
+  "Detoxification and stress response"
 )
 scope_levels <- c("All scaffolds", "Placed chromosomes")
+evidence_levels <- c("Manual curation candidate", "eggNOG-supported candidate")
+evidence_alpha <- c(
+  "Manual curation candidate" = 1,
+  "eggNOG-supported candidate" = 0.42
+)
 response_colors <- c(
   "Higher in infected" = "#B91C1C",
   "Higher in control" = "#1D4ED8"
@@ -308,23 +383,27 @@ candidate_degs <- deg_results |>
     contrast_id %in% paste0("infection_diet", c("33", "50", "83")),
     significant
   ) |>
-  dplyr::left_join(physiology_annotation, by = "gene_id") |>
-  dplyr::filter(!is.na(physiology_theme)) |>
+  dplyr::left_join(candidate_gene_summary, by = "gene_id") |>
+  dplyr::filter(!is.na(evidence_tier), !is.na(physiology_theme)) |>
   dplyr::mutate(
     diet = stringr::str_extract(contrast_id, "[0-9]+$"),
     direction = ifelse(log2FoldChange > 0,
                        "Higher in infected", "Higher in control"),
     physiology_theme = factor(physiology_theme, levels = theme_levels),
-    analysis_scope = factor(analysis_scope, levels = scope_levels)
+    analysis_scope = factor(analysis_scope, levels = scope_levels),
+    evidence_tier = factor(evidence_tier, levels = evidence_levels)
   )
 
 candidate_counts <- candidate_degs |>
-  dplyr::distinct(analysis_scope, physiology_theme, diet, direction, gene_id) |>
-  dplyr::count(analysis_scope, physiology_theme, diet, direction,
+  dplyr::distinct(
+    analysis_scope, physiology_theme, evidence_tier, diet, direction, gene_id
+  ) |>
+  dplyr::count(analysis_scope, physiology_theme, evidence_tier, diet, direction,
                name = "n_candidate_degs") |>
   tidyr::complete(
     analysis_scope = factor(scope_levels, levels = scope_levels),
     physiology_theme = factor(theme_levels, levels = theme_levels),
+    evidence_tier = factor(evidence_levels, levels = evidence_levels),
     diet = c("33", "50", "83"),
     direction = c("Higher in infected", "Higher in control"),
     fill = list(n_candidate_degs = 0)
@@ -336,6 +415,24 @@ write.csv(candidate_degs,
 write.csv(candidate_counts,
           file.path(out_dir, "physiology_candidate_counts_both_scopes.csv"),
           row.names = FALSE)
+
+additional_deg_ids <- candidate_degs |>
+  dplyr::filter(evidence_tier == "eggNOG-supported candidate") |>
+  dplyr::pull(gene_id) |>
+  unique()
+
+paper_candidate_master <- candidate_gene_summary |>
+  dplyr::filter(
+    evidence_tier == "Manual curation candidate" |
+      gene_id %in% additional_deg_ids
+  ) |>
+  dplyr::arrange(evidence_tier, physiology_theme, gene_id)
+
+write.csv(
+  paper_candidate_master,
+  file.path(out_dir, "paper_physiological_candidate_master.csv"),
+  row.names = FALSE
+)
 ```
 
 ## Diet-specific infection-response barplots
@@ -343,26 +440,32 @@ write.csv(candidate_counts,
 ```{r physiology-response-barplots, fig.width=16, fig.height=10}
 p_candidate <- ggplot2::ggplot(
   candidate_counts,
-  ggplot2::aes(x = diet, y = n_candidate_degs, fill = direction)
+  ggplot2::aes(
+    x = diet, y = n_candidate_degs, fill = direction,
+    alpha = evidence_tier,
+    group = interaction(direction, evidence_tier)
+  )
 ) +
   ggplot2::geom_col(
-    position = ggplot2::position_dodge(width = 0.74),
+    position = ggplot2::position_dodge2(width = 0.82, preserve = "single"),
     width = 0.64,
     color = "white"
   ) +
   ggplot2::geom_text(
     ggplot2::aes(label = ifelse(n_candidate_degs > 0, n_candidate_degs, "")),
-    position = ggplot2::position_dodge(width = 0.74),
+    position = ggplot2::position_dodge2(width = 0.82, preserve = "single"),
     vjust = -0.25,
     size = 4.2
   ) +
   ggplot2::facet_grid(analysis_scope ~ physiology_theme, scales = "free_y") +
   ggplot2::scale_fill_manual(values = response_colors) +
+  ggplot2::scale_alpha_manual(values = evidence_alpha, drop = FALSE) +
   ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.15))) +
   ggplot2::labs(
-    title = "Diet-specific infection-response DEGs in four physiology themes",
+    title = "Diet-specific infection-response DEGs in physiological candidate sets",
     subtitle = "The 44-sample analysis cohort retained; panels differ only in the tested gene universe",
-    x = "Diet", y = "Number of candidate DEGs", fill = NULL
+    x = "Diet", y = "Number of candidate DEGs", fill = NULL,
+    alpha = "Candidate evidence"
   ) +
   ggplot2::theme_bw(base_size = 14) +
   ggplot2::theme(
@@ -400,16 +503,25 @@ diet_50_83 <- candidate_counts |>
 
 p_delta <- ggplot2::ggplot(
   diet_50_83,
-  ggplot2::aes(x = physiology_theme, y = diet50_minus_diet83, fill = direction)
+  ggplot2::aes(
+    x = physiology_theme, y = diet50_minus_diet83, fill = direction,
+    alpha = evidence_tier,
+    group = interaction(direction, evidence_tier)
+  )
 ) +
   ggplot2::geom_hline(yintercept = 0, color = "#374151", linewidth = 0.7) +
-  ggplot2::geom_col(position = "dodge", width = 0.68) +
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge2(width = 0.82, preserve = "single"),
+    width = 0.68
+  ) +
   ggplot2::facet_wrap(~ analysis_scope, ncol = 1) +
   ggplot2::scale_fill_manual(values = response_colors) +
+  ggplot2::scale_alpha_manual(values = evidence_alpha, drop = FALSE) +
   ggplot2::labs(
     title = "Difference in infection-response DEG counts: diet 50 minus diet 83",
     subtitle = "Positive bars indicate more candidate DEGs in diet 50; negative bars indicate more in diet 83",
-    x = NULL, y = "Difference in DEG count", fill = NULL
+    x = NULL, y = "Difference in DEG count", fill = NULL,
+    alpha = "Candidate evidence"
   ) +
   ggplot2::theme_bw(base_size = 14) +
   ggplot2::theme(
@@ -437,7 +549,9 @@ DT::datatable(
   candidate_degs |>
     dplyr::select(
       analysis_scope, physiology_theme, diet, direction, gene_id,
-      Description, log2FoldChange, padj
+      evidence_tier, candidate_reason, Description, Preferred_name,
+      matched_keywords, GOs, KEGG_ko, KEGG_Pathway, PFAMs,
+      log2FoldChange, padj
     ) |>
     dplyr::arrange(analysis_scope, physiology_theme, diet, padj),
   rownames = FALSE,

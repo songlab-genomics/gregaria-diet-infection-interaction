@@ -2342,10 +2342,12 @@ knitr::kable(
 ## Figure S2: non-host taxonomic profiles
 
 Figure S2 summarizes Kraken2/Bracken family assignments among reads that did
-not align to the host-only reference. Metazoan and plant families are excluded
-from the display. Panels A and B show absolute Bracken-estimated family reads
-and their relative composition; panel C shows Bray-Curtis ordination. This is
-supporting metatranscriptomic evidence rather than a dedicated microbiome assay.
+not align to the host-only reference. Metazoan and plant families are excluded;
+the retained profiles comprise fungi, bacteria, archaea, viruses, and other
+microbial eukaryotes. Panels A and B show absolute Bracken-estimated reads and
+their relative composition among retained non-host taxonomic families; panel C
+shows Bray-Curtis ordination. This is supporting metatranscriptomic evidence
+rather than a dedicated microbiome assay.
 
 ```{r figure-s2-bracken, echo=FALSE, out.width="96%"}
 taxonomy_dir <- latest_dir("^metarhizium-read-burden_")

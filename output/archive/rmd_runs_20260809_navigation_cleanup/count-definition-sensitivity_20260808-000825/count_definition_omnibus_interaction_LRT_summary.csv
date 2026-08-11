@@ -1,5 +1,0 @@
-"counting_mode","sequence_scope","genes_entering_model","omnibus_FDR_lt_0_05","omnibus_FDR_and_max_abs_pairwise_log2FC_ge_1"
-"Exon only","Main chromosomes",11140,0,0
-"Exon only","All scaffolds",13884,0,NA
-"Transcript + exon","Main chromosomes",14132,9,9
-"Transcript + exon","All scaffolds",16896,2,NA

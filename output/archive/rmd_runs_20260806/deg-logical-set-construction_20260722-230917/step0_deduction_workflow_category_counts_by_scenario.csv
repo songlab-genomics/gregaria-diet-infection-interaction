@@ -1,9 +1,0 @@
-"scenario","logical_set","n_genes"
-"All samples","DEG tissues",7273
-"All samples","DEG phase changes",1449
-"All samples","DEG Diet (controls)",79
-"All samples","DEG infection x diet",1731
-"Current outliers removed","DEG tissues",7273
-"Current outliers removed","DEG phase changes",1449
-"Current outliers removed","DEG Diet (controls)",113
-"Current outliers removed","DEG infection x diet",3311

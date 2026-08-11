@@ -112,6 +112,11 @@ and remove annotated rRNA loci.
     <strong>Fat Body Count QC</strong>
     <p>Check library sizes, PCA structure, sample distances, and broad expression quality.</p>
   </a>
+  <a class="analysis-tile" href="47-paper-statistical-reference.html">
+    <span>Step 4</span>
+    <strong>Statistical Analysis Reference</strong>
+    <p>Trace each paper result from its model code to its reported evidence and interpretation.</p>
+  </a>
 </div>
 
 ## Choose The Count Definition
@@ -231,7 +236,3 @@ and remove annotated rRNA loci.
     <figcaption>Expression clusters</figcaption>
   </figure>
 </div>
-
-The [archive](archive.html) preserves outlier-removal and superseded exploratory
-pages as provenance. They remain traceable but are no longer presented as
-current alternatives to the all-sample analysis.

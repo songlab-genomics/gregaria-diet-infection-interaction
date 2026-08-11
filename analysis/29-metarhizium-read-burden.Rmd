@@ -36,7 +36,7 @@ Use fungal RNA as supporting infection evidence, not as a direct biomass measure
 ::: {.walkthrough-step}
 **Step 4 - Compare non-host composition**
 
-Use Kraken2 and Bracken to test whether microbial family profiles differ among diets or treatments.
+Use Kraken2 and Bracken to test whether retained non-host taxonomic family profiles differ among diets or treatments.
 :::
 :::
 
@@ -827,10 +827,11 @@ These profiles should not be described automatically as contamination. They can
 contain the challenge fungus, environmental or diet-associated organisms,
 reagent background, and taxonomic assignments caused by incomplete reference
 databases. Metazoan and plant families are therefore excluded from the
-microbial-composition display, including host-like assignments such as
-Hominidae. Relative abundance is calculated among Bracken-estimated reads
-assigned to the retained microbial families, not as a percentage of the entire
-RNA-seq library.
+composition display, including host-like assignments such as Hominidae. The
+retained profiles comprise fungi, bacteria, archaea, viruses, and other
+microbial eukaryotes. Relative abundance is calculated among Bracken-estimated
+reads assigned to these retained non-host taxonomic families, not as a
+percentage of the entire RNA-seq library.
 
 ```{r bracken-family-composition-prepare}
 read_kraken_family_lineages <- function(path) {
@@ -1062,11 +1063,14 @@ family_absolute_plot <- ggplot2::ggplot(
     expand = ggplot2::expansion(mult = c(0, 0.05))
   ) +
   ggplot2::labs(
-    title = "A. Bracken-estimated microbial family reads",
-    subtitle = "Host-unmapped reads; metazoan and plant families excluded",
+    title = "A. Bracken-estimated non-host family reads",
+    subtitle = paste(
+      "Host-unmapped reads; fungi, bacteria, archaea, viruses, and other",
+      "microbial eukaryotes retained"
+    ),
     x = NULL,
     y = "Estimated family-assigned reads",
-    fill = "Microbial family"
+    fill = "Taxonomic family"
   ) +
   ggplot2::theme_bw(base_size = 13) +
   ggplot2::theme(
@@ -1093,11 +1097,11 @@ family_relative_plot <- ggplot2::ggplot(
     expand = c(0, 0)
   ) +
   ggplot2::labs(
-    title = "B. Relative microbial family composition",
-    subtitle = "Percentage of retained Bracken-estimated microbial family reads",
+    title = "B. Relative non-host family composition",
+    subtitle = "Percentage of retained Bracken-estimated non-host family reads",
     x = NULL,
     y = "Relative abundance",
-    fill = "Microbial family"
+    fill = "Taxonomic family"
   ) +
   ggplot2::theme_bw(base_size = 13) +
   ggplot2::theme(
@@ -1161,7 +1165,7 @@ family_pcoa_plot <- ggplot2::ggplot(
   ) +
   ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
   ggplot2::labs(
-    title = "C. Bray-Curtis ordination of microbial family profiles",
+    title = "C. Bray-Curtis ordination of non-host family profiles",
     subtitle = "Open points are diet-by-treatment centroids; lines connect control and infected centroids",
     x = paste0("PCoA1 (", round(family_pcoa_variance[[1]], 1), "%)"),
     y = paste0("PCoA2 (", round(family_pcoa_variance[[2]], 1), "%)"),
@@ -1315,7 +1319,7 @@ family_pcoa_plot_large <- ggplot2::ggplot(
   ) +
   ggplot2::scale_shape_manual(values = c(Control = 16, Infected = 17)) +
   ggplot2::labs(
-    title = "C. Bray-Curtis ordination of microbial family profiles",
+    title = "C. Bray-Curtis ordination of non-host family profiles",
     subtitle = NULL,
     x = paste0("PCoA1 (", round(family_pcoa_variance[[1]], 1), "%)"),
     y = paste0("PCoA2 (", round(family_pcoa_variance[[2]], 1), "%)"),
