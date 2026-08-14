@@ -1,9 +1,9 @@
-name: Deploy workflowR site
+name: Manual fallback - deploy workflowR site
 
+# The repository normally publishes the committed docs/ folder through
+# Settings > Pages > Deploy from a branch. Run this workflow only after
+# intentionally changing the Pages source to GitHub Actions.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:

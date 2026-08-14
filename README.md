@@ -28,3 +28,12 @@ The R Markdown pages keep project-relative paths such as
 `data/reference/...` and `output/rmd_runs/...`. The setup script links those
 paths to the external data package, so the analysis code remains portable and
 does not depend on files committed to GitHub.
+
+## GitHub Pages deployment
+
+The rendered workflowR website is committed under `docs/`. In the repository
+Pages settings, use **Deploy from a branch**, with branch `main` and folder
+`/docs`. The included Pages workflow is retained as a manual fallback only; use
+it only after intentionally changing the repository Pages source to
+**GitHub Actions**. Keeping both deployment modes active on every push can
+create competing Pages deployments.
