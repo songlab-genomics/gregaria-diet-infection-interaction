@@ -60,6 +60,9 @@ competing primary analysis.
 <img src="figure/16-all-samples-infection-within-diet-deg.Rmd/vst-pca-centroids-1.png" alt="Main-chromosome fat body VST PCA with condition centroids">
 </div>
 </div>
+<div class="study-design-banner">
+<img src="assets/home/experimental-design-overview.png" alt="Experimental design showing crowded-reared desert locusts assigned to control or Metarhizium infection across three artificial diets">
+</div>
 ')
 ```
 
