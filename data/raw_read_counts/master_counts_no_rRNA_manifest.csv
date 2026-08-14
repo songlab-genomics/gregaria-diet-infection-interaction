@@ -1,2 +1,0 @@
-"input_counts","rrna_list","output_counts","total_genes","rrna_ids_in_list","rrna_ids_found_in_counts","retained_genes","missing_list_ids","created_at"
-"data/raw_read_counts/master_counts.csv","data/excluded_loci/gregaria_rrna_list.txt","data/raw_read_counts/master_counts_no_rRNA.csv",35681,12402,12402,23279,0,"2026-07-03 22:32:25.882326"

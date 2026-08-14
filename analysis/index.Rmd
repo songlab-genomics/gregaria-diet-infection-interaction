@@ -47,8 +47,8 @@ mapping-QC outlier 1044, and presents two parallel count definitions for the
 same experiment. Within each, the all-scaffold view
 preserves the complete host-reference signal and the placed-chromosome view
 provides the conservative foreground used for publication. Outlier-removal
-analyses are archived as sensitivity checks rather than treated as competing
-results.
+is retained only as a focused sensitivity check rather than treated as a
+competing primary analysis.
 </p>
 <div class="hero-actions">
 <a href="04-deseq2-interaction-model.html">Transcript + exon</a>
@@ -91,6 +91,21 @@ consistently through DEG testing, overlap, catalogue, enrichment, and figures.
 Page labels state whether a result uses all scaffolds or placed chromosomes.
 Both count definitions retain every sample in the 44-library analysis cohort
 and remove annotated rRNA loci.
+</p>
+</div>
+
+## Data Availability And Local Setup
+
+<div class="note-panel">
+<p>
+GitHub contains the runnable R Markdown workflow, small design files, and the
+rendered website. Large count matrices, annotations, complete result tables,
+and HPC audit products are kept in the associated Dryad package. On the project
+computer, that package is located at
+<code>/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad</code>.
+Run <code>bash scripts/setup_dryad_links.sh</code> after cloning the repository
+or downloading the data package. The analysis pages then continue to use their
+documented project-relative paths.
 </p>
 </div>
 

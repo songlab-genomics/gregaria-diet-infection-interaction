@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-10" />
+<meta name="date" content="2026-08-14" />
 
 <title>Workflow and reproducibility</title>
 
@@ -597,7 +597,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Workflow and reproducibility</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-10</h4>
+<h4 class="date">2026-08-14</h4>
 
 </div>
 
@@ -605,7 +605,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -616,8 +616,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -626,13 +626,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-10
+<strong>Last updated:</strong> 2026-08-14
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -656,18 +656,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -758,15 +761,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1bc8d166405df6f90165fee7c5837d90cf48dd38targetblank1bc8d16a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1bc8d166405df6f90165fee7c5837d90cf48dd38" target="_blank">1bc8d16</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree1bc8d166405df6f90165fee7c5837d90cf48dd38targetblank1bc8d16a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -776,7 +779,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/1bc8d166405df6f90165fee7c5837d90cf48dd38" target="_blank">1bc8d16</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -797,27 +800,248 @@ Ignored files:
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
     Ignored:    data/.DS_Store
-    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
-    Ignored:    data/reference/
-    Ignored:    manuscript/revisions/.DS_Store
+    Ignored:    data/GO_Annotations
+    Ignored:    data/external
+    Ignored:    data/legacy_csv
+    Ignored:    data/raw_read_counts
+    Ignored:    data/reference
+    Ignored:    data/scaffold_origin
     Ignored:    output/.DS_Store
-    Ignored:    output/archive/rmd_runs_20260809_navigation_cleanup/curated-target-gene-figure_20260808-001351/
-    Ignored:    output/rmd_runs/
-    Ignored:    output/runs/
-    Ignored:    outputs/.DS_Store
+    Ignored:    output/rmd_runs
+    Ignored:    output/runs
+    Ignored:    outputs
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
+    Ignored:    scripts/__pycache__/
     Ignored:    scripts/manuscript/__pycache__/
 
 Untracked files:
-    Untracked:  manuscript/revisions/20260810_methods_results_latest_analysis_audit/
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-020715/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-022116/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/placed-unplaced-scaffold-analysis_20260806-010555/placed_unplaced_all_deseq2_results.csv
-    Untracked:  scripts/manuscript/build_methods_results_audit_20260810.py
+    Untracked:  DRYAD_PACKAGE.md
+    Untracked:  scripts/build_dryad_manifest.sh
+    Untracked:  scripts/migrate_large_data_to_dryad.sh
+    Untracked:  scripts/setup_dryad_links.sh
 
 Unstaged changes:
-    Modified:   analysis/03-count-qc-exploration.Rmd
+    Modified:   .gitignore
+    Modified:   README.md
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/index.Rmd
+    Deleted:    data/GO_Annotations/DesertLocustR/DESCRIPTION
+    Deleted:    data/GO_Annotations/DesertLocustR/NAMESPACE
+    Deleted:    data/GO_Annotations/DesertLocustR/R/GO_enrichment.R
+    Deleted:    data/GO_Annotations/DesertLocustR/R/KEGG_enrichment.R
+    Deleted:    data/GO_Annotations/DesertLocustR/R/install_depedencies.R
+    Deleted:    data/GO_Annotations/DesertLocustR/R/prep_data.R
+    Deleted:    data/GO_Annotations/DesertLocustR/man/GO_enrichment.Rd
+    Deleted:    data/GO_Annotations/DesertLocustR/man/KEGG_enrichment.Rd
+    Deleted:    data/GO_Annotations/DesertLocustR/man/lift_annotaitons.Rd
+    Deleted:    data/GO_Annotations/DesertLocustR_0.1.0.tar.gz
+    Deleted:    data/GO_Annotations/EggNog_Arthropoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations
+    Deleted:    data/GO_Annotations/blast2go_gregaria.annot
+    Deleted:    data/GO_Annotations/blast2go_gregaria.annot.mgp_removed
+    Deleted:    data/GO_Annotations/blast2go_gregaria.txt
+    Deleted:    data/GO_Annotations/blast2go_gregaria_custom.txt
+    Modified:   data/README.md
+    Deleted:    data/external/curated_target_genes/2026-07-26_curated-hypoth_DEGs_v14.xlsx
+    Deleted:    data/external/curated_target_genes/2026-08-06_curated-hypoth_DEGs_v21.xlsx
+    Deleted:    data/external/curated_target_genes/2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx
+    Deleted:    data/external/curated_target_genes/CuratedDEGs_CompositeFig_v03.pdf
+    Deleted:    data/external/curated_target_genes/README.md
+    Deleted:    data/external/curated_target_genes/hypoth-curated_DEGs_figures.docx
+    Deleted:    data/external/phase_reference/DESeq2_results_sva_Head_gregaria_togregaria.csv
+    Deleted:    data/external/phase_reference/DESeq2_results_sva_Thorax_gregaria_togregaria.csv
+    Deleted:    data/external/phase_reference/DESeq2_sigresults_sva_Head_gregaria_togregaria.csv
+    Deleted:    data/external/phase_reference/DESeq2_sigresults_sva_Thorax_gregaria_togregaria.csv
+    Deleted:    data/external/phase_reference/README.md
+    Deleted:    data/external/phase_reference/gregaria_head_phase_degs.csv
+    Deleted:    data/external/phase_reference/gregaria_thorax_phase_degs.csv
+    Deleted:    data/external/phase_reference/overlapping_genes_head_thorax_gregaria.csv
+    Deleted:    data/external/timecourse_fatbody_reference/README.md
+    Deleted:    data/external/timecourse_fatbody_reference/gregaria_FAT_phase_reference_metadata.csv
+    Deleted:    data/external/timecourse_fatbody_reference/readcounts/GREG_G_CCT_11_FAT_featurecounts.txt
+    Deleted:    data/external/timecourse_fatbody_reference/readcounts/GREG_S_ICT_9_FAT_featurecounts.txt
+    Deleted:    data/legacy_csv/README.md
+    Deleted:    data/legacy_csv/annotated_tables/Control_33_vs_50_Annotated_Table.csv
+    Deleted:    data/legacy_csv/annotated_tables/Control_33_vs_83_Annotated_Table.csv
+    Deleted:    data/legacy_csv/annotated_tables/Control_50_83_Combined_Annotated.csv
+    Deleted:    data/legacy_csv/annotated_tables/Control_SVA_50_83_Combined_Annotated.csv
+    Deleted:    data/legacy_csv/annotated_tables/Infected_33_vs_50_Annotated_Table.csv
+    Deleted:    data/legacy_csv/annotated_tables/Infected_33_vs_83_Annotated_Table.csv
+    Deleted:    data/legacy_csv/annotated_tables/Infected_50_83_Combined_Annotated.csv
+    Deleted:    data/legacy_csv/annotated_tables/Infected_SVA_50_83_Combined_Annotated.csv
+    Deleted:    data/legacy_csv/annotated_tables/Within_50_83_Combined_Annotated.csv
+    Deleted:    data/legacy_csv/annotated_tables/filter_table_with_rRNA.csv
+    Deleted:    data/legacy_csv/annotated_tables/filtered_table_NO_rRNA.csv
+    Deleted:    data/legacy_csv/overlap_helpers/analysis_non_overlapping_rows.csv
+    Deleted:    data/legacy_csv/overlap_helpers/common_rows.csv
+    Deleted:    data/legacy_csv/overlap_helpers/control_infection_desc_overlap.csv
+    Deleted:    data/legacy_csv/overlap_helpers/control_infection_within_desc_overlap.csv
+    Deleted:    data/legacy_csv/overlap_helpers/matched_GeneIDs_by_Description.csv
+    Deleted:    data/legacy_csv/overlap_helpers/matching_rows_with_source.csv
+    Deleted:    data/legacy_csv/overlap_helpers/non_overlapping_rows.csv
+    Deleted:    data/raw_read_counts/03-FAT-DESeq2/GREG_G_CCT_11_FAT_FULL_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-FAT-DESeq2/GREG_G_CCT_11_FAT_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-FAT-DESeq2/GREG_S_ICT_9_FAT_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-1_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-1_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-2_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-2_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-3_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-3_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-4_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-4_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-5_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-5_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-6_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-CRD-6_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-1_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-1_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-2_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-2_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-3_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-3_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-4_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-4_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-5_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-5_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-6_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-HEAD-ISO-6_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-1_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-1_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-2_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-2_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-3_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-3_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-4_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-4_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-5_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-5_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-6_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-CRD-6_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-1_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-1_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-2_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-2_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-3_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-3_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-4_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-4_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-5_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-5_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-6_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/03-gregaria-DESeq2/SGRE-THOX-ISO-6_MERGE_featurecounts.txt
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet33_vs_50_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet33_vs_50_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet33_vs_83_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet33_vs_83_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet83_vs_50_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Diet83_vs_50_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Infection_within_Diet33.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Infection_within_Diet50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Infection_within_Diet83.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Interaction_Diet33_vs_50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MA_Interaction_Diet83_vs_50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/MeanSD_vst.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/PCA.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/SampleDistance_Heatmap.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet33_vs_50_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet33_vs_50_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet33_vs_83_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet33_vs_83_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet83_vs_50_inControls.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Diet83_vs_50_within_Infected.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Infection_within_Diet33.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Infection_within_Diet50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Infection_within_Diet83.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Interaction_Diet33_vs_50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/plots/Volcano_Interaction_Diet83_vs_50.pdf
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_50_inControls.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_50_inControls_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_50_within_Infected.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_50_within_Infected_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_83_inControls.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_83_inControls_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_83_within_Infected.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet33_vs_83_within_Infected_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet83_vs_50_inControls.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet83_vs_50_inControls_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet83_vs_50_within_Infected.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Diet83_vs_50_within_Infected_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/FILTER_support_counts_ALL.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet33.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet33_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet50.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet50_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet83.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Infection_within_Diet83_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Interaction_Diet33_vs_50.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Interaction_Diet33_vs_50_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Interaction_Diet83_vs_50.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/Interaction_Diet83_vs_50_SHRUNK.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/SUMMARY_counts_SHRUNKEN_detailed.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/SUMMARY_counts_UNSHRUNKEN_detailed.csv
+    Deleted:    data/raw_read_counts/DESeq2_output/tables/resultsNames.txt
+    Deleted:    data/raw_read_counts/master_counts.csv
+    Deleted:    data/raw_read_counts/master_counts.tsv
+    Deleted:    data/raw_read_counts/master_counts_no_rRNA.csv
+    Deleted:    data/raw_read_counts/master_counts_no_rRNA.tsv
+    Deleted:    data/raw_read_counts/master_counts_no_rRNA_manifest.csv
+    Deleted:    data/raw_read_counts/master_counts_removed_rRNA_genes.csv
+    Deleted:    data/raw_read_counts/mehreen_1002_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1003_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1004_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1005_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1006_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1007_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1009_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1011_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1014_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1015_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1016_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1018_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1020_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1021_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1023_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1024_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1025_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1027_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1028_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1029_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1030_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1031_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1032_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1033_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1034_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1035_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1036_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1037_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1038_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1039_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1040_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1041_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1042_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1043_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1045_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1046_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1049_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1050_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1051_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1052_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1054_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1055_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1057_MERGE_counts.txt
+    Deleted:    data/raw_read_counts/mehreen_1058_MERGE_counts.txt
+    Deleted:    data/scaffold_origin/README.md
+    Deleted:    data/scaffold_origin/ncbi_taxonomy_lookup_20260804.tsv
+    Modified:   output/README.md
+    Deleted:    outputs/candidate_set_comparison_20260811/candidate_gene_set_overlap_audit.xlsx
+    Deleted:    outputs/figure4-curated-deg-audit-20260806/figure4_curated_DEG_audit.xlsx
+    Deleted:    outputs/figure4-curated-deg-audit-20260806/figure4_curated_DEG_audit.xlsx.inspect.ndjson
+    Deleted:    outputs/figure4-curated-deg-audit-20260806/formula_error_scan.ndjson
+    Deleted:    outputs/figure4-curated-deg-audit-20260806/workbook_check.ndjson
+    Deleted:    outputs/paper_supplementary_tables_20260811/paper_supplementary_tables_transcript_exon.xlsx
+    Deleted:    outputs/paper_supplementary_tables_20260811/staging/paper_tables.json
 
 </code></pre>
 <p>
@@ -863,6 +1087,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1bc8d166405df6f90165fee7c5837d90cf48dd38/docs/02-workflow-reproducibility.html" target="_blank">1bc8d16</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+changes layout
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/02-workflow-reproducibility.html" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+update figures
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1155,6 +1413,24 @@ excluded from biological models. The two branches differ only in which
 annotation feature types are counted, so their DEG results can be
 compared directly.</p>
 </div>
+<div id="github-and-dryad-data-boundary" class="section level2">
+<h2>GitHub and Dryad data boundary</h2>
+<p>The GitHub repository contains the R Markdown code, corrected sample
+metadata, the rRNA exclusion list, and rendered web figures. Large count
+matrices, reference and eggNOG annotations, external phase-reference
+data, complete analysis outputs, and HPC audit products are stored in
+the associated Dryad package instead of being committed to GitHub.</p>
+<p>On the project computer, the current package is located at:</p>
+<pre class="text"><code>/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad</code></pre>
+<p>The analysis pages retain readable project-relative paths. Create the
+local links once before knitting:</p>
+<pre class="bash"><code>export GREGARIA_DIET_DRYAD_DIR=/path/to/gregaria-diet-infection-interaction-dryad
+bash scripts/setup_dryad_links.sh</code></pre>
+<p>If <code>GREGARIA_DIET_DRYAD_DIR</code> is not set, the setup script
+uses the project computer’s Dropbox path shown above. No biological
+analysis is run by the setup script; it only validates the external
+package and creates links.</p>
+</div>
 <div id="repository-layout" class="section level2">
 <h2>Repository layout</h2>
 <pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
@@ -1165,16 +1441,18 @@ out_dir &lt;- file.path(project_dir, &quot;output&quot;, &quot;rmd_runs&quot;,
                      paste(params$output_tag, run_stamp, sep = &quot;_&quot;))
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)</code></pre>
 <pre class="r"><code>layout &lt;- data.frame(
-  folder = c(&quot;analysis/&quot;, &quot;data/metadata/&quot;, &quot;data/raw_read_counts/&quot;,
-             &quot;data/reference/&quot;, &quot;docs/&quot;, &quot;output/rmd_runs/&quot;, &quot;scripts/&quot;),
+  folder = c(&quot;analysis/&quot;, &quot;data/metadata/&quot;, &quot;data/excluded_loci/&quot;,
+             &quot;data/raw_read_counts/&quot;, &quot;data/reference/&quot;, &quot;docs/&quot;,
+             &quot;output/rmd_runs/&quot;, &quot;scripts/&quot;),
   role = c(
     &quot;workflowR R Markdown pages; new analysis code should live here&quot;,
     &quot;sample metadata used to align counts with biological groups&quot;,
-    &quot;raw and merged gene count tables&quot;,
-    &quot;reference annotation files&quot;,
+    &quot;rRNA identifiers removed before normalization and modeling&quot;,
+    &quot;Dryad-linked raw and merged gene count tables&quot;,
+    &quot;Dryad-linked reference annotation files&quot;,
     &quot;rendered workflowR website and committed visual assets&quot;,
-    &quot;fresh output folders created by each Rmd render&quot;,
-    &quot;legacy standalone scripts retained for provenance&quot;
+    &quot;Dryad-linked fresh output folders created by each Rmd render&quot;,
+    &quot;reproducible workflow and data-link setup scripts&quot;
   )
 )
 
@@ -1202,25 +1480,31 @@ live here</td>
 groups</td>
 </tr>
 <tr class="odd">
-<td align="left">data/raw_read_counts/</td>
-<td align="left">raw and merged gene count tables</td>
+<td align="left">data/excluded_loci/</td>
+<td align="left">rRNA identifiers removed before normalization and
+modeling</td>
 </tr>
 <tr class="even">
-<td align="left">data/reference/</td>
-<td align="left">reference annotation files</td>
+<td align="left">data/raw_read_counts/</td>
+<td align="left">Dryad-linked raw and merged gene count tables</td>
 </tr>
 <tr class="odd">
+<td align="left">data/reference/</td>
+<td align="left">Dryad-linked reference annotation files</td>
+</tr>
+<tr class="even">
 <td align="left">docs/</td>
 <td align="left">rendered workflowR website and committed visual
 assets</td>
 </tr>
-<tr class="even">
-<td align="left">output/rmd_runs/</td>
-<td align="left">fresh output folders created by each Rmd render</td>
-</tr>
 <tr class="odd">
+<td align="left">output/rmd_runs/</td>
+<td align="left">Dryad-linked fresh output folders created by each Rmd
+render</td>
+</tr>
+<tr class="even">
 <td align="left">scripts/</td>
-<td align="left">legacy standalone scripts retained for provenance</td>
+<td align="left">reproducible workflow and data-link setup scripts</td>
 </tr>
 </tbody>
 </table>
@@ -1408,9 +1692,10 @@ figures.</p>
 </div>
 <div id="rerun-commands" class="section level2">
 <h2>Rerun commands</h2>
-<p>Run these commands from the repository root. Each rendered analysis
-page makes a new timestamped folder under
-<code>output/rmd_runs/</code>.</p>
+<p>Run these commands from the repository root after creating the Dryad
+links. Each rendered analysis page makes a new timestamped folder under
+<code>output/rmd_runs/</code>, which resolves into the external data
+package.</p>
 <pre class="bash"><code># Render one page after editing its parameters.
 Rscript -e &#39;workflowr::wflow_build(&quot;analysis/03-count-qc-exploration.Rmd&quot;)&#39;
 
@@ -1519,8 +1804,9 @@ knitr::kable(package_status)</code></pre>
 <li>Save <code>sessionInfo()</code> in the same folder as the
 results.</li>
 </ol>
-<p>This keeps the manuscript figures reproducible while leaving the
-older scripts available for comparison.</p>
+<p>This keeps the manuscript figures reproducible while separating code
+and web-ready figures from large deposited inputs and full result
+tables.</p>
 <pre class="r"><code>writeLines(capture.output(sessionInfo()),
            file.path(out_dir, &quot;sessionInfo.txt&quot;))
 sessionInfo()</code></pre>

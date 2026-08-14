@@ -44,6 +44,32 @@ processed and retained in the QC audit but excluded from biological models.
 The two branches differ only in which annotation feature types are counted, so
 their DEG results can be compared directly.
 
+## GitHub and Dryad data boundary
+
+The GitHub repository contains the R Markdown code, corrected sample metadata,
+the rRNA exclusion list, and rendered web figures. Large count matrices,
+reference and eggNOG annotations, external phase-reference data, complete
+analysis outputs, and HPC audit products are stored in the associated Dryad
+package instead of being committed to GitHub.
+
+On the project computer, the current package is located at:
+
+```text
+/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad
+```
+
+The analysis pages retain readable project-relative paths. Create the local
+links once before knitting:
+
+```{bash, eval=FALSE}
+export GREGARIA_DIET_DRYAD_DIR=/path/to/gregaria-diet-infection-interaction-dryad
+bash scripts/setup_dryad_links.sh
+```
+
+If `GREGARIA_DIET_DRYAD_DIR` is not set, the setup script uses the project
+computer's Dropbox path shown above. No biological analysis is run by the setup
+script; it only validates the external package and creates links.
+
 ## Repository layout
 
 ```{r setup}
@@ -58,16 +84,18 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 ```{r repo-layout}
 layout <- data.frame(
-  folder = c("analysis/", "data/metadata/", "data/raw_read_counts/",
-             "data/reference/", "docs/", "output/rmd_runs/", "scripts/"),
+  folder = c("analysis/", "data/metadata/", "data/excluded_loci/",
+             "data/raw_read_counts/", "data/reference/", "docs/",
+             "output/rmd_runs/", "scripts/"),
   role = c(
     "workflowR R Markdown pages; new analysis code should live here",
     "sample metadata used to align counts with biological groups",
-    "raw and merged gene count tables",
-    "reference annotation files",
+    "rRNA identifiers removed before normalization and modeling",
+    "Dryad-linked raw and merged gene count tables",
+    "Dryad-linked reference annotation files",
     "rendered workflowR website and committed visual assets",
-    "fresh output folders created by each Rmd render",
-    "legacy standalone scripts retained for provenance"
+    "Dryad-linked fresh output folders created by each Rmd render",
+    "reproducible workflow and data-link setup scripts"
   )
 )
 
@@ -199,8 +227,9 @@ differential expression, annotation enrichment, and publication figures.
 
 ## Rerun commands
 
-Run these commands from the repository root. Each rendered analysis page makes a
-new timestamped folder under `output/rmd_runs/`.
+Run these commands from the repository root after creating the Dryad links.
+Each rendered analysis page makes a new timestamped folder under
+`output/rmd_runs/`, which resolves into the external data package.
 
 ```{bash, eval=FALSE}
 # Render one page after editing its parameters.
@@ -251,8 +280,8 @@ The current analysis pages follow this pattern:
 4. Write derived tables and figures to a new folder under `output/rmd_runs/`.
 5. Save `sessionInfo()` in the same folder as the results.
 
-This keeps the manuscript figures reproducible while leaving the older scripts
-available for comparison.
+This keeps the manuscript figures reproducible while separating code and
+web-ready figures from large deposited inputs and full result tables.
 
 ```{r session-info}
 writeLines(capture.output(sessionInfo()),
