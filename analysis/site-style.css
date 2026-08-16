@@ -306,7 +306,8 @@ pre, code {
   font-size: 17px;
 }
 
-.analysis-tile p {
+.analysis-description {
+  display: block;
   color: #52606d;
   line-height: 1.45;
   margin: 0;
