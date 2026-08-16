@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-10" />
+<meta name="date" content="2026-08-16" />
 
 <title>Main-chromosome all-samples DEG catalogue</title>
 
@@ -616,7 +616,7 @@ div.tocify {
 <h1 class="title toc-ignore">Main-chromosome all-samples DEG
 catalogue</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-10</h4>
+<h4 class="date">2026-08-16</h4>
 
 </div>
 
@@ -624,7 +624,7 @@ catalogue</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -635,8 +635,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -645,13 +645,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-10
+<strong>Last updated:</strong> 2026-08-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -675,21 +675,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -780,15 +777,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeca46d4f055e2e9d6c4a25135f8264747949afc16targetblankca46d4fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ca46d4f055e2e9d6c4a25135f8264747949afc16" target="_blank">ca46d4f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreebdea9ec4b430789b20c48e45993a41b922ffd629targetblankbdea9eca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeca46d4f055e2e9d6c4a25135f8264747949afc16targetblankca46d4fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -798,7 +795,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/bdea9ec4b430789b20c48e45993a41b922ffd629" target="_blank">bdea9ec</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ca46d4f055e2e9d6c4a25135f8264747949afc16" target="_blank">ca46d4f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -819,30 +816,20 @@ Ignored files:
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
     Ignored:    data/.DS_Store
-    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
-    Ignored:    data/reference/
-    Ignored:    manuscript/revisions/.DS_Store
+    Ignored:    data/GO_Annotations
+    Ignored:    data/external
+    Ignored:    data/legacy_csv
+    Ignored:    data/raw_read_counts
+    Ignored:    data/reference
+    Ignored:    data/scaffold_origin
     Ignored:    output/.DS_Store
-    Ignored:    output/archive/rmd_runs_20260809_navigation_cleanup/curated-target-gene-figure_20260808-001351/
-    Ignored:    output/rmd_runs/
-    Ignored:    output/runs/
-    Ignored:    outputs/.DS_Store
+    Ignored:    output/rmd_runs
+    Ignored:    output/runs
+    Ignored:    outputs
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
+    Ignored:    scripts/__pycache__/
     Ignored:    scripts/manuscript/__pycache__/
-
-Untracked files:
-    Untracked:  manuscript/revisions/20260810_methods_results_latest_analysis_audit/
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-020715/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-022116/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/placed-unplaced-scaffold-analysis_20260806-010555/placed_unplaced_all_deseq2_results.csv
-    Untracked:  scripts/manuscript/build_methods_results_audit_20260810.py
-
-Unstaged changes:
-    Modified:   analysis/03-count-qc-exploration.Rmd
-    Modified:   analysis/24-all-deg-catalogue.Rmd
-    Modified:   scripts/manuscript/revise_cbpb_manuscript.py
-    Modified:   scripts/manuscript/revise_cbpd_manuscript.py
 
 </code></pre>
 <p>
@@ -887,6 +874,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1bc8d166405df6f90165fee7c5837d90cf48dd38/docs/24-all-deg-catalogue.html" target="_blank">1bc8d16</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+changes layout
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/analysis/24-all-deg-catalogue.Rmd" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+update figures
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/24-all-deg-catalogue.html" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+update figures
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1301,13 +1339,13 @@ knitr::kable(input_files, caption = &quot;Input files used for the DEG catalogue
 <tr class="odd">
 <td align="left">Joint main-chromosome DESeq2 table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260810-145930/placed_unplaced_all_deseq2_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260816-192754/placed_unplaced_all_deseq2_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Placed-gene DESeq2 size factors</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260810-145930/competitive_host_placed_gene_size_factors.tsv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/placed-unplaced-scaffold-analysis_20260816-192754/competitive_host_placed_gene_size_factors.tsv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
@@ -1325,7 +1363,7 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">Exon-only DESeq2 sensitivity table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-deseq2-analysis_20260810-150359/placed_unplaced_all_deseq2_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-deseq2-analysis_20260816-193003/placed_unplaced_all_deseq2_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
@@ -1846,7 +1884,7 @@ knitr::kable(cluster_export_note,
 <tr class="odd">
 <td align="left">Expression-cluster assignments</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-cluster-enrichment_20260810-145738/full_heatmap_expression_cluster_assignments.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-cluster-enrichment_20260811-121100/full_heatmap_expression_cluster_assignments.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -2450,6 +2488,43 @@ save_png_svg(
 )
 p_diet_candidates</code></pre>
 <p><img src="figure/24-all-deg-catalogue.Rmd/diet-high-expression-candidates-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diet-high-expression-candidates-1">
+Past versions of diet-high-expression-candidates-1.png
+</button>
+</p>
+<div id="fig-diet-high-expression-candidates-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/figure/24-all-deg-catalogue.Rmd/diet-high-expression-candidates-1.png" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The strongest annotated diet candidates include uncharacterized
 LOC126354934; vesicular glutamate transporter 1-like; fatty acyl-CoA
 reductase 1-like; fatty acyl-CoA reductase wat-like; peroxisomal
@@ -2579,6 +2654,43 @@ save_png_svg(
 )
 p_infection_candidates</code></pre>
 <p><img src="figure/24-all-deg-catalogue.Rmd/infection-high-expression-candidates-1.png" alt="" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-infection-high-expression-candidates-1">
+Past versions of infection-high-expression-candidates-1.png
+</button>
+</p>
+<div id="fig-infection-high-expression-candidates-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/figure/24-all-deg-catalogue.Rmd/infection-high-expression-candidates-1.png" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Among the strongest annotated infection-induced candidates are
 uncharacterized LOC126332318; uncharacterized LOC126332302;
 proton-coupled amino acid transporter-like protein pathetic;
@@ -2750,6 +2862,43 @@ save_png_svg(
 )
 p_infection_volcano</code></pre>
 <p><img src="figure/24-all-deg-catalogue.Rmd/infection-candidate-volcano-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-infection-candidate-volcano-1">
+Past versions of infection-candidate-volcano-1.png
+</button>
+</p>
+<div id="fig-infection-candidate-volcano-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/figure/24-all-deg-catalogue.Rmd/infection-candidate-volcano-1.png" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>diet_volcano_data &lt;- volcano_data |&gt;
   dplyr::filter(
     .data$comparison_type %in%
@@ -2778,6 +2927,43 @@ save_png_svg(
 )
 p_diet_volcano</code></pre>
 <p><img src="figure/24-all-deg-catalogue.Rmd/diet-candidate-volcano-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-diet-candidate-volcano-1">
+Past versions of diet-candidate-volcano-1.png
+</button>
+</p>
+<div id="fig-diet-candidate-volcano-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/figure/24-all-deg-catalogue.Rmd/diet-candidate-volcano-1.png" target="_blank">b30a02b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="searchable-candidate-table" class="section level3">
 <h3>Searchable candidate table</h3>
@@ -2877,7 +3063,7 @@ knitr::kable(tibble::tibble(file = exports),
              caption = paste(&quot;Files written to&quot;, out_dir))</code></pre>
 <table>
 <caption>Files written to
-/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-deg-catalogue_20260810-173509</caption>
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/main-chromosome-all-deg-catalogue_20260816-194411</caption>
 <colgroup>
 <col width="100%" />
 </colgroup>

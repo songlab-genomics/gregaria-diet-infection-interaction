@@ -29,6 +29,20 @@ The R Markdown pages keep project-relative paths such as
 paths to the external data package, so the analysis code remains portable and
 does not depend on files committed to GitHub.
 
+## Zenodo code archive
+
+Create the Zenodo code-and-website zip from a clean commit rather than zipping
+the working directory directly:
+
+```bash
+bash scripts/build_zenodo_release.sh v1.0.0
+```
+
+The script uses `git archive`, validates the resulting zip, and reports its
+SHA-256 checksum. It includes only committed code, metadata, and rendered site
+files. Local R history files, `.git`, and the absolute links to the separately
+deposited Dryad data are intentionally excluded.
+
 ## GitHub Pages deployment
 
 The rendered workflowR website is committed under `docs/`. In the repository

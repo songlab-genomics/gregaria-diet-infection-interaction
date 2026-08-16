@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-11" />
+<meta name="date" content="2026-08-16" />
 
 <title>Exon-only publication figure exports</title>
 
@@ -597,7 +597,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Exon-only publication figure exports</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-11</h4>
+<h4 class="date">2026-08-16</h4>
 
 </div>
 
@@ -605,7 +605,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -616,8 +616,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -626,13 +626,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-11
+<strong>Last updated:</strong> 2026-08-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -656,21 +656,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -761,15 +758,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeb30a02be6ca1ecb3c0f16d47c38581b7a1b964eetargetblankb30a02ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeca46d4f055e2e9d6c4a25135f8264747949afc16targetblankca46d4fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee" target="_blank">b30a02b</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ca46d4f055e2e9d6c4a25135f8264747949afc16" target="_blank">ca46d4f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeb30a02be6ca1ecb3c0f16d47c38581b7a1b964eetargetblankb30a02ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreeca46d4f055e2e9d6c4a25135f8264747949afc16targetblankca46d4fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -779,7 +776,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee" target="_blank">b30a02b</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/ca46d4f055e2e9d6c4a25135f8264747949afc16" target="_blank">ca46d4f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -800,31 +797,20 @@ Ignored files:
     Ignored:    code/R_timecourse_reference/
     Ignored:    code/scripts/__pycache__/
     Ignored:    data/.DS_Store
-    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
-    Ignored:    data/reference/
+    Ignored:    data/GO_Annotations
+    Ignored:    data/external
+    Ignored:    data/legacy_csv
+    Ignored:    data/raw_read_counts
+    Ignored:    data/reference
+    Ignored:    data/scaffold_origin
     Ignored:    output/.DS_Store
-    Ignored:    output/archive/rmd_runs_20260809_navigation_cleanup/curated-target-gene-figure_20260808-001351/
-    Ignored:    output/rmd_runs/
-    Ignored:    output/runs/
-    Ignored:    outputs/.DS_Store
+    Ignored:    output/rmd_runs
+    Ignored:    output/runs
+    Ignored:    outputs
     Ignored:    scripts/.RData
     Ignored:    scripts/.Rhistory
+    Ignored:    scripts/__pycache__/
     Ignored:    scripts/manuscript/__pycache__/
-
-Untracked files:
-    Untracked:  analysis/47-paper-statistical-reference.Rmd
-    Untracked:  data/external/curated_target_genes/2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-020715/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/exon-only-deseq2-analysis_20260808-022116/placed_unplaced_all_deseq2_results.csv
-    Untracked:  output/archive/rmd_runs_20260809_navigation_cleanup/placed-unplaced-scaffold-analysis_20260806-010555/placed_unplaced_all_deseq2_results.csv
-    Untracked:  outputs/candidate_set_comparison_20260811/
-
-Unstaged changes:
-    Modified:   analysis/08-publication-figures.Rmd
-    Modified:   analysis/29-metarhizium-read-burden.Rmd
-    Modified:   analysis/46-exon-only-publication-figures.Rmd
-    Modified:   analysis/_site.yml
-    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -870,6 +856,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1bc8d166405df6f90165fee7c5837d90cf48dd38/analysis/46-exon-only-publication-figures.Rmd" target="_blank">1bc8d16</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+changes layout
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/1bc8d166405df6f90165fee7c5837d90cf48dd38/docs/46-exon-only-publication-figures.html" target="_blank">1bc8d16</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+<td>
+changes layout
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1766,19 +1786,19 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">main-chromosome DESeq2 scenario table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/main_chromosome_sample_filter_scenario_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/main_chromosome_sample_filter_scenario_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">sample-filter scenario counts</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/main_chromosome_sample_counts_by_scenario.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/main_chromosome_sample_counts_by_scenario.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">main-chromosome average infection results</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/main_chromosome_average_infection_results.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/main_chromosome_average_infection_results.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
@@ -3068,103 +3088,103 @@ knitr::kable(figure2_exports, caption = &quot;Figure 2 and standalone overlap ex
 <tr class="odd">
 <td align="left">Figure 2 composite PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_deg_burden_context_phase_venns.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_deg_burden_context_phase_venns.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2 composite SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_deg_burden_context_phase_venns.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_deg_burden_context_phase_venns.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2A DEG burden PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_panel_A_deg_biotype_burden.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_panel_A_deg_biotype_burden.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection DEGs by diet Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_infection_degs_by_diet_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_infection_degs_by_diet_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2B infection DEGs by diet Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_infection_degs_by_diet_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_infection_degs_by_diet_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2B infection-by-diet membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_infection_diet_venn_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_infection_diet_venn_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2C infection-phase Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_infection_phase_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_infection_phase_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Figure 2C infection-phase Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_infection_phase_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_infection_phase_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context Venn PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_broad_context_overlap_venn.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_broad_context_overlap_venn.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative broad-context Venn SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_broad_context_overlap_venn.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_broad_context_overlap_venn.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative broad-context membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_deg_family_overlap_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_deg_family_overlap_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact-contrast UpSet PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_panel_B_exact_contrast_upset.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_panel_B_exact_contrast_upset.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Alternative exact-contrast UpSet SVG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_panel_B_exact_contrast_upset.svg</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_panel_B_exact_contrast_upset.svg</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Alternative exact membership table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_panel_B_exact_contrast_upset_membership.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_panel_B_exact_contrast_upset_membership.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Standalone physiology composition PNG</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_panel_C_candidate_physiology_phase_composition.png</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_panel_C_candidate_physiology_phase_composition.png</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="even">
 <td align="left">Standalone candidate category gene table</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_deg_family_candidate_theme_gene_table.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_deg_family_candidate_theme_gene_table.csv</td>
 <td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">Figure 2 rRNA exclusion audit</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654/figure2_rrna_exclusion_audit.csv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230/figure2_rrna_exclusion_audit.csv</td>
 <td align="left">TRUE</td>
 </tr>
 </tbody>
@@ -3996,6 +4016,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/1bc8d166405df6f90165fee7c5837d90cf48dd38/docs/figure/46-exon-only-publication-figures.Rmd/figure-s2-bracken-1.png" target="_blank">1bc8d16</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/b30a02be6ca1ecb3c0f16d47c38581b7a1b964ee/docs/figure/46-exon-only-publication-figures.Rmd/figure-s2-bracken-1.png" target="_blank">b30a02b</a>
 </td>
 <td>
@@ -4106,7 +4137,7 @@ knitr::kable(tibble::tibble(file = exports),
              caption = paste(&quot;Files written to&quot;, out_dir))</code></pre>
 <table>
 <caption>Files written to
-/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260811-121654</caption>
+/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/exon-only-publication-figures_20260816-194230</caption>
 <colgroup>
 <col width="100%" />
 </colgroup>
