@@ -10,7 +10,6 @@ data/reference
 data/GO_Annotations
 data/raw_read_counts
 data/external
-data/legacy_csv
 data/scaffold_origin
 output/rmd_runs/
 output/rmd_runs

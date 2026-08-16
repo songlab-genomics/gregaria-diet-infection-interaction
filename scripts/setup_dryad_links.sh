@@ -12,7 +12,6 @@ LINK_PATHS=(
   "data/raw_read_counts"
   "data/reference"
   "data/external"
-  "data/legacy_csv"
   "data/scaffold_origin"
   "output/rmd_runs"
   "output/runs"

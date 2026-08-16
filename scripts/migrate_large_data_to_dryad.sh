@@ -12,21 +12,10 @@ MOVE_PATHS=(
   "data/raw_read_counts"
   "data/reference"
   "data/external"
-  "data/legacy_csv"
   "data/scaffold_origin"
   "output/rmd_runs"
   "output/runs"
   "outputs"
-)
-
-LEGACY_DOC_PATHS=(
-  "docs/assets/rRNA_included"
-  "docs/assets/rRNA_removed"
-  "docs/assets/rRNA_removed_SVA"
-)
-
-LEGACY_REPORT_PATHS=(
-  "docs/Mehreen_DEG_Analysis_htmlimg.html"
 )
 
 mkdir -p "$DRYAD_DIR"
@@ -51,32 +40,6 @@ for rel_path in "${MOVE_PATHS[@]}"; do
   mkdir -p "$(dirname "$target_path")"
   mv "$source_path" "$target_path"
   printf 'Moved: %s\n' "$rel_path"
-done
-
-for rel_path in "${LEGACY_DOC_PATHS[@]}"; do
-  source_path="$PROJECT_DIR/$rel_path"
-  target_path="$DRYAD_DIR/legacy_website_assets/${rel_path#docs/assets/}"
-  [[ -e "$source_path" ]] || continue
-  if [[ -e "$target_path" ]]; then
-    echo "ERROR: refusing to overwrite Dryad path: $target_path" >&2
-    exit 1
-  fi
-  mkdir -p "$(dirname "$target_path")"
-  mv "$source_path" "$target_path"
-  printf 'Moved legacy website data: %s\n' "$rel_path"
-done
-
-for rel_path in "${LEGACY_REPORT_PATHS[@]}"; do
-  source_path="$PROJECT_DIR/$rel_path"
-  target_path="$DRYAD_DIR/legacy_website_assets/reports/$(basename "$rel_path")"
-  [[ -e "$source_path" ]] || continue
-  if [[ -e "$target_path" ]]; then
-    echo "ERROR: refusing to overwrite Dryad path: $target_path" >&2
-    exit 1
-  fi
-  mkdir -p "$(dirname "$target_path")"
-  mv "$source_path" "$target_path"
-  printf 'Moved legacy website report: %s\n' "$rel_path"
 done
 
 cp "$PROJECT_DIR/DRYAD_PACKAGE.md" "$DRYAD_DIR/README.md"
