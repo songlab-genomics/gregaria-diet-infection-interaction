@@ -355,232 +355,87 @@ div.tocify {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Start Here
+    Study
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="index.html">Project overview</a>
-    </li>
-    <li>
       <a href="01-study-design-data.html">Study design and data</a>
     </li>
     <li>
-      <a href="02-workflow-reproducibility.html">RNA-seq workflow</a>
+      <a href="02-workflow-reproducibility.html">Workflow and reproducibility</a>
     </li>
     <li>
       <a href="03-count-qc-exploration.html">Count QC and exploration</a>
     </li>
     <li>
-      <a href="47-paper-statistical-reference.html">Statistical analysis reference</a>
+      <a href="47-paper-statistical-reference.html">Statistical methods</a>
     </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Fat Body Experiment
+    Results
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="03-count-qc-exploration.html">Experiment QC</a>
-        </li>
-        <li>
-          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
-        </li>
-        <li>
-          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
-        </li>
-        <li>
-          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
-        </li>
-        <li>
-          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
-        </li>
-        <li>
-          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
-        </li>
-        <li>
-          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
-        </li>
-      </ul>
+    <li>
+      <a href="28-placed-unplaced-scaffold-analysis.html">Primary DESeq2 analysis</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
-        </li>
-        <li>
-          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
-        </li>
-        <li>
-          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
-        </li>
-        <li>
-          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
-        </li>
-      </ul>
+    <li>
+      <a href="16-all-samples-infection-within-diet-deg.html">Infection response within diets</a>
+    </li>
+    <li>
+      <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
+    </li>
+    <li>
+      <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+    </li>
+    <li>
+      <a href="10-go-term-enrichment.html">GO and KEGG enrichment</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html">Expression clusters</a>
+    </li>
+    <li>
+      <a href="13-physiology-candidate-genes.html">Physiology candidates</a>
+    </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html">Curated target genes</a>
     </li>
   </ul>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Interpretation
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
-        </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
-        </li>
-        <li>
-          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
-        </li>
-        <li>
-          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
-        </li>
-        <li>
-          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
-        </li>
-        <li>
-          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
-        </li>
-        <li>
-          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
-        </li>
-        <li>
-          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
-        </li>
-        <li>
-          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
-        </li>
-        <li>
-          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
-        </li>
-        <li>
-          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
-        </li>
-        <li>
-          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
-        </li>
-        <li>
-          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
-        </li>
-        <li>
-          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
-        </li>
-        <li>
-          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
-        </li>
-        <li>
-          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+<li>
+  <a href="08-publication-figures.html">Figures</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Figures
+    Validation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="08-publication-figures.html">Publication figure exports</a>
-        </li>
-        <li>
-          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-        </li>
-        <li>
-          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-        </li>
-        <li>
-          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
-        </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
-        </li>
-      </ul>
+    <li>
+      <a href="35-count-definition-sensitivity.html">Count-definition sensitivity</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
-        </li>
-        <li>
-          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-        </li>
-        <li>
-          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-        </li>
-        <li>
-          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
-        </li>
-        <li>
-          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
-        </li>
-      </ul>
+    <li>
+      <a href="36-exon-only-deseq2-analysis.html">Exon-only analysis</a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Sensitivity and Validation
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
-        </li>
-        <li>
-          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
-        </li>
-        <li>
-          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
-        </li>
-        <li>
-          <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomic profiles</a>
-        </li>
-      </ul>
+    <li>
+      <a href="27-scaffold-origin-audit.html">Unplaced-scaffold origin audit</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
-        </li>
-      </ul>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomy</a>
+    </li>
+    <li>
+      <a href="11-outlier-sensitivity.html">Sample-exclusion sensitivity</a>
     </li>
   </ul>
 </li>
@@ -777,15 +632,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree949289c551db8e00a6ad43884edc20fd601e8adftargetblank949289ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreee67684dafd06824ce3f2f518cdbde30c282dbc7etargetblanke67684da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/949289c551db8e00a6ad43884edc20fd601e8adf" target="_blank">949289c</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/e67684dafd06824ce3f2f518cdbde30c282dbc7e" target="_blank">e67684d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontree949289c551db8e00a6ad43884edc20fd601e8adftargetblank949289ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreee67684dafd06824ce3f2f518cdbde30c282dbc7etargetblanke67684da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -795,7 +650,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/949289c551db8e00a6ad43884edc20fd601e8adf" target="_blank">949289c</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/e67684dafd06824ce3f2f518cdbde30c282dbc7e" target="_blank">e67684d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -810,29 +665,16 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
-    Ignored:    analysis/.Rhistory
     Ignored:    analysis/output/
-    Ignored:    code/R_timecourse_reference/
-    Ignored:    code/scripts/__pycache__/
-    Ignored:    data/.DS_Store
     Ignored:    data/GO_Annotations
     Ignored:    data/external
-    Ignored:    data/legacy_csv
     Ignored:    data/raw_read_counts
     Ignored:    data/reference
     Ignored:    data/scaffold_origin
-    Ignored:    output/.DS_Store
+    Ignored:    output/manual-validation/
     Ignored:    output/rmd_runs
     Ignored:    output/runs
     Ignored:    outputs
-    Ignored:    scripts/.RData
-    Ignored:    scripts/.Rhistory
-    Ignored:    scripts/__pycache__/
-    Ignored:    scripts/manuscript/__pycache__/
-
-Unstaged changes:
-    Modified:   .gitignore
 
 </code></pre>
 <p>
@@ -878,6 +720,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/dfaa4669d4d6a4e5a6332b33500afb42c2345377/docs/30-curated-target-gene-figure.html" target="_blank">dfaa466</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Complete workflowR release provenance
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3941,12 +3800,12 @@ align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interac
 <tr class="odd">
 <td align="left">Corrected BLASTn/DIAMOND homology evidence</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/scaffold-origin-audit_20260816-194715/corrected_gene_homology_evidence.tsv</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/scaffold-origin-audit_20260816-214921/corrected_gene_homology_evidence.tsv</td>
 </tr>
 <tr class="even">
 <td align="left">Output directory</td>
 <td
-align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260816-194910</td>
+align="left">/Users/maevatecher/Documents/GitHub/gregaria-diet-infection-interaction/output/rmd_runs/curated-target-gene-figure_20260816-215116</td>
 </tr>
 </tbody>
 </table>
@@ -4056,31 +3915,6 @@ loaded via a namespace (and not attached):
 </div>
 </div>
 
-<script id="count-definition-navigation">
-(function ($) {
-  "use strict";
-
-  $(function () {
-    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
-      var item = $(this).parent(".dropdown-submenu");
-
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-      item.siblings(".dropdown-submenu.open").removeClass("open")
-        .children("a").attr("aria-expanded", "false");
-      item.toggleClass("open");
-      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
-      return false;
-    });
-  });
-
-  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
-    $(this).find(".dropdown-submenu.open").removeClass("open")
-      .children("a").attr("aria-expanded", "false");
-  });
-}(window.jQuery));
-</script>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see

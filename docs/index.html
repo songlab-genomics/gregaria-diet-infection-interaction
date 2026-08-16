@@ -261,232 +261,87 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Start Here
+    Study
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="index.html">Project overview</a>
-    </li>
-    <li>
       <a href="01-study-design-data.html">Study design and data</a>
     </li>
     <li>
-      <a href="02-workflow-reproducibility.html">RNA-seq workflow</a>
+      <a href="02-workflow-reproducibility.html">Workflow and reproducibility</a>
     </li>
     <li>
       <a href="03-count-qc-exploration.html">Count QC and exploration</a>
     </li>
     <li>
-      <a href="47-paper-statistical-reference.html">Statistical analysis reference</a>
+      <a href="47-paper-statistical-reference.html">Statistical methods</a>
     </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Fat Body Experiment
+    Results
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="03-count-qc-exploration.html">Experiment QC</a>
-        </li>
-        <li>
-          <a href="04-deseq2-interaction-model.html">All scaffolds: interaction</a>
-        </li>
-        <li>
-          <a href="05-diet-pairwise-deg.html">All scaffolds: diet DEGs</a>
-        </li>
-        <li>
-          <a href="06-infection-within-diet-deg.html">All scaffolds: infection DEGs</a>
-        </li>
-        <li>
-          <a href="14-all-samples-deseq2-interaction-model.html">Placed chromosomes: interaction</a>
-        </li>
-        <li>
-          <a href="15-all-samples-diet-pairwise-deg.html">Placed chromosomes: diet DEGs</a>
-        </li>
-        <li>
-          <a href="16-all-samples-infection-within-diet-deg.html">Placed chromosomes: infection DEGs</a>
-        </li>
-      </ul>
+    <li>
+      <a href="28-placed-unplaced-scaffold-analysis.html">Primary DESeq2 analysis</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="36-exon-only-deseq2-analysis.html">Analysis overview</a>
-        </li>
-        <li>
-          <a href="37-exon-only-interaction-model.html">Diet x infection interaction</a>
-        </li>
-        <li>
-          <a href="38-exon-only-diet-pairwise-deg.html">Diet pairwise DEGs</a>
-        </li>
-        <li>
-          <a href="39-exon-only-infection-within-diet-deg.html">Infection within diet DEGs</a>
-        </li>
-      </ul>
+    <li>
+      <a href="16-all-samples-infection-within-diet-deg.html">Infection response within diets</a>
+    </li>
+    <li>
+      <a href="07-deg-overlap-prioritization.html">DEG overlap</a>
+    </li>
+    <li>
+      <a href="24-all-deg-catalogue.html">Searchable DEG catalogue</a>
+    </li>
+    <li>
+      <a href="10-go-term-enrichment.html">GO and KEGG enrichment</a>
+    </li>
+    <li>
+      <a href="26-circled-cluster-enrichment.html">Expression clusters</a>
+    </li>
+    <li>
+      <a href="13-physiology-candidate-genes.html">Physiology candidates</a>
+    </li>
+    <li>
+      <a href="30-curated-target-gene-figure.html">Curated target genes</a>
     </li>
   </ul>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Interpretation
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="13-physiology-candidate-genes.html">Physiology candidates - both scopes</a>
-        </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html">Curated targets - both scopes</a>
-        </li>
-        <li>
-          <a href="31-all-scaffolds-deg-overlap-prioritization.html">All scaffolds: DEG overlap</a>
-        </li>
-        <li>
-          <a href="32-all-scaffolds-deg-catalogue.html">All scaffolds: DEG catalogue</a>
-        </li>
-        <li>
-          <a href="33-all-scaffolds-go-term-enrichment.html">All scaffolds: GO / KEGG</a>
-        </li>
-        <li>
-          <a href="34-all-scaffolds-enrichment-term-gene-index.html">All scaffolds: term-gene index</a>
-        </li>
-        <li>
-          <a href="07-deg-overlap-prioritization.html">Placed chromosomes: DEG overlap</a>
-        </li>
-        <li>
-          <a href="24-all-deg-catalogue.html">Placed chromosomes: DEG catalogue</a>
-        </li>
-        <li>
-          <a href="10-go-term-enrichment.html">Placed chromosomes: GO / KEGG</a>
-        </li>
-        <li>
-          <a href="25-enrichment-term-gene-index.html">Placed chromosomes: term-gene index</a>
-        </li>
-        <li>
-          <a href="26-circled-cluster-enrichment.html">Placed chromosomes: expression clusters</a>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="40-exon-only-deg-overlap.html">DEG overlap</a>
-        </li>
-        <li>
-          <a href="41-exon-only-deg-catalogue.html">Searchable DEG catalogue</a>
-        </li>
-        <li>
-          <a href="42-exon-only-go-term-enrichment.html">GO / KEGG enrichment</a>
-        </li>
-        <li>
-          <a href="43-exon-only-enrichment-term-gene-index.html">GO / KEGG term-gene index</a>
-        </li>
-        <li>
-          <a href="44-exon-only-expression-clusters.html">Expression clusters</a>
-        </li>
-        <li>
-          <a href="45-exon-only-curated-target-genes.html">Curated target genes</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+<li>
+  <a href="08-publication-figures.html">Figures</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Figures
+    Validation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="08-publication-figures.html">Publication figure exports</a>
-        </li>
-        <li>
-          <a href="14-all-samples-deseq2-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-        </li>
-        <li>
-          <a href="07-deg-overlap-prioritization.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-        </li>
-        <li>
-          <a href="26-circled-cluster-enrichment.html#Publication_figure">Figure 3 - expression clusters</a>
-        </li>
-        <li>
-          <a href="30-curated-target-gene-figure.html#Curated_target_figures">Figure 4 - curated targets</a>
-        </li>
-      </ul>
+    <li>
+      <a href="35-count-definition-sensitivity.html">Count-definition sensitivity</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="46-exon-only-publication-figures.html">Publication figure exports</a>
-        </li>
-        <li>
-          <a href="37-exon-only-interaction-model.html#Publication_figure">Figure 1 - PCA</a>
-        </li>
-        <li>
-          <a href="40-exon-only-deg-overlap.html#Publication_figure">Figure 2 - DEG burden and overlap</a>
-        </li>
-        <li>
-          <a href="44-exon-only-expression-clusters.html#Publication_figure">Figure 3 - expression clusters</a>
-        </li>
-        <li>
-          <a href="45-exon-only-curated-target-genes.html#Curated_target_figures">Figure 4 - curated targets</a>
-        </li>
-      </ul>
+    <li>
+      <a href="36-exon-only-deseq2-analysis.html">Exon-only analysis</a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Sensitivity and Validation
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transcript + exon</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="11-outlier-sensitivity.html">Outlier filtering sensitivity</a>
-        </li>
-        <li>
-          <a href="28-placed-unplaced-scaffold-analysis.html">Placed vs unplaced scaffolds</a>
-        </li>
-        <li>
-          <a href="27-scaffold-origin-audit.html">Unplaced scaffold origin audit</a>
-        </li>
-        <li>
-          <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomic profiles</a>
-        </li>
-      </ul>
+    <li>
+      <a href="27-scaffold-origin-audit.html">Unplaced-scaffold origin audit</a>
     </li>
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Exon only</a>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="35-count-definition-sensitivity.html">Exon only vs transcript + exon</a>
-        </li>
-      </ul>
+    <li>
+      <a href="29-metarhizium-read-burden.html">Fungal burden and taxonomy</a>
+    </li>
+    <li>
+      <a href="11-outlier-sensitivity.html">Sample-exclusion sensitivity</a>
     </li>
   </ul>
 </li>
@@ -683,15 +538,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreedfaa4669d4d6a4e5a6332b33500afb42c2345377targetblankdfaa466a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreed9f1a3322f70a606f474ca2c676739b63414ca45targetblankd9f1a33a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/dfaa4669d4d6a4e5a6332b33500afb42c2345377" target="_blank">dfaa466</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/d9f1a3322f70a606f474ca2c676739b63414ca45" target="_blank">d9f1a33</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreedfaa4669d4d6a4e5a6332b33500afb42c2345377targetblankdfaa466a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreed9f1a3322f70a606f474ca2c676739b63414ca45targetblankd9f1a33a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -701,7 +556,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/dfaa4669d4d6a4e5a6332b33500afb42c2345377" target="_blank">dfaa466</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/d9f1a3322f70a606f474ca2c676739b63414ca45" target="_blank">d9f1a33</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -716,26 +571,16 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
-    Ignored:    analysis/.Rhistory
     Ignored:    analysis/output/
-    Ignored:    code/R_timecourse_reference/
-    Ignored:    code/scripts/__pycache__/
-    Ignored:    data/.DS_Store
     Ignored:    data/GO_Annotations
     Ignored:    data/external
-    Ignored:    data/legacy_csv
     Ignored:    data/raw_read_counts
     Ignored:    data/reference
     Ignored:    data/scaffold_origin
-    Ignored:    output/.DS_Store
+    Ignored:    output/manual-validation/
     Ignored:    output/rmd_runs
     Ignored:    output/runs
     Ignored:    outputs
-    Ignored:    scripts/.RData
-    Ignored:    scripts/.Rhistory
-    Ignored:    scripts/__pycache__/
-    Ignored:    scripts/manuscript/__pycache__/
 
 </code></pre>
 <p>
@@ -779,6 +624,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/d9f1a3322f70a606f474ca2c676739b63414ca45/analysis/index.Rmd" target="_blank">d9f1a33</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Stabilize homepage analysis grid
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/e67684dafd06824ce3f2f518cdbde30c282dbc7e/analysis/index.Rmd" target="_blank">e67684d</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Fix homepage analysis card markup
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/blob/7b8dd7b52040845183a0c182555209a0e2062e7b/analysis/index.Rmd" target="_blank">7b8dd7b</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Simplify workflowR site navigation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/d1e1f5c1166173d48a41673e9574e42089f93c38/docs/index.html" target="_blank">d1e1f5c</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Finish clean workflowR site rebuild
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1441,18 +1354,16 @@ fat body RNA-seq / diet / fungal challenge
 Fat body diet-infection RNA-seq analysis
 </h1>
 <p class="lede">
-This workflowR site analyzes a frozen 44-library fat-body cohort after
-excluding mapping-QC outlier 1044, and presents two parallel count
-definitions for the same experiment. Within each, the all-scaffold view
-preserves the complete host-reference signal and the placed-chromosome
-view provides the conservative foreground used for publication.
-Outlier-removal is retained only as a focused sensitivity check rather
-than treated as a competing primary analysis.
+Follow how dietary protein-to-carbohydrate balance relates to the fat
+body transcriptional response of <em>Schistocerca gregaria</em> to
+<em>Metarhizium robertsii</em>. The site moves from experimental design
+and quality control to differential expression, functional
+interpretation, and publication figures.
 </p>
 <div class="hero-actions">
-<p><a href="04-deseq2-interaction-model.html">Transcript + exon</a>
-<a href="36-exon-only-deseq2-analysis.html">Exon only</a>
-<a href="08-publication-figures.html">Publication figures</a></p>
+<p><a href="01-study-design-data.html">Start with the study</a>
+<a href="28-placed-unplaced-scaffold-analysis.html">Read the results</a>
+<a href="08-publication-figures.html">View the figures</a></p>
 </div>
 </div>
 <div class="hero-figure">
@@ -1462,237 +1373,43 @@ than treated as a competing primary analysis.
 <div class="study-design-banner">
 <p><img src="assets/home/experimental-design-overview.png" alt="Experimental design showing crowded-reared desert locusts assigned to control or Metarhizium infection across three artificial diets"></p>
 </div>
-<div class="metric-grid">
-<div class="metric">
-<span>44</span><strong>samples</strong>
-</div>
-<div class="metric">
-<span>83,204</span><strong>all non-rRNA loci</strong>
-</div>
-<div class="metric">
-<span>19,724</span><strong>placed chromosome loci</strong>
-</div>
-<div class="metric">
-<span>6</span><strong>diet x treatment groups</strong>
-</div>
-</div>
-<div id="how-to-read-this-site" class="section level2">
-<h2>How To Read This Site</h2>
-<div class="note-panel">
-<p>
-Start with the shared design and workflow pages. In each main menu,
-first choose either <strong>Transcript + exon</strong> or <strong>Exon
-only</strong>, then follow that definition consistently through DEG
-testing, overlap, catalogue, enrichment, and figures. Page labels state
-whether a result uses all scaffolds or placed chromosomes. Both count
-definitions retain every sample in the 44-library analysis cohort and
-remove annotated rRNA loci.
-</p>
-</div>
-</div>
-<div id="data-availability-and-local-setup" class="section level2">
-<h2>Data Availability And Local Setup</h2>
-<div class="note-panel">
-<p>
-GitHub contains the runnable R Markdown workflow, small design files,
-and the rendered website. Large count matrices, annotations, complete
-result tables, and HPC audit products are kept in the associated Dryad
-package. On the project computer, that package is located at
-<code>/Users/maevatecher/Dropbox/3. Research
-Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad</code>.
-Run <code>bash scripts/setup_dryad_links.sh</code> after cloning the
-repository or downloading the data package. The analysis pages then
-continue to use their documented project-relative paths.
-</p>
-</div>
-</div>
-<div id="shared-starting-point" class="section level2">
-<h2>Shared Starting Point</h2>
+<div id="follow-the-analysis" class="section level2">
+<h2>Follow the analysis</h2>
 <div class="analysis-grid">
-<a class="analysis-tile" href="01-study-design-data.html"> <span>Step
-1</span> <strong>Study Design and Data</strong>
-<p>
-Confirm the diet, infection, sample metadata, rRNA-filtered counts, and
-inclusion logic.
-</p>
-</a> <a class="analysis-tile" href="02-workflow-reproducibility.html">
-<span>Step 2</span> <strong>RNA-seq Workflow</strong>
-<p>
-Document how reads move from trimming, STAR alignment, and featureCounts
-into the count matrix.
-</p>
-</a> <a class="analysis-tile" href="03-count-qc-exploration.html">
-<span>Step 3</span> <strong>Fat Body Count QC</strong>
-<p>
-Check library sizes, PCA structure, sample distances, and broad
-expression quality.
-</p>
-</a>
-<a class="analysis-tile" href="47-paper-statistical-reference.html">
-<span>Step 4</span> <strong>Statistical Analysis Reference</strong>
-<p>
-Trace each paper result from its model code to its reported evidence and
-interpretation.
-</p>
-<p></a></p>
-</div>
-</div>
-<div id="choose-the-count-definition" class="section level2">
-<h2>Choose The Count Definition</h2>
-<div class="scope-grid">
-<section class="scope-panel all-scope">
-<span>Primary count definition</span>
-<h3>
-Transcript + exon
-</h3>
-<p>
-Gene counts use featureCounts <code>-t transcript,exon -g
-gene_id</code>. This is the primary branch used for the current
-manuscript figures.
-</p>
-<div class="scope-links">
-<p><a href="04-deseq2-interaction-model.html">Fat body analysis</a>
-<a href="31-all-scaffolds-deg-overlap-prioritization.html">Interpretation</a>
-<a href="08-publication-figures.html">Figures</a></p>
-</div>
-</section>
-<section class="scope-panel placed-scope">
-<span>Parallel sensitivity definition</span>
-<h3>
-Exon only
-</h3>
-<p>
-Gene counts use featureCounts <code>-t exon -g gene_id</code>, with the
-same 44-sample analysis cohort, rRNA exclusion, models, contrasts, and
-thresholds.
-</p>
-<div class="scope-links">
-<p><a href="36-exon-only-deseq2-analysis.html">Fat body analysis</a>
-<a href="40-exon-only-deg-overlap.html">Interpretation</a>
-<a href="46-exon-only-publication-figures.html">Figures</a></p>
-</div>
-</section>
-</div>
-</div>
-<div id="choose-the-gene-universe" class="section level2">
-<h2>Choose The Gene Universe</h2>
-<div class="scope-grid">
-<section class="scope-panel all-scope">
-<span>Complete reference view</span>
-<h3>
-All samples + all scaffolds
-</h3>
-<p>
-The 44-sample analysis cohort and every expression-filtered non-rRNA
-host locus are tested. Use this branch to inspect the full signal,
-including unplaced scaffolds.
-</p>
-<div class="scope-links">
-<p><a href="04-deseq2-interaction-model.html">Interaction model</a>
-<a href="05-diet-pairwise-deg.html">Diet DEGs</a>
-<a href="06-infection-within-diet-deg.html">Infection DEGs</a>
-<a href="31-all-scaffolds-deg-overlap-prioritization.html">Overlap</a>
-<a href="32-all-scaffolds-deg-catalogue.html">Catalogue</a>
-<a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG</a></p>
-</div>
-</section>
-<section class="scope-panel placed-scope">
-<span>Current manuscript view</span>
-<h3>
-All samples + placed chromosomes
-</h3>
-<p>
-The 44-sample analysis cohort are retained, while the tested universe is
-restricted to official nuclear chromosomes. This is the conservative
-publication branch.
-</p>
-<div class="scope-links">
-<p><a href="14-all-samples-deseq2-interaction-model.html">Interaction
-model</a> <a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
-<a href="16-all-samples-infection-within-diet-deg.html">Infection
-DEGs</a> <a href="07-deg-overlap-prioritization.html">Overlap</a>
-<a href="24-all-deg-catalogue.html">Catalogue</a>
-<a href="10-go-term-enrichment.html">GO / KEGG</a></p>
-</div>
-</section>
-</div>
-</div>
-<div id="biological-interpretation" class="section level2">
-<h2>Biological Interpretation</h2>
-<div class="analysis-grid">
-<a class="analysis-tile featured-tile" href="13-physiology-candidate-genes.html">
-<span>Both scopes</span> <strong>Physiology Candidates</strong>
-<p>
-Compare immune, protein storage/synthesis, lipid metabolism, and
-detoxification responses across diets.
-</p>
-</a> <a class="analysis-tile" href="26-circled-cluster-enrichment.html">
-<span>Placed chromosomes</span> <strong>Expression Clusters</strong>
-<p>
-Review the complete gene-level heatmap and cluster-specific GO/KEGG
-patterns used in Figure 3.
-</p>
-</a> <a class="analysis-tile" href="30-curated-target-gene-figure.html">
-<span>Both placement scopes</span> <strong>Curated Targets</strong>
-<p>
-Follow the curated immune and protein-anabolism genes through matched
-main-chromosome and unplaced-scaffold views.
-</p>
-</a> <a class="analysis-tile" href="08-publication-figures.html">
-<span>Compiled exports</span> <strong>Publication Figures</strong>
-<p>
-Download manuscript-ready Figures 1-4 and supplementary figures from one
-page.
-</p>
-<p></a></p>
-</div>
-</div>
-<div id="validation-and-provenance" class="section level2">
-<h2>Validation and Provenance</h2>
-<div class="analysis-grid compact-grid">
+<p><a class="analysis-tile" href="01-study-design-data.html"> <span
+class="analysis-step">1</span> <strong>Design and quality
+control</strong> <span class="analysis-description">Understand the
+diets, infection treatment, sample cohort, mapping, and count
+filtering.</span> </a>
 <a class="analysis-tile" href="28-placed-unplaced-scaffold-analysis.html">
-<span>Placement sensitivity</span> <strong>Placed vs Unplaced</strong>
-<p>
-Quantify how unplaced-scaffold genes alter DEG totals without mixing
-them into the paper foreground.
-</p>
-</a> <a class="analysis-tile" href="27-scaffold-origin-audit.html">
-<span>Origin audit</span> <strong>Unplaced Scaffolds</strong>
-<p>
-Review assembly, Kraken/FCS, cross-species, BLASTn, and DIAMOND
-evidence.
-</p>
-</a>
-<a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_mapping-quality_basis_for_excluding_1044">
-<span>Sample quality control</span> <strong>Exclusion of 1044</strong>
-<p>
-Show the technical mapping failure that excluded 1044 while retaining
-every other library.
-</p>
-<p></a></p>
+<span class="analysis-step">2</span> <strong>Primary differential
+expression</strong> <span class="analysis-description">Follow the
+manuscript analysis and the placement sensitivity that defines its gene
+universe.</span> </a>
+<a class="analysis-tile" href="10-go-term-enrichment.html"> <span
+class="analysis-step">3</span> <strong>Functional
+interpretation</strong> <span class="analysis-description">Connect
+infection-responsive genes to GO terms, KEGG pathways, expression
+clusters, and candidates.</span> </a>
+<a class="analysis-tile" href="08-publication-figures.html"> <span
+class="analysis-step">4</span> <strong>Publication figures</strong>
+<span class="analysis-description">Review and download the main and
+supplementary figure panels with their source tables.</span> </a></p>
 </div>
-</div>
-<div id="current-visual-signals" class="section level2">
-<h2>Current Visual Signals</h2>
-<div class="figure-strip">
-<figure>
-<img src="figure/16-all-samples-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="Main-chromosome infection DEG count barplot">
-<figcaption>
-Infection DEGs by diet
-</figcaption>
-</figure>
-<figure>
-<img src="figure/07-deg-overlap-prioritization.Rmd/deg-upsetr-current-sets.png" alt="Main-chromosome DEG overlap plot">
-<figcaption>
-DEG overlap
-</figcaption>
-</figure>
-<figure>
-<img src="figure/26-circled-cluster-enrichment.Rmd/expression-cluster-landscape-1.png" alt="Main-chromosome DEG expression clusters">
-<figcaption>
-Expression clusters
-</figcaption>
-</figure>
+<div class="note-panel home-scope-note">
+<p>
+<strong>Primary analysis.</strong> The manuscript path uses the 44
+QC-passed libraries, transcript-plus-exon gene counts, annotated rRNA
+removal, and genes assigned to the nuclear chromosomes. All-scaffold,
+exon-only, sample-exclusion, and sequence-origin checks are grouped
+under <a href="35-count-definition-sensitivity.html">Validation</a>.
+</p>
+<p>
+Every analysis page contains its runnable R code. Data locations and
+rerun commands are documented on the
+<a href="02-workflow-reproducibility.html">workflow and reproducibility
+page</a>.
+</p>
 </div>
 <br>
 <p>
@@ -1743,31 +1460,6 @@ loaded via a namespace (and not attached):
 </div>
 </div>
 
-<script id="count-definition-navigation">
-(function ($) {
-  "use strict";
-
-  $(function () {
-    $(".dropdown-submenu > a").on("click.countDefinition", function (event) {
-      var item = $(this).parent(".dropdown-submenu");
-
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-      item.siblings(".dropdown-submenu.open").removeClass("open")
-        .children("a").attr("aria-expanded", "false");
-      item.toggleClass("open");
-      $(this).attr("aria-expanded", item.hasClass("open") ? "true" : "false");
-      return false;
-    });
-  });
-
-  $(document).on("hide.bs.dropdown", ".navbar-nav > .dropdown", function () {
-    $(this).find(".dropdown-submenu.open").removeClass("open")
-      .children("a").attr("aria-expanded", "false");
-  });
-}(window.jQuery));
-</script>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
