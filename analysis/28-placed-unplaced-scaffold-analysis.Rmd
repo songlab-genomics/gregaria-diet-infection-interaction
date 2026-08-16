@@ -1,5 +1,5 @@
 ---
-title: "Placed-scaffold primary analysis and unplaced-gene sensitivity"
+title: "Primary DESeq2 analysis and placement sensitivity"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -69,6 +69,24 @@ before modeling.
 > biological origin. Unplaced genes are preserved in the outputs and in the
 > focused cluster 1 verification section; they are not presented as confirmed
 > microbial genes.
+
+### Continue through the primary results
+
+This page is the main entry point for the transcript-plus-exon analysis. The
+reader-facing results continue with [infection responses within each
+diet](16-all-samples-infection-within-diet-deg.html), [DEG
+overlap](07-deg-overlap-prioritization.html), the [searchable DEG
+catalogue](24-all-deg-catalogue.html), [GO and KEGG
+enrichment](10-go-term-enrichment.html), and [expression
+clusters](26-circled-cluster-enrichment.html).
+
+The matched all-scaffold calculations remain available as detailed notebooks
+for the [interaction model](04-deseq2-interaction-model.html), [diet
+contrasts](05-diet-pairwise-deg.html), [infection
+contrasts](06-infection-within-diet-deg.html), [overlap](31-all-scaffolds-deg-overlap-prioritization.html),
+[catalogue](32-all-scaffolds-deg-catalogue.html), and [functional
+enrichment](33-all-scaffolds-go-term-enrichment.html). They are validation
+views rather than a second competing narrative.
 
 ## Setup
 

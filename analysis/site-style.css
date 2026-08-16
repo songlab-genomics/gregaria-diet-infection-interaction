@@ -37,31 +37,8 @@ body {
   background-color: #22313f;
 }
 
-/* Count-definition submenus are shared by every scientific section. */
 .navbar .dropdown-menu {
   min-width: 230px;
-}
-
-.navbar .dropdown-submenu > a {
-  color: #102a43;
-  font-weight: 750;
-}
-
-.navbar .dropdown-submenu > .dropdown-menu {
-  min-width: 285px;
-  max-height: 72vh;
-  overflow-y: auto;
-}
-
-.navbar .dropdown-submenu.open > .dropdown-menu {
-  display: block;
-}
-
-@media (min-width: 768px) {
-  .navbar-nav > li:nth-last-child(-n + 4) .dropdown-submenu > .dropdown-menu {
-    right: 100%;
-    left: auto;
-  }
 }
 
 .main-container {
@@ -286,20 +263,11 @@ pre, code {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
-.metric-grid,
-.analysis-grid,
-.scope-grid,
-.figure-strip {
+.analysis-grid {
   display: grid;
   gap: 16px;
 }
 
-.metric-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 24px 0 18px;
-}
-
-.metric,
 .analysis-tile {
   background: #ffffff;
   border: 1px solid #d9e2ec;
@@ -307,94 +275,8 @@ pre, code {
   box-shadow: 0 8px 22px rgba(31, 41, 51, 0.08);
 }
 
-.metric {
-  padding: 18px;
-}
-
-.metric span {
-  display: block;
-  color: #b45309;
-  font-size: 28px;
-  line-height: 1.1;
-  font-weight: 800;
-}
-
-.metric strong {
-  display: block;
-  margin-top: 6px;
-  color: #52606d;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
 .analysis-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.scope-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 18px 0 30px;
-}
-
-.scope-panel {
-  background: #ffffff;
-  border: 1px solid #d9e2ec;
-  border-top: 6px solid #0f766e;
-  border-radius: 8px;
-  box-shadow: 0 10px 26px rgba(31, 41, 51, 0.09);
-  padding: 22px;
-}
-
-.scope-panel.placed-scope {
-  border-top-color: #b45309;
-}
-
-.scope-panel > span {
-  color: #0f766e;
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.scope-panel.placed-scope > span {
-  color: #b45309;
-}
-
-.scope-panel h3 {
-  margin: 8px 0 10px;
-}
-
-.scope-panel p {
-  color: #52606d;
-  line-height: 1.55;
-}
-
-.scope-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.scope-links a {
-  background: #eef6f4;
-  border: 1px solid #c9ded9;
-  border-radius: 6px;
-  color: #0f5f59;
-  font-weight: 700;
-  padding: 8px 10px;
-  text-decoration: none;
-}
-
-.placed-scope .scope-links a {
-  background: #fff7ed;
-  border-color: #f3d2ae;
-  color: #92400e;
-}
-
-.compact-grid .analysis-tile {
-  min-height: 145px;
 }
 
 .analysis-tile {
@@ -430,11 +312,6 @@ pre, code {
   margin: 0;
 }
 
-.featured-tile {
-  border-color: #0f766e;
-  box-shadow: 0 12px 30px rgba(15, 118, 110, 0.18);
-}
-
 .note-panel {
   background: #ffffff;
   border-left: 6px solid #0f766e;
@@ -451,29 +328,8 @@ pre, code {
   margin: 0;
 }
 
-.figure-strip {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 14px;
-}
-
-.figure-strip figure {
-  margin: 0;
-  background: #ffffff;
-  border: 1px solid #d9e2ec;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 8px 22px rgba(31, 41, 51, 0.08);
-}
-
-.figure-strip img {
-  width: 100%;
-  display: block;
-}
-
-.figure-strip figcaption {
-  padding: 10px 12px;
-  color: #52606d;
-  font-weight: 700;
+.note-panel p + p {
+  margin-top: 10px;
 }
 
 img {
@@ -520,21 +376,15 @@ img {
 
 @media (max-width: 980px) {
   .hero-panel,
-  .metric-grid,
   .analysis-grid,
-  .scope-grid,
-  .walkthrough-grid,
-  .figure-strip {
+  .walkthrough-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 680px) {
   .hero-panel,
-  .metric-grid,
-  .analysis-grid,
-  .scope-grid,
-  .figure-strip {
+  .analysis-grid {
     grid-template-columns: 1fr;
   }
 
@@ -544,18 +394,5 @@ img {
 
   .hero-panel h1 {
     font-size: 30px;
-  }
-}
-
-@media (max-width: 767px) {
-  .navbar .dropdown-submenu > .dropdown-menu {
-    position: static;
-    float: none;
-    width: auto;
-    min-width: 0;
-    max-height: none;
-    margin: 0 0 4px 16px;
-    border: 0;
-    box-shadow: none;
   }
 }

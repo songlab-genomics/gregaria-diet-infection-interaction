@@ -8,52 +8,21 @@ output:
     toc: false
 ---
 
-```{r setup, include=FALSE}
-metadata <- read.delim("data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
-                       check.names = FALSE)
-metadata <- metadata[, !is.na(names(metadata)) & nzchar(names(metadata)),
-                     drop = FALSE]
-metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
-metadata$Treatment <- factor(metadata$Treatment, levels = c("Control", "Infected"))
-
-counts_table <- read.delim(
-  "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv",
-  check.names = FALSE
-)
-placement <- read.delim(
-  "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv",
-  check.names = FALSE
-)
-rrna_ids <- trimws(readLines("data/excluded_loci/gregaria_rrna_list.txt"))
-rrna_ids <- rrna_ids[nzchar(rrna_ids) & !startsWith(rrna_ids, "#")]
-all_non_rrna_ids <- setdiff(counts_table$gene_id, rrna_ids)
-main_chromosome_ids <- placement$gene_id[
-  placement$sequence_class == "Nuclear chromosome" &
-    !placement$gene_id %in% rrna_ids
-]
-all_counts <- counts_table[counts_table$gene_id %in% all_non_rrna_ids, ]
-placed_counts <- counts_table[counts_table$gene_id %in% main_chromosome_ids, ]
-```
-
-```{r hero, echo=FALSE, results='asis'}
-cat('
 <div class="hero-panel">
 <div class="hero-copy">
 <p class="eyebrow">fat body RNA-seq / diet / fungal challenge</p>
 <h1>Fat body diet-infection RNA-seq analysis</h1>
 <p class="lede">
-This workflowR site analyzes a frozen 44-library fat-body cohort after excluding
-mapping-QC outlier 1044, and presents two parallel count definitions for the
-same experiment. Within each, the all-scaffold view
-preserves the complete host-reference signal and the placed-chromosome view
-provides the conservative foreground used for publication. Outlier-removal
-is retained only as a focused sensitivity check rather than treated as a
-competing primary analysis.
+Follow how dietary protein-to-carbohydrate balance relates to the fat body
+transcriptional response of <em>Schistocerca gregaria</em> to
+<em>Metarhizium robertsii</em>. The site moves from experimental design and
+quality control to differential expression, functional interpretation, and
+publication figures.
 </p>
 <div class="hero-actions">
-<a href="04-deseq2-interaction-model.html">Transcript + exon</a>
-<a href="36-exon-only-deseq2-analysis.html">Exon only</a>
-<a href="08-publication-figures.html">Publication figures</a>
+<a href="01-study-design-data.html">Start with the study</a>
+<a href="28-placed-unplaced-scaffold-analysis.html">Read the results</a>
+<a href="08-publication-figures.html">View the figures</a>
 </div>
 </div>
 <div class="hero-figure">
@@ -63,194 +32,37 @@ competing primary analysis.
 <div class="study-design-banner">
 <img src="assets/home/experimental-design-overview.png" alt="Experimental design showing crowded-reared desert locusts assigned to control or Metarhizium infection across three artificial diets">
 </div>
-')
-```
 
-```{r metrics, echo=FALSE, results='asis'}
-n_samples <- nrow(metadata)
-n_all_genes <- nrow(all_counts)
-n_placed_genes <- nrow(placed_counts)
-diet_levels <- paste(levels(droplevels(metadata$Diet)), collapse = " / ")
-treatment_levels <- paste(levels(droplevels(metadata$Treatment)), collapse = " / ")
-
-cat('<div class="metric-grid">')
-cat(sprintf('<div class="metric"><span>%s</span><strong>samples</strong></div>', n_samples))
-cat(sprintf('<div class="metric"><span>%s</span><strong>all non-rRNA loci</strong></div>',
-            format(n_all_genes, big.mark = ",")))
-cat(sprintf('<div class="metric"><span>%s</span><strong>placed chromosome loci</strong></div>',
-            format(n_placed_genes, big.mark = ",")))
-cat(sprintf('<div class="metric"><span>%s</span><strong>diet x treatment groups</strong></div>',
-            length(unique(interaction(metadata$Diet, metadata$Treatment)))))
-cat('</div>')
-```
-
-## How To Read This Site
-
-<div class="note-panel">
-<p>
-Start with the shared design and workflow pages. In each main menu, first choose
-either **Transcript + exon** or **Exon only**, then follow that definition
-consistently through DEG testing, overlap, catalogue, enrichment, and figures.
-Page labels state whether a result uses all scaffolds or placed chromosomes.
-Both count definitions retain every sample in the 44-library analysis cohort
-and remove annotated rRNA loci.
-</p>
-</div>
-
-## Data Availability And Local Setup
-
-<div class="note-panel">
-<p>
-GitHub contains the runnable R Markdown workflow, small design files, and the
-rendered website. Large count matrices, annotations, complete result tables,
-and HPC audit products are kept in the associated Dryad package. On the project
-computer, that package is located at
-<code>/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad</code>.
-Run <code>bash scripts/setup_dryad_links.sh</code> after cloning the repository
-or downloading the data package. The analysis pages then continue to use their
-documented project-relative paths.
-</p>
-</div>
-
-## Shared Starting Point
+## Follow the analysis
 
 <div class="analysis-grid">
   <a class="analysis-tile" href="01-study-design-data.html">
-    <span>Step 1</span>
-    <strong>Study Design and Data</strong>
-    <p>Confirm the diet, infection, sample metadata, rRNA-filtered counts, and inclusion logic.</p>
+    <span>1</span>
+    <strong>Design and quality control</strong>
+    <p>Understand the diets, infection treatment, sample cohort, mapping, and count filtering.</p>
   </a>
-  <a class="analysis-tile" href="02-workflow-reproducibility.html">
-    <span>Step 2</span>
-    <strong>RNA-seq Workflow</strong>
-    <p>Document how reads move from trimming, STAR alignment, and featureCounts into the count matrix.</p>
+  <a class="analysis-tile" href="28-placed-unplaced-scaffold-analysis.html">
+    <span>2</span>
+    <strong>Primary differential expression</strong>
+    <p>Follow the manuscript analysis and the placement sensitivity that defines its gene universe.</p>
   </a>
-  <a class="analysis-tile" href="03-count-qc-exploration.html">
-    <span>Step 3</span>
-    <strong>Fat Body Count QC</strong>
-    <p>Check library sizes, PCA structure, sample distances, and broad expression quality.</p>
-  </a>
-  <a class="analysis-tile" href="47-paper-statistical-reference.html">
-    <span>Step 4</span>
-    <strong>Statistical Analysis Reference</strong>
-    <p>Trace each paper result from its model code to its reported evidence and interpretation.</p>
-  </a>
-</div>
-
-## Choose The Count Definition
-
-<div class="scope-grid">
-<section class="scope-panel all-scope">
-<span>Primary count definition</span>
-<h3>Transcript + exon</h3>
-<p>Gene counts use featureCounts <code>-t transcript,exon -g gene_id</code>. This is the primary branch used for the current manuscript figures.</p>
-<div class="scope-links">
-<a href="04-deseq2-interaction-model.html">Fat body analysis</a>
-<a href="31-all-scaffolds-deg-overlap-prioritization.html">Interpretation</a>
-<a href="08-publication-figures.html">Figures</a>
-</div>
-</section>
-<section class="scope-panel placed-scope">
-<span>Parallel sensitivity definition</span>
-<h3>Exon only</h3>
-<p>Gene counts use featureCounts <code>-t exon -g gene_id</code>, with the same 44-sample analysis cohort, rRNA exclusion, models, contrasts, and thresholds.</p>
-<div class="scope-links">
-<a href="36-exon-only-deseq2-analysis.html">Fat body analysis</a>
-<a href="40-exon-only-deg-overlap.html">Interpretation</a>
-<a href="46-exon-only-publication-figures.html">Figures</a>
-</div>
-</section>
-</div>
-
-## Choose The Gene Universe
-
-<div class="scope-grid">
-<section class="scope-panel all-scope">
-<span>Complete reference view</span>
-<h3>All samples + all scaffolds</h3>
-<p>The 44-sample analysis cohort and every expression-filtered non-rRNA host locus are tested. Use this branch to inspect the full signal, including unplaced scaffolds.</p>
-<div class="scope-links">
-<a href="04-deseq2-interaction-model.html">Interaction model</a>
-<a href="05-diet-pairwise-deg.html">Diet DEGs</a>
-<a href="06-infection-within-diet-deg.html">Infection DEGs</a>
-<a href="31-all-scaffolds-deg-overlap-prioritization.html">Overlap</a>
-<a href="32-all-scaffolds-deg-catalogue.html">Catalogue</a>
-<a href="33-all-scaffolds-go-term-enrichment.html">GO / KEGG</a>
-</div>
-</section>
-<section class="scope-panel placed-scope">
-<span>Current manuscript view</span>
-<h3>All samples + placed chromosomes</h3>
-<p>The 44-sample analysis cohort are retained, while the tested universe is restricted to official nuclear chromosomes. This is the conservative publication branch.</p>
-<div class="scope-links">
-<a href="14-all-samples-deseq2-interaction-model.html">Interaction model</a>
-<a href="15-all-samples-diet-pairwise-deg.html">Diet DEGs</a>
-<a href="16-all-samples-infection-within-diet-deg.html">Infection DEGs</a>
-<a href="07-deg-overlap-prioritization.html">Overlap</a>
-<a href="24-all-deg-catalogue.html">Catalogue</a>
-<a href="10-go-term-enrichment.html">GO / KEGG</a>
-</div>
-</section>
-</div>
-
-## Biological Interpretation
-
-<div class="analysis-grid">
-  <a class="analysis-tile featured-tile" href="13-physiology-candidate-genes.html">
-    <span>Both scopes</span>
-    <strong>Physiology Candidates</strong>
-    <p>Compare immune, protein storage/synthesis, lipid metabolism, and detoxification responses across diets.</p>
-  </a>
-  <a class="analysis-tile" href="26-circled-cluster-enrichment.html">
-    <span>Placed chromosomes</span>
-    <strong>Expression Clusters</strong>
-    <p>Review the complete gene-level heatmap and cluster-specific GO/KEGG patterns used in Figure 3.</p>
-  </a>
-  <a class="analysis-tile" href="30-curated-target-gene-figure.html">
-    <span>Both placement scopes</span>
-    <strong>Curated Targets</strong>
-    <p>Follow the curated immune and protein-anabolism genes through matched main-chromosome and unplaced-scaffold views.</p>
+  <a class="analysis-tile" href="10-go-term-enrichment.html">
+    <span>3</span>
+    <strong>Functional interpretation</strong>
+    <p>Connect infection-responsive genes to GO terms, KEGG pathways, expression clusters, and candidates.</p>
   </a>
   <a class="analysis-tile" href="08-publication-figures.html">
-    <span>Compiled exports</span>
-    <strong>Publication Figures</strong>
-    <p>Download manuscript-ready Figures 1-4 and supplementary figures from one page.</p>
+    <span>4</span>
+    <strong>Publication figures</strong>
+    <p>Review and download the main and supplementary figure panels with their source tables.</p>
   </a>
 </div>
 
-## Validation and Provenance
-
-<div class="analysis-grid compact-grid">
-  <a class="analysis-tile" href="28-placed-unplaced-scaffold-analysis.html">
-    <span>Placement sensitivity</span>
-    <strong>Placed vs Unplaced</strong>
-    <p>Quantify how unplaced-scaffold genes alter DEG totals without mixing them into the paper foreground.</p>
-  </a>
-  <a class="analysis-tile" href="27-scaffold-origin-audit.html">
-    <span>Origin audit</span>
-    <strong>Unplaced Scaffolds</strong>
-    <p>Review assembly, Kraken/FCS, cross-species, BLASTn, and DIAMOND evidence.</p>
-  </a>
-  <a class="analysis-tile" href="08-publication-figures.html#Figure_S1:_mapping-quality_basis_for_excluding_1044">
-    <span>Sample quality control</span>
-    <strong>Exclusion of 1044</strong>
-    <p>Show the technical mapping failure that excluded 1044 while retaining every other library.</p>
-  </a>
-</div>
-
-## Current Visual Signals
-
-<div class="figure-strip">
-  <figure>
-    <img src="figure/16-all-samples-infection-within-diet-deg.Rmd/deg-count-barplot-1.png" alt="Main-chromosome infection DEG count barplot">
-    <figcaption>Infection DEGs by diet</figcaption>
-  </figure>
-  <figure>
-    <img src="figure/07-deg-overlap-prioritization.Rmd/deg-upsetr-current-sets.png" alt="Main-chromosome DEG overlap plot">
-    <figcaption>DEG overlap</figcaption>
-  </figure>
-  <figure>
-    <img src="figure/26-circled-cluster-enrichment.Rmd/expression-cluster-landscape-1.png" alt="Main-chromosome DEG expression clusters">
-    <figcaption>Expression clusters</figcaption>
-  </figure>
+<div class="note-panel home-scope-note">
+<p><strong>Primary analysis.</strong> The manuscript path uses the 44 QC-passed
+libraries, transcript-plus-exon gene counts, annotated rRNA removal, and genes
+assigned to the nuclear chromosomes. All-scaffold, exon-only, sample-exclusion,
+and sequence-origin checks are grouped under <a href="35-count-definition-sensitivity.html">Validation</a>.</p>
+<p>Every analysis page contains its runnable R code. Data locations and rerun
+commands are documented on the <a href="02-workflow-reproducibility.html">workflow and reproducibility page</a>.</p>
 </div>

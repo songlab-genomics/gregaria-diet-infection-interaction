@@ -1,5 +1,5 @@
 ---
-title: "Complete exon-only DESeq2 analysis"
+title: "Exon-only sensitivity analysis"
 author: "Emily Baker and Maeva A. Techer"
 date: "`r Sys.Date()`"
 site: workflowr::wflow_site
@@ -75,6 +75,20 @@ before modeling.
 > biological origin. Unplaced genes are preserved in the outputs and in the
 > focused cluster 1 verification section; they are not presented as confirmed
 > microbial genes.
+
+### Exon-only drill-down
+
+This overview is the canonical exon-only sensitivity page. Detailed notebooks
+remain available for the [interaction model](37-exon-only-interaction-model.html),
+[diet contrasts](38-exon-only-diet-pairwise-deg.html), [infection contrasts](39-exon-only-infection-within-diet-deg.html),
+[DEG overlap](40-exon-only-deg-overlap.html), [searchable
+catalogue](41-exon-only-deg-catalogue.html), [GO and KEGG
+enrichment](42-exon-only-go-term-enrichment.html), [term-to-gene
+index](43-exon-only-enrichment-term-gene-index.html), [expression
+clusters](44-exon-only-expression-clusters.html), [curated target
+genes](45-exon-only-curated-target-genes.html), and [figure
+exports](46-exon-only-publication-figures.html). These pages document the
+sensitivity branch without duplicating it in the main navigation.
 
 ## Setup
 
