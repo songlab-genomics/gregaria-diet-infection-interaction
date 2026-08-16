@@ -268,6 +268,11 @@ pre, code {
   gap: 16px;
 }
 
+/* Pandoc wraps adjacent raw links in a paragraph; expose the links as grid items. */
+.analysis-grid > p {
+  display: contents;
+}
+
 .analysis-tile {
   background: #ffffff;
   border: 1px solid #d9e2ec;
@@ -293,7 +298,7 @@ pre, code {
   text-decoration: none;
 }
 
-.analysis-tile span {
+.analysis-step {
   color: #0f766e;
   font-size: 13px;
   font-weight: 800;

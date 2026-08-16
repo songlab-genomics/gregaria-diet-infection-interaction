@@ -37,22 +37,22 @@ publication figures.
 
 <div class="analysis-grid">
   <a class="analysis-tile" href="01-study-design-data.html">
-    <span>1</span>
+    <span class="analysis-step">1</span>
     <strong>Design and quality control</strong>
     <span class="analysis-description">Understand the diets, infection treatment, sample cohort, mapping, and count filtering.</span>
   </a>
   <a class="analysis-tile" href="28-placed-unplaced-scaffold-analysis.html">
-    <span>2</span>
+    <span class="analysis-step">2</span>
     <strong>Primary differential expression</strong>
     <span class="analysis-description">Follow the manuscript analysis and the placement sensitivity that defines its gene universe.</span>
   </a>
   <a class="analysis-tile" href="10-go-term-enrichment.html">
-    <span>3</span>
+    <span class="analysis-step">3</span>
     <strong>Functional interpretation</strong>
     <span class="analysis-description">Connect infection-responsive genes to GO terms, KEGG pathways, expression clusters, and candidates.</span>
   </a>
   <a class="analysis-tile" href="08-publication-figures.html">
-    <span>4</span>
+    <span class="analysis-step">4</span>
     <strong>Publication figures</strong>
     <span class="analysis-description">Review and download the main and supplementary figure panels with their source tables.</span>
   </a>
