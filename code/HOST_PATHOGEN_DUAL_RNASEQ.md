@@ -136,17 +136,22 @@ reveals genes whose apparent host signal is reduced when reads can map to the
 fungal proxy.
 
 Both mappings use the same two-pass STAR settings, unique-read MAPQ convention,
-paired featureCounts settings, and reverse-stranded library assumption.
+paired featureCounts settings, and reverse-stranded library assumption. Because
+fastp clips two bases from the 150-bp reads, both STAR indexes use
+`sjdbOverhang=147` (maximum retained read length minus one).
 
-For each host branch and for the competitive fungal branch, featureCounts uses
-one active counting definition:
+For each host branch and for the competitive fungal branch, the primary
+featureCounts definition is:
 
 ```text
 -t transcript,exon -g gene_id
 ```
 
 This keeps transcript-span and exon features together under their gene ID. The
-pipeline does not generate a parallel exon-only matrix.
+two host branches also generate independent exon-only matrices (`-t exon`) for
+the explicit count-definition sensitivity analysis. Primary and sensitivity
+counts are never pooled. The fungal branch currently uses only the primary
+`transcript,exon` definition.
 
 Before DESeq2, loci listed in
 `data/excluded_loci/gregaria_rrna_list.txt` are removed. All biological samples
@@ -442,10 +447,11 @@ refers to the numerator recorded in the output table.
 
 The final reconciliation labels significant genes as supported by both
 mappings in the same direction, supported by both in opposite directions,
-host-only only, or competitive-host only. Every fresh host-only DEG on an
-`NW_` scaffold enters the unplaced-scaffold origin screen automatically; the
-reconciliation table then shows whether its differential-expression evidence
-is retained under competitive mapping.
+host-only only, or competitive-host only. Every fresh host-only DEG assigned
+`Sequence-Role=unplaced-scaffold` by the official NCBI assembly report enters
+the unplaced-scaffold origin screen automatically; the reconciliation table
+then shows whether its differential-expression evidence is retained under
+competitive mapping. Accession-prefix rules are not used as placement evidence.
 
 Fungal differential expression is attempted only among infected libraries that
 pass configurable fungal-read and detected-gene thresholds. Control libraries

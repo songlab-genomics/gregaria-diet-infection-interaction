@@ -76,8 +76,23 @@ REF_GENOME = f"{REFDIR}/{GENOME_ID}_genomic.fna"
 REF_GTF    = f"{REFDIR}/{GENOME_ID}_genomic.gtf"
 REF_TRANSCRIPTOME= f"{REFDIR}/{GENOME_ID}_rna_from_genomic.fna"
 REF_PROTEIN = f"{REFDIR}/{GENOME_ID}_protein.faa"
+REF_ASSEMBLY_REPORT = env_str(
+    "REF_ASSEMBLY_REPORT",
+    f"{REFDIR}/{GENOME_ID}_assembly_report.txt",
+)
 
-STAR_INDEX_DIR = f"{REFDIR}/index/{SPECIES}/STAR"
+# Shared settings for the legacy expression entry point. The curated dual
+# RNA-seq branch below uses the same values.
+STAR_SJDB_OVERHANG = int(env_str("STAR_SJDB_OVERHANG", "147"))
+STAR_ALIGN_INTRON_MAX = int(env_str("STAR_ALIGN_INTRON_MAX", "2500000"))
+STAR_ALIGN_MATES_GAP_MAX = int(env_str("STAR_ALIGN_MATES_GAP_MAX", "2500000"))
+STAR_OUTSAM_MAPQ_UNIQUE = int(env_str("STAR_OUTSAM_MAPQ_UNIQUE", "60"))
+FEATURECOUNTS_STRAND = int(env_str("FEATURECOUNTS_STRAND", "2"))
+
+STAR_INDEX_DIR = env_str(
+    "STAR_INDEX_DIR",
+    f"{SCRATCHDIR}/reference-indexes/{GENOME_ID}/STAR_2.7.10b_sjdb{STAR_SJDB_OVERHANG}",
+)
 SALMON_DIR       = f"{REFDIR}/index/{SPECIES}/SALMON"
 SALMON_INDEX_DIR = f"{SALMON_DIR}/{SPECIES}_index"
 
@@ -229,6 +244,10 @@ DUAL_TRIMMED_DIR = env_str(
 # under that isolate name, so ARSEF 23 is recorded as the mapping proxy.
 DUAL_HOST_FASTA = env_str("DUAL_HOST_FASTA", REF_GENOME)
 DUAL_HOST_GTF = env_str("DUAL_HOST_GTF", REF_GTF)
+DUAL_HOST_ASSEMBLY_REPORT = env_str(
+    "DUAL_HOST_ASSEMBLY_REPORT",
+    REF_ASSEMBLY_REPORT,
+)
 DUAL_FUNGUS_ACCESSION = env_str("DUAL_FUNGUS_ACCESSION", "GCF_000187425.2")
 DUAL_FUNGUS_ISOLATE = env_str("DUAL_FUNGUS_ISOLATE", "ARSEF 23")
 DUAL_EXPERIMENTAL_ISOLATE = env_str("DUAL_EXPERIMENTAL_ISOLATE", "DWR2009 / ARSEF 10343")
@@ -254,8 +273,15 @@ DUAL_REFERENCE_DIR = (
     if DUAL_REFERENCE_CACHE_DIR
     else f"{DUAL_DIR}/00-reference"
 )
-DUAL_HOST_ONLY_STAR_INDEX_DIR = f"{DUAL_REFERENCE_DIR}/STAR-host-only"
-DUAL_COMPETITIVE_STAR_INDEX_DIR = f"{DUAL_REFERENCE_DIR}/STAR-competitive"
+# The 150-bp libraries lose two bases during front trimming, so the maximum
+# retained read length is 148 bp and STAR uses max_read_length - 1 = 147.
+DUAL_STAR_SJDB_OVERHANG = int(env_str("DUAL_STAR_SJDB_OVERHANG", "147"))
+DUAL_HOST_ONLY_STAR_INDEX_DIR = (
+    f"{DUAL_REFERENCE_DIR}/STAR-host-only-sjdb{DUAL_STAR_SJDB_OVERHANG}"
+)
+DUAL_COMPETITIVE_STAR_INDEX_DIR = (
+    f"{DUAL_REFERENCE_DIR}/STAR-competitive-sjdb{DUAL_STAR_SJDB_OVERHANG}"
+)
 DUAL_HOST_PREFIX = env_str("DUAL_HOST_PREFIX", "HOST__")
 DUAL_FUNGUS_PREFIX = env_str("DUAL_FUNGUS_PREFIX", "MR__")
 

@@ -8,6 +8,9 @@ rule STAR_index:
         annotation = REF_GTF
     output:
         index_dir = directory(STAR_INDEX_DIR)
+    params:
+        sjdb_overhang = STAR_SJDB_OVERHANG,
+        align_intron_max = STAR_ALIGN_INTRON_MAX
     threads: 20
     shell:
         r"""
@@ -21,8 +24,8 @@ rule STAR_index:
           --genomeDir {output.index_dir} \
           --genomeFastaFiles {input.ref_genome} \
           --sjdbGTFfile {input.annotation} \
-          --alignIntronMax 2500000 \
-          --sjdbOverhang 149
+          --alignIntronMax {params.align_intron_max} \
+          --sjdbOverhang {params.sjdb_overhang}
         """
 
 
@@ -38,7 +41,10 @@ rule STAR_align:
         readtable = WORKDIR + "/02-{tissue}-star/{locust}_ReadsPerGene.out.tab",
         counts = WORKDIR + "/03-{tissue}-DESeq2/{locust}_counts.txt"
     params:
-        prefix = WORKDIR + "/02-{tissue}-star/{locust}_"
+        prefix = WORKDIR + "/02-{tissue}-star/{locust}_",
+        mapq_unique = STAR_OUTSAM_MAPQ_UNIQUE,
+        align_intron_max = STAR_ALIGN_INTRON_MAX,
+        align_mates_gap_max = STAR_ALIGN_MATES_GAP_MAX
     threads: 16
     shell:
         r"""
@@ -53,13 +59,14 @@ rule STAR_align:
           --genomeLoad NoSharedMemory \
           --limitBAMsortRAM 32000000000 \
           --outSAMtype BAM SortedByCoordinate \
+          --outSAMmapqUnique {params.mapq_unique} \
           --outSAMattrRGline ID:{wildcards.locust} SM:{wildcards.locust} LB:Stranded_Total_RNA_RiboZero PL:Illumina PU:NovaSeq6000 \
           --quantMode TranscriptomeSAM GeneCounts \
           --twopassMode Basic \
           --sjdbGTFfile {input.annotation} \
-          --sjdbOverhang 149 \
           --outSAMattributes NH HI AS NM MD \
-          --alignIntronMax 2500000 \
+          --alignIntronMax {params.align_intron_max} \
+          --alignMatesGapMax {params.align_mates_gap_max} \
           --outSAMunmapped Within \
           --readFilesCommand zcat \
           --readFilesIn {input.trimmed_read1} {input.trimmed_read2} \

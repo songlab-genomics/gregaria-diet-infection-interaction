@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Link fresh host-only DEGs to unplaced S. gregaria scaffolds in the GTF."""
+"""Link fresh host-only DEGs to NCBI-defined unplaced scaffolds."""
 
 import argparse
 import csv
@@ -16,6 +16,7 @@ def parse_args():
     parser.add_argument("--deseq-results", required=True)
     parser.add_argument("--mapping-reconciliation", required=True)
     parser.add_argument("--gtf", required=True)
+    parser.add_argument("--assembly-report", required=True)
     parser.add_argument("--output-genes", required=True)
     parser.add_argument("--output-scaffolds", required=True)
     return parser.parse_args()
@@ -25,8 +26,37 @@ def as_bool(value):
     return str(value).strip().lower() in {"true", "t", "1", "yes"}
 
 
+def no_version(accession):
+    parts = accession.rsplit(".", 1)
+    return parts[0] if len(parts) == 2 and parts[1].isdigit() else accession
+
+
+def unplaced_accessions(path):
+    lines = Path(path).read_text(encoding="utf-8", errors="replace").splitlines()
+    header_index = next(
+        (i for i, line in enumerate(lines) if line.startswith("# Sequence-Name\t")),
+        None,
+    )
+    if header_index is None:
+        raise ValueError(f"NCBI assembly-report header not found: {path}")
+    header = lines[header_index][2:].split("\t")
+    accessions = set()
+    for line in lines[header_index + 1 :]:
+        if not line or line.startswith("#"):
+            continue
+        row = dict(zip(header, line.split("\t")))
+        if row.get("Sequence-Role") != "unplaced-scaffold":
+            continue
+        for key in ("Sequence-Name", "RefSeq-Accn", "GenBank-Accn"):
+            accession = row.get(key, "")
+            if accession and accession.lower() != "na":
+                accessions.update({accession, no_version(accession)})
+    return accessions
+
+
 def main():
     args = parse_args()
+    unplaced = unplaced_accessions(args.assembly_report)
     significant_contrasts = defaultdict(set)
     with open(args.deseq_results, newline="") as handle:
         for row in csv.DictReader(handle):
@@ -53,7 +83,10 @@ def main():
             if not match:
                 continue
             gene_id = match.group(1)
-            if gene_id in significant_contrasts and fields[0].startswith("NW_"):
+            if (
+                gene_id in significant_contrasts
+                and (fields[0] in unplaced or no_version(fields[0]) in unplaced)
+            ):
                 gene_to_scaffolds[gene_id].add(fields[0])
 
     rows = []

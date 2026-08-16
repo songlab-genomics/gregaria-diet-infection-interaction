@@ -21,9 +21,14 @@ rule featurecounts:
 
         featureCounts -p \
           --countReadPairs \
+          -B \
+          -C \
+          -s {FEATURECOUNTS_STRAND} \
           -t transcript,exon \
           -g gene_id \
           --extraAttributes gene_name \
+          --primary \
+          -Q 10 \
           -a {input.annotation} \
           -R BAM {input.bamfile} \
           -T {threads} \

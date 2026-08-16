@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract NW_ unplaced scaffolds and report simple sequence properties."""
+"""Extract selected unplaced scaffolds and report sequence properties."""
 
 import argparse
 import csv
@@ -51,7 +51,7 @@ def main():
     rows = []
     with open(args.output_fasta, "w") as fasta_out:
         for name, description, sequence in fasta_records(args.fasta):
-            if not name.startswith("NW_"):
+            if selected is None and not name.startswith("NW_"):
                 continue
             if selected is not None and name not in selected:
                 continue

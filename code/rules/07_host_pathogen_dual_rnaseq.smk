@@ -502,7 +502,7 @@ rule dual_host_only_star_index:
           --genomeFastaFiles {input.fasta} \
           --sjdbGTFfile {input.gtf} \
           --alignIntronMax 2500000 \
-          --sjdbOverhang 149
+          --sjdbOverhang {DUAL_STAR_SJDB_OVERHANG}
         """
 
 
@@ -526,7 +526,7 @@ rule dual_competitive_star_index:
           --genomeFastaFiles {input.fasta} \
           --sjdbGTFfile {input.gtf} \
           --alignIntronMax 2500000 \
-          --sjdbOverhang 149
+          --sjdbOverhang {DUAL_STAR_SJDB_OVERHANG}
         """
 
 
@@ -1339,7 +1339,8 @@ rule dual_identify_unplaced_host_degs:
     input:
         results=DUAL_HOST_ONLY_DE_DIR + "/host_deseq2_all_contrasts.csv",
         reconciliation=DUAL_DE_RECONCILIATION,
-        gtf=DUAL_HOST_GTF
+        gtf=DUAL_HOST_GTF,
+        assembly_report=DUAL_HOST_ASSEMBLY_REPORT
     output:
         genes=DUAL_UNPLACED_DEG_GENES,
         scaffolds=DUAL_UNPLACED_SCAFFOLD_LIST
@@ -1349,6 +1350,7 @@ rule dual_identify_unplaced_host_degs:
           --deseq-results {input.results} \
           --mapping-reconciliation {input.reconciliation} \
           --gtf {input.gtf} \
+          --assembly-report {input.assembly_report} \
           --output-genes {output.genes} \
           --output-scaffolds {output.scaffolds}
         """
