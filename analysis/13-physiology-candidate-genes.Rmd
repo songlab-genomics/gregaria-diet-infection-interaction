@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
-  all_results_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
+  all_results_file: "data/derived/deseq2/transcript_exon_primary_all_contrasts.csv.gz"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   curated_candidate_file: "data/external/curated_target_genes/2026-08-09_Immune_Protein_Anabolism_DEGs_v24.xlsx"
@@ -159,7 +159,7 @@ parse_cds_gene_bridge <- function(path) {
     dplyr::distinct()
 }
 
-counts_raw <- if (grepl("[.]tsv$", counts_file, ignore.case = TRUE)) {
+counts_raw <- if (grepl("[.]tsv([.]gz)?$", counts_file, ignore.case = TRUE)) {
   read.delim(counts_file, check.names = FALSE)
 } else {
   read.csv(counts_file, check.names = FALSE)

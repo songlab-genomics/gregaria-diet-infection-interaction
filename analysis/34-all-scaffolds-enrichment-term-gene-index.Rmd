@@ -8,7 +8,7 @@ output:
     toc: true
     toc_float: true
 params:
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
@@ -243,7 +243,7 @@ if (!all(input_files$present)) {
 ## Build term-to-gene index
 
 ```{r build-index}
-counts_raw <- if (grepl("[.]tsv$", counts_file, ignore.case = TRUE)) {
+counts_raw <- if (grepl("[.]tsv([.]gz)?$", counts_file, ignore.case = TRUE)) {
   read.delim(counts_file, check.names = FALSE)
 } else {
   read.csv(counts_file, check.names = FALSE)

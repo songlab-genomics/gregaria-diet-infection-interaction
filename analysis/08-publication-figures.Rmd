@@ -9,8 +9,8 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
-  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
+  placement_file: "data/derived/mapping/host_gene_sequence_placement.tsv.gz"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
@@ -71,15 +71,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 publication_default_params <- list(
   metadata_file = "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
-  counts_file = paste0(
-    "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/",
-    "host_counts_no_rrna.tsv"
-  ),
-  placement_file = paste0(
-    "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
-    "host-mapping-audit_20260729-163928/unified-model/audit-summary/",
-    "host_gene_sequence_placement.tsv"
-  ),
+  counts_file = "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz",
+  placement_file = "data/derived/mapping/host_gene_sequence_placement.tsv.gz",
   rrna_file = "data/excluded_loci/gregaria_rrna_list.txt",
   gff_file = "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff",
   eggnog_file = paste0(
@@ -3156,8 +3149,51 @@ knitr::kable(
 )
 ```
 
+## Figure S4: GO enrichment of diet-resolved responses
+
+Figure S4 summarizes GO enrichment among genes induced by infection within
+each diet, the subset of induced genes detected as significant in only one
+diet, and direct diet contrasts among control locusts. “Diet-exclusive” refers
+to the pattern of DEG detection and is interpreted as exploratory: failure to
+reach the DEG threshold in another diet is not itself evidence for a
+significant diet-by-infection interaction. The formal interaction test remains
+the appropriate test of whether infection effects differ among diets.
+
+```{r figure-s4-diet-resolved-go, echo=FALSE, out.width="92%"}
+go_enrichment_dir <- latest_dir("^go-term-enrichment_")
+s4_go_files <- c(
+  "figureS4_diet_resolved_GO_enrichment.png",
+  "figureS4_diet_resolved_GO_enrichment.svg",
+  "figureS4_diet_resolved_GO_enrichment.pdf",
+  "figureS4_diet_resolved_GO_enrichment_results.csv",
+  "diet_exclusive_infection_induced_deg_set_summary.csv",
+  "diet_exclusive_infection_induced_DEG_sets_long.csv",
+  "diet_exclusive_infection_induced_gene_annotations.csv"
+)
+s4_go_sources <- file.path(go_enrichment_dir, s4_go_files)
+if (!all(file.exists(s4_go_sources))) {
+  stop("Missing Figure S4 GO-enrichment source exports in: ",
+       go_enrichment_dir)
+}
+s4_go_targets <- file.path(out_dir, basename(s4_go_sources))
+file.copy(s4_go_sources, s4_go_targets, overwrite = TRUE)
+
+grid::grid.newpage()
+grid::grid.raster(png::readPNG(s4_go_sources[[1]]))
+```
+
+```{r figure-s4-go-export-manifest, echo=FALSE}
+knitr::kable(
+  tibble::tibble(
+    file = basename(s4_go_targets),
+    present = file.exists(s4_go_targets)
+  ),
+  caption = "Figure S4 GO-enrichment plot and source-data exports"
+)
+```
+
 <!-- Chromosomal DEG localization remains an unnumbered candidate supplementary
-figure for possible inclusion as Figure S4 or a later supplement. -->
+figure for possible inclusion as Figure S5 or a later supplement. -->
 
 ```{r candidate-deg-genome-localization, eval=FALSE, include=FALSE}
 s2_scenario_degs <- read.csv(scenario_results_file, check.names = FALSE) |>

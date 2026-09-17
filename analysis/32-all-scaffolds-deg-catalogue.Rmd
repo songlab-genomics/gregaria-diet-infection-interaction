@@ -8,13 +8,13 @@ output:
     toc: true
     toc_float: true
 params:
-  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  placement_file: "data/derived/mapping/host_gene_sequence_placement.tsv.gz"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   latest_results_root: "output/rmd_runs"
   alpha: 0.05
   lfc_threshold: 1
-  all_results_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_deseq2_all_contrasts.csv"
+  all_results_file: "data/derived/deseq2/transcript_exon_primary_all_contrasts.csv.gz"
   output_tag: "all-scaffolds-all-deg-catalogue"
 ---
 

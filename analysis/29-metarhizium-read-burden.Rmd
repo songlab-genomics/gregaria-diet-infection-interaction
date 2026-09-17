@@ -9,8 +9,8 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  mapping_summary_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/05-mapping-comparison/competitive_mapping_summary.tsv"
-  taxonomy_manifest_file: "output/runs/host_pathogen_dual_corrected45_20260809-153146/08-taxonomy/family_abundance_manifest.tsv"
+  mapping_summary_file: "data/derived/mapping/competitive_mapping_summary.tsv"
+  taxonomy_manifest_file: "data/derived/taxonomy/family_abundance_manifest.tsv"
   cluster_run_dir: ""
   output_tag: "metarhizium-read-burden"
 ---

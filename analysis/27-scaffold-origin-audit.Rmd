@@ -8,8 +8,8 @@ output:
     toc: true
     toc_float: true
 params:
-  audit_review_dir: "output/runs/scaffold_origin_20260729_030308/local-analysis/scaffold-origin-review_20260730-234810"
-  homology_review_dir: "output/runs/scaffold_homology_20260803_042409/local-analysis/homology-review_20260804-084526"
+  audit_review_dir: "data/derived/scaffold_audit/origin"
+  homology_review_dir: "data/derived/scaffold_audit/homology"
   taxonomy_lookup: "data/scaffold_origin/ncbi_taxonomy_lookup_20260804.tsv"
   output_tag: "scaffold-origin-audit"
 ---

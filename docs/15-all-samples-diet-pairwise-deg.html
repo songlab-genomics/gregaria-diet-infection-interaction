@@ -11,7 +11,7 @@
 
 <meta name="author" content="Emily Baker and Maeva A. Techer" />
 
-<meta name="date" content="2026-08-16" />
+<meta name="date" content="2026-09-17" />
 
 <title>Main-chromosome diet pairwise DEGs - analysis cohort</title>
 
@@ -453,7 +453,7 @@ div.tocify {
 <h1 class="title toc-ignore">Main-chromosome diet pairwise DEGs -
 analysis cohort</h1>
 <h4 class="author">Emily Baker and Maeva A. Techer</h4>
-<h4 class="date">2026-08-16</h4>
+<h4 class="date">2026-09-17</h4>
 
 </div>
 
@@ -461,7 +461,7 @@ analysis cohort</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -472,8 +472,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -482,13 +482,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-16
+<strong>Last updated:</strong> 2026-09-17
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -512,18 +512,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -614,15 +617,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreee67684dafd06824ce3f2f518cdbde30c282dbc7etargetblanke67684da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreec29c2e47f041d36e73ab46d4238b51b49351d20ftargetblankc29c2e4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/e67684dafd06824ce3f2f518cdbde30c282dbc7e" target="_blank">e67684d</a>
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/c29c2e47f041d36e73ab46d4238b51b49351d20f" target="_blank">c29c2e4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreee67684dafd06824ce3f2f518cdbde30c282dbc7etargetblanke67684da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomsonglabgenomicsgregariadietinfectioninteractiontreec29c2e47f041d36e73ab46d4238b51b49351d20ftargetblankc29c2e4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -632,7 +635,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/e67684dafd06824ce3f2f518cdbde30c282dbc7e" target="_blank">e67684d</a>.
+<a href="https://github.com/songlab-genomics/gregaria-diet-infection-interaction/tree/c29c2e47f041d36e73ab46d4238b51b49351d20f" target="_blank">c29c2e4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -647,16 +650,59 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
     Ignored:    analysis/output/
-    Ignored:    data/GO_Annotations
-    Ignored:    data/external
-    Ignored:    data/raw_read_counts
-    Ignored:    data/reference
-    Ignored:    data/scaffold_origin
+    Ignored:    data/raw_read_counts/DESeq2_output/overlap_DEGs/
+    Ignored:    data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff
     Ignored:    output/manual-validation/
-    Ignored:    output/rmd_runs
-    Ignored:    output/runs
+    Ignored:    output/rmd_runs/
+    Ignored:    output/runs/
     Ignored:    outputs
+
+Untracked files:
+    Untracked:  code/pilot/archive_gregaria_complete_hpc.sh
+    Untracked:  code/pilot/archive_gregaria_publication_hpc.sh
+
+Unstaged changes:
+    Modified:   analysis/01-study-design-data.Rmd
+    Modified:   analysis/02-workflow-reproducibility.Rmd
+    Modified:   analysis/03-count-qc-exploration.Rmd
+    Modified:   analysis/04-deseq2-interaction-model.Rmd
+    Modified:   analysis/05-diet-pairwise-deg.Rmd
+    Modified:   analysis/06-infection-within-diet-deg.Rmd
+    Modified:   analysis/07-deg-overlap-prioritization.Rmd
+    Modified:   analysis/08-publication-figures.Rmd
+    Modified:   analysis/10-go-term-enrichment.Rmd
+    Modified:   analysis/11-outlier-sensitivity.Rmd
+    Modified:   analysis/13-physiology-candidate-genes.Rmd
+    Modified:   analysis/14-all-samples-deseq2-interaction-model.Rmd
+    Modified:   analysis/15-all-samples-diet-pairwise-deg.Rmd
+    Modified:   analysis/16-all-samples-infection-within-diet-deg.Rmd
+    Modified:   analysis/24-all-deg-catalogue.Rmd
+    Modified:   analysis/25-enrichment-term-gene-index.Rmd
+    Modified:   analysis/26-circled-cluster-enrichment.Rmd
+    Modified:   analysis/27-scaffold-origin-audit.Rmd
+    Modified:   analysis/28-placed-unplaced-scaffold-analysis.Rmd
+    Modified:   analysis/29-metarhizium-read-burden.Rmd
+    Modified:   analysis/30-curated-target-gene-figure.Rmd
+    Modified:   analysis/31-all-scaffolds-deg-overlap-prioritization.Rmd
+    Modified:   analysis/32-all-scaffolds-deg-catalogue.Rmd
+    Modified:   analysis/33-all-scaffolds-go-term-enrichment.Rmd
+    Modified:   analysis/34-all-scaffolds-enrichment-term-gene-index.Rmd
+    Modified:   analysis/35-count-definition-sensitivity.Rmd
+    Modified:   analysis/36-exon-only-deseq2-analysis.Rmd
+    Modified:   analysis/37-exon-only-interaction-model.Rmd
+    Modified:   analysis/38-exon-only-diet-pairwise-deg.Rmd
+    Modified:   analysis/39-exon-only-infection-within-diet-deg.Rmd
+    Modified:   analysis/40-exon-only-deg-overlap.Rmd
+    Modified:   analysis/41-exon-only-deg-catalogue.Rmd
+    Modified:   analysis/43-exon-only-enrichment-term-gene-index.Rmd
+    Modified:   analysis/44-exon-only-expression-clusters.Rmd
+    Modified:   analysis/45-exon-only-curated-target-genes.Rmd
+    Modified:   analysis/46-exon-only-publication-figures.Rmd
+    Modified:   analysis/47-paper-statistical-reference.Rmd
+    Modified:   code/HOST_PATHOGEN_DUAL_RNASEQ.md
+    Modified:   code/README.md
 
 </code></pre>
 <p>
@@ -702,6 +748,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/songlab-genomics/gregaria-diet-infection-interaction/40169019548e04c790be4b8d3861be0396036789/docs/15-all-samples-diet-pairwise-deg.html" target="_blank">4016901</a>
+</td>
+<td>
+Maeva TECHER
+</td>
+<td>
+2026-08-16
+</td>
+<td>
+Rebuild simplified workflowR site
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1566,7 +1629,7 @@ knitr::kable(summary_table)</code></pre>
 sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.6.1
+Running under: macOS Tahoe 26.7
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -1640,7 +1703,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.6.0 (2026-04-24)
 Platform: aarch64-apple-darwin23
-Running under: macOS Tahoe 26.6.1
+Running under: macOS Tahoe 26.7
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 

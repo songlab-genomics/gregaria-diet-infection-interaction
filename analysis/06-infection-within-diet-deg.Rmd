@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
   eggnog_file: "data/GO_Annotations/GCF_023897955.1_iqSchGreg1.2_Arthopoda_one2one.emapper.annotations"
   gff_file: "data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff"
   min_total_count: 10
@@ -97,7 +97,7 @@ metadata$Diet <- factor(metadata$Diet, levels = c("33", "50", "83"))
 metadata$Treatment <- relevel(factor(metadata$Treatment), ref = "Control")
 
 counts_path <- file.path(project_dir, params$counts_file)
-counts_raw <- if (grepl("[.]tsv$", counts_path, ignore.case = TRUE)) {
+counts_raw <- if (grepl("[.]tsv([.]gz)?$", counts_path, ignore.case = TRUE)) {
   read.delim(counts_path, check.names = FALSE)
 } else {
   read.csv(counts_path, check.names = FALSE)

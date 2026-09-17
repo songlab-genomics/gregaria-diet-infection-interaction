@@ -9,7 +9,7 @@ output:
     toc_float: true
 params:
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
   output_tag: "workflow-reproducibility"
 ---
 
@@ -44,31 +44,27 @@ processed and retained in the QC audit but excluded from biological models.
 The two branches differ only in which annotation feature types are counted, so
 their DEG results can be compared directly.
 
-## GitHub and Dryad data boundary
+## Bundled data and generated-output boundary
 
-The GitHub repository contains the R Markdown code, corrected sample metadata,
-the rRNA exclusion list, and rendered web figures. Large count matrices,
-reference and eggNOG annotations, external phase-reference data, complete
-analysis outputs, and HPC audit products are stored in the associated Dryad
-package instead of being committed to GitHub.
+The GitHub repository contains the R Markdown code, corrected metadata, rRNA
+exclusion list, count matrices, DESeq2 results, reference and eggNOG
+annotations, phase-reference data, taxonomy summaries, scaffold-audit evidence,
+and rendered web figures. Inputs promoted from authoritative analysis runs are
+stored under `data/derived/` with stable names so the reports do not depend on
+historical timestamped output folders.
 
-On the project computer, the current package is located at:
-
-```text
-/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad
-```
-
-The analysis pages retain readable project-relative paths. Create the local
-links once before knitting:
+The NCBI GFF is committed in compressed form. Expand its ignored working copy
+once after cloning, then validate all bundled files:
 
 ```{bash, eval=FALSE}
-export GREGARIA_DIET_DRYAD_DIR=/path/to/gregaria-diet-infection-interaction-dryad
-bash scripts/setup_dryad_links.sh
+bash scripts/setup_reference_data.sh
+shasum -a 256 -c data/SHA256SUMS
 ```
 
-If `GREGARIA_DIET_DRYAD_DIR` is not set, the setup script uses the project
-computer's Dropbox path shown above. No biological analysis is run by the setup
-script; it only validates the external package and creates links.
+Raw sequencing reads, BAM files, complete Kraken classifications, and full HPC
+run trees remain outside Git. Newly generated report outputs are written to
+ignored timestamped directories under `output/rmd_runs/`; publication-facing
+HTML and figure assets are committed under `docs/`.
 
 ## Repository layout
 
@@ -85,17 +81,18 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 ```{r repo-layout}
 layout <- data.frame(
   folder = c("analysis/", "data/metadata/", "data/excluded_loci/",
-             "data/raw_read_counts/", "data/reference/", "docs/",
-             "output/rmd_runs/", "scripts/"),
+             "data/raw_read_counts/", "data/derived/", "data/reference/",
+             "docs/", "output/rmd_runs/", "scripts/"),
   role = c(
     "workflowR R Markdown pages; new analysis code should live here",
     "sample metadata used to align counts with biological groups",
     "rRNA identifiers removed before normalization and modeling",
-    "Dryad-linked raw and merged gene count tables",
-    "Dryad-linked reference annotation files",
+    "versioned raw, merged, and frozen analysis count tables",
+    "stable inputs promoted from authoritative completed analyses",
+    "versioned assembly reports and compressed reference annotation",
     "rendered workflowR website and committed visual assets",
-    "Dryad-linked fresh output folders created by each Rmd render",
-    "reproducible workflow and data-link setup scripts"
+    "ignored fresh output folders created by each Rmd render",
+    "reproducible workflow and reference-setup scripts"
   )
 )
 
@@ -227,23 +224,40 @@ differential expression, annotation enrichment, and publication figures.
 
 ## Rerun commands
 
-Run these commands from the repository root after creating the Dryad links.
-Each rendered analysis page makes a new timestamped folder under
-`output/rmd_runs/`, which resolves into the external data package.
+Run these commands from the repository root after expanding the bundled GFF.
+Each rendered analysis page makes a new timestamped local folder under
+`output/rmd_runs/`.
 
 ```{bash, eval=FALSE}
+# Expand the committed reference annotation after a fresh clone.
+bash scripts/setup_reference_data.sh
+
 # Render one page after editing its parameters.
 Rscript -e 'workflowr::wflow_build("analysis/03-count-qc-exploration.Rmd")'
 
-# Render the main manuscript-oriented pages.
+# Render the manuscript-oriented pages in dependency order.
 Rscript -e 'workflowr::wflow_build(c(
   "analysis/01-study-design-data.Rmd",
   "analysis/02-workflow-reproducibility.Rmd",
   "analysis/03-count-qc-exploration.Rmd",
-  "analysis/04-deseq2-interaction-model.Rmd",
-  "analysis/05-diet-pairwise-deg.Rmd",
-  "analysis/06-infection-within-diet-deg.Rmd",
+  "analysis/47-paper-statistical-reference.Rmd",
+  "analysis/28-placed-unplaced-scaffold-analysis.Rmd",
+  "analysis/16-all-samples-infection-within-diet-deg.Rmd",
   "analysis/07-deg-overlap-prioritization.Rmd",
+  "analysis/27-scaffold-origin-audit.Rmd",
+  "analysis/10-go-term-enrichment.Rmd",
+  "analysis/26-circled-cluster-enrichment.Rmd",
+  "analysis/13-physiology-candidate-genes.Rmd",
+  "analysis/30-curated-target-gene-figure.Rmd",
+  "analysis/29-metarhizium-read-burden.Rmd",
+  "analysis/11-outlier-sensitivity.Rmd",
+  "analysis/35-count-definition-sensitivity.Rmd",
+  "analysis/36-exon-only-deseq2-analysis.Rmd",
+  "analysis/42-exon-only-go-term-enrichment.Rmd",
+  "analysis/44-exon-only-expression-clusters.Rmd",
+  "analysis/45-exon-only-curated-target-genes.Rmd",
+  "analysis/46-exon-only-publication-figures.Rmd",
+  "analysis/24-all-deg-catalogue.Rmd",
   "analysis/08-publication-figures.Rmd"
 ))'
 

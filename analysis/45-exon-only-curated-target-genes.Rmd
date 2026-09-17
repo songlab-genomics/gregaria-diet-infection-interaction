@@ -10,9 +10,9 @@ output:
 params:
   workbook_file: "data/external/curated_target_genes/2026-08-06_curated-hypoth_DEGs_v21.xlsx"
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  frozen_gene_audit_file: "output/rmd_runs/exon-only-curated-target-genes_20260810-150803/figure4_curated_gene_audit.csv"
-  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
-  results_file: "output/rmd_runs/exon-only-deseq2-analysis_20260810-150359/placed_unplaced_all_deseq2_results.csv"
+  frozen_gene_audit_file: "data/derived/analysis_inputs/exon_only_curated_gene_audit.csv"
+  placement_file: "data/derived/mapping/host_gene_sequence_placement.tsv.gz"
+  results_file: "data/derived/analysis_inputs/exon_only_placed_unplaced_all_deseq2_results.csv.gz"
   homology_results_pattern: "^scaffold-origin-audit_"
   alpha: 0.05
   lfc_threshold: 1
@@ -92,19 +92,9 @@ page_defaults <- list(
     "2026-08-06_curated-hypoth_DEGs_v21.xlsx"
   ),
   metadata_file = "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt",
-  frozen_gene_audit_file = paste0(
-    "output/rmd_runs/exon-only-curated-target-genes_20260810-150803/",
-    "figure4_curated_gene_audit.csv"
-  ),
-  placement_file = paste0(
-    "output/runs/host_pathogen_dual_20260727_000952/local-analysis/",
-    "host-mapping-audit_20260729-163928/unified-model/audit-summary/",
-    "host_gene_sequence_placement.tsv"
-  ),
-  results_file = paste0(
-    "output/rmd_runs/exon-only-deseq2-analysis_20260810-150359/",
-    "placed_unplaced_all_deseq2_results.csv"
-  ),
+  frozen_gene_audit_file = "data/derived/analysis_inputs/exon_only_curated_gene_audit.csv",
+  placement_file = "data/derived/mapping/host_gene_sequence_placement.tsv.gz",
+  results_file = "data/derived/analysis_inputs/exon_only_placed_unplaced_all_deseq2_results.csv.gz",
   latest_results_root = "output/rmd_runs",
   homology_results_pattern = "^scaffold-origin-audit_",
   alpha = 0.05,

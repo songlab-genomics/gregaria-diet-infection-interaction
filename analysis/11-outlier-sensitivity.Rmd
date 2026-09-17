@@ -11,7 +11,7 @@ params:
   metadata_full_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
   metadata_no_outliers_file: "data/metadata/mehreen_metadata_no_outliers_corrected_45.txt"
   mandatory_exclusion: "1044"
-  counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
   min_total_count: 10
   alpha: 0.05
   lfc_threshold: 1

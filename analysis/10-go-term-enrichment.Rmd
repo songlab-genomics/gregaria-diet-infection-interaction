@@ -73,7 +73,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 required <- c(
   "dplyr", "tidyr", "stringr", "ggplot2", "forcats", "clusterProfiler",
-  "GO.db", "AnnotationDbi", "DT"
+  "GO.db", "AnnotationDbi", "DT", "patchwork"
 )
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
@@ -144,6 +144,12 @@ kegg_scope_colors <- c(
 direction_colors <- c(
   "Upregulated" = "#E41A1C",
   "Downregulated" = "#1E88E5"
+)
+
+supplement_ontology_colors <- c(
+  "Biological process" = "#111111",
+  "Cellular component" = "#8B5E3C",
+  "Molecular function" = "#7A7A7A"
 )
 ```
 
@@ -741,12 +747,69 @@ for (i in seq_len(nrow(directional_contrasts))) {
   directional_records <- c(directional_records, added$records)
 }
 
+# These exploratory foregrounds contain genes that are higher in infected
+# locusts in one diet and are not significant infection DEGs in either other
+# diet. This is a detection-pattern definition, not a formal interaction test.
+infection_diets <- c("33", "50", "83")
+infection_significant_by_diet <- stats::setNames(
+  lapply(infection_diets, function(diet) {
+    placed_results |>
+      dplyr::filter(
+        .data$contrast_id == paste0("infection_diet", .env$diet),
+        .data$significant
+      ) |>
+      dplyr::pull(gene_id) |>
+      unique()
+  }),
+  infection_diets
+)
+infection_induced_by_diet <- stats::setNames(
+  lapply(infection_diets, function(diet) {
+    placed_results |>
+      dplyr::filter(
+        .data$contrast_id == paste0("infection_diet", .env$diet),
+        .data$significant,
+        .data$log2FoldChange > 0
+      ) |>
+      dplyr::pull(gene_id) |>
+      unique()
+  }),
+  infection_diets
+)
+diet_exclusive_infection_induced_sets <- stats::setNames(
+  lapply(infection_diets, function(diet) {
+    other_diets <- setdiff(infection_diets, diet)
+    other_significant <- unique(unlist(
+      infection_significant_by_diet[other_diets],
+      use.names = FALSE
+    ))
+    setdiff(infection_induced_by_diet[[diet]], other_significant)
+  }),
+  paste0("infection_diet", infection_diets, "_exclusive_up")
+)
+
+for (diet in infection_diets) {
+  set_id <- paste0("infection_diet", diet, "_exclusive_up")
+  genes <- diet_exclusive_infection_induced_sets[[set_id]]
+  directional_sets[[set_id]] <- genes
+  directional_records[[length(directional_records) + 1]] <-
+    make_directional_record(
+      set_id = set_id,
+      family = "Diet-exclusive infection-induced",
+      comparison = paste0("Diet ", diet, " exclusive infection-induced"),
+      direction = "Upregulated",
+      plot_label = paste0("Diet ", diet, " only"),
+      genes = genes,
+      source_file = primary_results_file
+    )
+}
+
 directional_set_summary <- dplyr::bind_rows(directional_records) |>
   dplyr::mutate(
     family = factor(
       family,
       levels = c("Infected within diet", "Control animals only",
-                 "Infected animals only")
+                 "Infected animals only", "Diet-exclusive infection-induced")
     ),
     direction = factor(direction, levels = c("Upregulated", "Downregulated"))
   ) |>
@@ -772,7 +835,71 @@ write.csv(
   file.path(out_dir, "requested_directional_DEG_sets_long.csv"),
   row.names = FALSE
 )
+
+diet_exclusive_set_summary <- directional_set_summary |>
+  dplyr::filter(family == "Diet-exclusive infection-induced") |>
+  dplyr::select(set_id, comparison, plot_label, n_genes, source_file)
+diet_exclusive_set_long <- data.frame(
+  set_id = rep(
+    names(diet_exclusive_infection_induced_sets),
+    lengths(diet_exclusive_infection_induced_sets)
+  ),
+  gene_id = unlist(
+    diet_exclusive_infection_induced_sets,
+    use.names = FALSE
+  ),
+  stringsAsFactors = FALSE
+)
+diet_exclusive_gene_annotations <- diet_exclusive_set_long |>
+  dplyr::mutate(
+    diet = stringr::str_match(set_id, "diet(33|50|83)")[, 2],
+    contrast_id = paste0("infection_diet", diet)
+  ) |>
+  dplyr::left_join(
+    placed_results |>
+      dplyr::filter(.data$contrast_id %in% paste0("infection_diet", infection_diets)) |>
+      dplyr::select(
+        gene_id, contrast_id, baseMean, log2FoldChange, lfcSE,
+        stat, pvalue, padj, gene_biotype
+      ),
+    by = c("gene_id", "contrast_id")
+  ) |>
+  dplyr::left_join(
+    annotation |>
+      dplyr::select(
+        gene_id, Preferred_name, Description, GOs, KEGG_ko,
+        KEGG_Pathway, PFAMs
+      ),
+    by = "gene_id"
+  ) |>
+  dplyr::arrange(factor(diet, levels = infection_diets), padj)
+write.csv(
+  diet_exclusive_set_summary,
+  file.path(out_dir, "diet_exclusive_infection_induced_deg_set_summary.csv"),
+  row.names = FALSE
+)
+write.csv(
+  diet_exclusive_set_long,
+  file.path(out_dir, "diet_exclusive_infection_induced_DEG_sets_long.csv"),
+  row.names = FALSE
+)
+write.csv(
+  diet_exclusive_gene_annotations,
+  file.path(out_dir, "diet_exclusive_infection_induced_gene_annotations.csv"),
+  row.names = FALSE
+)
 ```
+
+### Why the diet-exclusive sets are exploratory
+
+For the reviewer-focused comparison, an infection-induced gene is called
+**diet-exclusive** when it is significantly higher in infected locusts in one
+diet and is not a significant infection DEG in either of the other diets. This
+identifies functions carried by the additional response detected under each
+nutritional condition. It does not by itself prove that the infection effect
+differs significantly among diets: a gene can pass the DEG threshold in one
+diet and narrowly miss it in another. The likelihood-ratio interaction test
+remains the formal test of diet-dependent infection responses.
 
 ## Fat body immune and storage candidates
 
@@ -1449,7 +1576,7 @@ if (nrow(directional_go_enrichment_df) > 0 && "ID" %in% names(directional_go_enr
       family = factor(
         as.character(family),
         levels = c("Infected within diet", "Control animals only",
-                   "Infected animals only")
+                   "Infected animals only", "Diet-exclusive infection-induced")
       ),
       direction = factor(as.character(direction),
                          levels = c("Upregulated", "Downregulated")),
@@ -1689,6 +1816,358 @@ plot_directional_go_family("Infected within diet")
 ```{r requested-go-ontology-control-animals-only, fig.height=10, fig.width=18}
 plot_directional_go_family("Control animals only")
 ```
+
+## Figure S4: GO enrichment of diet-resolved responses
+
+This reviewer-focused supplement brings three related questions into one
+figure. Panel A shows GO enrichment among genes significantly higher in
+infected than control locusts within each diet. Panel B narrows those
+foregrounds to infection-induced genes detected as significant in only one
+diet. Panel C shows the direct pairwise diet contrasts among control locusts.
+Only the strongest terms per ontology and comparison are displayed; the full
+enrichment results and exact foreground membership are exported beside the
+figure.
+
+```{r figure-s4-go-enrichment, fig.width=16, fig.height=20}
+supplement_plot_labels <- c(
+  "Diet 33" = "C-biased (33)",
+  "Diet 50" = "Balanced (50)",
+  "Diet 83" = "P-biased (83)",
+  "Diet 33 only" = "C-biased only",
+  "Diet 50 only" = "Balanced only",
+  "Diet 83 only" = "P-biased only",
+  "33 vs 50" = "C-biased vs balanced",
+  "83 vs 33" = "P-biased vs C-biased",
+  "83 vs 50" = "P-biased vs balanced"
+)
+format_supplement_plot_label <- function(x) {
+  x <- as.character(x)
+  replacement <- unname(supplement_plot_labels[x])
+  dplyr::if_else(is.na(replacement), x, replacement)
+}
+
+make_supplement_go_panel <- function(family_name, title, directions,
+                                     top_n = 4, show_direction = FALSE,
+                                     size_limits = NULL,
+                                     size_breaks = ggplot2::waiver()) {
+  family_df <- directional_go_enrichment_ontology |>
+    dplyr::filter(
+      as.character(family) == .env$family_name,
+      as.character(direction) %in% .env$directions,
+      !is.na(ontology)
+    ) |>
+    dplyr::mutate(plot_label = format_supplement_plot_label(plot_label))
+
+  plot_order <- directional_set_summary |>
+    dplyr::filter(as.character(family) == .env$family_name) |>
+    dplyr::pull(plot_label) |>
+    format_supplement_plot_label() |>
+    unique()
+
+  if (nrow(family_df) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate(
+          "text", x = 0.5, y = 0.5,
+          label = paste0(title, "\nNo enriched GO terms"),
+          size = 6
+        ) +
+        ggplot2::theme_void()
+    )
+  }
+
+  plot_df <- family_df |>
+    dplyr::group_by(plot_label, direction, ontology) |>
+    dplyr::arrange(p.adjust, dplyr::desc(Count), .by_group = TRUE) |>
+    dplyr::slice_head(n = top_n) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      plot_label = factor(plot_label, levels = plot_order),
+      ontology = factor(
+        ontology,
+        levels = names(supplement_ontology_colors)
+      ),
+      direction = factor(
+        as.character(direction),
+        levels = c("Upregulated", "Downregulated")
+      ),
+      term_key = paste(term_label, ontology, sep = "___")
+    )
+
+  term_levels <- plot_df |>
+    dplyr::group_by(ontology, term_key) |>
+    dplyr::summarise(
+      best_p = min(p.adjust, na.rm = TRUE),
+      max_count = max(Count, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(ontology, best_p, dplyr::desc(max_count)) |>
+    dplyr::pull(term_key)
+
+  plot_df <- plot_df |>
+    dplyr::mutate(term_key = factor(term_key,
+                                    levels = rev(unique(term_levels))))
+
+  missing_plot_labels <- setdiff(
+    plot_order,
+    as.character(stats::na.omit(unique(plot_df$plot_label)))
+  )
+  no_terms_df <- data.frame(
+    plot_label = factor(character(), levels = plot_order),
+    ontology = factor(
+      character(),
+      levels = names(supplement_ontology_colors)
+    ),
+    term_key = factor(character(), levels = levels(plot_df$term_key)),
+    label_x = numeric(),
+    label = character()
+  )
+  if (length(missing_plot_labels) > 0) {
+    label_x <- max(plot_df$neg_log10_padj, na.rm = TRUE) * 0.48
+    if (!is.finite(label_x) || label_x <= 0) label_x <- 1
+    first_ontology <- as.character(stats::na.omit(plot_df$ontology)[1])
+    first_term <- as.character(stats::na.omit(plot_df$term_key)[1])
+    no_terms_df <- data.frame(
+      plot_label = factor(missing_plot_labels, levels = plot_order),
+      ontology = factor(
+        rep(first_ontology, length(missing_plot_labels)),
+        levels = names(supplement_ontology_colors)
+      ),
+      term_key = factor(
+        rep(first_term, length(missing_plot_labels)),
+        levels = levels(plot_df$term_key)
+      ),
+      label_x = rep(label_x, length(missing_plot_labels)),
+      label = rep("No enriched terms", length(missing_plot_labels))
+    )
+  }
+
+  p <- ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(y = term_key, color = ontology)
+  ) +
+    ggplot2::geom_vline(
+      xintercept = -log10(0.05), linetype = "dashed",
+      color = "#4B5563", linewidth = 0.35
+    ) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = neg_log10_padj, yend = term_key),
+      linewidth = 0.7
+    ) +
+    ggplot2::geom_text(
+      data = no_terms_df,
+      ggplot2::aes(x = label_x, y = term_key, label = label),
+      inherit.aes = FALSE,
+      color = "#6B7280", fontface = "italic", size = 5.2
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(
+        x = neg_log10_padj,
+        size = Count,
+        shape = if (show_direction) direction else NULL
+      ),
+      stroke = 0.7
+    ) +
+    ggplot2::facet_grid(
+      ontology ~ plot_label,
+      scales = "free_y", space = "free_y",
+      labeller = ggplot2::labeller(
+        ontology = c(
+          "Biological process" = "BP",
+          "Cellular component" = "CC",
+          "Molecular function" = "MF"
+        )
+      )
+    ) +
+    ggplot2::scale_color_manual(
+      values = supplement_ontology_colors,
+      breaks = names(supplement_ontology_colors),
+      drop = FALSE
+    ) +
+    ggplot2::scale_shape_manual(
+      values = c("Upregulated" = 16, "Downregulated" = 17),
+      breaks = c("Upregulated", "Downregulated"),
+      labels = c("Higher first diet", "Higher second diet"),
+      drop = FALSE
+    ) +
+    ggplot2::scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, NA),
+      expand = ggplot2::expansion(mult = c(0.01, 0.06))
+    ) +
+    ggplot2::scale_size(
+      range = c(3.5, 8), limits = size_limits, breaks = size_breaks
+    ) +
+    ggplot2::theme_bw(base_size = 15) +
+    ggplot2::theme(
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.border = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(
+        fill = "#F3F4F6", color = "#D1D5DB"
+      ),
+      strip.text.x = ggplot2::element_text(size = 16, face = "bold"),
+      strip.text.y = ggplot2::element_text(size = 15, face = "bold"),
+      axis.text.x = ggplot2::element_text(size = 11.5, color = "#111827"),
+      axis.text.y = ggplot2::element_text(size = 14, color = "#111827"),
+      axis.title.x = ggplot2::element_text(size = 15, face = "bold"),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_text(size = 14, face = "bold"),
+      legend.text = ggplot2::element_text(size = 13),
+      panel.spacing.x = grid::unit(0.6, "lines"),
+      panel.spacing.y = grid::unit(0.25, "lines"),
+      plot.title = ggplot2::element_text(size = 18, face = "bold"),
+      plot.margin = ggplot2::margin(4, 6, 4, 6)
+    ) +
+    ggplot2::labs(
+      title = title,
+      x = "-log10 adjusted p-value",
+      y = NULL,
+      color = "GO ontology",
+      size = "DEGs in term",
+      shape = "Diet side"
+    )
+
+  if (!show_direction) {
+    p <- p + ggplot2::guides(shape = "none")
+  }
+  p
+}
+
+s4_relevant_go <- directional_go_enrichment_ontology |>
+  dplyr::filter(
+    (as.character(family) == "Infected within diet" &
+       as.character(direction) == "Upregulated") |
+      as.character(family) == "Diet-exclusive infection-induced" |
+      as.character(family) == "Control animals only"
+  )
+s4_size_limits <- c(1, max(s4_relevant_go$Count, na.rm = TRUE))
+s4_size_breaks <- pretty(s4_size_limits, n = 4)
+s4_size_breaks <- s4_size_breaks[
+  s4_size_breaks >= s4_size_limits[[1]] &
+    s4_size_breaks <= s4_size_limits[[2]]
+]
+
+p_s4a <- make_supplement_go_panel(
+  "Infected within diet",
+  "A. Infection-induced genes within each diet",
+  directions = "Upregulated",
+  top_n = 3,
+  size_limits = s4_size_limits,
+  size_breaks = s4_size_breaks
+)
+p_s4b <- make_supplement_go_panel(
+  "Diet-exclusive infection-induced",
+  "B. Infection-induced genes detected only in one diet",
+  directions = "Upregulated",
+  top_n = 3,
+  size_limits = s4_size_limits,
+  size_breaks = s4_size_breaks
+)
+p_s4c <- make_supplement_go_panel(
+  "Control animals only",
+  "C. Direct diet contrasts among control locusts",
+  directions = c("Upregulated", "Downregulated"),
+  top_n = 3,
+  show_direction = TRUE,
+  size_limits = s4_size_limits,
+  size_breaks = s4_size_breaks
+) +
+  ggplot2::guides(color = "none", size = "none")
+
+figure_s4_go <- p_s4a / p_s4b / p_s4c +
+  patchwork::plot_layout(heights = c(1, 1, 0.58), guides = "collect") +
+  patchwork::plot_annotation(
+    title = "Figure S4. GO enrichment of diet-resolved infection and control responses",
+    subtitle = paste(
+      "Main-chromosome, rRNA-excluded transcript-plus-exon analysis;",
+      "diet-exclusive detection is exploratory rather than a formal interaction test"
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(size = 22, face = "bold"),
+      plot.subtitle = ggplot2::element_text(size = 15)
+    )
+  ) &
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.box = "vertical"
+  )
+
+for (extension in c("png", "svg", "pdf")) {
+  ggplot2::ggsave(
+    file.path(out_dir, paste0("figureS4_diet_resolved_GO_enrichment.", extension)),
+    figure_s4_go,
+    width = 16, height = 20, dpi = 300, limitsize = FALSE
+  )
+}
+
+figure_s4_go
+```
+
+```{r figure-s4-go-source-tables}
+figure_s4_go_results <- directional_go_enrichment_ontology |>
+  dplyr::filter(
+    (as.character(family) == "Infected within diet" &
+       as.character(direction) == "Upregulated") |
+      as.character(family) == "Diet-exclusive infection-induced" |
+      as.character(family) == "Control animals only"
+  ) |>
+  dplyr::arrange(family, plot_label, direction, p.adjust)
+
+write.csv(
+  figure_s4_go_results,
+  file.path(out_dir, "figureS4_diet_resolved_GO_enrichment_results.csv"),
+  row.names = FALSE
+)
+
+knitr::kable(
+  data.frame(
+    file = c(
+      "figureS4_diet_resolved_GO_enrichment.png",
+      "figureS4_diet_resolved_GO_enrichment.svg",
+      "figureS4_diet_resolved_GO_enrichment.pdf",
+      "figureS4_diet_resolved_GO_enrichment_results.csv",
+      "diet_exclusive_infection_induced_deg_set_summary.csv",
+      "diet_exclusive_infection_induced_DEG_sets_long.csv",
+      "diet_exclusive_infection_induced_gene_annotations.csv"
+    ),
+    present = file.exists(file.path(
+      out_dir,
+      c(
+        "figureS4_diet_resolved_GO_enrichment.png",
+        "figureS4_diet_resolved_GO_enrichment.svg",
+        "figureS4_diet_resolved_GO_enrichment.pdf",
+        "figureS4_diet_resolved_GO_enrichment_results.csv",
+        "diet_exclusive_infection_induced_deg_set_summary.csv",
+        "diet_exclusive_infection_induced_DEG_sets_long.csv",
+        "diet_exclusive_infection_induced_gene_annotations.csv"
+      )
+    ))
+  ),
+  caption = "Figure S4 plot and source-data exports"
+)
+```
+
+### Interpretation of the diet-exclusive foregrounds
+
+At BH-adjusted *p* < 0.05, the balanced-diet-exclusive induced set produced
+139 enriched GO terms, including nervous-system process, synapse organization,
+monoatomic-cation transport, receptor activity, and G-protein-coupled receptor
+signalling. The smaller C-biased and P-biased exclusive induced sets produced
+no GO terms passing the enrichment threshold. This is not evidence that those
+genes lack biological relevance: only 13 of the 65 C-biased-exclusive genes
+and 44 of the 171 P-biased-exclusive genes had GO annotations in the current
+eggNOG mapping. The accompanying annotation table therefore remains important
+for gene-level interpretation. For example, the C-biased-exclusive set
+contains annotated cytochrome P450, UDP-glycosyltransferase, glutathione
+transferase, and Krüppel homolog 1 candidates, but these individual annotations
+do not constitute a significantly enriched GO category.
+
+Among controls, no GO term passed the current enrichment threshold for the
+C-biased-versus-balanced comparison. Amino-acid and carboxylic-acid metabolic
+terms were enriched among genes higher in P-biased than C-biased controls,
+whereas monoatomic-anion transport was enriched among genes higher in balanced
+than P-biased controls. These sparse control-diet results are consistent with
+the small numbers of direct diet DEGs.
 
 ## KEGG pathway overview
 

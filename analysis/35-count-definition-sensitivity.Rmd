@@ -8,10 +8,10 @@ output:
     toc: true
     toc_float: true
 params:
-  exon_counts_file: "output/rmd_runs/exon-only-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
-  transcript_exon_counts_file: "output/rmd_runs/transcript-exon-primary-excluding1044_20260809-233420/host_counts_no_rrna.tsv"
+  exon_counts_file: "data/derived/counts/exon_only_primary_host_counts_no_rrna.tsv.gz"
+  transcript_exon_counts_file: "data/derived/counts/transcript_exon_primary_host_counts_no_rrna.tsv.gz"
   metadata_file: "data/metadata/mehreen_metadata_analysis_44_excluding_1044.txt"
-  placement_file: "output/runs/host_pathogen_dual_20260727_000952/local-analysis/host-mapping-audit_20260729-163928/unified-model/audit-summary/host_gene_sequence_placement.tsv"
+  placement_file: "data/derived/mapping/host_gene_sequence_placement.tsv.gz"
   rrna_file: "data/excluded_loci/gregaria_rrna_list.txt"
   min_count: 10
   min_samples: 3
