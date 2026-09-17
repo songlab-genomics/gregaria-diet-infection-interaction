@@ -45,3 +45,11 @@ comparisons, and Kraken/Bracken. Host and fungal DESeq2 analyses are run locally
 after transferring the compact count and taxonomy tables back from Sol. See
 [`HOST_PATHOGEN_DUAL_RNASEQ.md`](HOST_PATHOGEN_DUAL_RNASEQ.md) for exact HPC
 paths, fungal-reference download commands, preflight checks, and launch steps.
+
+The same guide documents two guarded archive workflows. Use
+`pilot/archive_gregaria_complete_hpc.sh` while the paper is under review to
+retain every authoritative intermediate and final HPC output before removing
+the complete scratch project. `pilot/archive_gregaria_publication_hpc.sh`
+records the smaller set that may be retained after acceptance, but it does not
+prune durable storage. Both use non-destructive audit, copy, and verification
+stages before separately authorized scratch cleanup.

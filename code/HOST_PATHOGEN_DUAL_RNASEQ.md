@@ -466,3 +466,92 @@ uniqueness.
 No tissue remains for qPCR validation. Fungal RNA abundance must therefore be
 reported as a tissue-specific transcriptional proxy for fungal burden, not as
 an absolute measurement of fungal biomass.
+
+## Durable publication archive and scratch cleanup
+
+Two guarded archive scopes are available. The complete archive is the current
+choice while the paper is under review: it retains trimmed reads, host-only and
+competitive BAMs and indexes, STAR reference products, per-sample
+featureCounts outputs, Kraken/Bracken results, merged matrices, mapping tables,
+scaffold-audit intermediates, and final transfer bundles. The older compact
+archive retains only the lightweight publication inputs and summaries.
+
+Use `pilot/archive_gregaria_complete_hpc.sh` until the paper is fully accepted.
+It copies only the four authoritative HPC runs and refuses to continue if an
+unclassified run is present. Superseded pilot and interrupted run directories,
+SLURM logs, `.snakemake`, editor files, and incomplete temporary products are
+excluded. The copy merges into the existing durable paths rather than creating
+a second copy of each run.
+
+The corrected 45-sample integration was assembled locally and must also be
+transferred to:
+
+```text
+/data/songlab/maeva/gregaria-diet-infection-interaction/output/runs/host_pathogen_dual_corrected45_20260809-153146
+```
+
+Complete verification requires its four 45-sample host count matrices and the
+corrected assignments for samples 1024 and 1044. It also confirms the durable
+raw-read directory and host FASTA/GTF, checks expected output counts, compares
+all retained files by checksum, validates the transfer archives, and runs
+`samtools quickcheck` plus `samtools idxstats` on all 90 retained BAMs.
+
+These are direct shell commands and do not use `sbatch`. Run the lightweight
+inventory on a Sol login node. Run sustained copying, checksum verification,
+and cleanup on `soldtn`, preferably inside `tmux` so an interrupted connection
+does not stop the operation.
+
+On a login node:
+
+```bash
+cd /scratch/mtecher/gregaria-diet-infection-interaction/code
+
+# Step 1: classify every run and validate the complete authoritative sources.
+/bin/bash pilot/archive_gregaria_complete_hpc.sh audit
+
+# This is also safe to inspect before copying anything.
+/bin/bash pilot/archive_gregaria_complete_hpc.sh cleanup-preview
+```
+
+Then connect to the data-transfer node and start a persistent terminal:
+
+```bash
+ssh soldtn
+tmux new -s gregaria_archive
+cd /scratch/mtecher/gregaria-diet-infection-interaction/code
+
+# Step 2: copy every retained intermediate and final product.
+/bin/bash pilot/archive_gregaria_complete_hpc.sh copy
+
+# Step 3: perform checksum, output-count, archive, and BAM checks.
+/bin/bash pilot/archive_gregaria_complete_hpc.sh verify
+
+# Step 4: display the exact complete project directory proposed for removal.
+/bin/bash pilot/archive_gregaria_complete_hpc.sh cleanup-preview
+```
+
+To leave the copy running while disconnecting, press `Ctrl-b`, then `d`. Return
+later with `ssh soldtn` followed by `tmux attach -t gregaria_archive`.
+
+Only after complete verification succeeds and the preview is acceptable should
+whole-project cleanup be authorized. Start the command from the home directory
+because the project directory, including the script being executed, will be
+removed:
+
+```bash
+cd ~
+export CONFIRM_COMPLETE_SCRATCH_REMOVAL=DELETE_VERIFIED_GREGARIA_PROJECT
+/bin/bash /scratch/mtecher/gregaria-diet-infection-interaction/code/pilot/archive_gregaria_complete_hpc.sh cleanup
+```
+
+The cleanup mode reruns the full verification before removing the entire
+project from scratch. It writes completion provenance under the durable project
+root. It does not remove the external Kraken or NCBI homology databases under
+`/scratch/mtecher/kraken2` and `/scratch/mtecher/scaffold_homology_databases`,
+because these may be shared with other projects.
+
+The previously used `pilot/archive_gregaria_publication_hpc.sh` documents the
+compact set that may be sufficient after acceptance. It does not delete full
+intermediates from `/data/songlab`; any future durable-storage pruning must be
+a separate, explicitly reviewed operation. Do not use its compact scope as the
+gate for complete scratch-project removal.
