@@ -1,0 +1,13 @@
+metric	value
+mapping_branch	competitive-host-transcript-exon-excluding1044
+samples_retained	44
+input_genes	95606
+rrna_ids_in_exclusion_list	12402
+rrna_genes_removed_from_matrix	12402
+genes_after_rrna_removal	83204
+minimum_count	10
+minimum_samples	3
+genes_entering_deseq2	16896
+declared_sample_exclusions	1044
+sample_outlier_policy	Declared QC exclusions removed before modeling: 1044; all remaining samples retained
+cooks_filtering	Disabled for planned contrasts

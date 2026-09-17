@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build a portable code-and-website archive from committed files only.
+# Build a portable code, analysis-data, and website archive from committed files.
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 PROJECT_NAME=$(basename "$PROJECT_DIR")
@@ -34,4 +34,4 @@ unzip -tq "$archive_path"
 echo "Zenodo code archive: $archive_path"
 echo "Archive size: $(du -h "$archive_path" | awk '{print $1}')"
 echo "SHA-256: $(shasum -a 256 "$archive_path" | awk '{print $1}')"
-echo "Dryad data are intentionally excluded; deposit that package separately."
+echo "Committed analysis-ready data are included; generated output trees remain excluded."

@@ -1,6 +1,9 @@
 # Output
 
-Full analysis outputs are stored with the associated Dryad data package rather
-than in GitHub. Run `bash scripts/setup_dryad_links.sh` to connect
-`output/runs/` and `output/rmd_runs/` to that package. Each R Markdown render
-continues to create a new timestamped result folder.
+This directory is reserved for newly generated local results. Each R Markdown
+render creates a fresh timestamped folder under `output/rmd_runs/`; Snakemake
+and HPC workflows use `output/runs/`.
+
+These generated trees are ignored by Git. Analysis-ready files required by the
+published reports are frozen under `data/derived/`, while the rendered website
+and publication-facing figures are committed under `docs/`.

@@ -4,34 +4,36 @@ A [workflowr][] project.
 
 [workflowr]: https://github.com/workflowr/workflowr
 
-## Data and full results
+## Data and reproducibility
 
-GitHub contains the analysis code, sample metadata, rRNA exclusion list, and
-rendered website. Large analysis inputs and full-resolution result trees are
-stored separately in the Dryad deposit working directory.
+GitHub contains the analysis code, rendered website, and the analysis-ready
+inputs needed by the workflowR reports. These include corrected metadata,
+rRNA exclusions, host count matrices, DESeq2 result tables, eggNOG annotations,
+phase-reference datasets, taxonomy summaries, and scaffold-origin audit data.
 
-On the project computer, the current data package is located at:
-
-```text
-/Users/maevatecher/Dropbox/3. Research Papers/Locusts/Ongoing/gregaria-diet-infection-interaction-dryad
-```
-
-After cloning the GitHub repository or downloading the Dryad package, set the
-data location and create the project links once:
+The NCBI GFF is committed as a compressed file to keep the repository compact.
+After cloning, prepare its uncompressed working copy once:
 
 ```bash
-export GREGARIA_DIET_DRYAD_DIR=/path/to/gregaria-diet-infection-interaction-dryad
-bash scripts/setup_dryad_links.sh
+bash scripts/setup_reference_data.sh
 ```
 
-The R Markdown pages keep project-relative paths such as
-`data/reference/...` and `output/rmd_runs/...`. The setup script links those
-paths to the external data package, so the analysis code remains portable and
-does not depend on files committed to GitHub.
+The expanded GFF is ignored by Git, while every R Markdown page continues to
+use the readable project-relative path `data/reference/...genomic.gff`.
+Bundled files can be checked against the committed manifest with:
+
+```bash
+shasum -a 256 -c data/SHA256SUMS
+```
+
+Raw FASTQ files, BAM files, complete Kraken classifications, and historical
+timestamped result trees are intentionally not stored in Git. New report runs
+are written locally to `output/rmd_runs/`; publication-facing HTML and figure
+assets are committed under `docs/`.
 
 ## Zenodo code archive
 
-Create the Zenodo code-and-website zip from a clean commit rather than zipping
+Create the Zenodo code, data, and website zip from a clean commit rather than zipping
 the working directory directly:
 
 ```bash
@@ -39,9 +41,9 @@ bash scripts/build_zenodo_release.sh v1.0.0
 ```
 
 The script uses `git archive`, validates the resulting zip, and reports its
-SHA-256 checksum. It includes only committed code, metadata, and rendered site
-files. Local R history files, `.git`, and the absolute links to the separately
-deposited Dryad data are intentionally excluded.
+SHA-256 checksum. It includes the committed analysis-ready data, code, metadata,
+and rendered site. Local R history files, `.git`, and generated output folders
+remain excluded.
 
 ## GitHub Pages deployment
 

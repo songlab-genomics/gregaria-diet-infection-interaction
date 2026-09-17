@@ -5,12 +5,11 @@
 
 # Local/generated files that should not be pushed to GitHub Pages.
 .DS_Store
-data/reference/
-data/reference
-data/GO_Annotations
-data/raw_read_counts
-data/external
-data/scaffold_origin
+
+# The compressed reference annotation is versioned. Its expanded copy is
+# recreated locally by scripts/setup_reference_data.sh.
+data/reference/GCF_023897955.1_iqSchGreg1.2_genomic.gff
+
 output/rmd_runs/
 output/rmd_runs
 output/manual-validation/
